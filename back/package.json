@@ -9,7 +9,9 @@
     "build": "npm run lint && rimraf dist/ && tsc",
     "start": "npm run build && node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint src/**/*.ts",
+    "fmt:check": "prettier -l .",
+    "fmt:fix": "prettier -w ."
   },
   "dependencies": {
     "@types/express": "^4.17.13",
