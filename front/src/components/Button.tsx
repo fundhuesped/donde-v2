@@ -1,18 +1,22 @@
 import classNames from 'classnames';
 import React from 'react';
-import { Icon } from './Icon';
+import { Icon, IconProps } from './Icon';
 
 type Props = React.PropsWithChildren<{
   type?: 'primary' | 'secondary' | 'tertiary';
   disabled?: boolean;
   className?: string;
   icon?: string;
+  iconSize?: 'small' | 'medium' | 'large';
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }>;
 
-export const Button: React.FC<Props> = React.memo((props) => {
-  const { className, children, icon, disabled = false, type = 'primary' } = props;
+export const Button: React.FC<Props & React.HTMLProps<HTMLButtonElement>> = React.memo((props) => {
+  const { className, children, icon, disabled = false, type = 'primary', iconSize = 'medium', onClick, name } = props;
   return (
     <button
+      onClick={onClick}
+      name={name}
       className={classNames(
         className,
         'px-3 font-bold flex items-center justify-center',
@@ -31,7 +35,7 @@ export const Button: React.FC<Props> = React.memo((props) => {
         },
       )}
     >
-      {icon && <Icon type={type} disabled={disabled} size="medium" icon={icon} />}
+      {icon && <Icon type={type} disabled={disabled} size={iconSize} icon={icon} />}
       <span className="py-3">{children}</span>
     </button>
   );
