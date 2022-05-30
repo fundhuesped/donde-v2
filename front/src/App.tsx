@@ -35,7 +35,7 @@ function App() {
   };
 
   useEffect(() => {
-    async function fetchServices() {
+    function fetchServices() {
       const hardcodedServices = [
         { id: 'preservativos', icon: CondonesIcon, description: 'Preservativos', isClicked: false },
         { id: 'test-its', icon: CondonesIcon, description: 'Test de ITS', isClicked: false },
