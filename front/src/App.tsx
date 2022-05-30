@@ -81,7 +81,11 @@ function App() {
             </Button>
           );
         })}
-        <Button className={'bg-white rounded-2xl w-full max-w-xs  my-5 mx-auto'} disabled={true} type={'primary'}>
+        <Button
+          className={'bg-white rounded-2xl w-full max-w-xs  my-5 mx-auto'}
+          disabled={disableSearchButton}
+          type={'primary'}
+        >
           Buscar
         </Button>
         <Button
