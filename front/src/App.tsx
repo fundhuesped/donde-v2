@@ -27,7 +27,7 @@ function App() {
     setServices(updatedServices);
   };
 
-  const handleSearchAllButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSelectAllButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const allClicked = services.map(service => service.isClicked).reduce((acc, isClicked) => acc && isClicked, true);
     const updatedServices = services.map(service => ({ ...service, isClicked: !allClicked }));
@@ -94,7 +94,7 @@ function App() {
         <Button
           className={'bg-white rounded-2xl w-full max-w-xs  my-5 mx-auto'}
           type={'secondary'}
-          onClick={handleSearchAllButtonClicked}
+          onClick={handleSelectAllButtonClicked}
         >
           Explorar todos los servicios
         </Button>
