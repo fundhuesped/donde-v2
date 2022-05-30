@@ -6,7 +6,7 @@ import {ReactComponent as CondonesIcon}  from './assets/images/Condones.svg';
 import first from 'lodash/first';
 interface Service {
   id: string;
-  icon: FunctionComponent<SVGProps<SVGSVGElement> & { title?: string | undefined; }>
+  icon: FunctionComponent<SVGProps<SVGSVGElement> & { title: string | undefined; }>
   description: string;
   isClicked: boolean;
 }
