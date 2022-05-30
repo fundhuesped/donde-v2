@@ -24,6 +24,14 @@ function App() {
     });
     setServices(updatedServices);
   };
+
+  const handleSearchAllButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const allClicked = services.map(service => service.isClicked).reduce((acc, isClicked) => acc && isClicked, true);
+    const updatedServices = services.map(service => ({ ...service, isClicked: !allClicked }));
+    setServices(updatedServices);
+  };
+
   useEffect(() => {
     async function fetchServices() {
       const hardcodedServices = [
@@ -70,7 +78,11 @@ function App() {
         <Button className={'bg-white rounded-2xl w-full max-w-xs  my-5 mx-auto'} disabled={true} type={'primary'}>
           Buscar
         </Button>
-        <Button className={'bg-white rounded-2xl w-full max-w-xs  my-5 mx-auto'} type={'secondary'} >
+        <Button
+          className={'bg-white rounded-2xl w-full max-w-xs  my-5 mx-auto'}
+          type={'secondary'}
+          onClick={handleSearchAllButtonClicked}
+        >
           Explorar todos los servicios
         </Button>
       </div>
