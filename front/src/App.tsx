@@ -14,7 +14,7 @@ function App() {
   const [services, setServices] = useState<Service[]>([]);
   const [disableSearchButton, setDisableSearchButton] = useState<boolean>(false);
 
-  const hasSelectedAnyService = () => services.filter(service => service.isClicked).length === 0;
+  const shouldDisableSearchButton = () => services.filter(service => service.isClicked).length === 0;
 
   const handleServiceButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -27,7 +27,7 @@ function App() {
       return { ...serviceToUpdate, isClicked: !serviceToUpdate.isClicked };
     });
     setServices(updatedServices);
-    setDisableSearchButton(hasSelectedAnyService());
+    setDisableSearchButton(shouldDisableSearchButton());
   };
 
   const handleSearchAllButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -35,7 +35,7 @@ function App() {
     const allClicked = services.map(service => service.isClicked).reduce((acc, isClicked) => acc && isClicked, true);
     const updatedServices = services.map(service => ({ ...service, isClicked: !allClicked }));
     setServices(updatedServices);
-    setDisableSearchButton(hasSelectedAnyService());
+    setDisableSearchButton(shouldDisableSearchButton());
   };
 
   useEffect(() => {
