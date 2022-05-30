@@ -14,8 +14,6 @@ function App() {
   const [services, setServices] = useState<Service[]>([]);
   const [disableSearchButton, setDisableSearchButton] = useState<boolean>(false);
 
-  const shouldDisableSearchButton = () => services.filter(service => service.isClicked).length === 0;
-
   const handleServiceButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const buttonClickedId = event.currentTarget.name;
@@ -27,7 +25,6 @@ function App() {
       return { ...serviceToUpdate, isClicked: !serviceToUpdate.isClicked };
     });
     setServices(updatedServices);
-    setDisableSearchButton(shouldDisableSearchButton());
   };
 
   const handleSearchAllButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -35,7 +32,6 @@ function App() {
     const allClicked = services.map(service => service.isClicked).reduce((acc, isClicked) => acc && isClicked, true);
     const updatedServices = services.map(service => ({ ...service, isClicked: !allClicked }));
     setServices(updatedServices);
-    setDisableSearchButton(shouldDisableSearchButton());
   };
 
   useEffect(() => {
@@ -57,6 +53,13 @@ function App() {
     }
     fetchServices();
   }, []);
+
+  useEffect(() => {
+    const shouldDisableSearchButton = () => services.filter(service => service.isClicked).length === 0;
+    setDisableSearchButton(shouldDisableSearchButton());
+
+  }, [services])
+
   return (
     <div className={'py-4  px-1 mx-auto  max-w-sm'}>
       <Header />
