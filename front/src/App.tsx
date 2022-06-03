@@ -8,11 +8,11 @@ interface Service {
   id: string;
   icon: FunctionComponent<SVGProps<SVGSVGElement> & { title: string | undefined; }>
   description: string;
-  isClicked: boolean;
+  active: boolean;
 }
 function App() {
   const [services, setServices] = useState<Service[]>([]);
-  const disableSearchButton = !services.some(service => service.isClicked);
+  const disableSearchButton = !services.some(service => service.active);
 
   const handleServiceButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -22,7 +22,7 @@ function App() {
       if (service.id !== serviceToUpdate.id) {
         return service;
       }
-      return { ...serviceToUpdate, isClicked: !serviceToUpdate.isClicked };
+      return { ...serviceToUpdate, active: !serviceToUpdate.active };
     });
     setServices(updatedServices);
   };
@@ -37,16 +37,16 @@ function App() {
   useEffect(() => {
     function fetchServices() {
       const hardcodedServices = [
-        { id: 'preservativos', icon: CondonesIcon, description: 'Preservativos', isClicked: false },
-        { id: 'test-its', icon: CondonesIcon, description: 'Test de ITS', isClicked: false },
-        { id: 'vacunatorios', icon: CondonesIcon, description: 'Vacunatorios', isClicked: false },
-        { id: 'centros-infectologia', icon: CondonesIcon, description: 'Centros de infectología', isClicked: false },
-        { id: 'anticonceptivos', icon: CondonesIcon, description: 'Métodos anticonceptivos', isClicked: false },
+        { id: 'preservativos', icon: CondonesIcon, description: 'Preservativos', active: false },
+        { id: 'test-its', icon: CondonesIcon, description: 'Test de ITS', active: false },
+        { id: 'vacunatorios', icon: CondonesIcon, description: 'Vacunatorios', active: false },
+        { id: 'centros-infectologia', icon: CondonesIcon, description: 'Centros de infectología', active: false },
+        { id: 'anticonceptivos', icon: CondonesIcon, description: 'Métodos anticonceptivos', active: false },
         {
           id: 'interrupcion-voluntaria-embarazo',
           icon: CondonesIcon,
           description: 'Interrupción voluntaria del embarazo',
-          isClicked: false,
+          active: false,
         },
       ];
       setServices(hardcodedServices);
@@ -63,7 +63,7 @@ function App() {
         </p>
         <p className={'text-xs px-2 my-6 text-donde-black-100'}>Seleccioná los servicios que querés encontrar</p>
         {services.map((service) => {
-          const borderColor = service.isClicked ? '!border-donde-primary' : 'border-white';
+          const borderColor = service.active ? '!border-donde-primary' : 'border-white';
           return (
             <Button
               key={service.id}
