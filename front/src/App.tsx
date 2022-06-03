@@ -4,6 +4,7 @@ import { Header } from './Header';
 import { Button } from './components/Button';
 import { ReactComponent as CondonesIcon } from './assets/images/Condones.svg';
 import { ServiceButton } from './ServiceButton';
+import { Link } from "react-router-dom";
 
 interface Service {
   id: string;
@@ -84,14 +85,16 @@ function App() {
             />
           );
         })}
-        <Button
-          className={'bg-white w-full max-w-xs  my-5 mx-auto'}
-          disabled={isDisabled}
-          type={'primary'}
-          onClick={handleSearchButtonClicked}
-        >
-          Buscar
-        </Button>
+        <Link to="/buscar">
+          <Button
+            className={'bg-white w-full max-w-xs  my-5 mx-auto'}
+            disabled={isDisabled}
+            type={'primary'}
+            onClick={handleSearchButtonClicked}
+          >
+            Buscar
+          </Button>
+        </Link>
         <Button className={'bg-white w-full max-w-xs  my-5 mx-auto'} type={'secondary'} onClick={handleSearchAllButtonClicked}>
           Buscar todos los servicios
         </Button>
