@@ -27,11 +27,19 @@ function App() {
     setServices(updatedServices);
   };
 
-  const handleSelectAllButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSearchAllButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const allClicked = services.map(service => service.isClicked).reduce((acc, isClicked) => acc && isClicked, true);
-    const updatedServices = services.map(service => ({ ...service, isClicked: !allClicked }));
-    setServices(updatedServices);
+    search(services);
+  };
+
+  const handleSearchButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    search(services.filter(service => service.active));
+  };
+
+  const search = (servicesToSearch: Service[]) => {
+    // do something
+    console.log(servicesToSearch);
   };
 
   useEffect(() => {
@@ -82,13 +90,14 @@ function App() {
           className={'bg-white rounded-2xl w-full max-w-xs  my-5 mx-auto'}
           disabled={disableSearchButton}
           type={'primary'}
+          onClick={handleSearchButtonClicked}
         >
           Buscar
         </Button>
         <Button
           className={'bg-white rounded-2xl w-full max-w-xs  my-5 mx-auto'}
           type={'secondary'}
-          onClick={handleSelectAllButtonClicked}
+          onClick={handleSearchAllButtonClicked}
         >
           Explorar todos los servicios
         </Button>
