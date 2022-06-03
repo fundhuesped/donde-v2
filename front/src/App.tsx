@@ -12,7 +12,7 @@ interface Service {
 }
 function App() {
   const [services, setServices] = useState<Service[]>([]);
-  const [disableSearchButton, setDisableSearchButton] = useState<boolean>(false);
+  const disableSearchButton = !services.some(service => service.isClicked);
 
   const handleServiceButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -53,12 +53,6 @@ function App() {
     }
     fetchServices();
   }, []);
-
-  useEffect(() => {
-    const shouldDisableSearchButton = () => services.filter(service => service.isClicked).length === 0;
-    setDisableSearchButton(shouldDisableSearchButton());
-
-  }, [services])
 
   return (
     <div className={'py-4  px-1 mx-auto  max-w-sm'}>
