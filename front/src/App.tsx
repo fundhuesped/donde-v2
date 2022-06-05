@@ -8,11 +8,11 @@ interface Service {
   id: string;
   icon: FunctionComponent<SVGProps<SVGSVGElement> & { title: string | undefined; }>
   description: string;
-  isClicked: boolean;
+  active: boolean;
 }
 function App() {
   const [services, setServices] = useState<Service[]>([]);
-  const [disableSearchButton, setDisableSearchButton] = useState<boolean>(false);
+  const disableSearchButton = !services.some(service => service.active);
 
   const handleServiceButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -22,43 +22,45 @@ function App() {
       if (service.id !== serviceToUpdate.id) {
         return service;
       }
-      return { ...serviceToUpdate, isClicked: !serviceToUpdate.isClicked };
+      return { ...serviceToUpdate, active: !serviceToUpdate.active };
     });
     setServices(updatedServices);
   };
 
-  const handleSelectAllButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSearchAllButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const allClicked = services.map(service => service.isClicked).reduce((acc, isClicked) => acc && isClicked, true);
-    const updatedServices = services.map(service => ({ ...service, isClicked: !allClicked }));
-    setServices(updatedServices);
+    search(services);
+  };
+
+  const handleSearchButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    search(services.filter(service => service.active));
+  };
+
+  const search = (servicesToSearch: Service[]) => {
+    // do something
+    console.log(servicesToSearch);
   };
 
   useEffect(() => {
     function fetchServices() {
       const hardcodedServices = [
-        { id: 'preservativos', icon: CondonesIcon, description: 'Preservativos', isClicked: false },
-        { id: 'test-its', icon: CondonesIcon, description: 'Test de ITS', isClicked: false },
-        { id: 'vacunatorios', icon: CondonesIcon, description: 'Vacunatorios', isClicked: false },
-        { id: 'centros-infectologia', icon: CondonesIcon, description: 'Centros de infectología', isClicked: false },
-        { id: 'anticonceptivos', icon: CondonesIcon, description: 'Métodos anticonceptivos', isClicked: false },
+        { id: 'preservativos', icon: CondonesIcon, description: 'Preservativos', active: false },
+        { id: 'test-its', icon: CondonesIcon, description: 'Test de ITS', active: false },
+        { id: 'vacunatorios', icon: CondonesIcon, description: 'Vacunatorios', active: false },
+        { id: 'centros-infectologia', icon: CondonesIcon, description: 'Centros de infectología', active: false },
+        { id: 'anticonceptivos', icon: CondonesIcon, description: 'Métodos anticonceptivos', active: false },
         {
           id: 'interrupcion-voluntaria-embarazo',
           icon: CondonesIcon,
           description: 'Interrupción voluntaria del embarazo',
-          isClicked: false,
+          active: false,
         },
       ];
       setServices(hardcodedServices);
     }
     fetchServices();
   }, []);
-
-  useEffect(() => {
-    const shouldDisableSearchButton = () => services.filter(service => service.isClicked).length === 0;
-    setDisableSearchButton(shouldDisableSearchButton());
-
-  }, [services])
 
   return (
     <div className={'py-4  px-1 mx-auto  max-w-sm'}>
@@ -69,7 +71,7 @@ function App() {
         </p>
         <p className={'text-xs px-2 my-6 text-donde-black-100'}>Seleccioná los servicios que querés encontrar</p>
         {services.map((service) => {
-          const borderColor = service.isClicked ? '!border-donde-primary' : 'border-white';
+          const borderColor = service.active ? '!border-donde-primary' : 'border-white';
           return (
             <Button
               key={service.id}
@@ -88,13 +90,14 @@ function App() {
           className={'bg-white rounded-2xl w-full max-w-xs  my-5 mx-auto'}
           disabled={disableSearchButton}
           type={'primary'}
+          onClick={handleSearchButtonClicked}
         >
           Buscar
         </Button>
         <Button
           className={'bg-white rounded-2xl w-full max-w-xs  my-5 mx-auto'}
           type={'secondary'}
-          onClick={handleSelectAllButtonClicked}
+          onClick={handleSearchAllButtonClicked}
         >
           Explorar todos los servicios
         </Button>

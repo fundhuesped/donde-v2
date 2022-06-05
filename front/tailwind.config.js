@@ -9,7 +9,6 @@ module.exports = {
         'donde-gray-600': '#5A5A67',
         'donde-gray-400': '#A3A3AF',
         'donde-gray-200': '#F0F0F2',
-        'donde-black-100': '#323239',
       },
       spacing: {
         4.5: '1.125rem',
