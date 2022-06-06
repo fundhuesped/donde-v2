@@ -14,13 +14,12 @@ interface Service {
 const ServiceButton = (props:{ service: Service, onClick: (event: React.MouseEvent<HTMLButtonElement>) => void }) => {
   const { service, onClick } = props;
   const borderColor = service.active ? '!border-donde-primary' : 'border-white';
-  const fontWeight = service.active ? 'font-semibold' : 'font-normal';
+  const fontWeight = service.active ? 'font-semibold' : '!font-normal';
   return <Button
 
       name={props.service.id}
       onClick={props.onClick}
-      className={`bg-white w-full max-w-xs !justify-start my-5 mx-auto text-base text-donde-gray-800 ${fontWeight} ${borderColor}`}
-      disabled={false}
+      className={`bg-white w-full max-w-xs !justify-start my-5 mx-auto text-base !text-donde-gray-800 ${fontWeight} ${borderColor}`}
       iconSize={"large"}
       type={"tertiary"}
       icon={service.icon}
@@ -90,10 +89,8 @@ function App() {
         </p>
         <p className={'text-xs px-2 my-6 text-donde-black-100'}>Seleccioná los servicios que querés encontrar</p>
         {services.map((service) => {
-
           return (
-            <ServiceButton key={service.id} service={service} onClick={handleServiceButtonClicked}
-                              />
+            <ServiceButton key={service.id} service={service} onClick={handleServiceButtonClicked}/>
           );
         })}
         <Button
