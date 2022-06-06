@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, {ReactNode} from 'react';
+import React, { ReactNode } from 'react';
 
 export type IconProps = {
   type?: 'primary' | 'secondary' | 'tertiary';

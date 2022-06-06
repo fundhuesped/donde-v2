@@ -1,18 +1,21 @@
 import classNames from 'classnames';
-import React, {ReactNode} from 'react';
+import React, { ReactNode } from 'react';
 import { Icon, IconProps } from './Icon';
 
-type Props = React.PropsWithChildren<{
-  type?: 'primary' | 'secondary' | 'tertiary';
-  disabled?: boolean;
-  className?: string;
-  icon?: ReactNode;
-  iconSize?: 'small' | 'medium' | 'large';
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
- } & React.HTMLProps<HTMLButtonElement>>;
+type Props = React.PropsWithChildren<
+  {
+    type?: 'primary' | 'secondary' | 'tertiary';
+    disabled?: boolean;
+    className?: string;
+    icon?: ReactNode;
+    iconSize?: 'small' | 'medium' | 'large';
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
+    alignment?: 'left' | 'center' | 'right';
+  } & React.HTMLProps<HTMLButtonElement>
+>;
 
 export const Button: React.FC<Props> = React.memo((props) => {
-  const { className, children, icon, disabled = false, type = 'primary', iconSize = 'medium', onClick, name } = props;
+  const { className, children, icon, disabled = false, type = 'primary', iconSize = 'medium', onClick, name, alignment } = props;
   return (
     <button
       onClick={onClick}
@@ -36,7 +39,7 @@ export const Button: React.FC<Props> = React.memo((props) => {
       )}
     >
       {icon && <Icon type={type} disabled={disabled} size={iconSize} icon={icon} />}
-      <span className="py-3">{children}</span>
+      <span className={classNames({ 'text-left': alignment === 'left' }, 'py-3')}>{children}</span>
     </button>
   );
 });
