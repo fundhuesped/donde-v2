@@ -1,21 +1,28 @@
 import classNames from 'classnames';
-import React from 'react';
-import { Icon } from './Icon';
+import React, { ReactNode } from 'react';
+import { Icon, IconProps } from './Icon';
 
-type Props = React.PropsWithChildren<{
-  type?: 'primary' | 'secondary' | 'tertiary';
-  disabled?: boolean;
-  className?: string;
-  icon?: string;
-}>;
+type Props = React.PropsWithChildren<
+  {
+    type?: 'primary' | 'secondary' | 'tertiary';
+    disabled?: boolean;
+    className?: string;
+    icon?: ReactNode;
+    iconSize?: 'small' | 'medium' | 'large';
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
+    alignment?: 'left' | 'center' | 'right';
+  } & React.HTMLProps<HTMLButtonElement>
+>;
 
 export const Button: React.FC<Props> = React.memo((props) => {
-  const { className, children, icon, disabled = false, type = 'primary' } = props;
+  const { className, children, icon, disabled = false, type = 'primary', iconSize = 'medium', onClick, name, alignment } = props;
   return (
     <button
+      onClick={onClick}
+      name={name}
       className={classNames(
         className,
-        'px-3 font-bold flex items-center justify-center',
+        'px-3 font-bold flex items-center justify-center rounded-2xl border-2',
         { 'rounded-xl': ['primary', 'secondary'].includes(type) },
         {
           'bg-donde-primary text-white': type === 'primary' && !disabled,
@@ -31,8 +38,8 @@ export const Button: React.FC<Props> = React.memo((props) => {
         },
       )}
     >
-      {icon && <Icon type={type} disabled={disabled} size="medium" icon={icon} />}
-      <span className="py-3">{children}</span>
+      {icon && <Icon type={type} disabled={disabled} size={iconSize} icon={icon} />}
+      <span className={classNames({ 'text-left': alignment === 'left' }, 'py-3')}>{children}</span>
     </button>
   );
 });

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 export type IconProps = {
   type?: 'primary' | 'secondary' | 'tertiary';
@@ -7,7 +7,7 @@ export type IconProps = {
   disabled?: boolean;
   circle?: boolean;
   className?: string;
-  icon: string;
+  icon: ReactNode;
 };
 
 export const Icon = React.memo<IconProps>((props) => {
@@ -32,7 +32,7 @@ export const Icon = React.memo<IconProps>((props) => {
         { 'bg-white': type === 'secondary' },
       )}
     >
-      <img className={iconClassName} src={IconInner} alt="" />
+      {IconInner}
     </div>
   );
 });
