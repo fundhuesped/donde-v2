@@ -16,7 +16,7 @@ export const ServiceButton = (props: ServiceProps) => {
     <Button
       name={id}
       onClick={onClick}
-      className={`bg-white w-full max-w-xs !justify-start my-5 mx-auto text-base !text-donde-gray-800 ${fontWeight} ${borderColor}`}
+      className={`bg-white w-full !justify-start my-5 text-base !text-donde-gray-800 ${fontWeight} ${borderColor}`}
       iconSize={'large'}
       type={'tertiary'}
       icon={icon}
