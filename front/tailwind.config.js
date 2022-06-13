@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme');
+
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
@@ -10,6 +12,9 @@ module.exports = {
         'donde-gray-400': '#A3A3AF',
         'donde-gray-200': '#F0F0F2',
         'light-gray': '#D1D1D7',
+      },
+      fontFamily: {
+        sans: ['Poppins', ...defaultTheme.fontFamily.sans],
       },
       spacing: {
         4.5: '1.125rem',
