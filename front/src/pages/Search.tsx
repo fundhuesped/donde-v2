@@ -25,7 +25,7 @@ const Search = () => {
     <>
       <div>
         <Link to="/">
-          <ChevronLeftIcon className="h-8 w-8 ml-2 text-donde-gray-600" />
+          <ChevronLeftIcon className="h-8 w-8 ml-2 text-dark-gray" />
         </Link>
         <div className={'px-4'}>
           <p className="mt-2"> Estás buscando </p>
@@ -33,8 +33,8 @@ const Search = () => {
         </div>
       </div>
       <MainContainer>
-        <h1 className={'text-xl px-2 my-6 text-donde-gray-800 font-semibold'}>¿En qué lugar estas buscando?</h1>
-        <p className={'text-xs px-2 my-6 text-donde-gray-800'}>
+        <h1 className={'text-xl px-2 my-6 text-black font-semibold'}>¿En qué lugar estas buscando?</h1>
+        <p className={'text-xs px-2 my-6 text-black'}>
           Podés buscar por ciudad, departamento o barrio. También podés buscar por el nombre o la dirección de un centro que ya
           conozcas.
         </p>

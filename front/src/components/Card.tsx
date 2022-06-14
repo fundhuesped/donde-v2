@@ -2,12 +2,16 @@ import classNames from 'classnames';
 import React from 'react';
 import { Icon, IconProps } from './Icon';
 
-type CardProps = {
+type CardProps = React.PropsWithChildren<{
   className?: string;
-};
+}>;
 export const Card = React.memo<CardProps>((props) => {
-  const { className, ...restProps } = props;
-  return <div className={classNames(className, 'bg-white flex flex-col drop-shadow-wingu rounded-2xl p-4')} {...restProps} />;
+  const { children, className, ...restProps } = props;
+  return (
+    <div className={classNames(className, 'bg-white flex flex-col drop-shadow-wingu rounded-2xl p-4')} {...restProps}>
+      {children}
+    </div>
+  );
 });
 
 type CardHeaderProps = React.PropsWithChildren<{
@@ -16,9 +20,9 @@ type CardHeaderProps = React.PropsWithChildren<{
 export const CardHeader = React.memo<CardHeaderProps>((props) => {
   const { className, children, ...restProps } = props;
   return (
-    <h1 className={classNames(className, 'pb-2 text-wingu-gray-800 font-bold')} {...restProps}>
+    <h3 className={classNames(className, 'text-black font-bold')} {...restProps}>
       {children}
-    </h1>
+    </h3>
   );
 });
 
@@ -28,9 +32,9 @@ type CardSubHeaderProps = React.PropsWithChildren<{
 export const CardSubHeader = React.memo<CardSubHeaderProps>((props) => {
   const { className, children, ...restProps } = props;
   return (
-    <h2 className={classNames(className, 'pt-6 pb-2 text-xs text-wingu-gray-400')} {...restProps}>
+    <h4 className={classNames(className, 'pt-6 pb-2 text-xs text-wingu-gray-400')} {...restProps}>
       {children}
-    </h2>
+    </h4>
   );
 });
 
@@ -46,16 +50,22 @@ export const CardParagraph = React.memo<CardParagraphProps>((props) => {
   );
 });
 
+type CardIconListProps = React.PropsWithChildren<{}>;
+export const CardList = React.memo<CardIconListProps>((props) => {
+  const { children } = props;
+  return <ul>{children}</ul>;
+});
+
 type CardIconLineProps = React.PropsWithChildren<{
   className?: string;
   icon: IconProps['icon'];
 }>;
-export const CardIconLine = React.memo<CardIconLineProps>((props) => {
-  const { className, children, icon, ...restProps } = props;
+export const CardListItem = React.memo<CardIconLineProps>((props) => {
+  const { className, children, icon } = props;
   return (
-    <div className={classNames(className, 'flex items-center')} {...restProps}>
-      <Icon size="medium" type="secondary" circle={false} icon={icon} />
-      <span className="pl-1.5 text-wingu-gray-600 text-sm">{children}</span>
-    </div>
+    <li className={classNames(className, 'flex items-center text-dark-gray')}>
+      <Icon size="medium" type="secondary" icon={icon} />
+      <span className="pl-1 text-dark-gray text-sm">{children}</span>
+    </li>
   );
 });

@@ -5,13 +5,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'donde-primary': '#E6334C',
-        'donde-secondary': '#FEEBEC',
-        'donde-gray-800': '#323239',
-        'donde-gray-600': '#5A5A67',
-        'donde-gray-400': '#A3A3AF',
-        'donde-gray-200': '#F0F0F2',
+        primary: '#E6334C',
+        secondary: '#FEEBEC',
+        black: '#323239',
+        'dark-gray': '#5A5A67',
+        'medium-gray': '#A3A3AF',
         'light-gray': '#D1D1D7',
+        'ultra-light-gray': '#F0F0F2',
       },
       fontFamily: {
         sans: ['Poppins', ...defaultTheme.fontFamily.sans],
