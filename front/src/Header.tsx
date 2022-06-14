@@ -6,7 +6,7 @@ export function Header() {
   return (
     <header className={'flex justify-between mx-2 py-4'}>
       <DondeLogo />
-      <MenuIcon className="h-6 w-5 text-donde-gray-600" />
+      <MenuIcon className="h-6 w-5 text-dark-gray" />
     </header>
   );
 }

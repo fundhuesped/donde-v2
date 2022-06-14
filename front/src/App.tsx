@@ -3,7 +3,7 @@ import { Header } from './Header';
 import Home from './pages/Home';
 import { Route, Routes } from 'react-router-dom';
 import Search from './pages/Search';
-import MainContainer from './components/MainContainer';
+import { Map } from './pages/Map';
 
 const App = () => (
   <div className={'min-h-screen flex flex-col'}>
@@ -11,6 +11,7 @@ const App = () => (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/buscar" element={<Search />} />
+      <Route path="/mapa" element={<Map />} />
     </Routes>
   </div>
 );

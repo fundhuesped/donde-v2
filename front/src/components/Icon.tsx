@@ -11,12 +11,7 @@ export type IconProps = {
 };
 
 export const Icon = React.memo<IconProps>((props) => {
-  const { type = 'primary', size = 'large', disabled = false, icon: IconInner, className, circle = true } = props;
-  const iconClassName = classNames({
-    'text-white': type === 'primary',
-    'text-wingu-primary': type !== 'primary' && !disabled,
-    'text-wingu-gray-400': type !== 'primary' && disabled,
-  });
+  const { type = 'primary', size = 'large', disabled = false, icon: IconInner, className, circle = false } = props;
   return (
     <div
       className={classNames(

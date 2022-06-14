@@ -25,16 +25,16 @@ export const Button: React.FC<Props> = React.memo((props) => {
         'px-3 font-bold flex items-center justify-center rounded-2xl border-2',
         { 'rounded-xl': ['primary', 'secondary'].includes(type) },
         {
-          'bg-donde-primary text-white': type === 'primary' && !disabled,
+          'bg-primary text-white': type === 'primary' && !disabled,
           'bg-gray-400 text-white': type === 'primary' && disabled,
         },
         {
-          'border border-donde-primary text-donde-primary': type === 'secondary' && !disabled,
-          'border border-donde-gray-400 text-donde-gray-400': type === 'secondary' && disabled,
+          'border border-primary text-primary': type === 'secondary' && !disabled,
+          'border border-medium-gray text-medium-gray': type === 'secondary' && disabled,
         },
         {
-          'text-donde-primary': type === 'tertiary' && !disabled,
-          'text-donde-gray-400': type === 'tertiary' && disabled,
+          'text-primary': type === 'tertiary' && !disabled,
+          'text-medium-gray': type === 'tertiary' && disabled,
         },
       )}
     >
