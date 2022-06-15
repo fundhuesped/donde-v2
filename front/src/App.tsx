@@ -11,7 +11,7 @@ const App = () => (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/buscar" element={<Search />} />
-      <Route path="/mapa" element={<Map />} />
+      <Route path="/mapa" element={<Map centerLat={-34.602086} centerLng={-58.384543} zoom={13} />} />
     </Routes>
   </div>
 );
