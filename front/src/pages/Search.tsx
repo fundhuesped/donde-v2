@@ -29,7 +29,7 @@ const Search = () => {
         </Link>
         <div className={'px-4'}>
           <p className="mt-2"> Estás buscando </p>
-          <SelectedService label={'Test de ITS'} />
+          <SelectedService label={'Test de HIV'} />
         </div>
       </div>
       <MainContainer>
