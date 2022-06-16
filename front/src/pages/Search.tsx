@@ -33,7 +33,7 @@ const Search = () => {
         </div>
       </div>
       <MainContainer>
-        <h1 className={'text-xl px-2 my-6 text-black font-semibold'}>¿En qué lugar estas buscando?</h1>
+        <h1 className={'font-title text-lg px-2 my-6 text-black font-bold'}>¿En qué lugar estas buscando?</h1>
         <p className={'text-xs px-2 my-6 text-black'}>
           Podés buscar por ciudad, departamento o barrio. También podés buscar por el nombre o la dirección de un centro que ya
           conozcas.

@@ -14,7 +14,8 @@ module.exports = {
         'ultra-light-gray': '#F0F0F2',
       },
       fontFamily: {
-        sans: ['Poppins', ...defaultTheme.fontFamily.sans],
+        sans: ['Open-sans', ...defaultTheme.fontFamily.sans],
+        title: ['Poppins', ...defaultTheme.fontFamily.sans],
       },
       spacing: {
         4.5: '1.125rem',
