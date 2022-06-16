@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { ServiceButton } from '../ServiceButton';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/Button';
-import { ReactComponent as CondonesIcon } from '../assets/images/Condones.svg';
+import { ReactComponent as TestDeVIH } from '../assets/images/TestDeVIH.svg';
 import MainContainer from '../components/MainContainer';
 
 interface Service {
@@ -44,53 +44,46 @@ const Home = () => {
 
   useEffect(() => {
     function fetchServices() {
-      const hardcodedServices = [
-        { id: 'preservativos', icon: <CondonesIcon />, description: 'Preservativos', active: false },
-        { id: 'test-its', icon: <CondonesIcon />, description: 'Test de ITS', active: false },
-        { id: 'vacunatorios', icon: <CondonesIcon />, description: 'Vacunatorios', active: false },
-        { id: 'centros-infectologia', icon: <CondonesIcon />, description: 'Centros de infectología', active: false },
-        { id: 'anticonceptivos', icon: <CondonesIcon />, description: 'Métodos anticonceptivos', active: false },
-        {
-          id: 'interrupcion-voluntaria-embarazo',
-          icon: <CondonesIcon />,
-          description: 'Interrupción voluntaria del embarazo',
-          active: false,
-        },
-      ];
+      const hardcodedServices = [{ id: 'test-its', icon: <TestDeVIH />, description: 'Test de HIV', active: false }];
       setServices(hardcodedServices);
     }
     fetchServices();
   }, []);
 
   return (
-    <MainContainer>
-      <p className={'text-xl px-2 my-6 text-donde-black-100'}>
-        <strong> ¿Qué estás buscando? </strong>
+    <>
+      <p className={'px-6 my-2 text-xl font-title text-justify'}>
+        <strong>Dónde</strong> es una plataforma que te permite encontrar servicios de salud en toda América Latina.
       </p>
-      <p className={'text-xs px-2 my-6 text-donde-black-100'}>Seleccioná los servicios que querés encontrar</p>
-      {services.map((service) => {
-        return (
-          <ServiceButton
-            key={service.id}
-            id={service.id}
-            icon={service.icon}
-            description={service.description}
-            active={service.active}
-            onClick={handleServiceButtonClicked}
-          />
-        );
-      })}
-      <Link to="/buscar">
-        <Button className={'bg-white w-full my-5'} disabled={isDisabled} type={'primary'} onClick={handleSearchButtonClicked}>
-          Buscar
-        </Button>
-      </Link>
-      <Link to="/buscar">
-        <Button className={'w-full my-5'} type={'secondary'} onClick={handleSearchAllButtonClicked}>
-          Buscar todos los servicios
-        </Button>
-      </Link>
-    </MainContainer>
+      <MainContainer>
+        <p className={'px-2 mt-6 text-xl font-title text-donde-black-100'}>
+          <strong> ¿Qué estás buscando? </strong>
+        </p>
+        <p className={'px-2 my-3 text-xs text-donde-black-100'}>Seleccioná los servicios que querés encontrar</p>
+        {services.map((service) => {
+          return (
+            <ServiceButton
+              key={service.id}
+              id={service.id}
+              icon={service.icon}
+              description={service.description}
+              active={service.active}
+              onClick={handleServiceButtonClicked}
+            />
+          );
+        })}
+        <Link to="/buscar">
+          <Button className={'bg-white w-full my-5'} disabled={isDisabled} type={'primary'} onClick={handleSearchButtonClicked}>
+            Buscar
+          </Button>
+        </Link>
+        <Link to="/buscar">
+          <Button className={'w-full my-5'} type={'secondary'} onClick={handleSearchAllButtonClicked}>
+            Buscar todos los servicios
+          </Button>
+        </Link>
+      </MainContainer>
+    </>
   );
 };
 
