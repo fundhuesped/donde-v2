@@ -15,7 +15,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Open-sans', ...defaultTheme.fontFamily.sans],
-        poppins: ['Poppins', ...defaultTheme.fontFamily.sans],
+        title: ['Poppins', ...defaultTheme.fontFamily.sans],
       },
       spacing: {
         4.5: '1.125rem',

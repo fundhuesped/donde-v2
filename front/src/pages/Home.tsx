@@ -52,11 +52,11 @@ const Home = () => {
 
   return (
     <>
-      <p className={'px-6 my-2 text-xl font-poppins text-justify'}>
+      <p className={'px-6 my-2 text-xl font-title text-justify'}>
         <strong>Dónde</strong> es una plataforma que te permite encontrar servicios de salud en toda América Latina.
       </p>
       <MainContainer>
-        <p className={'px-2 mt-6 text-xl font-poppins text-donde-black-100'}>
+        <p className={'px-2 mt-6 text-xl font-title text-donde-black-100'}>
           <strong> ¿Qué estás buscando? </strong>
         </p>
         <p className={'px-2 my-3 text-xs text-donde-black-100'}>Seleccioná los servicios que querés encontrar</p>
