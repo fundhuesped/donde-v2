@@ -1,5 +1,5 @@
 import React from 'react';
-import { LocationMarkerIcon } from '@heroicons/react/solid';
+import { LocationMarkerIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
 
 export type MarkerProps = {
@@ -12,10 +12,9 @@ export type MarkerProps = {
 export const Marker = React.memo<MarkerProps>((props) => {
   return (
     <div
-      className={classNames('bg-wingu-primary', 'w-20 h-20 p-4')}
-      style={{ position: 'absolute', transform: 'translate(-50%, -70%)' }}
+      className={classNames('w-20 h-20 p-4 absolute -translate-x-2/4 -translate-y-3/4')}
     >
-      <LocationMarkerIcon className={'text-primary'} />
+      <LocationMarkerIcon className={'text-primary fill-white'} />
     </div>
   );
 });
