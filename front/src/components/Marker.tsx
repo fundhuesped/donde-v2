@@ -11,9 +11,7 @@ export type MarkerProps = {
 
 export const Marker = React.memo<MarkerProps>((props) => {
   return (
-    <div
-      className={classNames('w-20 h-20 p-4 absolute -translate-x-2/4 -translate-y-3/4')}
-    >
+    <div className={classNames('w-20 h-20 p-4 absolute -translate-x-2/4 -translate-y-3/4')}>
       <LocationMarkerIcon className={'text-primary fill-white'} />
     </div>
   );

@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { Pill } from '../components/Pill';
 import GoogleMapReact from 'google-map-react';
 import { Marker } from '../components/Marker';
-import MainContainer from "../components/MainContainer";
+import MainContainer from '../components/MainContainer';
 
 const markers = [
   {
@@ -37,20 +37,20 @@ export const Map = React.memo<MapProps>((props) => {
       <MainContainer className={'relative overflow-hidden px-0'}>
         <div className={classNames('w-full')} style={{ height: 'calc(100vh - 56px - 1.5rem)' }}>
           <GoogleMapReact
-              bootstrapURLKeys={{
-                key: '',
-                language: 'es',
-                region: 'ar'
-              }}
-              options={{
-                fullscreenControl: false,
-                zoomControl: false
-              }}
-              center={{ lat: centerLat, lng: centerLng }}
-              zoom={zoom}
+            bootstrapURLKeys={{
+              key: '',
+              language: 'es',
+              region: 'ar',
+            }}
+            options={{
+              fullscreenControl: false,
+              zoomControl: false,
+            }}
+            center={{ lat: centerLat, lng: centerLng }}
+            zoom={zoom}
           >
             {markers.map((marker) => (
-                <Marker {...marker} />
+              <Marker {...marker} />
             ))}
           </GoogleMapReact>
         </div>
@@ -59,8 +59,8 @@ export const Map = React.memo<MapProps>((props) => {
           <header className={'flex flex-row justify-between items-center mb-2'}>
             <CardHeader>Nombre del establecimiento</CardHeader>
             <span className={'w-5 text-dark-gray'}>
-            <XIcon />
-          </span>
+              <XIcon />
+            </span>
           </header>
           <CardList>
             <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
