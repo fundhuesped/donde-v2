@@ -44,7 +44,7 @@ type CardParagraphProps = React.PropsWithChildren<{
 export const CardParagraph = React.memo<CardParagraphProps>((props) => {
   const { className, children, ...restProps } = props;
   return (
-    <p className={classNames(className, 'text-sm leading-6')} {...restProps}>
+    <p className={classNames(className, 'text-black text-sm leading-6')} {...restProps}>
       {children}
     </p>
   );
