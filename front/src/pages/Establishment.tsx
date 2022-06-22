@@ -48,9 +48,21 @@ const WhatsAppButton = React.memo<WhatsAppButtonProps>((props) => {
   );
 });
 
-const ShareButton = () => {
+const ShareButton = (props: { name: string }) => {
+  const { name } = props;
+  const shareEstablishment = () => {
+    const title = `${name} | Dónde`;
+    const url = window.location.href;
+    // Share using Web Share API if available. Otherwise, copy to clipboard.
+    if (navigator.share) {
+      navigator.share({ url, title }).catch((e) => console.error(e));
+    } else {
+      // TODO: Add toast indicating that the establishment info was copied to the clipboard.
+      navigator.clipboard.writeText(`${title}\n${url}`).catch((e) => console.error(e));
+    }
+  };
   return (
-    <button>
+    <button onClick={shareEstablishment}>
       <Icon type="secondary" circle={true} icon={<ShareIcon className={'text-primary'} />} label={'Compartir'} />
     </button>
   );
@@ -120,7 +132,7 @@ export const Establishment = React.memo<EstablishmentProps>((props) => {
         <div className={'flex justify-center space-x-7 my-9'}>
           {website && <WebSiteButton website={website} />}
           {phone && <PhoneButton phone={phone} />}
-          <ShareButton />
+          <ShareButton name={name} />
           {whatsAppPhone && <WhatsAppButton phone={whatsAppPhone} />}
         </div>
       </MainContainer>
