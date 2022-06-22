@@ -25,12 +25,6 @@ const markers = [
   },
 ];
 
-export type MapProps = {
-  centerLat: number;
-  centerLng: number;
-  zoom?: number;
-};
-
 interface Location {
   state: {
     location?: string;
@@ -41,12 +35,11 @@ interface Location {
   };
 }
 
-export const Map = React.memo<MapProps>((props) => {
+const Map = () => {
   const { state } = useLocation() as Location;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { location, coords } = state;
 
-  const { centerLat, centerLng, zoom = 14 } = props;
   return (
     <>
       <MainContainer className={'relative overflow-hidden px-0'}>
@@ -61,8 +54,8 @@ export const Map = React.memo<MapProps>((props) => {
               fullscreenControl: false,
               zoomControl: false,
             }}
-            center={{ lat: centerLat, lng: centerLng }}
-            zoom={zoom}
+            center={ coords }
+            zoom={ 14 }
           >
             {markers.map((marker) => (
               <Marker {...marker} />
@@ -91,4 +84,6 @@ export const Map = React.memo<MapProps>((props) => {
       </MainContainer>
     </>
   );
-});
+};
+
+export default Map;
