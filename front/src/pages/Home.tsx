@@ -32,8 +32,6 @@ const Home = () => {
   };
 
   const search = (servicesToSearch: Service[]) => {
-    console.log(servicesToSearch);
-
     if (!isEmpty(servicesToSearch)) {
       navigate('/buscar');
     }
