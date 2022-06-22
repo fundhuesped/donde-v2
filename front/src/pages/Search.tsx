@@ -3,6 +3,7 @@ import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
 import isEmpty from 'lodash/isEmpty';
 import { BackButton } from '../components/BackButton';
+import { useNavigate } from 'react-router-dom';
 
 const SelectedService = (props: { label: string }) => (
   <Button type="secondary" className="h-8 mt-2 mb-1" disabled={true}>
@@ -12,13 +13,35 @@ const SelectedService = (props: { label: string }) => (
 );
 
 const Search = () => {
-  const [ubicacion, setUbicacion] = useState('');
+  const navigate = useNavigate();
 
-  const handleUbicacionChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setUbicacion(event.currentTarget.value);
+  const [location, setLocation] = useState('');
+  const isLocationEmpty = isEmpty(location);
+
+  const handleLocationChange = (event: React.FormEvent<HTMLInputElement>) => {
+    setLocation(event.currentTarget.value);
   };
 
-  const isDisabled = isEmpty(ubicacion);
+  const handleSearchButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!isLocationEmpty) {
+      navigate('/mapa', { state: { location } });
+    }
+  };
+
+  const handleSearchButtonByLocationClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const successFunction = (position: GeolocationPosition) => {
+      const { coords } = position;
+      const { latitude: lat, longitude: lng } = coords;
+
+      navigate('/mapa', { state: { coords: { lat, lng } } });
+    };
+    const errorFunction = (error: GeolocationPositionError) => {
+      console.warn('ERROR(' + error.code + '): ' + error.message);
+    };
+    const getCurrentPositionOptions = { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 };
+
+    navigator.geolocation.getCurrentPosition(successFunction, errorFunction, getCurrentPositionOptions);
+  };
 
   return (
     <>
@@ -38,13 +61,18 @@ const Search = () => {
         <input
           className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0'}
           placeholder={'Ingresá la ubicación'}
-          value={ubicacion}
-          onChange={handleUbicacionChange}
+          value={location}
+          onChange={handleLocationChange}
         />
-        <Button className={'bg-white w-full my-5'} disabled={isDisabled} type={'primary'}>
+        <Button
+          className={'bg-white w-full my-5'}
+          disabled={isLocationEmpty}
+          type={'primary'}
+          onClick={handleSearchButtonClicked}
+        >
           Buscar
         </Button>
-        <Button className={'w-full my-5'} type={'secondary'}>
+        <Button className={'w-full my-5'} type={'secondary'} onClick={handleSearchButtonByLocationClicked}>
           Buscar por mi ubicación actual
         </Button>
       </MainContainer>

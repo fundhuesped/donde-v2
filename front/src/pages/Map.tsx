@@ -6,6 +6,7 @@ import { Pill } from '../components/Pill';
 import GoogleMapReact from 'google-map-react';
 import { Marker } from '../components/Marker';
 import MainContainer from '../components/MainContainer';
+import { useLocation } from 'react-router-dom';
 
 const markers = [
   {
@@ -30,7 +31,21 @@ export type MapProps = {
   zoom?: number;
 };
 
+interface Location {
+  state: {
+    location?: string;
+    coords?: {
+      lat: number;
+      lng: number;
+    };
+  };
+}
+
 export const Map = React.memo<MapProps>((props) => {
+  const { state } = useLocation() as Location;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { location, coords } = state;
+
   const { centerLat, centerLng, zoom = 14 } = props;
   return (
     <>
