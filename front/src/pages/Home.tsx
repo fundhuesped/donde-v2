@@ -1,9 +1,10 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { ServiceButton } from '../ServiceButton';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { ReactComponent as TestDeVIH } from '../assets/images/TestDeVIH.svg';
 import MainContainer from '../components/MainContainer';
+import isEmpty from 'lodash/isEmpty';
 
 interface Service {
   id: string;
@@ -15,6 +16,7 @@ interface Service {
 const Home = () => {
   const [services, setServices] = useState<Service[]>([]);
   const isDisabled = !services.some((service) => service.active);
+  const navigate = useNavigate();
 
   const handleServiceButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -30,8 +32,11 @@ const Home = () => {
   };
 
   const search = (servicesToSearch: Service[]) => {
-    // do something
     console.log(servicesToSearch);
+
+    if (!isEmpty(servicesToSearch)) {
+      navigate('/buscar');
+    }
   };
 
   const handleSearchAllButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -47,6 +52,7 @@ const Home = () => {
       const hardcodedServices = [{ id: 'test-its', icon: <TestDeVIH />, description: 'Test de HIV', active: false }];
       setServices(hardcodedServices);
     }
+
     fetchServices();
   }, []);
 
@@ -72,16 +78,12 @@ const Home = () => {
             />
           );
         })}
-        <Link to="/buscar">
-          <Button className={'bg-white w-full my-5'} disabled={isDisabled} type={'primary'} onClick={handleSearchButtonClicked}>
-            Buscar
-          </Button>
-        </Link>
-        <Link to="/buscar">
-          <Button className={'w-full my-5'} type={'secondary'} onClick={handleSearchAllButtonClicked}>
-            Buscar todos los servicios
-          </Button>
-        </Link>
+        <Button className={'bg-white w-full my-5'} disabled={isDisabled} type={'primary'} onClick={handleSearchButtonClicked}>
+          Buscar
+        </Button>
+        <Button className={'w-full my-5'} type={'secondary'} onClick={handleSearchAllButtonClicked}>
+          Buscar todos los servicios
+        </Button>
       </MainContainer>
     </>
   );
