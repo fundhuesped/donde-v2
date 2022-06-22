@@ -7,16 +7,16 @@ import GoogleMapReact from 'google-map-react';
 import { Marker } from '../components/Marker';
 import MainContainer from '../components/MainContainer';
 import {useLocation, useNavigate} from 'react-router-dom';
-import places from '../assets/establecimientos.json'
+import places from '../assets/establishments.json';
 import {BackButton} from "../components/BackButton";
 
 const markers = places.flatMap((place, index) => { // TODO: no se si es el mejor lugar para hacer esto
-  if (typeof place.latitude !== 'number' || typeof place.longitude !== 'number') return []
+  if (typeof place.lat !== 'number' || typeof place.lng !== 'number') return []
   return [{
+    ...place,
     key: index,
-    lat: place.latitude,
-    lng: place.longitude,
-    ...place
+    lat: place.lat,
+    lng: place.lng,
   }]
 })
 
