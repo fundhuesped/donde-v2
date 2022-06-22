@@ -33,15 +33,18 @@ export type MapProps = {
 
 interface Location {
   state: {
-    ubicacion: string;
+    location?: string;
+    coords?: {
+      lat: number;
+      lng: number;
+    };
   };
 }
 
 export const Map = React.memo<MapProps>((props) => {
   const { state } = useLocation() as Location;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // Esto es lo que mandamos de la ubicación manual
-  const { ubicacion } = state;
+  const { location, coords } = state;
 
   const { centerLat, centerLng, zoom = 14 } = props;
   return (

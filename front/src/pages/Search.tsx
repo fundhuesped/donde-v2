@@ -15,17 +15,32 @@ const SelectedService = (props: { label: string }) => (
 const Search = () => {
   const navigate = useNavigate();
 
-  const [ubicacion, setUbicacion] = useState('');
-  const isUbicacionEmpty = isEmpty(ubicacion);
+  const [location, setLocation] = useState('');
+  const isLocationEmpty = isEmpty(location);
 
-  const handleUbicacionChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setUbicacion(event.currentTarget.value);
+  const handleLocationChange = (event: React.FormEvent<HTMLInputElement>) => {
+    setLocation(event.currentTarget.value);
   };
 
   const handleSearchButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (!isUbicacionEmpty) {
-      navigate('/mapa', { state: { ubicacion } });
+    if (!isLocationEmpty) {
+      navigate('/mapa', { state: { location } });
     }
+  };
+
+  const handleSearchButtonByLocationClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const successFunction = (position: GeolocationPosition) => {
+      const { coords } = position;
+      const { latitude: lat, longitude: lng } = coords;
+
+      navigate('/mapa', { state: { coords: { lat, lng } } });
+    };
+    const errorFunction = (error: GeolocationPositionError) => {
+      console.warn('ERROR(' + error.code + '): ' + error.message);
+    };
+    const getCurrentPositionOptions = { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 };
+
+    navigator.geolocation.getCurrentPosition(successFunction, errorFunction, getCurrentPositionOptions);
   };
 
   return (
@@ -46,18 +61,18 @@ const Search = () => {
         <input
           className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0'}
           placeholder={'Ingresá la ubicación'}
-          value={ubicacion}
-          onChange={handleUbicacionChange}
+          value={location}
+          onChange={handleLocationChange}
         />
         <Button
           className={'bg-white w-full my-5'}
-          disabled={isUbicacionEmpty}
+          disabled={isLocationEmpty}
           type={'primary'}
           onClick={handleSearchButtonClicked}
         >
           Buscar
         </Button>
-        <Button className={'w-full my-5'} type={'secondary'}>
+        <Button className={'w-full my-5'} type={'secondary'} onClick={handleSearchButtonByLocationClicked}>
           Buscar por mi ubicación actual
         </Button>
       </MainContainer>
