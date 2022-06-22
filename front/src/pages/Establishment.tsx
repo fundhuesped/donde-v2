@@ -6,9 +6,7 @@ import { Card, CardHeader, CardList, CardListItem, CardParagraph, CardSubHeader 
 import { ClockIcon, LocationMarkerIcon, GlobeAltIcon } from '@heroicons/react/outline';
 import { PhoneIcon, ShareIcon } from '@heroicons/react/solid';
 import { ReactComponent as WhatsAppLogo } from '../assets/images/WhatsAppLogo.svg';
-
-import React from 'react';
-import { ReactComponent as TestDeVIH } from '../assets/images/TestDeVIH.svg';
+import React, { ReactNode } from 'react';
 
 interface WebSiteButtonProps {
   website: string;
@@ -58,17 +56,27 @@ const ShareButton = () => {
   );
 };
 
-export const Establishment = () => {
-  const name = 'BIOLAB SRL';
-  const type = 'Privado';
-  const address = 'M. Moreno 449, Santa Rosa, La Pampa';
-  const addressNotes = '';
-  const businessHours = 'Lunes a viernes 7 a 11 Hs';
-  const services = [{ id: 'test-hiv', name: 'Test de HIV', icon: <TestDeVIH /> }];
-  const website = 'https://www.biolabsrl.com.ar';
-  const phone = '02954814366';
-  const whatsApp = '2954427081';
-  const additionalInfo = 'Se necesitan 8 Hs de ayuno. El resultado es  ario.';
+interface Service {
+  id: string;
+  name: string;
+  icon: ReactNode;
+}
+
+interface EstablishmentProps {
+  name: string;
+  type: string;
+  address: string;
+  addressNotes?: string;
+  businessHours: string;
+  services: Service[];
+  website?: string;
+  phone?: string;
+  whatsAppPhone?: string;
+  additionalInfo?: string;
+}
+
+export const Establishment = React.memo<EstablishmentProps>((props) => {
+  const { name, type, address, addressNotes, businessHours, services, website, phone, whatsAppPhone, additionalInfo } = props;
 
   return (
     <>
@@ -113,9 +121,9 @@ export const Establishment = () => {
           {website && <WebSiteButton website={website} />}
           {phone && <PhoneButton phone={phone} />}
           <ShareButton />
-          {whatsApp && <WhatsAppButton phone={whatsApp} />}
+          {whatsAppPhone && <WhatsAppButton phone={whatsAppPhone} />}
         </div>
       </MainContainer>
     </>
   );
-};
+});
