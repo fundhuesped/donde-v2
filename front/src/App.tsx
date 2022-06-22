@@ -6,6 +6,7 @@ import Search from './pages/Search';
 import Map from './pages/Map';
 import { Establishment } from './pages/Establishment';
 import { ReactComponent as TestDeVIH } from './assets/images/TestDeVIH.svg';
+import About from "./pages/About";
 
 const exampleEstablishment = {
   name: 'BIOLAB SRL',
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="/buscar" element={<Search />} />
         <Route path="/mapa" element={<Map />} />
         <Route path="/establecimiento" element={<Establishment {...exampleEstablishment} />} />
+        <Route path="/sobre-donde" element={<About />} />
       </Routes>
     </div>
   );
