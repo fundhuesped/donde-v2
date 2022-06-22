@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
 import isEmpty from 'lodash/isEmpty';
-import {BackButton} from "../components/BackButton";
+import { BackButton } from '../components/BackButton';
 
 const SelectedService = (props: { label: string }) => (
   <Button type="secondary" className="h-8 mt-2 mb-1" disabled={true}>
