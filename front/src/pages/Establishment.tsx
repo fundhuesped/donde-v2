@@ -18,8 +18,7 @@ const WebSiteButton = React.memo<WebSiteButtonProps>((props) => {
   const { website } = props;
   return (
     <a href={website} role="button">
-      <Icon type="secondary" circle={true} icon={<GlobeAltIcon className={'text-primary'} />} />
-      <div className={'pt-2 text-center text-xs text-primary'}>Sitio Web</div>
+      <Icon type="secondary" circle={true} icon={<GlobeAltIcon className={'text-primary'} />} label={'Sitio Web'} />
     </a>
   );
 });
@@ -32,8 +31,7 @@ const PhoneButton = React.memo<PhoneButtonProps>((props) => {
   const { phone } = props;
   return (
     <a href={'tel:' + phone} role="button">
-      <Icon type="secondary" circle={true} icon={<PhoneIcon className={'text-primary'} />} />
-      <div className={'pt-2 text-center text-xs text-primary'}>Llamar</div>
+      <Icon type="secondary" circle={true} icon={<PhoneIcon className={'text-primary'} />} label={'Llamar'} />
     </a>
   );
 });
@@ -47,8 +45,7 @@ const WhatsAppButton = React.memo<WhatsAppButtonProps>((props) => {
   return (
     // https://faq.whatsapp.com/general/chats/how-to-use-click-to-chat
     <a href={'https://wa.me/' + phone} role="button">
-      <Icon type="secondary" circle={true} icon={<WhatsAppLogo />} />
-      <div className={'pt-2 text-center text-xs text-primary'}>WhatsApp</div>
+      <Icon type="secondary" circle={true} icon={<WhatsAppLogo />} label={'WhatsApp'} />
     </a>
   );
 });
@@ -56,8 +53,7 @@ const WhatsAppButton = React.memo<WhatsAppButtonProps>((props) => {
 const ShareButton = () => {
   return (
     <button>
-      <Icon type="secondary" circle={true} icon={<ShareIcon className={'text-primary'} />} />
-      <div className={'pt-2 text-center text-xs text-primary'}>Compartir</div>
+      <Icon type="secondary" circle={true} icon={<ShareIcon className={'text-primary'} />} label={'Compartir'} />
     </button>
   );
 };
