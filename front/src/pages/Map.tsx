@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { LocationMarkerIcon, ClockIcon, SupportIcon, XIcon } from '@heroicons/react/outline';
 import { Card, CardHeader, CardListItem, CardList } from '../components/Card';
 import classNames from 'classnames';
@@ -34,6 +34,21 @@ const Map = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { location, coords } = state;
 
+  const [activeMarker, setActiveMarker] = useState<any>(null);
+  const handleMarkerClick = (marker:number) => {
+    setActiveMarker(markers[marker-1])
+  }
+
+  const handleClose = () => {
+    setActiveMarker(null)
+  }
+
+  const placeInfo = (data:string|number) => {
+    if (typeof data === 'number') return data
+    if (data.toLowerCase() === "null") return ''
+    return data
+  }
+
   return (
     <>
       <MainContainer className={'relative overflow-hidden px-0'}>
@@ -50,6 +65,7 @@ const Map = () => {
             }}
             center={ coords }
             zoom={ 14 }
+            onChildClick={handleMarkerClick}
           >
             {markers.map((marker) => (
               <Marker {...marker} />
@@ -57,24 +73,27 @@ const Map = () => {
           </GoogleMapReact>
         </div>
 
-        <Card className={'fixed bottom-8 right-4 left-4'}>
-          <header className={'flex flex-row justify-between items-center mb-2'}>
-            <CardHeader>Nombre del establecimiento</CardHeader>
-            <span className={'w-5 text-dark-gray'}>
-              <XIcon />
+        {activeMarker !== null &&
+            <Card className={'fixed bottom-8 right-4 left-4'}>
+              <header className={'flex flex-row justify-between items-center mb-2'}>
+                <CardHeader>{activeMarker.establecimiento}</CardHeader>
+                <span className={'w-5 text-dark-gray'}>
+              <XIcon onClick={handleClose} />
             </span>
-          </header>
-          <CardList>
-            <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
-              Calle 1234, CABA <span className={'text-xs text-medium-gray'}>- A 400 metros</span>
-            </CardListItem>
-            <CardListItem icon={<ClockIcon className={'text-primary'} />}>Lunes a Sábados de 9 a 20 hs</CardListItem>
-            <CardListItem icon={<SupportIcon className={'text-primary'} />}>Test de HIV</CardListItem>
-          </CardList>
-          <footer className={classNames('mt-4')}>
-            <Pill>Cargado por Fundación Huesped</Pill>
-          </footer>
-        </Card>
+              </header>
+              <CardList>
+                <CardListItem icon={<LocationMarkerIcon className={'text-primary'}/>}>
+                  {`${placeInfo(activeMarker.calle)} ${placeInfo(activeMarker.altura)}, ${placeInfo(activeMarker.nombre_ciudad)}`}
+                  {/*<span className={'text-xs text-medium-gray'}>- A 400 metros</span>*/}
+                </CardListItem>
+                {activeMarker.horario_testeo.toLowerCase() !== 'null' && <CardListItem icon={<ClockIcon className={'text-primary'}/>}>{activeMarker.horario_testeo}</CardListItem> }
+                <CardListItem icon={<SupportIcon className={'text-primary'}/>}>Test de HIV</CardListItem>
+              </CardList>
+              <footer className={classNames('mt-4')}>
+                <Pill>Cargado por Fundación Huesped</Pill>
+              </footer>
+            </Card>
+        }
       </MainContainer>
     </>
   );
