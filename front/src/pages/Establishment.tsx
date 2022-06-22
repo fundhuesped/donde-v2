@@ -11,7 +11,6 @@ import React from 'react';
 import { ReactComponent as Condones } from '../assets/images/Condones.svg';
 import { ReactComponent as TestDeVIH } from '../assets/images/TestDeVIH.svg';
 
-
 interface WebSiteButtonProps {
   website: string;
 }
@@ -94,10 +93,10 @@ export const Establishment = () => {
     <>
       <BackButton />
       <MainContainer>
-        <div className={'mt-10 ml-4'}>
+        <header className={'mt-10 ml-4'}>
           <CardHeader className={'font-title text-lg'}>{name}</CardHeader>
           <CardParagraph>{type}</CardParagraph>
-        </div>
+        </header>
         <Card className={'my-4'}>
           <CardList>
             <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
