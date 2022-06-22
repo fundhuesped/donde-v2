@@ -7,23 +7,17 @@ import GoogleMapReact from 'google-map-react';
 import { Marker } from '../components/Marker';
 import MainContainer from '../components/MainContainer';
 import { useLocation } from 'react-router-dom';
+import places from '../assets/establecimientos.json'
 
-const markers = [
-  {
-    key: 1,
-    lat: -34.602086,
-    lng: -58.384543,
-    address: 'Tribunales',
-    schedule: 'Lunes a Viernes de 12 a 18',
-  },
-  {
-    key: 2,
-    lat: -34.592057,
-    lng: -58.401208,
-    address: 'Pueyrredon',
-    schedule: 'Lunes a Viernes de 12 a 18',
-  },
-];
+const markers = places.flatMap((place, index) => { // TODO: no se si es el mejor lugar para hacer esto
+  if (typeof place.latitude !== 'number' || typeof place.longitude !== 'number') return []
+  return [{
+    key: index,
+    lat: place.latitude,
+    lng: place.longitude,
+    ...place
+  }]
+})
 
 interface Location {
   state: {

@@ -5,8 +5,6 @@ import classNames from 'classnames';
 export type MarkerProps = {
   lat: number;
   lng: number;
-  address: string;
-  schedule: string;
 };
 
 export const Marker = React.memo<MarkerProps>((props) => {
