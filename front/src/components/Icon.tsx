@@ -21,9 +21,9 @@ export const Icon = React.memo<IconProps>((props) => {
         { 'w-8 h-8 p-1.5': size === 'medium' },
         { 'w-14 h-14 p-4': size === 'large' },
         { 'rounded-full': circle },
-        { 'bg-primary': type === 'primary' && !disabled },
-        { 'bg-gray-400': type === 'primary' && disabled },
-        { 'bg-secondary': type === 'tertiary' },
+        { 'bg-wingu-primary': type === 'primary' && !disabled },
+        { 'bg-wingu-gray-400': type === 'primary' && disabled },
+        { 'bg-wingu-secondary': type === 'tertiary' },
         { 'bg-white': type === 'secondary' },
       )}
     >
