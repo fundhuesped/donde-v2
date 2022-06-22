@@ -3,6 +3,7 @@ import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
 import isEmpty from 'lodash/isEmpty';
 import { BackButton } from '../components/BackButton';
+import { useNavigate } from 'react-router-dom';
 
 const SelectedService = (props: { label: string }) => (
   <Button type="secondary" className="h-8 mt-2 mb-1" disabled={true}>
@@ -12,13 +13,20 @@ const SelectedService = (props: { label: string }) => (
 );
 
 const Search = () => {
+  const navigate = useNavigate();
+
   const [ubicacion, setUbicacion] = useState('');
+  const isUbicacionEmpty = isEmpty(ubicacion);
 
   const handleUbicacionChange = (event: React.FormEvent<HTMLInputElement>) => {
     setUbicacion(event.currentTarget.value);
   };
 
-  const isDisabled = isEmpty(ubicacion);
+  const handleSearchButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!isUbicacionEmpty) {
+      navigate('/mapa', { state: { ubicacion } });
+    }
+  };
 
   return (
     <>
@@ -41,7 +49,12 @@ const Search = () => {
           value={ubicacion}
           onChange={handleUbicacionChange}
         />
-        <Button className={'bg-white w-full my-5'} disabled={isDisabled} type={'primary'}>
+        <Button
+          className={'bg-white w-full my-5'}
+          disabled={isUbicacionEmpty}
+          type={'primary'}
+          onClick={handleSearchButtonClicked}
+        >
           Buscar
         </Button>
         <Button className={'w-full my-5'} type={'secondary'}>
