@@ -32,7 +32,7 @@ type CardSubHeaderProps = React.PropsWithChildren<{
 export const CardSubHeader = React.memo<CardSubHeaderProps>((props) => {
   const { className, children, ...restProps } = props;
   return (
-    <h4 className={classNames(className, 'pt-6 pb-2 text-xs text-wingu-gray-400')} {...restProps}>
+    <h4 className={classNames(className, 'text-xs text-medium-gray mb-2 mt-5')} {...restProps}>
       {children}
     </h4>
   );
@@ -42,12 +42,8 @@ type CardParagraphProps = React.PropsWithChildren<{
   className?: string;
 }>;
 export const CardParagraph = React.memo<CardParagraphProps>((props) => {
-  const { className, children, ...restProps } = props;
-  return (
-    <p className={classNames(className, 'text-sm leading-6')} {...restProps}>
-      {children}
-    </p>
-  );
+  const { className, children } = props;
+  return <p className={classNames(className, 'text-black text-sm leading-6')}>{children}</p>;
 });
 
 type CardIconListProps = React.PropsWithChildren<{}>;
