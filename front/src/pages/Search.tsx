@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { ChevronLeftIcon } from '@heroicons/react/solid';
 import { Button } from '../components/Button';
-import { Link } from 'react-router-dom';
 import MainContainer from '../components/MainContainer';
 import isEmpty from 'lodash/isEmpty';
+import {BackButton} from "../components/BackButton";
 
 const SelectedService = (props: { label: string }) => (
   <Button type="secondary" className="h-8 mt-2 mb-1" disabled={true}>
@@ -24,9 +23,7 @@ const Search = () => {
   return (
     <>
       <div>
-        <Link to="/">
-          <ChevronLeftIcon className="h-8 w-8 ml-2 text-dark-gray" />
-        </Link>
+        <BackButton />
         <div className={'px-4'}>
           <p className="mt-2"> Estás buscando </p>
           <SelectedService label={'Test de HIV'} />
