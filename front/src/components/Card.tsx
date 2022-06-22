@@ -4,6 +4,7 @@ import { Icon, IconProps } from './Icon';
 
 type CardProps = React.PropsWithChildren<{
   className?: string;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
 }>;
 export const Card = React.memo<CardProps>((props) => {
   const { children, className, ...restProps } = props;

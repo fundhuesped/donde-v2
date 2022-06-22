@@ -6,7 +6,7 @@ import { Pill } from '../components/Pill';
 import GoogleMapReact from 'google-map-react';
 import { Marker } from '../components/Marker';
 import MainContainer from '../components/MainContainer';
-import { useLocation } from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import places from '../assets/establecimientos.json'
 
 const markers = places.flatMap((place, index) => { // TODO: no se si es el mejor lugar para hacer esto
@@ -30,6 +30,8 @@ interface Location {
 }
 
 const Map = () => {
+  const navigate = useNavigate();
+
   const { state } = useLocation() as Location;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { location, coords } = state;
@@ -47,6 +49,10 @@ const Map = () => {
     if (typeof data === 'number') return data
     if (data.toLowerCase() === "null") return ''
     return data
+  }
+
+  const handleDetailsClick = () => {
+    navigate('/establecimiento', { state: activeMarker });
   }
 
   return (
@@ -74,7 +80,7 @@ const Map = () => {
         </div>
 
         {activeMarker !== null &&
-            <Card className={'fixed bottom-8 right-4 left-4'}>
+            <Card onClick={handleDetailsClick} className={'fixed bottom-8 right-4 left-4'}>
               <header className={'flex flex-row justify-between items-center mb-2'}>
                 <CardHeader>{activeMarker.establecimiento}</CardHeader>
                 <span className={'w-5 text-dark-gray'}>
