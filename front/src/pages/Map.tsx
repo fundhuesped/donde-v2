@@ -8,6 +8,7 @@ import { Marker } from '../components/Marker';
 import MainContainer from '../components/MainContainer';
 import {useLocation, useNavigate} from 'react-router-dom';
 import places from '../assets/establecimientos.json'
+import {BackButton} from "../components/BackButton";
 
 const markers = places.flatMap((place, index) => { // TODO: no se si es el mejor lugar para hacer esto
   if (typeof place.latitude !== 'number' || typeof place.longitude !== 'number') return []
@@ -57,8 +58,9 @@ const Map = () => {
 
   return (
     <>
+      <BackButton />
       <MainContainer className={'relative overflow-hidden px-0'}>
-        <div className={classNames('w-full')} style={{ height: 'calc(100vh - 56px - 1.5rem)' }}>
+        <div className={classNames('w-full')} style={{ height: 'calc(100vh - 56px - 32px - 1.5rem)' }}>
           <GoogleMapReact
             bootstrapURLKeys={{
               key: '',
