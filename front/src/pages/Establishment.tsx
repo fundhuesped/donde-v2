@@ -3,7 +3,8 @@ import { BackButton } from '../components/BackButton';
 import { Icon } from '../components/Icon';
 import { Pill } from '../components/Pill';
 import { Card, CardHeader, CardList, CardListItem, CardParagraph, CardSubHeader } from '../components/Card';
-import { ClockIcon, LocationMarkerIcon, GlobeAltIcon, PhoneIcon, ShareIcon } from '@heroicons/react/outline';
+import { ClockIcon, LocationMarkerIcon, GlobeAltIcon } from '@heroicons/react/outline';
+import { PhoneIcon, ShareIcon } from '@heroicons/react/solid';
 import { ReactComponent as WhatsAppLogo } from '../assets/images/WhatsAppLogo.svg';
 
 import React from 'react';
@@ -79,7 +80,7 @@ const WhatsAppButton = React.memo<WhatsAppButtonProps>((props) => {
   );
 });
 
-export const Details = () => {
+export const Establishment = () => {
   const name = 'Nombre del establecimiento';
   const type = 'Tipo de establecimiento';
   const address = 'Calle 1234, CABA';
