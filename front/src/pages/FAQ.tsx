@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { QuestionMarkCircleIcon, ChevronDownIcon } from '@heroicons/react/outline';
 type AccordionItem = {
   id: string;
