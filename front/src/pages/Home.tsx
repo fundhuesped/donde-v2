@@ -56,26 +56,22 @@ const Home = () => {
 
   return (
     <>
-      <p className={'px-6 my-2 text-xl font-title text-justify'}>
+      <p className={'px-content my-4 text-xl font-title text-justify'}>
         <strong>Dónde</strong> es una plataforma que te permite encontrar servicios de salud en toda América Latina.
       </p>
-      <MainContainer>
-        <p className={'px-2 mt-6 text-xl font-title text-donde-black-100'}>
-          <strong> ¿Qué estás buscando? </strong>
-        </p>
-        <p className={'px-2 my-3 text-xs text-donde-black-100'}>Seleccioná los servicios que querés encontrar</p>
-        {services.map((service) => {
-          return (
-            <ServiceButton
-              key={service.id}
-              id={service.id}
-              icon={service.icon}
-              description={service.description}
-              active={service.active}
-              onClick={handleServiceButtonClicked}
-            />
-          );
-        })}
+      <MainContainer className={'mt-4 pt-8'}>
+        <h2 className={'text-xl text-black font-title font-bold'}>¿Qué estás buscando?</h2>
+        <p className={'text-xs text-black mt-2'}>Seleccioná los servicios que querés encontrar</p>
+        {services.map((service) => (
+          <ServiceButton
+            key={service.id}
+            id={service.id}
+            icon={service.icon}
+            description={service.description}
+            active={service.active}
+            onClick={handleServiceButtonClicked}
+          />
+        ))}
         <Button className={'bg-white w-full my-5'} disabled={isDisabled} type={'primary'} onClick={handleSearchButtonClicked}>
           Buscar
         </Button>

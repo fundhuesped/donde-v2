@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 export function Header() {
   return (
-    <header className={'flex justify-between mx-4 mt-10 mb-5'}>
+    <header className={'flex justify-between py-5 px-content'}>
       <Link to={'/'}>
         <DondeLogo />
       </Link>
