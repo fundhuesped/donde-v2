@@ -6,8 +6,8 @@ import Search from './pages/Search';
 import Map from './pages/Map';
 import { Establishment } from './pages/Establishment';
 import { ReactComponent as TestDeVIH } from './assets/images/TestDeVIH.svg';
-import About from "./pages/About";
-import FAQ from "./pages/FAQ";
+import About from './pages/About';
+import FAQ from './pages/FAQ';
 
 const exampleEstablishment = {
   name: 'BIOLAB SRL',
