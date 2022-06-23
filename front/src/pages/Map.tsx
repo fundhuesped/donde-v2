@@ -68,6 +68,7 @@ const Map = () => {
   };
 
   const placeInfo = (data: string | number) => {
+    if (!data) return '';
     if (typeof data === 'number') return data;
     if (data.toLowerCase() === 'null') return '';
     return data;
@@ -80,7 +81,7 @@ const Map = () => {
   return (
     <>
       <MainContainer className={'relative overflow-hidden px-0'}>
-        <div className={classNames('w-full')} style={{ height: 'calc(100vh - 56px - 32px - 1.5rem)' }}>
+        <div className={classNames('w-full')} style={{ height: 'calc(100vh - 56px - 1.5rem)' }}>
           <GoogleMapReact
             bootstrapURLKeys={{
               key: mapsApiKey,
@@ -114,7 +115,7 @@ const Map = () => {
                 {`${placeInfo(activeMarker.calle)} ${placeInfo(activeMarker.altura)}, ${placeInfo(activeMarker.nombre_ciudad)}`}
                 {/*<span className={'text-xs text-medium-gray'}>- A 400 metros</span>*/}
               </CardListItem>
-              {activeMarker.horario_testeo.toLowerCase() !== 'null' && (
+              {activeMarker.horario_testeo !== null && (
                 <CardListItem icon={<ClockIcon className={'text-primary'} />}>{activeMarker.horario_testeo}</CardListItem>
               )}
               <CardListItem icon={<SupportIcon className={'text-primary'} />}>Test de HIV</CardListItem>
