@@ -14,6 +14,35 @@ type Service = {
   selected: boolean;
 };
 
+interface SearchButtonProps {
+  enabled: boolean;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+const SearchButton = React.memo<SearchButtonProps>((props) => {
+  const { enabled, onClick } = props;
+
+  return (
+    <Button className={'bg-white w-full my-5'} disabled={!enabled} type={'primary'} onClick={onClick}>
+      Buscar
+    </Button>
+  );
+});
+
+interface SearchAllButtonProps {
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+const SearchAllButton = React.memo<SearchAllButtonProps>((props) => {
+  const { onClick } = props;
+
+  return (
+    <Button className={'w-full my-5'} type={'secondary'} onClick={onClick}>
+      Buscar todos los servicios
+    </Button>
+  );
+});
+
 const Home = React.memo(() => {
   const [services, setServices] = useState<Record<string, Service>>(
     Object.fromEntries(
@@ -53,11 +82,11 @@ const Home = React.memo(() => {
     }
   };
 
-  const handleSearchAllButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSearchAllButtonClicked = () => {
     search(Object.values(services));
   };
 
-  const handleSearchButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSearchButtonClicked = () => {
     search(Object.values(services).filter((service) => service.selected));
   };
 
@@ -79,17 +108,8 @@ const Home = React.memo(() => {
             onClick={() => toggleService(service.id)}
           />
         ))}
-        <Button
-          className={'bg-white w-full my-5'}
-          disabled={!servicesSelected}
-          type={'primary'}
-          onClick={handleSearchButtonClicked}
-        >
-          Buscar
-        </Button>
-        <Button className={'w-full my-5'} type={'secondary'} onClick={handleSearchAllButtonClicked}>
-          Buscar todos los servicios
-        </Button>
+        <SearchButton enabled={servicesSelected} onClick={handleSearchButtonClicked} />
+        {/*<SearchAllButton onClick={handleSearchAllButtonClicked} />*/}
       </MainContainer>
     </>
   );
