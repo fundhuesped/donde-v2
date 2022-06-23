@@ -7,6 +7,7 @@ import Map from './pages/Map';
 import { Establishment } from './pages/Establishment';
 import { ReactComponent as TestDeVIH } from './assets/images/TestDeVIH.svg';
 import About from "./pages/About";
+import FAQ from "./pages/FAQ";
 
 const exampleEstablishment = {
   name: 'BIOLAB SRL',
@@ -36,6 +37,8 @@ const App = () => {
         <Route path="/mapa" element={<Map />} />
         <Route path="/establecimiento" element={<Establishment {...exampleEstablishment} />} />
         <Route path="/sobre-donde" element={<About />} />
+        <Route path="/faq" element={<FAQ />} />
+
       </Routes>
     </div>
   );
