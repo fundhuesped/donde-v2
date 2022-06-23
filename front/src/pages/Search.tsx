@@ -33,18 +33,7 @@ const Search = () => {
   };
 
   const handleSearchButtonByLocationClicked = () => {
-    const successFunction = (position: GeolocationPosition) => {
-      const { coords } = position;
-      const { latitude: lat, longitude: lng } = coords;
-
-      navigate('/establecimientos', { state: { coords: { lat, lng } } });
-    };
-    const errorFunction = (error: GeolocationPositionError) => {
-      console.warn('ERROR(' + error.code + '): ' + error.message);
-    };
-    const getCurrentPositionOptions = { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 };
-
-    navigator.geolocation.getCurrentPosition(successFunction, errorFunction, getCurrentPositionOptions);
+    navigate('/establecimientos');
   };
 
   return (
