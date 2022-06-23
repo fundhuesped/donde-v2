@@ -5,7 +5,12 @@ import { Card, CardHeader, CardList, CardListItem, CardParagraph, CardSubHeader 
 import { ClockIcon, GlobeAltIcon, LocationMarkerIcon } from '@heroicons/react/outline';
 import { PhoneIcon, ShareIcon } from '@heroicons/react/solid';
 import { ReactComponent as WhatsAppLogo } from '../assets/images/WhatsAppLogo.svg';
-import React, { ReactNode } from 'react';
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import places from '../assets/establishments.json';
+import services from '../assets/services.json';
+import { formatEstablishmentLocation } from '../utils/establishments';
+import { SERVICE_ICONS } from '../config/services';
 
 interface WebSiteButtonProps {
   website: string;
@@ -67,27 +72,29 @@ const ShareButton = (props: { name: string }) => {
   );
 };
 
-interface Service {
-  id: string;
-  name: string;
-  icon: ReactNode;
-}
+export const Establishment = React.memo(() => {
+  const { id: idParam } = useParams();
+  const id = idParam ? parseInt(idParam) : undefined;
+  const establishment = places.find((place) => place.placeId === id);
 
-interface EstablishmentProps {
-  name: string;
-  type: string;
-  address: string;
-  addressNotes?: string;
-  businessHours: string;
-  services: Service[];
-  website?: string;
-  phone?: string;
-  whatsAppPhone?: string;
-  additionalInfo?: string;
-}
+  if (!establishment) {
+    return null;
+  }
+  console.log(establishment);
 
-export const Establishment = React.memo<EstablishmentProps>((props) => {
-  const { name, type, address, addressNotes, businessHours, services, website, phone, whatsAppPhone, additionalInfo } = props;
+  const addressNotes = null;
+  const whatsAppPhone = null;
+
+  const {
+    establecimiento: name,
+    tipo: type,
+    horario_testeo: businessHours,
+    web_testeo: website,
+    tel_testeo: phone,
+    observaciones_testeo: additionalInfo,
+  } = establishment;
+
+  const address = formatEstablishmentLocation(establishment);
 
   return (
     <>
@@ -101,14 +108,14 @@ export const Establishment = React.memo<EstablishmentProps>((props) => {
             <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
               {address} {addressNotes && <span className={'text-xs text-medium-gray'}>- {addressNotes}</span>}
             </CardListItem>
-            <CardListItem icon={<ClockIcon className={'text-primary'} />}>{businessHours}</CardListItem>
+            {businessHours && <CardListItem icon={<ClockIcon className={'text-primary'} />}>{businessHours}</CardListItem>}
           </CardList>
 
           <CardSubHeader>Servicios disponibles</CardSubHeader>
           <CardList>
             {services.map((service) => {
               return (
-                <CardListItem key={service.id} icon={service.icon}>
+                <CardListItem key={service.id} icon={SERVICE_ICONS[service.id]}>
                   {service.name}
                 </CardListItem>
               );

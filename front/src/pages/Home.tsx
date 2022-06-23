@@ -2,14 +2,10 @@ import React, { ReactNode, useState } from 'react';
 import { ServiceButton } from '../ServiceButton';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
-import { ReactComponent as TestDeVIH } from '../assets/images/TestDeVIH.svg';
 import MainContainer from '../components/MainContainer';
 import isEmpty from 'lodash/isEmpty';
 import servicesData from '../assets/services.json';
-
-const SERVICE_ICONS: Record<string, ReactNode> = {
-  'test-hiv': <TestDeVIH />,
-};
+import { SERVICE_ICONS } from '../config/services';
 
 type Service = {
   id: string;

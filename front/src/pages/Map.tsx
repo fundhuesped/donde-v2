@@ -8,6 +8,7 @@ import { Marker } from '../components/Marker';
 import MainContainer from '../components/MainContainer';
 import { useLocation, useNavigate } from 'react-router-dom';
 import places from '../assets/establishments.json';
+import { formatEstablishmentLocation } from '../utils/establishments';
 
 const markers = places.flatMap((place, index) => {
   // TODO: no se si es el mejor lugar para hacer esto
@@ -94,15 +95,8 @@ const Map = () => {
     setActiveMarker(null);
   };
 
-  const placeInfo = (data: string | number) => {
-    if (!data) return '';
-    if (typeof data === 'number') return data;
-    if (data.toLowerCase() === 'null') return '';
-    return data;
-  };
-
   const handleDetailsClick = () => {
-    navigate(`/establecimiento/${activeMarker.placeId}`);
+    navigate(`/establecimientos/${activeMarker.placeId}`);
   };
 
   return (
@@ -141,9 +135,7 @@ const Map = () => {
                 </header>
                 <CardList>
                   <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
-                    {`${placeInfo(activeMarker.calle)} ${placeInfo(activeMarker.altura)}, ${placeInfo(
-                      activeMarker.nombre_ciudad,
-                    )}`}
+                    {formatEstablishmentLocation(activeMarker)}
                     {/*<span className={'text-xs text-medium-gray'}>- A 400 metros</span>*/}
                   </CardListItem>
                   {activeMarker.horario_testeo !== null && (
