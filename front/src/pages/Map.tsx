@@ -3,7 +3,7 @@ import { ClockIcon, LocationMarkerIcon, SupportIcon, XIcon } from '@heroicons/re
 import { Card, CardHeader, CardList, CardListItem } from '../components/Card';
 import classNames from 'classnames';
 import { Pill } from '../components/Pill';
-import GoogleMapReact, {Coords} from 'google-map-react';
+import GoogleMapReact, { Coords } from 'google-map-react';
 import { Marker } from '../components/Marker';
 import MainContainer from '../components/MainContainer';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -32,31 +32,31 @@ interface Location {
   };
 }
 
-const mapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY
-if (!mapsApiKey) throw new Error('REACT_APP_GOOGLE_MAPS_API_KEY env var is not set')
-const defaultCoords = { lat: -34.6989000, lng: -64.7597000}
-const defaultZoom = 14
+const mapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+if (!mapsApiKey) throw new Error('REACT_APP_GOOGLE_MAPS_API_KEY env var is not set');
+const defaultCoords = { lat: -34.6989, lng: -64.7597 };
+const defaultZoom = 14;
 
 const Map = () => {
-  const getCoordinates = (coords:{lat:number, lng:number}|undefined, location: string|undefined):[Coords, number] => {
+  const getCoordinates = (coords: { lat: number; lng: number } | undefined, location: string | undefined): [Coords, number] => {
     if (coords) {
-      return [coords, defaultZoom]
+      return [coords, defaultZoom];
     }
     if (location) {
-      const place = markers.find(place => location.toLowerCase().includes(place.nombre_partido.toLowerCase()))
+      const place = markers.find((place) => location.toLowerCase().includes(place.nombre_partido.toLowerCase()));
       if (place) {
-        const placeCoords = { lat: place.lat, lng: place.lng }
-        return [placeCoords, 12]
+        const placeCoords = { lat: place.lat, lng: place.lng };
+        return [placeCoords, 12];
       }
     }
-    return [defaultCoords, 5]
-  }
+    return [defaultCoords, 5];
+  };
 
   const navigate = useNavigate();
 
   const { state } = useLocation() as Location;
   const { location, coords } = state;
-  const [centerCoordinates, zoom] = getCoordinates(coords, location)
+  const [centerCoordinates, zoom] = getCoordinates(coords, location);
 
   const [activeMarker, setActiveMarker] = useState<any>(null);
   const handleMarkerClick = (marker: number) => {
