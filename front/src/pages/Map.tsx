@@ -30,6 +30,9 @@ interface Location {
   };
 }
 
+const mapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+if (!mapsApiKey) throw new Error('REACT_APP_GOOGLE_MAPS_API_KEY env var is not set')
+
 const Map = () => {
   const navigate = useNavigate();
 
@@ -63,7 +66,7 @@ const Map = () => {
         <div className={classNames('w-full')} style={{ height: 'calc(100vh - 56px - 32px - 1.5rem)' }}>
           <GoogleMapReact
             bootstrapURLKeys={{
-              key: '',
+              key: mapsApiKey,
               language: 'es',
               region: 'ar',
             }}
