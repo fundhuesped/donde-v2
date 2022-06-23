@@ -12,6 +12,7 @@ module.exports = {
         'medium-gray': '#A3A3AF',
         'light-gray': '#D1D1D7',
         'ultra-light-gray': '#F0F0F2',
+        'ultra-light-salmon': '#fceaed',
       },
       fontFamily: {
         sans: ['Open-sans', ...defaultTheme.fontFamily.sans],
