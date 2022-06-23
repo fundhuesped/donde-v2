@@ -127,7 +127,7 @@ const Map = () => {
             </div>
 
             {activeMarker !== null && (
-              <Card onClick={handleDetailsClick} className={'fixed bottom-8 right-4 left-4'}>
+              <Card onClick={handleDetailsClick} className={'fixed bottom-8 right-4 left-4 cursor-pointer'}>
                 <header className={'flex flex-row justify-between items-center mb-2'}>
                   <CardHeader>{activeMarker.establecimiento}</CardHeader>
                   <button className={'w-5 text-dark-gray'} onClick={handleClose}>
