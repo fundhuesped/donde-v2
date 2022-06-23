@@ -3,7 +3,7 @@ import { MenuIcon, InformationCircleIcon, ChatAltIcon } from '@heroicons/react/o
 import { ReactComponent as DondeLogo } from './assets/images/DondeLogo.svg';
 import { Button } from './components/Button';
 import MainContainer from './components/MainContainer';
-import {Link, useNavigate, useLocation} from 'react-router-dom';
+import { Link, useNavigate , useLocation} from 'react-router-dom';
 import { BackButton } from './components/BackButton';
 
 export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: () => void }) {
@@ -32,7 +32,7 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
         <div className={'absolute min-h-full w-full left-0 top-10 flex'}>
           <MainContainer>
             <Button
-                onClick={() => handleClickMenuItem('/sobre-donde')}
+              onClick={() => handleClickMenuItem('/sobre-donde')}
               className={'border-ultra-light-gray '}
               type={'tertiary'}
               alignment={'left'}
@@ -41,8 +41,8 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
               Sobre Dónde
             </Button>
 
-              <Button
-                  onClick={() => handleClickMenuItem('/faq')}
+            <Button
+              onClick={() => handleClickMenuItem('/faq')}
               className={'border-ultra-light-gray'}
               type={'tertiary'}
               alignment={'left'}
