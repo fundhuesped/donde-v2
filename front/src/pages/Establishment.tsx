@@ -80,7 +80,6 @@ export const Establishment = React.memo(() => {
   if (!establishment) {
     return null;
   }
-  console.log(establishment);
 
   const addressNotes = null;
   const whatsAppPhone = null;
