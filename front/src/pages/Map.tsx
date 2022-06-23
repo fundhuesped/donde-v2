@@ -3,7 +3,7 @@ import { LocationMarkerIcon, ClockIcon, SupportIcon, XIcon } from '@heroicons/re
 import { Card, CardHeader, CardListItem, CardList } from '../components/Card';
 import classNames from 'classnames';
 import { Pill } from '../components/Pill';
-import GoogleMapReact from 'google-map-react';
+import GoogleMapReact, {Coords} from 'google-map-react';
 import { Marker } from '../components/Marker';
 import MainContainer from '../components/MainContainer';
 import {useLocation, useNavigate} from 'react-router-dom';
@@ -30,12 +30,31 @@ interface Location {
   };
 }
 
+const mapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+if (!mapsApiKey) throw new Error('REACT_APP_GOOGLE_MAPS_API_KEY env var is not set')
+const defaultCoords = { lat: -34.6989000, lng: -64.7597000}
+const defaultZoom = 14
+
 const Map = () => {
+  const getCoordinates = (coords:{lat:number, lng:number}|undefined, location: string|undefined):[Coords, number] => {
+    if (coords) {
+      return [coords, defaultZoom]
+    }
+    if (location) {
+      const place = markers.find(place => location.toLowerCase().includes(place.nombre_partido.toLowerCase()))
+      if (place) {
+        const placeCoords = { lat: place.lat, lng: place.lng }
+        return [placeCoords, 12]
+      }
+    }
+    return [defaultCoords, 5]
+  }
+
   const navigate = useNavigate();
 
   const { state } = useLocation() as Location;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { location, coords } = state;
+  const [centerCoordinates, zoom] = getCoordinates(coords, location)
 
   const [activeMarker, setActiveMarker] = useState<any>(null);
   const handleMarkerClick = (marker:number) => {
@@ -63,7 +82,7 @@ const Map = () => {
         <div className={classNames('w-full')} style={{ height: 'calc(100vh - 56px - 32px - 1.5rem)' }}>
           <GoogleMapReact
             bootstrapURLKeys={{
-              key: '',
+              key: mapsApiKey,
               language: 'es',
               region: 'ar',
             }}
@@ -71,8 +90,8 @@ const Map = () => {
               fullscreenControl: false,
               zoomControl: false,
             }}
-            center={ coords }
-            zoom={ 14 }
+            center={ centerCoordinates }
+            zoom={ zoom }
             onChildClick={handleMarkerClick}
           >
             {markers.map((marker) => (
