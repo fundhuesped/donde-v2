@@ -1,15 +1,20 @@
 import React from 'react';
 import { MenuIcon } from '@heroicons/react/outline';
 import { ReactComponent as DondeLogo } from './assets/images/DondeLogo.svg';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { BackButton } from './components/BackButton';
 
 export function Header() {
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+
   return (
-    <header className={'flex justify-between py-5 px-content'}>
+    <header className={'flex items-center py-5 px-content'}>
+      {!isHome && <BackButton />}
       <Link to={'/'}>
-        <DondeLogo />
+        <DondeLogo className={'translate-y-0.5'} />
       </Link>
-      <MenuIcon className="h-6 w-5 text-dark-gray" />
+      <MenuIcon className="w-6 text-dark-gray ml-auto" />
     </header>
   );
 }

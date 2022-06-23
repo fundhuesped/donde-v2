@@ -39,8 +39,7 @@ const Search = () => {
 
   return (
     <>
-      <div>
-        <BackButton />
+      <div className={'mt-2'}>
         <div className={'px-content'}>
           <p className="text-black text-xs mb-2">Estás buscando</p>
           <Pill>Test de HIV</Pill>
