@@ -91,7 +91,8 @@ const Map = () => {
     setActiveMarker(markers[marker - 1]);
   };
 
-  const handleClose = () => {
+  const handleClose = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
     setActiveMarker(null);
   };
 
@@ -129,9 +130,9 @@ const Map = () => {
               <Card onClick={handleDetailsClick} className={'fixed bottom-8 right-4 left-4'}>
                 <header className={'flex flex-row justify-between items-center mb-2'}>
                   <CardHeader>{activeMarker.establecimiento}</CardHeader>
-                  <span className={'w-5 text-dark-gray'}>
-                    <XIcon onClick={handleClose} />
-                  </span>
+                  <button className={'w-5 text-dark-gray'} onClick={handleClose}>
+                  <XIcon />
+              </button>
                 </header>
                 <CardList>
                   <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
