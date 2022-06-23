@@ -131,8 +131,8 @@ const Map = () => {
                 <header className={'flex flex-row justify-between items-center mb-2'}>
                   <CardHeader>{activeMarker.establecimiento}</CardHeader>
                   <button className={'w-5 text-dark-gray'} onClick={handleClose}>
-                  <XIcon />
-              </button>
+                    <XIcon />
+                  </button>
                 </header>
                 <CardList>
                   <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>

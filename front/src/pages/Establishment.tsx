@@ -54,11 +54,12 @@ const WhatsAppButton = React.memo<WhatsAppButtonProps>((props) => {
 
 const ShareButton = (props: { name: string }) => {
   const { name } = props;
+  const supportsSharing = !!navigator.share;
   const shareEstablishment = () => {
     const title = `${name} | Dónde`;
     const url = window.location.href;
     // Share using Web Share API if available. Otherwise, copy to clipboard.
-    if (navigator.share) {
+    if (supportsSharing) {
       navigator.share({ url, title }).catch((e) => console.error(e));
     } else {
       // TODO: Add toast indicating that the establishment info was copied to the clipboard.
@@ -67,7 +68,12 @@ const ShareButton = (props: { name: string }) => {
   };
   return (
     <button onClick={shareEstablishment}>
-      <Icon type="secondary" circle={true} icon={<ShareIcon className={'text-primary'} />} label={'Compartir'} />
+      <Icon
+        type="secondary"
+        circle={true}
+        icon={<ShareIcon className={'text-primary'} />}
+        label={supportsSharing ? 'Compartir' : 'Copiar'}
+      />
     </button>
   );
 };
