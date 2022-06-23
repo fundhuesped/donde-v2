@@ -87,9 +87,9 @@ const Home = React.memo(() => {
         >
           Buscar
         </Button>
-        <Button className={'w-full my-5'} type={'secondary'} onClick={handleSearchAllButtonClicked}>
-          Buscar todos los servicios
-        </Button>
+        {/*<Button className={'w-full my-5'} type={'secondary'} onClick={handleSearchAllButtonClicked}>*/}
+        {/*  Buscar todos los servicios*/}
+        {/*</Button>*/}
       </MainContainer>
     </>
   );
