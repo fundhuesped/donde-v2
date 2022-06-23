@@ -1,58 +1,69 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { ServiceButton } from '../ServiceButton';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { ReactComponent as TestDeVIH } from '../assets/images/TestDeVIH.svg';
 import MainContainer from '../components/MainContainer';
 import isEmpty from 'lodash/isEmpty';
+import servicesData from '../assets/services.json';
 
-interface Service {
+const SERVICE_ICONS: Record<string, ReactNode> = {
+  'test-hiv': <TestDeVIH />,
+};
+
+type Service = {
   id: string;
+  name: string;
   icon: ReactNode;
-  description: string;
-  active: boolean;
-}
+  selected: boolean;
+};
 
-const Home = () => {
-  const [services, setServices] = useState<Service[]>([]);
-  const isDisabled = !services.some((service) => service.active);
-  const navigate = useNavigate();
+const Home = React.memo(() => {
+  const [services, setServices] = useState<Record<string, Service>>(
+    Object.fromEntries(
+      servicesData.map((serviceData) => [
+        serviceData.id,
+        {
+          id: serviceData.id,
+          name: serviceData.name,
+          icon: SERVICE_ICONS[serviceData.id],
+          selected: false,
+        },
+      ]),
+    ),
+  );
+  const servicesSelected = Object.values(services).some((service) => service.selected);
 
-  const handleServiceButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    const buttonClickedId = event.currentTarget.name;
-    const serviceToUpdate = services.find((service) => service.id === buttonClickedId)!;
-    const updatedServices = services.map((service) => {
-      if (service.id !== serviceToUpdate.id) {
-        return service;
-      }
-      return { ...serviceToUpdate, active: !serviceToUpdate.active };
+  const toggleService = (serviceId: string) => {
+    const serviceToUpdate = services[serviceId];
+    if (!serviceToUpdate) {
+      return;
+    }
+    setServices({
+      ...services,
+      [serviceToUpdate.id]: {
+        ...serviceToUpdate,
+        selected: !serviceToUpdate.selected,
+      },
     });
-    setServices(updatedServices);
   };
 
+  const navigate = useNavigate();
   const search = (servicesToSearch: Service[]) => {
     if (!isEmpty(servicesToSearch)) {
-      navigate('/buscar');
+      navigate('/buscar', {
+        state: { services: servicesToSearch.map((service) => service.id) },
+      });
     }
   };
 
   const handleSearchAllButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
-    search(services);
+    search(Object.values(services));
   };
 
   const handleSearchButtonClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
-    search(services.filter((service) => service.active));
+    search(Object.values(services).filter((service) => service.selected));
   };
-
-  useEffect(() => {
-    function fetchServices() {
-      const hardcodedServices = [{ id: 'test-its', icon: <TestDeVIH />, description: 'Test de HIV', active: false }];
-      setServices(hardcodedServices);
-    }
-
-    fetchServices();
-  }, []);
 
   return (
     <>
@@ -62,17 +73,22 @@ const Home = () => {
       <MainContainer className={'mt-4 pt-8'}>
         <h2 className={'text-xl text-black font-title font-bold'}>¿Qué estás buscando?</h2>
         <p className={'text-xs text-black mt-2'}>Seleccioná los servicios que querés encontrar</p>
-        {services.map((service) => (
+        {Object.values(services).map((service) => (
           <ServiceButton
             key={service.id}
             id={service.id}
             icon={service.icon}
-            description={service.description}
-            active={service.active}
-            onClick={handleServiceButtonClicked}
+            description={service.name}
+            active={service.selected}
+            onClick={() => toggleService(service.id)}
           />
         ))}
-        <Button className={'bg-white w-full my-5'} disabled={isDisabled} type={'primary'} onClick={handleSearchButtonClicked}>
+        <Button
+          className={'bg-white w-full my-5'}
+          disabled={!servicesSelected}
+          type={'primary'}
+          onClick={handleSearchButtonClicked}
+        >
           Buscar
         </Button>
         <Button className={'w-full my-5'} type={'secondary'} onClick={handleSearchAllButtonClicked}>
@@ -81,6 +97,6 @@ const Home = () => {
       </MainContainer>
     </>
   );
-};
+});
 
 export default Home;

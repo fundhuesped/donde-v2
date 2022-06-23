@@ -1,16 +1,26 @@
 import React, { useState } from 'react';
 import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
-import isEmpty from 'lodash/isEmpty';
-import { BackButton } from '../components/BackButton';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Pill } from '../components/Pill';
+import servicesData from '../assets/services.json';
+
+type LocationState = {
+  services: string[];
+};
 
 const Search = () => {
   const navigate = useNavigate();
 
+  const { services: searchedServiceIds } = useLocation().state as LocationState;
+  const searchedServices =
+    searchedServiceIds && searchedServiceIds.length !== 0
+      ? servicesData.filter((service) => searchedServiceIds.includes(service.id))
+      : servicesData;
+  const services = searchedServices.map((service) => service);
+
   const [location, setLocation] = useState('');
-  const isLocationEmpty = isEmpty(location);
+  const isLocationEmpty = location.trim() === '';
 
   const handleLocationChange = (event: React.FormEvent<HTMLInputElement>) => {
     setLocation(event.currentTarget.value);
@@ -18,7 +28,7 @@ const Search = () => {
 
   const handleSearchButtonClicked = () => {
     if (!isLocationEmpty) {
-      navigate('/mapa', { state: { location } });
+      navigate('/establecimientos', { state: { location } });
     }
   };
 
@@ -27,7 +37,7 @@ const Search = () => {
       const { coords } = position;
       const { latitude: lat, longitude: lng } = coords;
 
-      navigate('/mapa', { state: { coords: { lat, lng } } });
+      navigate('/establecimientos', { state: { coords: { lat, lng } } });
     };
     const errorFunction = (error: GeolocationPositionError) => {
       console.warn('ERROR(' + error.code + '): ' + error.message);
@@ -42,7 +52,9 @@ const Search = () => {
       <div className={'mt-2'}>
         <div className={'px-content'}>
           <p className="text-black text-xs mb-2">Estás buscando</p>
-          <Pill>Test de HIV</Pill>
+          {services.map((service) => (
+            <Pill key={service.id}>{service.name}</Pill>
+          ))}
         </div>
       </div>
       <MainContainer className={'mt-8 pt-8'}>
