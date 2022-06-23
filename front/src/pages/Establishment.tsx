@@ -1,9 +1,8 @@
 import MainContainer from '../components/MainContainer';
-import { BackButton } from '../components/BackButton';
 import { Icon } from '../components/Icon';
 import { Pill } from '../components/Pill';
 import { Card, CardHeader, CardList, CardListItem, CardParagraph, CardSubHeader } from '../components/Card';
-import { ClockIcon, LocationMarkerIcon, GlobeAltIcon } from '@heroicons/react/outline';
+import { ClockIcon, GlobeAltIcon, LocationMarkerIcon } from '@heroicons/react/outline';
 import { PhoneIcon, ShareIcon } from '@heroicons/react/solid';
 import { ReactComponent as WhatsAppLogo } from '../assets/images/WhatsAppLogo.svg';
 import React, { ReactNode } from 'react';
@@ -92,7 +91,6 @@ export const Establishment = React.memo<EstablishmentProps>((props) => {
 
   return (
     <>
-      <BackButton />
       <MainContainer>
         <header className={'mt-10 ml-4'}>
           <CardHeader className={'font-title text-lg'}>{name}</CardHeader>

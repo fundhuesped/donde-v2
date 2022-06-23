@@ -18,6 +18,7 @@ module.exports = {
         title: ['Poppins', ...defaultTheme.fontFamily.sans],
       },
       spacing: {
+        content: '1rem',
         4.5: '1.125rem',
       },
       dropShadow: {
