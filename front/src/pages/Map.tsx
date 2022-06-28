@@ -3,7 +3,7 @@ import { ClockIcon, LocationMarkerIcon, SupportIcon, XIcon } from '@heroicons/re
 import { Card, CardHeader, CardList, CardListItem } from '../components/Card';
 import classNames from 'classnames';
 import { Pill } from '../components/Pill';
-import GoogleMapReact from 'google-map-react';
+import GoogleMapReact, {Bounds} from 'google-map-react';
 import { Marker } from '../components/Marker';
 import MainContainer from '../components/MainContainer';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -86,6 +86,8 @@ const Map = () => {
     }
   }, [location, coords]);
 
+  const [bounds, setBounds] = useState<Bounds|null>(null)
+
   const [activeMarker, setActiveMarker] = useState<any>(null);
   const handleMarkerClick = (marker: number) => {
     setActiveMarker(markers[marker - 1]);
@@ -99,6 +101,14 @@ const Map = () => {
   const handleDetailsClick = () => {
     navigate(`/establecimientos/${activeMarker.placeId}`);
   };
+
+  const markerWithinBoundaries = (marker: Coordinates, bounds: Bounds) => {
+    const northLat = bounds.nw.lat;
+    const southLat = bounds.sw.lat;
+    const westLng = bounds.nw.lng;
+    const eastLng = bounds.ne.lng;
+    return marker.lat < northLat && marker.lat > southLat && marker.lng > westLng && marker.lng < eastLng
+  }
 
   return (
     <>
@@ -116,13 +126,21 @@ const Map = () => {
                   fullscreenControl: false,
                   zoomControl: false,
                 }}
-                center={mapPosition.coords}
-                zoom={mapPosition.zoom}
+                defaultCenter={mapPosition.coords}
+                defaultZoom={mapPosition.zoom}
                 onChildClick={handleMarkerClick}
+                resetBoundsOnResize={true}
+                onChange={({bounds}) => {
+                  setBounds(bounds)
+                }}
               >
-                {markers.map((marker) => (
-                  <Marker {...marker} />
-                ))}
+                {markers.map(marker => {
+                  if (bounds !== null && markerWithinBoundaries(marker, bounds)) {
+                    return <Marker {...marker} />
+                  }
+                  return <></>
+                }
+                )}
               </GoogleMapReact>
             </div>
 
