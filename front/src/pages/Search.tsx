@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { RefObject, useState } from 'react';
 import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Pill } from '../components/Pill';
 import servicesData from '../assets/services.json';
+import { usePlacesWidget } from 'react-google-autocomplete';
+import { Coordinates } from './Map';
 
 type LocationState = {
   services: string[];
@@ -11,6 +13,18 @@ type LocationState = {
 
 const Search = () => {
   const navigate = useNavigate();
+
+  const { ref: autocompleteInputRef }: { ref: RefObject<HTMLInputElement> } = usePlacesWidget({
+    apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    onPlaceSelected: (place) => {
+      setLocation(place.formatted_address);
+      setCoords({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
+    },
+    options: {
+      componentRestrictions: { country: 'ar' },
+      types: ['locality', 'street_address', 'sublocality', 'health', 'intersection'],
+    },
+  });
 
   const { services: searchedServiceIds } = useLocation().state as LocationState;
   const searchedServices =
@@ -20,6 +34,7 @@ const Search = () => {
   const services = searchedServices.map((service) => service);
 
   const [location, setLocation] = useState('');
+  const [coords, setCoords] = useState<Coordinates>({ lat: -34.6989, lng: -64.7597 });
   const isLocationEmpty = location.trim() === '';
 
   const handleLocationChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -28,7 +43,7 @@ const Search = () => {
 
   const handleSearchButtonClicked = () => {
     if (!isLocationEmpty) {
-      navigate('/establecimientos', { state: { location } });
+      navigate('/establecimientos', { state: { coords } });
     }
   };
 
@@ -53,6 +68,7 @@ const Search = () => {
           conozcas.
         </p>
         <input
+          ref={autocompleteInputRef}
           className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 mt-4'}
           placeholder={'Ingresá la ubicación'}
           value={location}
