@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { RefObject, useState } from 'react';
 import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Pill } from '../components/Pill';
 import servicesData from '../assets/services.json';
+import { usePlacesWidget } from 'react-google-autocomplete';
 
 type LocationState = {
   services: string[];
@@ -11,6 +12,17 @@ type LocationState = {
 
 const Search = () => {
   const navigate = useNavigate();
+
+  const { ref: autocompleteInputRef }: { ref: RefObject<HTMLInputElement> } = usePlacesWidget({
+    apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    onPlaceSelected: (place) => {
+      console.log(place);
+    },
+    options: {
+      componentRestrictions: { country: 'ar' },
+      types: ['address'],
+    },
+  });
 
   const { services: searchedServiceIds } = useLocation().state as LocationState;
   const searchedServices =
@@ -53,10 +65,12 @@ const Search = () => {
           conozcas.
         </p>
         <input
+          ref={autocompleteInputRef}
           className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 mt-4'}
           placeholder={'Ingresá la ubicación'}
           value={location}
           onChange={handleLocationChange}
+          onSelect={handleLocationChange}
         />
         <div className={'mt-8'}>
           <Button className={'bg-white w-full'} disabled={isLocationEmpty} type={'primary'} onClick={handleSearchButtonClicked}>
