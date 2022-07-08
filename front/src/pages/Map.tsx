@@ -3,7 +3,7 @@ import { ClockIcon, LocationMarkerIcon, SupportIcon, XIcon } from '@heroicons/re
 import { Card, CardHeader, CardList, CardListItem } from '../components/Card';
 import classNames from 'classnames';
 import { Pill } from '../components/Pill';
-import GoogleMapReact, {Bounds} from 'google-map-react';
+import GoogleMapReact, { Bounds } from 'google-map-react';
 import { Marker } from '../components/Marker';
 import MainContainer from '../components/MainContainer';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -36,7 +36,7 @@ if (!mapsApiKey) throw new Error('REACT_APP_GOOGLE_MAPS_API_KEY env var is not s
 const defaultCoords = { lat: -34.6989, lng: -64.7597 };
 const defaultZoom = 14;
 
-type Coordinates = { lat: number; lng: number };
+export type Coordinates = { lat: number; lng: number };
 
 function getCurrentLocation(callback: (coords: Coordinates) => void): void {
   navigator.geolocation.getCurrentPosition(
@@ -77,7 +77,9 @@ const Map = () => {
   const navigate = useNavigate();
 
   const { location, coords } = (useLocation().state as LocationState) ?? {};
+
   const [mapPosition, setMapPosition] = useState<MapPosition | null>(null);
+
   useEffect(() => {
     if (location || coords) {
       setMapPosition(getMapPosition(coords, location));
@@ -86,7 +88,7 @@ const Map = () => {
     }
   }, [location, coords]);
 
-  const [bounds, setBounds] = useState<Bounds|null>(null)
+  const [bounds, setBounds] = useState<Bounds | null>(null);
 
   const [activeMarker, setActiveMarker] = useState<any>(null);
   const handleMarkerClick = (marker: number) => {
@@ -107,8 +109,8 @@ const Map = () => {
     const southLat = bounds.sw.lat;
     const westLng = bounds.nw.lng;
     const eastLng = bounds.ne.lng;
-    return marker.lat < northLat && marker.lat > southLat && marker.lng > westLng && marker.lng < eastLng
-  }
+    return marker.lat < northLat && marker.lat > southLat && marker.lng > westLng && marker.lng < eastLng;
+  };
 
   return (
     <>
@@ -130,17 +132,16 @@ const Map = () => {
                 defaultZoom={mapPosition.zoom}
                 onChildClick={handleMarkerClick}
                 resetBoundsOnResize={true}
-                onChange={({bounds}) => {
-                  setBounds(bounds)
+                onChange={({ bounds }) => {
+                  setBounds(bounds);
                 }}
               >
-                {markers.map(marker => {
+                {markers.map((marker) => {
                   if (bounds !== null && markerWithinBoundaries(marker, bounds)) {
-                    return <Marker {...marker} />
+                    return <Marker {...marker} />;
                   }
-                  return <></>
-                }
-                )}
+                  return <></>;
+                })}
               </GoogleMapReact>
             </div>
 

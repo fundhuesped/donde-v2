@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Pill } from '../components/Pill';
 import servicesData from '../assets/services.json';
 import { usePlacesWidget } from 'react-google-autocomplete';
+import { Coordinates } from './Map';
 
 type LocationState = {
   services: string[];
@@ -16,11 +17,12 @@ const Search = () => {
   const { ref: autocompleteInputRef }: { ref: RefObject<HTMLInputElement> } = usePlacesWidget({
     apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     onPlaceSelected: (place) => {
-      console.log(place);
+      setLocation(place.formatted_address);
+      setCoords({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
     },
     options: {
       componentRestrictions: { country: 'ar' },
-      types: ['address'],
+      types: ['locality', 'street_address', 'neighborhood', 'health', 'intersection'],
     },
   });
 
@@ -32,6 +34,7 @@ const Search = () => {
   const services = searchedServices.map((service) => service);
 
   const [location, setLocation] = useState('');
+  const [coords, setCoords] = useState<Coordinates>({ lat: -34.6989, lng: -64.7597 });
   const isLocationEmpty = location.trim() === '';
 
   const handleLocationChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -40,7 +43,7 @@ const Search = () => {
 
   const handleSearchButtonClicked = () => {
     if (!isLocationEmpty) {
-      navigate('/establecimientos', { state: { location } });
+      navigate('/establecimientos', { state: { location, coords } });
     }
   };
 
@@ -70,7 +73,6 @@ const Search = () => {
           placeholder={'Ingresá la ubicación'}
           value={location}
           onChange={handleLocationChange}
-          onSelect={handleLocationChange}
         />
         <div className={'mt-8'}>
           <Button className={'bg-white w-full'} disabled={isLocationEmpty} type={'primary'} onClick={handleSearchButtonClicked}>
