@@ -59,34 +59,28 @@ type MapPosition = {
   zoom: number;
 };
 
-const getMapPosition = (coords: Coordinates | undefined, location: string | undefined): MapPosition => {
+const getMapPosition = (coords: Coordinates | undefined): MapPosition => {
   if (coords) {
     return { coords, zoom: defaultZoom };
   }
-  if (location) {
-    const place = markers.find((place) => location.toLowerCase().includes(place.nombre_partido.toLowerCase()));
-    if (place) {
-      const placeCoords = { lat: place.lat, lng: place.lng };
-      return { coords: placeCoords, zoom: 12 };
-    }
-  }
+
   return { coords: defaultCoords, zoom: 5 };
 };
 
 const Map = () => {
   const navigate = useNavigate();
 
-  const { location, coords } = (useLocation().state as LocationState) ?? {};
+  const { coords } = (useLocation().state as LocationState) ?? {};
 
   const [mapPosition, setMapPosition] = useState<MapPosition | null>(null);
 
   useEffect(() => {
-    if (location || coords) {
-      setMapPosition(getMapPosition(coords, location));
+    if (coords) {
+      setMapPosition(getMapPosition(coords));
     } else {
-      getCurrentLocation((coords) => setMapPosition(getMapPosition(coords, undefined)));
+      getCurrentLocation((coords) => setMapPosition(getMapPosition(coords)));
     }
-  }, [location, coords]);
+  }, [coords]);
 
   const [bounds, setBounds] = useState<Bounds | null>(null);
 

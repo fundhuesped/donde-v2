@@ -22,7 +22,7 @@ const Search = () => {
     },
     options: {
       componentRestrictions: { country: 'ar' },
-      types: ['locality', 'street_address', 'neighborhood', 'health', 'intersection'],
+      types: ['locality', 'street_address', 'sublocality', 'health', 'intersection'],
     },
   });
 
@@ -43,7 +43,7 @@ const Search = () => {
 
   const handleSearchButtonClicked = () => {
     if (!isLocationEmpty) {
-      navigate('/establecimientos', { state: { location, coords } });
+      navigate('/establecimientos', { state: { coords } });
     }
   };
 
