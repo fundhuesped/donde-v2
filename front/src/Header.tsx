@@ -30,7 +30,7 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
       >
         <DondeLogo className={'translate-y-0.5'} />
       </Link>
-      <button onClick={handleClickMenu} className={'ml-auto'}>
+      <button onClick={handleClickMenu} className={'ml-auto'} onBlur={handleClickMenu}>
         <MenuIcon className="w-6 text-dark-gray" />
       </button>
       {isMenuOpen && (
