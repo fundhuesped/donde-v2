@@ -14,7 +14,7 @@ const About = () => {
     <div className={'px-6 my-2'}>
       <h1 className={'text-lg text-black font-bold mb-8'}>Sobre Dónde</h1>
       <p className={'text-base text-justify mb-6'}>
-        <strong>Dónde</strong> es una plataforma que te permite encontrar servicios de salud en toda América Latina.
+        <strong>Dónde</strong> es una plataforma que te permite encontrar servicios de salud.
       </p>
       <p className={'text-base text-justify mb-6'}>
         Buscá el lugar más cercano para acceder a preservativos, métodos anticonceptivos, información sobre interrupción

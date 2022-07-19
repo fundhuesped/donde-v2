@@ -93,11 +93,11 @@ const Home = React.memo(() => {
   return (
     <>
       <p className={'px-content my-4 text-xl font-title text-justify'}>
-        <strong>Dónde</strong> es una plataforma que te permite encontrar servicios de salud en toda América Latina.
+        <strong>Dónde</strong> es una plataforma que te permite encontrar servicios de salud.
       </p>
       <MainContainer className={'mt-4 pt-8'}>
         <h2 className={'text-xl text-black font-title font-bold'}>¿Qué estás buscando?</h2>
-        <p className={'text-xs text-black mt-2'}>Seleccioná los servicios que querés encontrar</p>
+        <p className={'text-xs text-black mt-2'}>Seleccioná el servicio que querés encontrar</p>
         {Object.values(services).map((service) => (
           <ServiceButton
             key={service.id}
