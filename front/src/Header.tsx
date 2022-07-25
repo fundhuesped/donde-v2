@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { MenuIcon, InformationCircleIcon, ChatAltIcon } from '@heroicons/react/outline';
+import { ChatAltIcon, InformationCircleIcon, MenuIcon } from '@heroicons/react/outline';
 import { ReactComponent as DondeLogo } from './assets/images/DondeLogo.svg';
 import { Button } from './components/Button';
 import MainContainer from './components/MainContainer';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { BackButton } from './components/BackButton';
+import { useClickOutsideHandler } from './hooks/useClickOutsideHandler';
 
 export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: () => void }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -19,6 +20,7 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
   };
   const location = useLocation();
   const isHome = location.pathname === '/';
+  const innerRef = useClickOutsideHandler<HTMLDivElement>(() => setIsMenuOpen(false));
   return (
     <header className={'flex items-center py-5 px-content'}>
       {!isHome && <BackButton />}
@@ -30,12 +32,12 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
       >
         <DondeLogo className={'translate-y-0.5'} />
       </Link>
-      <button onClick={handleClickMenu} className={'ml-auto'} onBlur={handleClickMenu}>
+      <button onClick={handleClickMenu} className={'ml-auto'}>
         <MenuIcon className="w-6 text-dark-gray" />
       </button>
       {isMenuOpen && (
         <div className={'absolute min-h-full w-full left-0 top-10 flex'}>
-          <MainContainer className={'z-50'}>
+          <MainContainer ref={innerRef} className={'z-50 pt-6'}>
             <Button
               onClick={() => handleClickMenuItem('/sobre-donde')}
               className={'border-ultra-light-gray '}

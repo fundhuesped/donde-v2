@@ -5,10 +5,14 @@ type Props = React.PropsWithChildren<{
   className?: string;
 }>;
 
-const MainContainer = (props: Props) => {
-  const { children, className } = props;
+const MainContainer = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
+  const { children, className, ...rest } = props;
 
-  return <main className={classNames('bg-ultra-light-gray px-content mt-6 rounded-t-3xl flex-grow', className)}>{children}</main>;
-};
+  return (
+    <main ref={ref} className={classNames('bg-ultra-light-gray px-content mt-6 rounded-t-3xl flex-grow', className)} {...rest}>
+      {children}
+    </main>
+  );
+});
 
 export default MainContainer;
