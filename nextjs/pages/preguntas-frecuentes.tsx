@@ -3,8 +3,12 @@ import { ChevronDownIcon, ChevronLeftIcon, QuestionMarkCircleIcon } from '@heroi
 import classNames from 'classnames';
 
 const FAQLink = (props: HTMLProps<HTMLAnchorElement>) => {
-  const { className, ...rest } = props;
-  return <a className={classNames('text-primary', className)} {...rest} />;
+  const { className, children, ...rest } = props;
+  return (
+    <a className={classNames('text-primary', className)} {...rest}>
+      {children}
+    </a>
+  );
 };
 
 type AccordionItemProps = {
@@ -19,13 +23,13 @@ const AccordionItem = (props: AccordionItemProps) => {
 
   return (
     <div className={'flex flex-col rounded-2xl border-2 w-full my-4'}>
-      <a className={'py-4 flex flex-row w-full cursor-pointer'} onClick={() => setOpen(!open)}>
+      <button className={'py-4 flex flex-row w-full cursor-pointer'} onClick={() => setOpen(!open)}>
         <QuestionMarkCircleIcon className={'h-6 w-5 text-primary mx-4'} />
         <p className={'text-l font-title text-black font-semibold'}>{title}</p>
         <div className={'ml-auto'}>
           <ChevronIcon className={'h-6 w-5 text-primary mx-4'} />
         </div>
-      </a>
+      </button>
       {open && <div className="px-8 my-4">{children}</div>}
     </div>
   );
