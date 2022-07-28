@@ -60,7 +60,7 @@ const Search: NextPage<StaticProps> = ({googleMapsApiKey}) => {
       router.push({
         pathname: '/establecimientos',
         query: {
-          coords: `${coords.lat},${coords.lng}`
+          coords: encodeURIComponent(JSON.stringify(coords))
         }
       });
     }

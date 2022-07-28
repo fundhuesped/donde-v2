@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  // TODO: google-map-react is not compatible with strict mode. Switch to a package that supports it.
+  reactStrictMode: false,
   swcMinify: true,
 
   // SVG loader
