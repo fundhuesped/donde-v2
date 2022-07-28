@@ -1,6 +1,6 @@
 import React from 'react';
-import {Button} from '../components/Button';
-import Link from "next/link";
+import { Button } from '../components/Button';
+import Link from 'next/link';
 
 export default function About() {
   return (
@@ -15,12 +15,9 @@ export default function About() {
       </p>
       <p className={'text-base text-justify mb-6'}>Esta es una plataforma de código abierto pensada por Fundación Huésped.</p>
       <p className={'p-2 bg-ultra-light-salmon rounded-2xl text-center'}>
-        Si tienes inquietudes, visitá nuestra sección de
-        {' '}
+        Si tienes inquietudes, visitá nuestra sección de{' '}
         <Link href="/preguntas-frecuentes">
-          <span className={'text-primary font-bold'}>
-            preguntas frecuentes
-          </span>
+          <span className={'text-primary font-bold'}>preguntas frecuentes</span>
         </Link>
       </p>
       <Link href="/">

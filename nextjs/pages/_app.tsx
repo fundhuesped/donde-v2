@@ -1,7 +1,7 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
-import {useState} from "react";
-import {Header} from "../components/Header";
+import '../styles/globals.css';
+import type { AppProps } from 'next/app';
+import { useState } from 'react';
+import { Header } from '../components/Header';
 import '@fontsource/poppins';
 import '@fontsource/poppins/700.css';
 import '@fontsource/open-sans';

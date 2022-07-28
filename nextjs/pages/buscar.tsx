@@ -1,12 +1,12 @@
-import React, {RefObject, useState} from 'react';
-import {Button} from '../components/Button';
+import React, { RefObject, useState } from 'react';
+import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
-import {Pill} from '../components/Pill';
+import { Pill } from '../components/Pill';
 import servicesData from '../assets/services.json';
-import {usePlacesWidget} from 'react-google-autocomplete';
-import {useRouter} from "next/router";
-import {Coordinates} from "../model/map";
-import {GetStaticProps, NextPage} from "next";
+import { usePlacesWidget } from 'react-google-autocomplete';
+import { useRouter } from 'next/router';
+import { Coordinates } from '../model/map';
+import { GetStaticProps, NextPage } from 'next';
 
 type StaticProps = {
   googleMapsApiKey: string;
@@ -19,28 +19,32 @@ export const getStaticProps: GetStaticProps<StaticProps> = async () => {
   }
   return {
     props: {
-      googleMapsApiKey
-    }
+      googleMapsApiKey,
+    },
   };
-}
+};
 
-const Search: NextPage<StaticProps> = ({googleMapsApiKey}) => {
+const Search: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
   const router = useRouter();
 
-  const {ref: autocompleteInputRef}: { ref: RefObject<HTMLInputElement> } = usePlacesWidget({
+  const { ref: autocompleteInputRef }: { ref: RefObject<HTMLInputElement> } = usePlacesWidget({
     apiKey: googleMapsApiKey,
     onPlaceSelected: (place) => {
       setLocation(place.formatted_address);
-      setCoords({lat: place.geometry.location.lat(), lng: place.geometry.location.lng()});
+      setCoords({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
     },
     options: {
-      componentRestrictions: {country: 'ar'},
+      componentRestrictions: { country: 'ar' },
       types: ['locality', 'street_address', 'sublocality', 'health', 'intersection'],
     },
   });
 
   const servicesQueryParam = router.query.services;
-  const searchedServiceIds = servicesQueryParam ? (Array.isArray(servicesQueryParam) ? servicesQueryParam : [servicesQueryParam]) : []
+  const searchedServiceIds = servicesQueryParam
+    ? Array.isArray(servicesQueryParam)
+      ? servicesQueryParam
+      : [servicesQueryParam]
+    : [];
   const searchedServices =
     searchedServiceIds && searchedServiceIds.length !== 0
       ? servicesData.filter((service) => searchedServiceIds.includes(service.id))
@@ -48,7 +52,7 @@ const Search: NextPage<StaticProps> = ({googleMapsApiKey}) => {
   const services = searchedServices.map((service) => service);
 
   const [location, setLocation] = useState('');
-  const [coords, setCoords] = useState<Coordinates>({lat: -34.6989, lng: -64.7597});
+  const [coords, setCoords] = useState<Coordinates>({ lat: -34.6989, lng: -64.7597 });
   const isLocationEmpty = location.trim() === '';
 
   const handleLocationChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -60,8 +64,8 @@ const Search: NextPage<StaticProps> = ({googleMapsApiKey}) => {
       router.push({
         pathname: '/establecimientos',
         query: {
-          coords: encodeURIComponent(JSON.stringify(coords))
-        }
+          coords: encodeURIComponent(JSON.stringify(coords)),
+        },
       });
     }
   };

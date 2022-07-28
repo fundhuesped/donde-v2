@@ -1,11 +1,11 @@
-import type {NextPage} from 'next'
-import Head from 'next/head'
-import React, {ReactNode, useState} from "react";
-import {Button} from "../components/Button";
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import React, { ReactNode, useState } from 'react';
+import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
-import {SERVICE_ICONS} from "../config/services";
+import { SERVICE_ICONS } from '../config/services';
 import servicesData from '../assets/services.json';
-import {useRouter} from "next/router";
+import { useRouter } from 'next/router';
 
 type Service = {
   id: string;
@@ -101,14 +101,12 @@ const Home: NextPage = React.memo(() => {
   const router = useRouter();
   const search = (servicesToSearch: Service[]) => {
     if (servicesToSearch.length > 0) {
-      router.push(
-        {
-          pathname: '/buscar',
-          query: {
-            services: servicesToSearch.map((service) => service.id)
-          }
-        }
-      );
+      router.push({
+        pathname: '/buscar',
+        query: {
+          services: servicesToSearch.map((service) => service.id),
+        },
+      });
     }
   };
 

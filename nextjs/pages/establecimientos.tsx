@@ -1,15 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import {ClockIcon, LocationMarkerIcon, SupportIcon, XIcon} from '@heroicons/react/outline';
-import {Card, CardHeader, CardList, CardListItem} from '../components/Card';
+import React, { useEffect, useState } from 'react';
+import { ClockIcon, LocationMarkerIcon, SupportIcon, XIcon } from '@heroicons/react/outline';
+import { Card, CardHeader, CardList, CardListItem } from '../components/Card';
 import classNames from 'classnames';
-import {Pill} from '../components/Pill';
-import GoogleMapReact, {Bounds} from 'google-map-react';
-import {Marker} from '../components/Marker';
+import { Pill } from '../components/Pill';
+import GoogleMapReact, { Bounds } from 'google-map-react';
+import { Marker } from '../components/Marker';
 import MainContainer from '../components/MainContainer';
 import places from '../assets/establishments.json';
-import {formatEstablishmentLocation} from '../utils/establishments';
-import {useRouter} from "next/router";
-import {GetStaticProps, NextPage} from "next";
+import { formatEstablishmentLocation } from '../utils/establishments';
+import { useRouter } from 'next/router';
+import { GetStaticProps, NextPage } from 'next';
 
 type StaticProps = {
   googleMapsApiKey: string;
@@ -22,10 +22,10 @@ export const getStaticProps: GetStaticProps<StaticProps> = async () => {
   }
   return {
     props: {
-      googleMapsApiKey
-    }
+      googleMapsApiKey,
+    },
   };
-}
+};
 
 const markers = places.flatMap((place, index) => {
   // TODO: no se si es el mejor lugar para hacer esto
@@ -40,7 +40,7 @@ const markers = places.flatMap((place, index) => {
   ];
 });
 
-const defaultCoords = {lat: -34.6989, lng: -64.7597};
+const defaultCoords = { lat: -34.6989, lng: -64.7597 };
 const defaultZoom = 14;
 
 export type Coordinates = { lat: number; lng: number };
@@ -48,9 +48,9 @@ export type Coordinates = { lat: number; lng: number };
 function getCurrentLocation(callback: (coords: Coordinates) => void): void {
   navigator.geolocation.getCurrentPosition(
     (position: GeolocationPosition) => {
-      const {coords} = position;
-      const {latitude: lat, longitude: lng} = coords;
-      callback({lat, lng});
+      const { coords } = position;
+      const { latitude: lat, longitude: lng } = coords;
+      callback({ lat, lng });
     },
     (error: GeolocationPositionError) => console.warn('ERROR(' + error.code + '): ' + error.message),
     {
@@ -68,19 +68,18 @@ type MapPosition = {
 
 const getMapPosition = (coords: Coordinates | undefined): MapPosition => {
   if (coords) {
-    return {coords, zoom: defaultZoom};
+    return { coords, zoom: defaultZoom };
   }
 
-  return {coords: defaultCoords, zoom: 5};
+  return { coords: defaultCoords, zoom: 5 };
 };
 
-const Establishments: NextPage<StaticProps> = ({googleMapsApiKey}) => {
+const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
   const router = useRouter();
 
-  const {coords: serializedCoords} = router.query;
-  const coords = serializedCoords && typeof serializedCoords === 'string'
-    ? JSON.parse(decodeURIComponent(serializedCoords))
-    : undefined;
+  const { coords: serializedCoords } = router.query;
+  const coords =
+    serializedCoords && typeof serializedCoords === 'string' ? JSON.parse(decodeURIComponent(serializedCoords)) : undefined;
 
   const [mapPosition, setMapPosition] = useState<MapPosition | null>(null);
 
@@ -124,7 +123,7 @@ const Establishments: NextPage<StaticProps> = ({googleMapsApiKey}) => {
       <MainContainer className={'relative overflow-hidden px-0'}>
         {mapPosition && (
           <>
-            <div className={classNames('w-full')} style={{height: 'calc(100vh - 56px - 1.5rem)'}}>
+            <div className={classNames('w-full')} style={{ height: 'calc(100vh - 56px - 1.5rem)' }}>
               <GoogleMapReact
                 bootstrapURLKeys={{
                   key: googleMapsApiKey,
@@ -139,7 +138,7 @@ const Establishments: NextPage<StaticProps> = ({googleMapsApiKey}) => {
                 defaultZoom={mapPosition.zoom}
                 onChildClick={handleMarkerClick}
                 resetBoundsOnResize={true}
-                onChange={({bounds}) => {
+                onChange={({ bounds }) => {
                   setBounds(bounds);
                 }}
               >
@@ -156,18 +155,18 @@ const Establishments: NextPage<StaticProps> = ({googleMapsApiKey}) => {
                 <header className={'flex flex-row justify-between items-center mb-2'}>
                   <CardHeader>{activeMarker.establecimiento}</CardHeader>
                   <button className={'w-5 text-dark-gray'} onClick={handleClose}>
-                    <XIcon/>
+                    <XIcon />
                   </button>
                 </header>
                 <CardList>
-                  <CardListItem icon={<LocationMarkerIcon className={'text-primary'}/>}>
+                  <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
                     {formatEstablishmentLocation(activeMarker)}
                     {/*<span className={'text-xs text-medium-gray'}>- A 400 metros</span>*/}
                   </CardListItem>
                   {activeMarker.horario_testeo !== null && (
-                    <CardListItem icon={<ClockIcon className={'text-primary'}/>}>{activeMarker.horario_testeo}</CardListItem>
+                    <CardListItem icon={<ClockIcon className={'text-primary'} />}>{activeMarker.horario_testeo}</CardListItem>
                   )}
-                  <CardListItem icon={<SupportIcon className={'text-primary'}/>}>Test de HIV</CardListItem>
+                  <CardListItem icon={<SupportIcon className={'text-primary'} />}>Test de HIV</CardListItem>
                 </CardList>
                 <footer className={classNames('mt-4')}>
                   <Pill>Cargado por Fundación Huesped</Pill>
