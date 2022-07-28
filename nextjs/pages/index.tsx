@@ -20,7 +20,7 @@ interface SearchButtonProps {
 }
 
 const SearchButton = React.memo<SearchButtonProps>((props: SearchButtonProps) => {
-  const {enabled, onClick} = props;
+  const { enabled, onClick } = props;
 
   return (
     <Button className={'w-full my-5'} disabled={!enabled} type={'primary'} onClick={onClick}>
@@ -49,9 +49,8 @@ interface ServiceProps {
   active: boolean;
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
-
 export const ServiceButton = (props: ServiceProps) => {
-  const {id, icon, description, active, onClick} = props;
+  const { id, icon, description, active, onClick } = props;
   const borderColor = active ? '!border-primary' : 'border-white';
   const fontWeight = active ? 'font-semibold' : '!font-normal';
   return (
@@ -143,7 +142,7 @@ const Home: NextPage = React.memo(() => {
             onClick={() => toggleService(service.id)}
           />
         ))}
-        <SearchButton enabled={servicesSelected} onClick={handleSearchButtonClicked}/>
+        <SearchButton enabled={servicesSelected} onClick={handleSearchButtonClicked} />
         {/*<SearchAllButton onClick={handleSearchAllButtonClicked} />*/}
       </MainContainer>
     </>
