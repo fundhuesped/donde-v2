@@ -17,43 +17,59 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
   };
   const isHome = router.pathname === '/';
   const innerRef = useClickOutsideHandler<HTMLDivElement>(() => setIsMenuOpen(false));
+
+  const SobreDondeButton = React.forwardRef(({ }, ref) => {
+    return (
+      <Button
+        onClick={() => setIsMenuOpen(false)}
+        className={'border-ultra-light-gray '}
+        type={'tertiary'}
+        alignment={'left'}
+        icon={<InformationCircleIcon className={'h-6 w-5'} />}
+      >
+        Sobre Dónde
+      </Button>
+    )
+  })
+
+  const PreguntasFrecuentesButton = React.forwardRef(({ }, ref) => {
+    return (
+      <Button
+        onClick={() => setIsMenuOpen(false)}
+        className={'border-ultra-light-gray'}
+        type={'tertiary'}
+        alignment={'left'}
+        icon={<ChatAltIcon className={'h-6 w-5'} />}
+      >
+        Preguntas frecuentes
+      </Button>
+    )
+  })
+
   return (
     <header className={'flex items-center py-5 px-content'}>
       {!isHome && <BackButton />}
+
       <Link href="/">
         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
         <a>
           <DondeLogo className={'translate-y-0.5'} />
         </a>
       </Link>
+
       <button onClick={handleClickMenu} className={'ml-auto'}>
         <MenuIcon className="w-6 text-dark-gray" />
       </button>
+
       {isMenuOpen && (
         <div className={'absolute min-h-full w-full left-0 top-10 flex'}>
           <MainContainer ref={innerRef} className={'z-50 mt-6 pt-6'}>
-            <Link href="/sobre-donde">
-              <Button
-                onClick={() => setIsMenuOpen(false)}
-                className={'border-ultra-light-gray '}
-                type={'tertiary'}
-                alignment={'left'}
-                icon={<InformationCircleIcon className={'h-6 w-5'} />}
-              >
-                Sobre Dónde
-              </Button>
+            <Link href="/sobre-donde" passHref>
+              <SobreDondeButton/>
             </Link>
 
-            <Link href="/preguntas-frecuentes">
-              <Button
-                onClick={() => setIsMenuOpen(false)}
-                className={'border-ultra-light-gray'}
-                type={'tertiary'}
-                alignment={'left'}
-                icon={<ChatAltIcon className={'h-6 w-5'} />}
-              >
-                Preguntas frecuentes
-              </Button>
+            <Link href="/preguntas-frecuentes" passHref>
+              <PreguntasFrecuentesButton/>
             </Link>
           </MainContainer>
         </div>
