@@ -10,6 +10,7 @@ import places from '../assets/establishments.json';
 import { formatEstablishmentLocation } from '../utils/establishments';
 import { useRouter } from 'next/router';
 import { GetStaticProps, NextPage } from 'next';
+import Head from 'next/head';
 
 type StaticProps = {
   googleMapsApiKey: string;
@@ -120,6 +121,10 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
 
   return (
     <>
+      <Head>
+        <title>Dónde - Establecimientos</title>
+      </Head>
+
       <MainContainer className={'relative overflow-hidden px-0'}>
         {mapPosition && (
           <>

@@ -7,6 +7,7 @@ import { usePlacesWidget } from 'react-google-autocomplete';
 import { useRouter } from 'next/router';
 import { Coordinates } from '../model/map';
 import { GetStaticProps, NextPage } from 'next';
+import Head from 'next/head';
 
 type StaticProps = {
   googleMapsApiKey: string;
@@ -76,6 +77,10 @@ const Search: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
 
   return (
     <>
+      <Head>
+        <title>Dónde - Buscar Servicios</title>
+      </Head>
+
       <div className={'mt-2'}>
         <div className={'px-content'}>
           <p className="text-black text-xs mb-2">Estás buscando</p>

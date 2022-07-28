@@ -1,6 +1,7 @@
 import React, { HTMLProps, ReactNode, useState } from 'react';
 import { ChevronDownIcon, ChevronLeftIcon, QuestionMarkCircleIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
+import Head from 'next/head';
 
 const FAQLink = (props: HTMLProps<HTMLAnchorElement>) => {
   const { className, children, ...rest } = props;
@@ -100,15 +101,21 @@ const ITEMS = [
 
 export default function FAQs() {
   return (
-    <div className={'px-6 my-2'}>
-      <h1 className={'text-lg text-black font-bold mb-8'}>Preguntas frecuentes</h1>
-      <ul>
-        {ITEMS.map((item, index) => (
-          <li key={index}>
-            <AccordionItem title={item.title}>{item.content}</AccordionItem>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+      <Head>
+        <title>Dónde - Preguntas Frecuentes</title>
+      </Head>
+
+      <main className={'px-6 my-2'}>
+        <h1 className={'text-lg text-black font-bold mb-8'}>Preguntas frecuentes</h1>
+        <ul>
+          {ITEMS.map((item, index) => (
+            <li key={index}>
+              <AccordionItem title={item.title}>{item.content}</AccordionItem>
+            </li>
+          ))}
+        </ul>
+      </main>
+    </>
   );
 }

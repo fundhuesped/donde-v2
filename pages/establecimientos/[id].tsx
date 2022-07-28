@@ -13,6 +13,7 @@ import MainContainer from '../../components/MainContainer';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { Service } from '../../model/services';
+import Head from 'next/head';
 
 interface WebSiteButtonProps {
   website: string;
@@ -106,6 +107,10 @@ export const Establishment: NextPage = React.memo(() => {
 
   return (
     <>
+      <Head>
+        <title>Dónde - {name}</title>
+      </Head>
+
       <MainContainer>
         <header className={'mt-10 ml-4'}>
           <CardHeader className={'font-title text-lg'}>{name}</CardHeader>
