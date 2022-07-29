@@ -88,8 +88,10 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
     if (!router.isReady) {
       return;
     }
+
     if (coords) {
-      setMapPosition(getMapPosition(coords));
+      // Sin el setTimeout no funciona el ruteo, no pudimos encontrar el motivo
+      setTimeout(() => { setMapPosition(getMapPosition(coords)) }, 0);
     } else {
       getCurrentLocation((coords) => setMapPosition(getMapPosition(coords)));
     }

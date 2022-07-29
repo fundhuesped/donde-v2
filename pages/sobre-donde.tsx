@@ -2,6 +2,13 @@ import React from 'react';
 import { Button } from '../components/Button';
 import Link from 'next/link';
 import Head from 'next/head';
+import { router } from 'next/client';
+
+function ComenzarBusquedaButton() {
+  return <Button className={'w-full my-5'} type={'secondary'} onClick={ () => { router.push("/") } }>
+    Comenzar Búsqueda
+  </Button>;
+}
 
 export default function About() {
   return (
@@ -23,14 +30,14 @@ export default function About() {
         <p className={'p-2 bg-ultra-light-salmon rounded-2xl text-center'}>
           Si tienes inquietudes, visitá nuestra sección de{' '}
           <Link href="/preguntas-frecuentes">
-            <span className={'text-primary font-bold'}>preguntas frecuentes</span>
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+            <a>
+              <span className={'text-primary font-bold'}>preguntas frecuentes</span>
+            </a>
           </Link>
         </p>
-        <Link href="/">
-          <Button className={'w-full my-5'} type={'secondary'}>
-            Comenzar Búsqueda
-          </Button>
-        </Link>
+
+        <ComenzarBusquedaButton />
       </main>
     </>
   );
