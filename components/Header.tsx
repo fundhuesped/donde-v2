@@ -18,10 +18,14 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
   const isHome = router.pathname === '/';
   const innerRef = useClickOutsideHandler<HTMLDivElement>(() => setIsMenuOpen(false));
 
-  const SobreDondeButton = React.forwardRef(({ }, ref) => {
+  const SobreDondeButton = () => {
     return (
       <Button
-        onClick={() => setIsMenuOpen(false)}
+        onClick={() => {
+          setIsMenuOpen(false)
+
+          router.push({ pathname: "/sobre-donde" })
+        }}
         className={'border-ultra-light-gray '}
         type={'tertiary'}
         alignment={'left'}
@@ -30,12 +34,16 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
         Sobre Dónde
       </Button>
     )
-  })
+  }
 
-  const PreguntasFrecuentesButton = React.forwardRef(({ }, ref) => {
+  const PreguntasFrecuentesButton = () => {
     return (
       <Button
-        onClick={() => setIsMenuOpen(false)}
+        onClick={() => {
+          setIsMenuOpen(false)
+
+          router.push({ pathname: "/preguntas-frecuentes" })
+        }}
         className={'border-ultra-light-gray'}
         type={'tertiary'}
         alignment={'left'}
@@ -44,7 +52,7 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
         Preguntas frecuentes
       </Button>
     )
-  })
+  }
 
   return (
     <header className={'flex items-center py-5 px-content'}>
@@ -64,13 +72,9 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
       {isMenuOpen && (
         <div className={'absolute min-h-full w-full left-0 top-10 flex'}>
           <MainContainer ref={innerRef} className={'z-50 mt-6 pt-6'}>
-            <Link href="/sobre-donde" passHref>
-              <SobreDondeButton/>
-            </Link>
+            <SobreDondeButton/>
 
-            <Link href="/preguntas-frecuentes" passHref>
-              <PreguntasFrecuentesButton/>
-            </Link>
+            <PreguntasFrecuentesButton/>
           </MainContainer>
         </div>
       )}
