@@ -1,0 +1,10 @@
+services:
+  db:
+    image: postgres:14.4-alpine
+    command: ["postgres", "-c", "log_statement=all"]
+    environment:
+      - POSTGRES_DB=donde
+      - POSTGRES_USER=donde
+      - POSTGRES_PASSWORD=donde
+    ports:
+      - 5432:5432
