@@ -6,14 +6,23 @@ import { FormEvent, useState } from 'react';
 const SignIn: NextPage = () => {
   const { data: session } = useSession();
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+
   const handleSignIn = async (event: FormEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    await signIn('credentials', { email, password });
+    const res = await signIn('credentials', {
+      email,
+      password,
+      redirect: false
+    });
+    if (res?.error && res?.status === 401) {
+      setError('Contraseña incorrecta')
+    }
   };
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  console.log(session)
 
   return (
     <MainContainer className={'mt-6 pt-8'}>
@@ -35,7 +44,7 @@ const SignIn: NextPage = () => {
         </div>
         <div className="mb-6">
           <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-            Password
+            Contraseña
           </label>
           <input
             type="password"
@@ -60,6 +69,7 @@ const SignIn: NextPage = () => {
             Sign out
           </button>
         )}
+        {error && <p>{error}</p>}
       </form>
     </MainContainer>
   );

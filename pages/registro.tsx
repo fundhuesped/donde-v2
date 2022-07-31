@@ -6,17 +6,22 @@ import { FormEvent, useState } from 'react';
 const SignUp: NextPage = () => {
   const { data: session } = useSession();
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+
   const handleSignUp = async (event: FormEvent) => {
     event.preventDefault();
     event.stopPropagation();
     await fetch('/api/auth/signup', {
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password, firstName, lastName }),
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
     });
   };
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
   return (
     <MainContainer className={'mt-6'}>
@@ -24,6 +29,32 @@ const SignUp: NextPage = () => {
       <form className={'mt-10'} onSubmit={handleSignUp}>
         <h1 className="text-xl font-bold mb-4">Registro</h1>
         <div className="mb-6">
+          <div className="mb-6">
+            <label htmlFor="first-name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+              Nombre
+            </label>
+            <input
+              type="text"
+              id="first-name"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              required
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </div>
+          <div className="mb-6">
+            <label htmlFor="last-name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+              Apellido
+            </label>
+            <input
+              type="text"
+              id="last-name"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              required
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </div>
           <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
             Email
           </label>
@@ -38,7 +69,7 @@ const SignUp: NextPage = () => {
         </div>
         <div className="mb-6">
           <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-            Password
+            Contraseña
           </label>
           <input
             type="password"
