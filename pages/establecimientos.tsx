@@ -152,7 +152,7 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
                 {markers
                   .filter((marker) => bounds !== null && markerWithinBoundaries(marker, bounds))
                   .map((marker) => {
-                    return <Marker key={marker.placeId} {...marker} />;
+                    return <Marker {...marker} key={marker.key} />;
                   })}
               </GoogleMapReact>
             </div>
