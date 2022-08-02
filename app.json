@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "dokku": {
+      "postdeploy": "npx prisma migrate deploy"
+    }
+  },
+  "addons": [
+    "dokku-postgres"
+  ]
+}
