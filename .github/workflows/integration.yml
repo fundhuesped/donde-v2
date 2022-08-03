@@ -18,3 +18,14 @@ jobs:
         run: yarn install
       - name: Check format
         run: yarn fmt:check
+      - name: Comment
+        uses: actions/github-script@v6
+        if: failure()
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Found format errors. Fix them by running `yarn fmt:fix`.'
+            })
