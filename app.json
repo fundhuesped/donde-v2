@@ -4,7 +4,5 @@
       "postdeploy": "npx prisma migrate deploy"
     }
   },
-  "addons": [
-    "dokku-postgres"
-  ]
+  "addons": ["dokku-postgres"]
 }
