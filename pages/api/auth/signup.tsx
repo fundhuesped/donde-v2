@@ -1,9 +1,9 @@
 import { NextApiHandler } from 'next';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
-import {BCRYPT_COST} from "../../../config/server";
+import { BCRYPT_COST } from '../../../config/server';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 const handler: NextApiHandler = async (req, res) => {
   if (req.method !== 'POST') {
@@ -18,8 +18,8 @@ const handler: NextApiHandler = async (req, res) => {
       email,
       password: hashedPassword,
       first_name: firstName,
-      last_name: lastName
-    }
+      last_name: lastName,
+    },
   });
 
   return res.status(200).end();

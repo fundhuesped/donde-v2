@@ -4,9 +4,9 @@
 
 ### Requirements
 
-* [NVM](https://github.com/nvm-sh/nvm) to set up the node version used by the app.
-* [Yarn](https://yarnpkg.com/) to manage node dependencies.
-* [Docker Compose](https://docs.docker.com/compose/) to run backing services.
+- [NVM](https://github.com/nvm-sh/nvm) to set up the node version used by the app.
+- [Yarn](https://yarnpkg.com/) to manage node dependencies.
+- [Docker Compose](https://docs.docker.com/compose/) to run backing services.
 
 ### Setup
 

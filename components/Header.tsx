@@ -22,9 +22,9 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
     return (
       <Button
         onClick={() => {
-          setIsMenuOpen(false)
+          setIsMenuOpen(false);
 
-          router.push({ pathname: "/sobre-donde" })
+          router.push({ pathname: '/sobre-donde' });
         }}
         className={'border-ultra-light-gray '}
         type={'tertiary'}
@@ -33,16 +33,16 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
       >
         Sobre Dónde
       </Button>
-    )
-  }
+    );
+  };
 
   const PreguntasFrecuentesButton = () => {
     return (
       <Button
         onClick={() => {
-          setIsMenuOpen(false)
+          setIsMenuOpen(false);
 
-          router.push({ pathname: "/preguntas-frecuentes" })
+          router.push({ pathname: '/preguntas-frecuentes' });
         }}
         className={'border-ultra-light-gray'}
         type={'tertiary'}
@@ -51,8 +51,8 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
       >
         Preguntas frecuentes
       </Button>
-    )
-  }
+    );
+  };
 
   return (
     <header className={'flex items-center py-5 px-content'}>
@@ -72,9 +72,9 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
       {isMenuOpen && (
         <div className={'absolute min-h-full w-full left-0 top-10 flex'}>
           <MainContainer ref={innerRef} className={'z-50 mt-6 pt-6'}>
-            <SobreDondeButton/>
+            <SobreDondeButton />
 
-            <PreguntasFrecuentesButton/>
+            <PreguntasFrecuentesButton />
           </MainContainer>
         </div>
       )}

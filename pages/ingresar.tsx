@@ -1,8 +1,8 @@
-import {signIn, signOut} from 'next-auth/react';
-import {NextPage} from 'next';
+import { signIn, signOut } from 'next-auth/react';
+import { NextPage } from 'next';
 import MainContainer from '../components/MainContainer';
-import {FormEvent, useState} from 'react';
-import {useAuthenticatedUser} from "../hooks/useAuthenticatedUser";
+import { FormEvent, useState } from 'react';
+import { useAuthenticatedUser } from '../hooks/useAuthenticatedUser';
 
 const SignIn: NextPage = () => {
   const user = useAuthenticatedUser();
@@ -17,10 +17,10 @@ const SignIn: NextPage = () => {
     const res = await signIn('credentials', {
       email,
       password,
-      redirect: false
+      redirect: false,
     });
     if (res?.error && res?.status === 401) {
-      setError('Contraseña incorrecta')
+      setError('Contraseña incorrecta');
     }
   };
 

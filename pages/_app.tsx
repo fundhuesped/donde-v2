@@ -7,7 +7,7 @@ import '@fontsource/poppins/700.css';
 import '@fontsource/open-sans';
 import '@fontsource/open-sans/700.css';
 import { SessionProvider } from 'next-auth/react';
-import Script from 'next/script'
+import Script from 'next/script';
 
 export default function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const [isScrollDisabled, setIsScrollDisabled] = useState(false);
@@ -20,8 +20,8 @@ export default function MyApp({ Component, pageProps: { session, ...pageProps } 
       <div className={`min-h-screen flex flex-col ${showScroll}`}>
         <Header onMenuOpening={handleDisableScroll} />
         <Component {...pageProps} />
-      <Script src="https://go.botmaker.com/rest/webchat/p/HLENDRUDLS/init.js" />
-    </div>
+        <Script src="https://go.botmaker.com/rest/webchat/p/HLENDRUDLS/init.js" />
+      </div>
     </SessionProvider>
   );
 }

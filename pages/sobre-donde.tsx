@@ -2,13 +2,21 @@ import React from 'react';
 import { Button } from '../components/Button';
 import Link from 'next/link';
 import Head from 'next/head';
-import {useRouter} from "next/router";
+import { useRouter } from 'next/router';
 
 function ComenzarBusquedaButton() {
   const router = useRouter();
-  return <Button className={'w-full my-5'} type={'secondary'} onClick={ () => { router.push("/") } }>
-    Comenzar Búsqueda
-  </Button>;
+  return (
+    <Button
+      className={'w-full my-5'}
+      type={'secondary'}
+      onClick={() => {
+        router.push('/');
+      }}
+    >
+      Comenzar Búsqueda
+    </Button>
+  );
 }
 
 export default function About() {
