@@ -1,5 +1,5 @@
-import {useSession} from "next-auth/react";
-import {AuthenticatedUser} from "../model/auth";
+import { useSession } from 'next-auth/react';
+import { AuthenticatedUser } from '../model/auth';
 
 export function useAuthenticatedUser(): AuthenticatedUser | null {
   const { data: session } = useSession();

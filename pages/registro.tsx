@@ -18,8 +18,8 @@ const SignUp: NextPage = () => {
       body: JSON.stringify({ email, password, firstName, lastName }),
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
   };
 

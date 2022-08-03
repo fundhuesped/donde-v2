@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:14.4-alpine
-    command: ["postgres", "-c", "log_statement=all"]
+    command: ['postgres', '-c', 'log_statement=all']
     environment:
       - POSTGRES_DB=donde
       - POSTGRES_USER=donde
