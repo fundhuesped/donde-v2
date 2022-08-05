@@ -42,7 +42,7 @@ const markers = places.flatMap((place, index) => {
 });
 
 const defaultCoords = { lat: -34.6989, lng: -64.7597 };
-const defaultZoom = 14;
+const defaultZoom = 15;
 
 export type Coordinates = { lat: number; lng: number };
 
@@ -72,7 +72,7 @@ const getMapPosition = (coords: Coordinates | undefined): MapPosition => {
     return { coords, zoom: defaultZoom };
   }
 
-  return { coords: defaultCoords, zoom: 5 };
+  return { coords: defaultCoords, zoom: defaultZoom };
 };
 
 const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
