@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { ChatAltIcon, InformationCircleIcon, MenuIcon } from '@heroicons/react/outline';
+import { ChatAltIcon, InformationCircleIcon, LoginIcon, MenuIcon } from '@heroicons/react/outline';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 import DondeLogo from '../assets/images/DondeLogo.svg';
 import { useClickOutsideHandler } from '../hooks/useClickOutsideHandler';
 import { BackButton } from './BackButton';
-import Link from 'next/link';
-import MainContainer from './MainContainer';
 import { Button } from './Button';
-import { useRouter } from 'next/router';
+import MainContainer from './MainContainer';
 
 export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: () => void }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -54,6 +54,24 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
     );
   };
 
+  const LoginButton = () => {
+    return (
+      <Button
+        onClick={() => {
+          setIsMenuOpen(false);
+
+          router.push({ pathname: '/ingresar' });
+        }}
+        className={'border-ultra-light-gray'}
+        type={'tertiary'}
+        alignment={'left'}
+        icon={<LoginIcon className={'h-6 w-5'} />}
+      >
+        Login
+      </Button>
+    );
+  };
+
   return (
     <header className={'flex items-center py-5 px-content'}>
       {!isHome && <BackButton />}
@@ -75,6 +93,7 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
             <SobreDondeButton />
 
             <PreguntasFrecuentesButton />
+            <LoginButton />
           </MainContainer>
         </div>
       )}

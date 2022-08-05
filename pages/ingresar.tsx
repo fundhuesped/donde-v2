@@ -1,19 +1,41 @@
-import { signIn, signOut } from 'next-auth/react';
+import { KeyIcon, UserIcon } from '@heroicons/react/solid';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { NextPage } from 'next';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
 import MainContainer from '../components/MainContainer';
-import { FormEvent, useState } from 'react';
 import { useAuthenticatedUser } from '../hooks/useAuthenticatedUser';
 
+type FormValues = {
+  email: string;
+  password: string;
+};
+
+const schema = yup
+  .object({
+    email: yup.string().email('El correo debe tener este formato ejemplo@correo.com').required('Por favor escriba su correo'),
+    password: yup.string().required('Por favor escriba su contraseña'),
+  })
+  .required();
+
 const SignIn: NextPage = () => {
+  const router = useRouter();
   const user = useAuthenticatedUser();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  const handleSignIn = async (event: FormEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({ resolver: yupResolver(schema) });
+
+  const handleSignIn = async () => {
     const res = await signIn('credentials', {
       email,
       password,
@@ -25,51 +47,71 @@ const SignIn: NextPage = () => {
   };
 
   return (
-    <MainContainer className={'mt-6 pt-8'}>
-      {user && `Hola ${user.firstName} ${user.lastName}!`}
-      <h1 className="text-xl font-bold mb-4">Ingresar</h1>
-      <form className={'mt-10'} onSubmit={handleSignIn}>
+    <MainContainer className={'mt-6 pt-8 container mx-auto w-full lg:w-[35rem] md:max-h-[28rem] lg:rounded-b-3xl px-[3rem]'}>
+      <h1 className="text-xl font-bold text-center">Ingresar</h1>
+      <form className={'mt-7'} onSubmit={handleSubmit(handleSignIn)}>
         <div className="mb-6">
           <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-            Email
+            Usuarie
           </label>
-          <input
-            type="email"
-            id="email"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            value={email}
-          />
+
+          <div>
+            {email == '' ? (
+              <UserIcon style={{ margin: '.4em .5em .5em .7em', position: 'absolute', width: '1.2em' }} color="#E6334C" />
+            ) : (
+              ''
+            )}
+            <input
+              {...register('email')}
+              id="email"
+              className="input-style placeholder-icon"
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Nombre de usuario"
+              value={email}
+            />
+            <p className="color-primary text-sm">{errors.email?.message}</p>
+          </div>
         </div>
-        <div className="mb-6">
+        <div className="mb-8">
           <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
             Contraseña
           </label>
-          <input
-            type="password"
-            id="password"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div>
+            {password == '' ? (
+              <KeyIcon style={{ margin: '.4em .5em .5em .7em', position: 'absolute', width: '1.2em' }} color="#E6334C" />
+            ) : (
+              ''
+            )}
+            <input
+              {...register('password')}
+              type="password"
+              id="password"
+              className="input-style placeholder-icon"
+              value={password}
+              placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <p className="color-primary text-sm">{errors.password?.message}</p>
+            {error && <p className="color-primary text-sm">{error}</p>}
+          </div>
+          <small className={'flex justify-end pt-3 color-primary font-bold'}>¿Olvidaste la contraseña?</small>
         </div>
-        <button
-          type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-          Submit
-        </button>
-        {user && (
-          <button
-            onClick={() => signOut()}
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Sign out
+        <div className="mb-6">
+          <button type="submit" className="btn-primary">
+            Iniciar sesión
           </button>
-        )}
-        {error && <p>{error}</p>}
+        </div>
+        <small className={'flex justify-center'}>
+          ¿No tienes cuenta?{' '}
+          <button
+            className="ml-2 color-primary font-bold"
+            onClick={() => {
+              router.push('/registro');
+            }}
+          >
+            Solicitar
+          </button>
+        </small>
       </form>
     </MainContainer>
   );
