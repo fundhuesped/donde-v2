@@ -12,9 +12,9 @@ type FormValues = {
   firstName: string;
   lastName: string;
   email: string;
-  businessType: string;
-  businessRol: string;
-  businessCountry: string;
+  organizationType: string;
+  organizationRol: string;
+  organizationCountry: string;
   webSite: string;
 };
 
@@ -23,9 +23,9 @@ const schema = yup
     email: yup.string().email('El correo debe tener este formato ejemplo@correo.com').required('Por favor escriba su correo'),
     firstName: yup.string().required('Por favor escriba su nombre'),
     lastName: yup.string().required('Por favor escriba su apellido'),
-    businessType: yup.string().required('El tipo de organización es requerido'),
-    businessRol: yup.string().required('Por favor escriba su rol'),
-    businessCountry: yup.string().required('Por favor escriba el pais de la organización'),
+    organizationType: yup.string().required('El tipo de organización es requerido'),
+    organizationRol: yup.string().required('Por favor escriba su rol'),
+    organizationCountry: yup.string().required('Por favor escriba el pais de la organización'),
     webSite: yup.string().required('Por favor escriba el sitio web de su organización'),
   })
   .required();
@@ -35,9 +35,9 @@ const SignUp: NextPage = () => {
   const router = useRouter();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [businessType, setBusinessType] = useState('');
-  const [businessRol, setBusinessRol] = useState('');
-  const [businessCountry, setBusinessCountry] = useState('');
+  const [organizationType, setOrganizationType] = useState('');
+  const [organizationRol, setOrganizationRol] = useState('');
+  const [organizationCountry, setOrganizationCountry] = useState('');
   const [email, setEmail] = useState('');
   const [webSite, setWebSite] = useState('');
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -55,9 +55,9 @@ const SignUp: NextPage = () => {
       email,
       firstName,
       lastName,
-      businessType,
-      businessRol,
-      businessCountry,
+      organizationType,
+      organizationRol,
+      organizationCountry,
       webSite,
     };
 
@@ -153,17 +153,17 @@ const SignUp: NextPage = () => {
         </div>
         <div className="flex flex-wrap -mx-3 my-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            {businessType == '' ? (
+            {organizationType == '' ? (
               <p style={{ color: '#E6334C', margin: '.2em .5em .5em 9.2em', position: 'absolute', width: '1.2em' }}>*</p>
             ) : (
               ''
             )}
             <select
-              {...register('businessType')}
+              {...register('organizationType')}
               className="select-style"
               placeholder="Tipo de organización"
-              value={businessType}
-              onChange={(e) => setBusinessType(e.target.value)}
+              value={organizationType}
+              onChange={(e) => setOrganizationType(e.target.value)}
             >
               <option value="" disabled selected hidden>
                 Tipo de organización
@@ -173,37 +173,37 @@ const SignUp: NextPage = () => {
               <option>Institución privada</option>
               <option>Otro</option>
             </select>
-            <p className="color-primary text-sm">{errors.businessType?.message}</p>
+            <p className="color-primary text-sm">{errors.organizationType?.message}</p>
           </div>
           <div className="w-full md:w-1/2 px-3">
-            {businessRol == '' ? (
+            {organizationRol == '' ? (
               <p style={{ color: '#E6334C', margin: '.2em .5em .5em 9.6em', position: 'absolute', width: '1.2em' }}>*</p>
             ) : (
               ''
             )}
             <input
-              {...register('businessRol')}
+              {...register('organizationRol')}
               className="input-style"
               placeholder="Rol en la organización"
-              value={businessRol}
-              onChange={(e) => setBusinessRol(e.target.value)}
+              value={organizationRol}
+              onChange={(e) => setOrganizationRol(e.target.value)}
             ></input>
-            <p className="color-primary text-sm">{errors.businessRol?.message}</p>
+            <p className="color-primary text-sm">{errors.organizationRol?.message}</p>
           </div>
         </div>
         <div className="flex flex-wrap -mx-3 my-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            {businessCountry == '' ? (
+            {organizationCountry == '' ? (
               <p style={{ color: '#E6334C', margin: '.2em .5em .5em 10.2em', position: 'absolute', width: '1.2em' }}>*</p>
             ) : (
               ''
             )}
             <select
-              {...register('businessCountry')}
+              {...register('organizationCountry')}
               className="input-style select-style"
               placeholder="País de la organización"
-              value={businessCountry}
-              onChange={(e) => setBusinessCountry(e.target.value)}
+              value={organizationCountry}
+              onChange={(e) => setOrganizationCountry(e.target.value)}
             >
               <option className="text-gray-300" value="" disabled selected hidden>
                 País de la organización
@@ -212,7 +212,7 @@ const SignUp: NextPage = () => {
                 <option key={`country-${country}`}>{country}</option>
               ))}
             </select>
-            <p className="color-primary text-sm">{errors.businessCountry?.message}</p>
+            <p className="color-primary text-sm">{errors.organizationCountry?.message}</p>
           </div>
           <div className="w-full md:w-1/2 px-3">
             {email == '' ? (

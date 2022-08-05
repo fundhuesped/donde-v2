@@ -1,7 +1,7 @@
 import { KeyIcon, UserIcon } from '@heroicons/react/solid';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { NextPage } from 'next';
-import { signIn, signOut } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -48,7 +48,6 @@ const SignIn: NextPage = () => {
 
   return (
     <MainContainer className={'mt-6 pt-8 container mx-auto w-full lg:w-[35rem] md:max-h-[28rem] lg:rounded-b-3xl px-[3rem]'}>
-      {user && `Hola ${user.firstName} ${user.lastName}!`}
       <h1 className="text-xl font-bold text-center">Ingresar</h1>
       <form className={'mt-7'} onSubmit={handleSubmit(handleSignIn)}>
         <div className="mb-6">
@@ -113,15 +112,6 @@ const SignIn: NextPage = () => {
             Solicitar
           </button>
         </small>
-
-        {user && (
-          <button
-            onClick={() => signOut()}
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Sign out
-          </button>
-        )}
       </form>
     </MainContainer>
   );
