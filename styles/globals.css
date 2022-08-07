@@ -38,8 +38,8 @@
 }
 
 @layer utilities {
-  .placeholder-icon::-webkit-input-placeholder {
-    padding-left: 1.7rem;
+  .placeholder-icon {
+    padding-left: 2rem;
   }
   .color-primary {
     color: #e6334c;

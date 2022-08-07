@@ -1,4 +1,4 @@
-import { ChatAltIcon, InformationCircleIcon, LoginIcon, MenuIcon } from '@heroicons/react/outline';
+import { ChatAltIcon, InformationCircleIcon, LoginIcon, LogoutIcon, MenuIcon } from '@heroicons/react/outline';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -7,10 +7,13 @@ import { useClickOutsideHandler } from '../hooks/useClickOutsideHandler';
 import { BackButton } from './BackButton';
 import { Button } from './Button';
 import MainContainer from './MainContainer';
+import { useAuthenticatedUser } from '../hooks/useAuthenticatedUser';
+import { signOut } from 'next-auth/react';
 
 export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: () => void }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
+  const user = useAuthenticatedUser();
   const handleClickMenu = () => {
     setIsMenuOpen(!isMenuOpen);
     handleMenuOpening();
@@ -21,10 +24,9 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
   const SobreDondeButton = () => {
     return (
       <Button
-        onClick={() => {
+        onClick={async () => {
+          await router.push({ pathname: '/sobre-donde' });
           setIsMenuOpen(false);
-
-          router.push({ pathname: '/sobre-donde' });
         }}
         className={'border-ultra-light-gray '}
         type={'tertiary'}
@@ -39,10 +41,9 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
   const PreguntasFrecuentesButton = () => {
     return (
       <Button
-        onClick={() => {
+        onClick={async () => {
+          await router.push({ pathname: '/preguntas-frecuentes' });
           setIsMenuOpen(false);
-
-          router.push({ pathname: '/preguntas-frecuentes' });
         }}
         className={'border-ultra-light-gray'}
         type={'tertiary'}
@@ -57,17 +58,33 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
   const LoginButton = () => {
     return (
       <Button
-        onClick={() => {
+        onClick={async () => {
+          await router.push({ pathname: '/ingresar' });
           setIsMenuOpen(false);
-
-          router.push({ pathname: '/ingresar' });
         }}
         className={'border-ultra-light-gray'}
         type={'tertiary'}
         alignment={'left'}
         icon={<LoginIcon className={'h-6 w-5'} />}
       >
-        Login
+        Iniciar sesión
+      </Button>
+    );
+  };
+
+  const LogoutButton = () => {
+    return (
+      <Button
+        onClick={async () => {
+          await signOut();
+          setIsMenuOpen(false);
+        }}
+        className={'border-ultra-light-gray'}
+        type={'tertiary'}
+        alignment={'left'}
+        icon={<LogoutIcon className={'h-6 w-5'} />}
+      >
+        Cerrar sesión
       </Button>
     );
   };
@@ -90,10 +107,14 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
       {isMenuOpen && (
         <div className={'absolute min-h-full w-full left-0 top-10 flex'}>
           <MainContainer ref={innerRef} className={'z-50 mt-6 pt-6'}>
+            {user && (
+              <h3 className={'text-lg text-primary font-bold ml-4 mb-4'}>
+                ¡Hola {user.firstName} {user.lastName}!
+              </h3>
+            )}
             <SobreDondeButton />
-
             <PreguntasFrecuentesButton />
-            <LoginButton />
+            {user ? <LogoutButton /> : <LoginButton />}
           </MainContainer>
         </div>
       )}

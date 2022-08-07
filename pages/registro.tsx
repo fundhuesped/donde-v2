@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { OrganizationType } from '@prisma/client';
 import { NextPage } from 'next';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,10 +12,12 @@ type FormValues = {
   firstName: string;
   lastName: string;
   email: string;
+  password: string;
+  organizationName: string;
   organizationType: string;
-  organizationRol: string;
+  organizationRole: string;
   organizationCountry: string;
-  webSite: string;
+  organizationWebsite: string;
 };
 
 const schema = yup
@@ -23,23 +25,25 @@ const schema = yup
     email: yup.string().email('El correo debe tener este formato ejemplo@correo.com').required('Por favor escriba su correo'),
     firstName: yup.string().required('Por favor escriba su nombre'),
     lastName: yup.string().required('Por favor escriba su apellido'),
+    organizationName: yup.string().required('El nombre de la organización es requerido'),
     organizationType: yup.string().required('El tipo de organización es requerido'),
-    organizationRol: yup.string().required('Por favor escriba su rol'),
+    organizationRole: yup.string().required('Por favor escriba su rol'),
     organizationCountry: yup.string().required('Por favor escriba el pais de la organización'),
-    webSite: yup.string().required('Por favor escriba el sitio web de su organización'),
+    organizationWebsite: yup.string().required('Por favor escriba el sitio web de su organización'),
   })
   .required();
 
 const SignUp: NextPage = () => {
-  const { data: session } = useSession();
   const router = useRouter();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [organizationName, setOrganizationName] = useState('');
   const [organizationType, setOrganizationType] = useState('');
-  const [organizationRol, setOrganizationRol] = useState('');
+  const [organizationRole, setOrganizationRol] = useState('');
   const [organizationCountry, setOrganizationCountry] = useState('');
   const [email, setEmail] = useState('');
-  const [webSite, setWebSite] = useState('');
+  const [password, setPassword] = useState('');
+  const [organizationWebsite, setOrganizationWebsite] = useState('');
   const [showModal, setShowModal] = useState<boolean>(false);
   const [response, setResponse] = useState(false);
   const [error, setError] = useState('');
@@ -51,18 +55,18 @@ const SignUp: NextPage = () => {
   } = useForm<FormValues>({ resolver: yupResolver(schema) });
 
   const handleSignUp = async () => {
-    const data = {
-      email,
-      firstName,
-      lastName,
-      organizationType,
-      organizationRol,
-      organizationCountry,
-      webSite,
-    };
-
     await fetch('/api/auth/signup', {
-      body: JSON.stringify({ data }),
+      body: JSON.stringify({
+        email,
+        firstName,
+        lastName,
+        password,
+        organizationName,
+        organizationType,
+        organizationRole,
+        organizationCountry,
+        organizationWebsite,
+      }),
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -112,7 +116,6 @@ const SignUp: NextPage = () => {
 
   return (
     <MainContainer className={'mt-6 p-5 container mx-auto w-full lg:w-[55em] lg:max-h-[32em] px-[3rem]'}>
-      {session && `Hola ${session.user?.email}`}
       <form className={'px-5'} onSubmit={handleSubmit(handleSignUp)}>
         <h1 className="text-xl font-bold mb-4 text-center">Registro</h1>
         <p className="text-sm text-center">
@@ -122,7 +125,7 @@ const SignUp: NextPage = () => {
         <div className="flex flex-wrap -mx-3 my-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             {firstName == '' ? (
-              <p style={{ color: '#E6334C', margin: '.2em .5em .5em 4.2em', position: 'absolute', width: '1.2em' }}>*</p>
+              <p style={{ color: '#E6334C', margin: '.2em .5em .5em 4em', position: 'absolute', width: '1.2em' }}>*</p>
             ) : (
               ''
             )}
@@ -136,8 +139,8 @@ const SignUp: NextPage = () => {
             <p className="color-primary text-sm">{errors.firstName?.message}</p>
           </div>
           <div className="w-full md:w-1/2 px-3">
-            {firstName == '' ? (
-              <p style={{ color: '#E6334C', margin: '.2em .5em .5em 4.2em', position: 'absolute', width: '1.2em' }}>*</p>
+            {lastName == '' ? (
+              <p style={{ color: '#E6334C', margin: '.2em .5em .5em 4em', position: 'absolute', width: '1.2em' }}>*</p>
             ) : (
               ''
             )}
@@ -153,8 +156,73 @@ const SignUp: NextPage = () => {
         </div>
         <div className="flex flex-wrap -mx-3 my-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            {email == '' ? (
+              <p style={{ color: '#E6334C', margin: '.2em .5em .5em 8.2em', position: 'absolute', width: '1.2em' }}>*</p>
+            ) : (
+              ''
+            )}
+            <input
+              {...register('email')}
+              className="input-style"
+              placeholder="Correo electrónico"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            ></input>
+            <p className="color-primary text-sm">{errors.email?.message}</p>
+          </div>
+          <div className="w-full md:w-1/2 px-3">
+            {password == '' ? (
+              <p style={{ color: '#E6334C', margin: '.2em .5em .5em 5.3em', position: 'absolute', width: '1.2em' }}>*</p>
+            ) : (
+              ''
+            )}
+            <input
+              {...register('password')}
+              type="password"
+              className="input-style"
+              placeholder="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            ></input>
+            <p className="color-primary text-sm">{errors.lastName?.message}</p>
+          </div>
+        </div>
+        <div className="flex flex-wrap -mx-3 my-6">
+          <div className="w-full md:w-1/2 px-3">
+            {organizationName == '' ? (
+              <p style={{ color: '#E6334C', margin: '.2em .5em .5em 11.8em', position: 'absolute', width: '1.2em' }}>*</p>
+            ) : (
+              ''
+            )}
+            <input
+              {...register('organizationName')}
+              className="input-style"
+              placeholder="Nombre de la organización"
+              value={organizationName}
+              onChange={(e) => setOrganizationName(e.target.value)}
+            ></input>
+            <p className="color-primary text-sm">{errors.organizationName?.message}</p>
+          </div>
+          <div className="w-full md:w-1/2 px-3">
+            {organizationRole == '' ? (
+              <p style={{ color: '#E6334C', margin: '.2em .5em .5em 9.6em', position: 'absolute', width: '1.2em' }}>*</p>
+            ) : (
+              ''
+            )}
+            <input
+              {...register('organizationRole')}
+              className="input-style"
+              placeholder="Rol en la organización"
+              value={organizationRole}
+              onChange={(e) => setOrganizationRol(e.target.value)}
+            ></input>
+            <p className="color-primary text-sm">{errors.organizationRole?.message}</p>
+          </div>
+        </div>
+        <div className="flex flex-wrap -mx-3 my-6">
+          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             {organizationType == '' ? (
-              <p style={{ color: '#E6334C', margin: '.2em .5em .5em 9.2em', position: 'absolute', width: '1.2em' }}>*</p>
+              <p style={{ color: '#E6334C', margin: '.2em .5em .5em 9.4em', position: 'absolute', width: '1.2em' }}>*</p>
             ) : (
               ''
             )}
@@ -164,34 +232,18 @@ const SignUp: NextPage = () => {
               placeholder="Tipo de organización"
               value={organizationType}
               onChange={(e) => setOrganizationType(e.target.value)}
+              defaultValue=""
             >
-              <option value="" disabled selected hidden>
+              <option value="" disabled hidden>
                 Tipo de organización
               </option>
-              <option>Organización social</option>
-              <option>Institución pública</option>
-              <option>Institución privada</option>
-              <option>Otro</option>
+              <option value={OrganizationType.SOCIAL_ORGANIZATION}>Organización social</option>
+              <option value={OrganizationType.PUBLIC_INSTITUTION}>Institución pública</option>
+              <option value={OrganizationType.PRIVATE_INSTITUTION}>Institución privada</option>
+              <option value={OrganizationType.OTHER}>Otro</option>
             </select>
             <p className="color-primary text-sm">{errors.organizationType?.message}</p>
           </div>
-          <div className="w-full md:w-1/2 px-3">
-            {organizationRol == '' ? (
-              <p style={{ color: '#E6334C', margin: '.2em .5em .5em 9.6em', position: 'absolute', width: '1.2em' }}>*</p>
-            ) : (
-              ''
-            )}
-            <input
-              {...register('organizationRol')}
-              className="input-style"
-              placeholder="Rol en la organización"
-              value={organizationRol}
-              onChange={(e) => setOrganizationRol(e.target.value)}
-            ></input>
-            <p className="color-primary text-sm">{errors.organizationRol?.message}</p>
-          </div>
-        </div>
-        <div className="flex flex-wrap -mx-3 my-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             {organizationCountry == '' ? (
               <p style={{ color: '#E6334C', margin: '.2em .5em .5em 10.2em', position: 'absolute', width: '1.2em' }}>*</p>
@@ -204,8 +256,9 @@ const SignUp: NextPage = () => {
               placeholder="País de la organización"
               value={organizationCountry}
               onChange={(e) => setOrganizationCountry(e.target.value)}
+              defaultValue=""
             >
-              <option className="text-gray-300" value="" disabled selected hidden>
+              <option className="text-gray-300" value="" disabled hidden>
                 País de la organización
               </option>
               {countries.map((country) => (
@@ -214,37 +267,22 @@ const SignUp: NextPage = () => {
             </select>
             <p className="color-primary text-sm">{errors.organizationCountry?.message}</p>
           </div>
-          <div className="w-full md:w-1/2 px-3">
-            {email == '' ? (
-              <p style={{ color: '#E6334C', margin: '.2em .5em .5em 8.4em', position: 'absolute', width: '1.2em' }}>*</p>
-            ) : (
-              ''
-            )}
-            <input
-              {...register('email', { required: true, pattern: /^\S+@\S+$/i })}
-              className="input-style"
-              placeholder="Correo electrónico"
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-            ></input>
-            <p className="color-primary text-sm">{errors.email?.message}</p>
-          </div>
         </div>
         <div className="flex flex-wrap -mx-3 my-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            {webSite == '' ? (
+            {organizationWebsite == '' ? (
               <p style={{ color: '#E6334C', margin: '.2em .5em .5em 15em', position: 'absolute', width: '1.2em' }}>*</p>
             ) : (
               ''
             )}
             <input
-              {...register('webSite')}
+              {...register('organizationWebsite')}
               className="input-style"
               placeholder="Sitio web o RRSS de la organización"
-              value={webSite}
-              onChange={(e) => setWebSite(e.target.value)}
+              value={organizationWebsite}
+              onChange={(e) => setOrganizationWebsite(e.target.value)}
             ></input>
-            <p className="color-primary text-sm">{errors.webSite?.message}</p>
+            <p className="color-primary text-sm">{errors.organizationWebsite?.message}</p>
           </div>
         </div>
         <div className="m-3">
