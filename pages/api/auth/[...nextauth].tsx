@@ -1,12 +1,11 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { PrismaClient } from '@prisma/client';
+import { UserStatus } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { Session } from 'next-auth/core/types';
 import { AuthenticatedUser } from '../../../model/auth';
 import { JWT } from 'next-auth/jwt';
-
-const prisma = new PrismaClient();
+import { prismaClient } from '../../../server/prisma/client';
 
 export default NextAuth({
   providers: [
@@ -14,15 +13,17 @@ export default NextAuth({
       credentials: {},
       authorize: async (credentials: any): Promise<AuthenticatedUser | null> => {
         const { email, password } = credentials;
-        const user = await prisma.user.findUnique({
+        const user = await prismaClient.user.findUnique({
+          select: { email: true, password: true, first_name: true, last_name: true, role: true, status: true },
           where: { email },
         });
 
-        if (user && (await bcrypt.compare(password, user.password))) {
+        if (user && user.status === UserStatus.ACTIVE && (await bcrypt.compare(password, user.password))) {
           return {
             email: user.email,
             firstName: user.first_name,
             lastName: user.last_name,
+            role: user.role,
           };
         }
 

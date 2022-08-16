@@ -1,4 +1,4 @@
-import React, { RefObject, useState } from 'react';
+import React, { RefObject, useEffect, useState } from 'react';
 import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
 import { Pill } from '../components/Pill';
@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { Coordinates } from '../model/map';
 import { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
+import isEmpty from 'lodash/isEmpty';
 
 type StaticProps = {
   googleMapsApiKey: string;
@@ -31,12 +32,13 @@ const Search: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
   const { ref: autocompleteInputRef }: { ref: RefObject<HTMLInputElement> } = usePlacesWidget({
     apiKey: googleMapsApiKey,
     onPlaceSelected: (place) => {
+      setSearchLocation(place.formatted_address);
       setLocation(place.formatted_address);
       setCoords({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
     },
     options: {
       componentRestrictions: { country: 'ar' },
-      types: ['locality', 'street_address', 'sublocality', 'health', 'intersection'],
+      types: ['sublocality', 'locality', 'street_address', 'intersection'],
     },
   });
 
@@ -52,16 +54,21 @@ const Search: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
       : servicesData;
   const services = searchedServices.map((service) => service);
 
+  const [searchLocation, setSearchLocation] = useState('');
   const [location, setLocation] = useState('');
-  const [coords, setCoords] = useState<Coordinates>({ lat: -34.6989, lng: -64.7597 });
-  const isLocationEmpty = location.trim() === '';
+  const [coords, setCoords] = useState<Coordinates>({} as Coordinates);
+  const [isMissingSearchInfo, setIsMissingSearchInfo] = useState(true);
 
-  const handleLocationChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setLocation(event.currentTarget.value);
+  useEffect(() => {
+    setIsMissingSearchInfo(isEmpty(location) || isEmpty(coords));
+  }, [location, coords]);
+
+  const handleSearchLocationChange = (event: React.FormEvent<HTMLInputElement>) => {
+    setSearchLocation(event.currentTarget.value);
   };
 
   const handleSearchButtonClicked = () => {
-    if (!isLocationEmpty) {
+    if (!isMissingSearchInfo) {
       router.push({
         pathname: '/establecimientos',
         query: {
@@ -99,11 +106,16 @@ const Search: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
           ref={autocompleteInputRef}
           className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 mt-4'}
           placeholder={'Ingresá la ubicación'}
-          value={location}
-          onChange={handleLocationChange}
+          value={searchLocation}
+          onChange={handleSearchLocationChange}
         />
         <div className={'mt-8'}>
-          <Button className={'bg-white w-full'} disabled={isLocationEmpty} type={'primary'} onClick={handleSearchButtonClicked}>
+          <Button
+            className={'bg-white w-full'}
+            disabled={isMissingSearchInfo}
+            type={'primary'}
+            onClick={handleSearchButtonClicked}
+          >
             Buscar
           </Button>
           <Button className={'w-full mt-4'} type={'secondary'} onClick={handleSearchButtonByLocationClicked}>

@@ -7,7 +7,6 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import MainContainer from '../components/MainContainer';
-import { useAuthenticatedUser } from '../hooks/useAuthenticatedUser';
 
 type FormValues = {
   email: string;
@@ -23,7 +22,6 @@ const schema = yup
 
 const SignIn: NextPage = () => {
   const router = useRouter();
-  const user = useAuthenticatedUser();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -42,7 +40,9 @@ const SignIn: NextPage = () => {
       redirect: false,
     });
     if (res?.error && res?.status === 401) {
-      setError('Contraseña incorrecta');
+      setError('Los datos ingresados son incorrectos.');
+    } else {
+      await router.push('/');
     }
   };
 
@@ -52,15 +52,11 @@ const SignIn: NextPage = () => {
       <form className={'mt-7'} onSubmit={handleSubmit(handleSignIn)}>
         <div className="mb-6">
           <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-            Usuarie
+            Correo electrónico
           </label>
 
           <div>
-            {email == '' ? (
-              <UserIcon style={{ margin: '.4em .5em .5em .7em', position: 'absolute', width: '1.2em' }} color="#E6334C" />
-            ) : (
-              ''
-            )}
+            <UserIcon style={{ margin: '.4em .5em .5em .7em', position: 'absolute', width: '1.2em' }} color="#E6334C" />
             <input
               {...register('email')}
               id="email"
@@ -77,11 +73,7 @@ const SignIn: NextPage = () => {
             Contraseña
           </label>
           <div>
-            {password == '' ? (
-              <KeyIcon style={{ margin: '.4em .5em .5em .7em', position: 'absolute', width: '1.2em' }} color="#E6334C" />
-            ) : (
-              ''
-            )}
+            <KeyIcon style={{ margin: '.4em .5em .5em .7em', position: 'absolute', width: '1.2em' }} color="#E6334C" />
             <input
               {...register('password')}
               type="password"
@@ -92,7 +84,7 @@ const SignIn: NextPage = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
             <p className="color-primary text-sm">{errors.password?.message}</p>
-            {error && <p className="color-primary text-sm">{error}</p>}
+            {error && <p className="color-primary text-sm mt-4">{error}</p>}
           </div>
           <small className={'flex justify-end pt-3 color-primary font-bold'}>¿Olvidaste la contraseña?</small>
         </div>
@@ -105,8 +97,8 @@ const SignIn: NextPage = () => {
           ¿No tienes cuenta?{' '}
           <button
             className="ml-2 color-primary font-bold"
-            onClick={() => {
-              router.push('/registro');
+            onClick={async () => {
+              await router.push('/registro');
             }}
           >
             Solicitar

@@ -11,7 +11,7 @@ const MainContainer = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
   return (
     <main
       ref={ref}
-      className={classNames('bg-ultra-light-gray px-content lg:rounded-3xl rounded-none flex-grow', className)}
+      className={classNames('bg-ultra-light-gray px-content rounded-t-3xl lg:rounded-3xl flex-grow', className)}
       {...rest}
     >
       {children}
