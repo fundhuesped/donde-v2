@@ -3,8 +3,7 @@ import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/solid';
 export const SortTableArrows = () => {
   return (
     <>
-      <ChevronUpIcon style={{ color: 'inherent', width: '.7em' }} />{' '}
-      <ChevronDownIcon style={{ color: 'inherent', width: '.7em' }} />
+      <ChevronUpIcon className="text-inherit w-2.5" /> <ChevronDownIcon className="text-inherit w-2.5" />
     </>
   );
 };

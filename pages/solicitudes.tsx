@@ -1,9 +1,5 @@
 import { NextPage } from 'next';
-import { useState } from 'react';
 import Table from '../components/Table/Table';
-import { TableBody } from '../components/Table/TableBody';
-import TableHead from '../components/Table/TableHead';
-import { mockSolicitud } from './api/auth/mockSolicitud';
 
 const columns = [
   {
@@ -41,14 +37,9 @@ const columns = [
 ];
 
 const Solicitudes: NextPage = () => {
-  const [tableData, setTableData] = useState(mockSolicitud);
-
   return (
     <main className={'px-6 my-2'}>
-      <Table title={'Solicitudes'} placeholder={'Buscar por nombre o apellido '}>
-        <TableHead {...{ columns, tableData, setTableData }} />
-        <TableBody {...{ columns, tableData }} />
-      </Table>
+      <Table title={'Solicitudes'} placeholder={'Buscar por nombre o apellido '} columns={columns} />
     </main>
   );
 };

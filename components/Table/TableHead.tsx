@@ -1,53 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SortTableArrows } from './SortTableArrows';
 
-interface tableDataI {
-  name: string;
-  lastname: string;
-  date: string;
-  country: string;
-  state: string;
-  id: number;
-  mail: string;
-  dni: string;
-  tel: string;
-}
-
 type Props = React.PropsWithChildren<{
-  className?: string;
   columns: { label: string; accessor: string; className: string; sortable?: boolean }[];
-  tableData: tableDataI[];
-  setTableData: any;
+  onColumnSort: (accessor: string) => void;
 }>;
 
 const TableHead = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
-  const { children, columns, tableData, setTableData } = props;
-  const [sortField, setSortField] = useState('');
-  const [order, setOrder] = useState('asc');
-
-  const handleSorting = (sortField: string, sortOrder: string) => {
-    const sortFieldKey = sortField as keyof tableDataI;
-    if (sortField) {
-      const sorted = [...tableData].sort((a, b) => {
-        if (a[sortFieldKey] === null) return 1;
-        if (b[sortFieldKey] === null) return -1;
-        if (a[sortFieldKey] === null && b[sortFieldKey] === null) return 0;
-        return (
-          a[sortFieldKey].toString().localeCompare(b[sortFieldKey].toString(), 'es', {
-            numeric: true,
-          }) * (sortOrder === 'asc' ? 1 : -1)
-        );
-      });
-      setTableData(sorted);
-    }
-  };
-
-  const handleSortingChange = (accessor: string) => {
-    const sortOrder = accessor === sortField && order === 'asc' ? 'desc' : 'asc';
-    setSortField(accessor);
-    setOrder(sortOrder);
-    handleSorting(accessor, sortOrder);
-  };
+  const { columns, onColumnSort } = props;
 
   return (
     <>
@@ -59,7 +19,7 @@ const TableHead = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
                 {sortable ? (
                   <div className="flex aling-center justify-center">
                     {label}
-                    <button className="ml-2" onClick={() => handleSortingChange(accessor)}>
+                    <button className="ml-2" onClick={() => onColumnSort(accessor)}>
                       <SortTableArrows />
                     </button>
                   </div>

@@ -256,7 +256,7 @@ const SignUp: NextPage = () => {
           </button>
         </div>
         {showModal ? (
-          <Modal showModal={showModal} background={"url('../assets/images/bg-modal.png') white"}>
+          <Modal showModal={showModal} className={'bg-image bg-white'}>
             <div className="flex items-center justify-center flex-col px-[5rem] py-[1.5rem] rounded-b">
               <h2 className="text-xl font-semibold p-2">¡Gracias por ser parte!</h2>
               <p className="text-center p-5">Revisaremos los datos enviados y nos pondremos en contacto a la brevedad.</p>
