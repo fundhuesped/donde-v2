@@ -30,7 +30,7 @@
 1. Install Dokku, set up SSH keys and virtualhost settings. [Read the docs](https://dokku.com/docs/getting-started/installation/).
 2. Create the app.
    ```sh
-   dokku apps:create
+   dokku apps:create donde
    ```
 3. Create backing services.
    ```sh
@@ -41,12 +41,7 @@
    # Link the database service to the app. This will set the DATABASE_URL env config in the app.
    dokku postgres:link donde-db donde
    ```
-4. Configure NextAuth. [Read more](https://next-auth.js.org/configuration/options).
-   ```sh
-   dokku config:set donde NEXTAUTH_URL='https://your.domain.com'
-   dokku config:set donde NEXTAUTH_SECRET="$(openssl rand -base64 32)"
-   ```
-5. Set up SSL through Let's Encrypt.
+4. Set up SSL through Let's Encrypt.
    ```sh
    # Install the letsencrypt plugin
    sudo dokku plugin:install https://github.com/dokku/dokku-letsencrypt.git
@@ -58,4 +53,13 @@
    dokku letsencrypt:enable donde
    # Set up SSL auto-renewal
    dokku letsencrypt:cron-job --add
+   ```
+5. Configure Google Maps API key.
+   ```sh
+   dokku config:set donde GOOGLE_MAPS_API_KEY=your_api_key
+   ```
+6. Configure NextAuth. [Read more](https://next-auth.js.org/configuration/options).
+   ```sh
+   dokku config:set donde NEXTAUTH_URL='https://your.domain.com'
+   dokku config:set donde NEXTAUTH_SECRET="$(openssl rand -base64 32)"
    ```
