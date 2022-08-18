@@ -15,14 +15,14 @@ export const Search = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
   return (
     <div ref={ref} className="relative">
       <input
-        className="input-style w-[270px] lg:w-[370px] rounded-base h-10 text-sm text-gray-500"
+        className="input-style w-72 lg:w-96 rounded-base h-10 text-sm text-gray-500"
         placeholder={placeholder}
         name={name}
         defaultValue={defaultValue}
         value={value}
         onChange={onChange}
       />
-      <SearchIcon className="absolute -translate-y-2/4 left-60 lg:rigth-full lg:ml-24 top-1/3 w-5 text-light-gray" />
+      <SearchIcon className="absolute -translate-y-2/4 right-2 lg:rigth-full lg:ml-28 top-1/3 w-5 text-light-gray" />
     </div>
   );
 });

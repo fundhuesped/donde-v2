@@ -20,7 +20,7 @@ module.exports = {
         'dark-semi-transparent': 'rgba(50, 50, 57, 0.7)',
       },
       backgroundImage: {
-        image: "url('../assets/images/bg-modal.png')",
+        'modal-image': "url('../assets/images/bg-modal.png')",
       },
       fontFamily: {
         sans: ['Open-sans', ...defaultTheme.fontFamily.sans],
