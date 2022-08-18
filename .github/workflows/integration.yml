@@ -1,9 +1,14 @@
 name: Integration
+
 on:
   pull_request:
     types: [opened, synchronize]
+
+env:
+  GOOGLE_MAPS_API_KEY: ${{secrets.GOOGLE_MAPS_API_KEY}}
+
 jobs:
-  integration:
+  check_format:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
@@ -29,4 +34,31 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: 'Found format errors. Fix them by running `yarn fmt:fix`.'
+            })
+  check_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+      - name: Install node dependencies
+        run: yarn install
+      - name: Check build
+        run: yarn build
+      - name: Comment
+        uses: actions/github-script@v6
+        if: failure()
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Error at building app. Please take a look at the logs and fix errors.'
             })
