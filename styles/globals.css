@@ -32,8 +32,6 @@
 
   .modal-style {
     @apply flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-white bg-opacity-50;
-    @apply flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none;
-    background: url('../assets/images/bg-modal.png') white;
   }
 }
 
