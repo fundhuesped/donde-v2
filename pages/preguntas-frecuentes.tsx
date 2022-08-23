@@ -106,7 +106,7 @@ export default function FAQs() {
         <title>Dónde - Preguntas Frecuentes</title>
       </Head>
 
-      <main className={'px-6 my-2'}>
+      <main className={'px-6 my-2 lg:mx-auto lg:w-desktop'}>
         <h1 className={'text-lg text-black font-bold mb-8'}>Preguntas frecuentes</h1>
         <ul>
           {ITEMS.map((item, index) => (

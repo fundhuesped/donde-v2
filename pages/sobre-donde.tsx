@@ -8,7 +8,7 @@ function ComenzarBusquedaButton() {
   const router = useRouter();
   return (
     <Button
-      className={'w-full my-5'}
+      className={'w-full my-5 lg:mx-auto lg:max-w-sm'}
       type={'secondary'}
       onClick={() => {
         router.push('/');
@@ -26,7 +26,7 @@ export default function About() {
         <title>Dónde - Sobre Dónde</title>
       </Head>
 
-      <main className={'px-6 my-2'}>
+      <main className={'px-6 my-2 lg:mx-auto lg:max-w-desktop'}>
         <h1 className={'text-lg text-black font-bold mb-8'}>Sobre Dónde</h1>
         <p className={'text-base text-justify mb-6'}>
           <strong>Dónde</strong> es una plataforma que te permite encontrar servicios de salud.

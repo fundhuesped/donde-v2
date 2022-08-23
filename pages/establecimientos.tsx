@@ -132,7 +132,7 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
       <MainContainer className={'relative overflow-hidden px-0'}>
         {mapPosition && (
           <>
-            <div className={classNames('w-full')} style={{ height: 'calc(100vh - 56px - 1.5rem)' }}>
+            <div className={classNames('w-full lg:mx-auto')} style={{ height: 'calc(100vh - 56px - 1.5rem)' }}>
               <GoogleMapReact
                 bootstrapURLKeys={{
                   key: googleMapsApiKey,
@@ -160,7 +160,10 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
             </div>
 
             {activeMarker !== null && (
-              <Card onClick={handleDetailsClick} className={'fixed bottom-8 right-4 left-4 cursor-pointer'}>
+              <Card
+                onClick={handleDetailsClick}
+                className={'fixed bottom-8 right-4 left-4 cursor-pointer lg:w-desktop lg:mx-auto'}
+              >
                 <header className={'flex flex-row justify-between items-center mb-2'}>
                   <CardHeader>{activeMarker.establecimiento}</CardHeader>
                   <button className={'w-5 text-dark-gray'} onClick={handleClose}>
