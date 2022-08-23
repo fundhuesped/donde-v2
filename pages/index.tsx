@@ -23,7 +23,7 @@ const SearchButton = React.memo<SearchButtonProps>((props: SearchButtonProps) =>
   const { enabled, onClick } = props;
 
   return (
-    <Button className={'w-full my-5'} disabled={!enabled} type={'primary'} onClick={onClick}>
+    <Button className={'w-full my-5 lg:max-w-sm lg:mx-auto'} disabled={!enabled} type={'primary'} onClick={onClick}>
       Buscar
     </Button>
   );
@@ -127,7 +127,7 @@ const Home: NextPage = React.memo(() => {
       <p className={'px-content my-4 text-xl font-title text-justify'}>
         <strong>Dónde</strong> es una plataforma que te permite encontrar servicios de salud.
       </p>
-      <MainContainer className={'mt-4 pt-8'}>
+      <MainContainer className={'mt-4 pt-8 lg:mx-auto lg:grow-0 lg:p-8 lg:min-w-60rem'}>
         <h2 className={'text-xl text-black font-title font-bold'}>¿Qué estás buscando?</h2>
         <p className={'text-xs text-black mt-2'}>Seleccioná el servicio que querés encontrar</p>
         {Object.values(services).map((service) => (

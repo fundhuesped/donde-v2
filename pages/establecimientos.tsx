@@ -132,7 +132,7 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
       <MainContainer className={'relative overflow-hidden px-0'}>
         {mapPosition && (
           <>
-            <div className={classNames('w-full')} style={{ height: 'calc(100vh - 56px - 1.5rem)' }}>
+            <div className={classNames('w-full lg:px-64')} style={{ height: 'calc(100vh - 56px - 1.5rem)' }}>
               <GoogleMapReact
                 bootstrapURLKeys={{
                   key: googleMapsApiKey,

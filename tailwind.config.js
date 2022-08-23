@@ -4,6 +4,12 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 module.exports = {
   content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
   theme: {
+    minWidth: {
+      '60rem': '60rem',
+    },
+    maxWidth: {
+      '60rem': '60rem',
+    },
     extend: {
       colors: {
         primary: '#E6334C',
