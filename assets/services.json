@@ -1,1 +1,8 @@
-[{"id": "test-hiv", "name": "Test de HIV"}]
+[
+    {"id": "preservativos", "name": "Preservativos"},
+    {"id": "infectologia", "name": "Centros de Infectología"},
+    {"id": "test-its", "name": "Test de ITS"},
+    {"id": "anticonceptivos", "name": "Métodos anticonceptivos"},
+    {"id": "vacunatorios", "name": "Vacunatorios"},
+    {"id": "aborto", "name": "Interrupción voluntaria del embarazo"}
+]
