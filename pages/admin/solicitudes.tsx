@@ -1,5 +1,6 @@
 import { NextPage } from 'next';
 import Table from '../../components/Table/SignupRequestTable';
+import Head from "next/head";
 
 const columns = [
   {
@@ -37,11 +38,12 @@ const columns = [
 ];
 
 const Solicitudes: NextPage = () => {
-  return (
+  return (<>
+    <Head><title>Dónde - Solicitudes de alta</title></Head>
     <main className={'px-6 my-2'}>
       <Table title={'Solicitudes'} placeholder={'Buscar por nombre o apellido '} columns={columns} />
     </main>
-  );
+  </>);
 };
 
 export default Solicitudes;
