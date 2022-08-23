@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import Table from '../components/Table/SignupRequestTable';
+import Table from '../../components/Table/SignupRequestTable';
 
 const columns = [
   {
