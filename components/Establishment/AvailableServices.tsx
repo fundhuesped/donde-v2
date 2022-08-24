@@ -24,13 +24,12 @@ export const AvailableServices = (props: AvailableServicesProps) => {
       <h1 className={'my-6 text-justify font-bold text-black'}>¿Qué servicios brinda el lugar?</h1>
       {services?.map(service => {
         return (
-          <label>
+          <label key={service.id}>
             <input
-              key={service.id}
               name={service.id}
               className={'mr-2 text-xs'}
               type={'checkbox'}
-              onClick={handleChange}
+              onChange={handleChange}
               checked={isChecked(service.id)}
             />
             {service.label}
