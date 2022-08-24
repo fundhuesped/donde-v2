@@ -96,7 +96,7 @@ const Search: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
           ))}
         </div>
       </div>
-      <MainContainer className={'mt-8 pt-8'}>
+      <MainContainer className={'mt-8 pt-8 lg:mx-auto lg:grow-0 lg:p-8 lg:min-w-desktop'}>
         <h2 className={'text-xl text-black font-title font-bold'}>¿En qué lugar estas buscando?</h2>
         <p className={'text-xs text-black mt-2 mb-4'}>
           Podés buscar por ciudad, departamento o barrio. También podés buscar por el nombre o la dirección de un centro que ya
@@ -111,14 +111,18 @@ const Search: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
         />
         <div className={'mt-8'}>
           <Button
-            className={'bg-white w-full'}
+            className={'bg-white w-full lg:mx-auto lg:max-w-[24rem]'}
             disabled={isMissingSearchInfo}
             type={'primary'}
             onClick={handleSearchButtonClicked}
           >
             Buscar
           </Button>
-          <Button className={'w-full mt-4'} type={'secondary'} onClick={handleSearchButtonByLocationClicked}>
+          <Button
+            className={'w-full mt-4 lg:max-w-sm lg:mx-auto'}
+            type={'secondary'}
+            onClick={handleSearchButtonByLocationClicked}
+          >
             Buscar por mi ubicación actual
           </Button>
         </div>

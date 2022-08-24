@@ -29,9 +29,16 @@ module.exports = {
       spacing: {
         content: '1rem',
         4.5: '1.125rem',
+        desktop: '60rem',
       },
       dropShadow: {
         donde: '0 8px 16px rgba(0, 0, 0, 0.04)',
+      },
+      minWidth: {
+        desktop: '60rem',
+      },
+      maxWidth: {
+        desktop: '60rem',
       },
     },
   },
