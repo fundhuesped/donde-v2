@@ -1,26 +1,24 @@
-import React, {RefObject, useState} from 'react';
+import React, { RefObject, useState } from 'react';
 import isEmpty from 'lodash/isEmpty';
 import values from 'lodash/values';
-import {Bounds} from 'google-map-react';
-import {usePlacesWidget} from 'react-google-autocomplete';
+import { Bounds } from 'google-map-react';
+import { usePlacesWidget } from 'react-google-autocomplete';
 import MainContainer from '../../components/MainContainer';
-import {Button} from '../../components/Button';
+import { Button } from '../../components/Button';
 import Select from '../../components/Select';
 import Toast from '../../components/Toast';
-import {DraggableMap} from "../../components/DraggableMap";
-import {EstablishmentSearchStep} from "../../components/Establishment/EstablishmentSearchStep";
-import {AvailabilityField} from "../../components/Establishment/AvailabilityField";
-import {AvailableServices} from "../../components/Establishment/AvailableServices";
-import {LocationField} from "../../components/Establishment/LocationField";
-import {ContactInfoField} from "../../components/Establishment/ContactInfoField";
+import { DraggableMap } from '../../components/DraggableMap';
+import { EstablishmentSearchStep } from '../../components/Establishment/EstablishmentSearchStep';
+import { AvailabilityField } from '../../components/Establishment/AvailabilityField';
+import { AvailableServices } from '../../components/Establishment/AvailableServices';
+import { LocationField } from '../../components/Establishment/LocationField';
+import { ContactInfoField } from '../../components/Establishment/ContactInfoField';
 
 const types = [
   { value: 'publico', label: 'Público' },
   { value: 'arancelado', label: 'Arancelado' },
 ];
-const services = [
-  { id: 'hiv', label: 'Test de HIV' },
-];
+const services = [{ id: 'hiv', label: 'Test de HIV' }];
 
 export type EstablishmentModel = {
   name: string;
@@ -60,11 +58,11 @@ const emptyEstablishmentModel = {
   availability: '',
 };
 
-const EstablishmentAdmin = ( props: {googleMapsApiKey: string, establishment?: EstablishmentModel} ) => {
-  const {googleMapsApiKey, establishment} = props
+const EstablishmentAdmin = (props: { googleMapsApiKey: string; establishment?: EstablishmentModel }) => {
+  const { googleMapsApiKey, establishment } = props;
   const [isError, setIsError] = useState(false);
   const [isNewEstablishment, setIsNewEstablishment] = useState(isEmpty(establishment));
-  const [form, setForm] = useState<EstablishmentModel>( establishment || emptyEstablishmentModel);
+  const [form, setForm] = useState<EstablishmentModel>(establishment || emptyEstablishmentModel);
   const [isFormCompleted, setIsFormCompleted] = useState(false);
 
   const [bounds, setBounds] = useState<Bounds | null>(null);
@@ -120,7 +118,6 @@ const EstablishmentAdmin = ( props: {googleMapsApiKey: string, establishment?: E
     setIsNewEstablishment(false);
   };
 
-
   const handleChildMouseMove = async (hoverKey: any, childProps: any, mouse: any) => {
     handleFormUpdate({ location: { lat: mouse.lat, lng: mouse.lng } });
   };
@@ -141,7 +138,7 @@ const EstablishmentAdmin = ( props: {googleMapsApiKey: string, establishment?: E
     tosCheckbox,
     location,
     additionalDescription,
-    availability
+    availability,
   } = form;
   return (
     <>
@@ -156,7 +153,8 @@ const EstablishmentAdmin = ( props: {googleMapsApiKey: string, establishment?: E
             ref={autocompleteInputRef}
             address={address}
             location={location}
-            onClick={handleContinueButtonClicked}/>
+            onClick={handleContinueButtonClicked}
+          />
         )}
         {!isNewEstablishment && (
           <>
@@ -175,26 +173,48 @@ const EstablishmentAdmin = ( props: {googleMapsApiKey: string, establishment?: E
               value={type}
               items={types}
             />
-            <LocationField key={'surroundingStreets'} onChange={handleFieldChange} fullAddress={fullAddress}
-                           streetName={streetName}
-                           streetNumber={streetNumber} floor={floor} surroundingStreets={surroundingStreets}/>
+            <LocationField
+              key={'surroundingStreets'}
+              onChange={handleFieldChange}
+              fullAddress={fullAddress}
+              streetName={streetName}
+              streetNumber={streetNumber}
+              floor={floor}
+              surroundingStreets={surroundingStreets}
+            />
 
-            <DraggableMap key={'markerPosition'} apiKey={googleMapsApiKey}
-                          onChildMouseMove={(key, childProps, mouse) => handleChildMouseMove(key, childProps, mouse)}
-                          location={location} onChange={({bounds}) => {
-              setBounds(bounds);
-            }}/>
-            <AvailabilityField key={'workingHourTo'} onChange={handleFormUpdate} availability={availability}/>
-            <AvailableServices onChange={handleFormUpdate} availableServices={availableServices} services={services}/>
-            <ContactInfoField key={'email'} onChange={handleFieldChange} website={website} phone={phone} whatsApp={whatsApp}
-                              email={email}/>
+            <DraggableMap
+              key={'markerPosition'}
+              apiKey={googleMapsApiKey}
+              onChildMouseMove={(key, childProps, mouse) => handleChildMouseMove(key, childProps, mouse)}
+              location={location}
+              onChange={({ bounds }) => {
+                setBounds(bounds);
+              }}
+            />
+            <AvailabilityField key={'workingHourTo'} onChange={handleFormUpdate} availability={availability} />
+            <AvailableServices onChange={handleFormUpdate} availableServices={availableServices} services={services} />
+            <ContactInfoField
+              key={'email'}
+              onChange={handleFieldChange}
+              website={website}
+              phone={phone}
+              whatsApp={whatsApp}
+              email={email}
+            />
 
             <h1 className={'mt-6 mb-2 font-bold text-black'}>¿Algo más que quieras agregar sobre el lugar?</h1>
             <p className={'text-xs mb-2'}>
               Por ejemplo referencias de acceso, o cualquier otro dato relevante sobre el establecimiento
             </p>
-            <textarea name={'additionalDescription'} value={additionalDescription} onChange={handleFieldChange}
-                      className={'w-full p-4 mt-2 rounded-lg'} rows={4} placeholder={'Escribí tus comentarios aca'}></textarea>
+            <textarea
+              name={'additionalDescription'}
+              value={additionalDescription}
+              onChange={handleFieldChange}
+              className={'w-full p-4 mt-2 rounded-lg'}
+              rows={4}
+              placeholder={'Escribí tus comentarios aca'}
+            ></textarea>
             <div className={'flex mt-10 mb-8'}>
               <input
                 key={'tosCheckbox'}

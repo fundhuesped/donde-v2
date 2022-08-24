@@ -1,28 +1,28 @@
-import React from "react";
+import React from 'react';
 
 type AvailableServicesProps = {
-  onChange: (event: { [key: string]: any }) => void,
-  services: { id: string, label: string }[],
-  availableServices: Set<string>
-}
+  onChange: (event: { [key: string]: any }) => void;
+  services: { id: string; label: string }[];
+  availableServices: Set<string>;
+};
 export const AvailableServices = (props: AvailableServicesProps) => {
-  const {availableServices, services, onChange} = props
+  const { availableServices, services, onChange } = props;
   const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const {name, checked} = event.currentTarget
-    let updatedServices = new Set(availableServices)
+    const { name, checked } = event.currentTarget;
+    let updatedServices = new Set(availableServices);
     if (checked) {
-      updatedServices.add(name)
+      updatedServices.add(name);
     } else {
-      updatedServices.delete(name)
+      updatedServices.delete(name);
     }
-    onChange({availableServices: updatedServices})
-  }
-  const isChecked = (serviceId: string) => availableServices.has(serviceId)
+    onChange({ availableServices: updatedServices });
+  };
+  const isChecked = (serviceId: string) => availableServices.has(serviceId);
 
   return (
     <>
       <h1 className={'my-6 text-justify font-bold text-black'}>¿Qué servicios brinda el lugar?</h1>
-      {services?.map(service => {
+      {services?.map((service) => {
         return (
           <label key={service.id}>
             <input
@@ -33,8 +33,9 @@ export const AvailableServices = (props: AvailableServicesProps) => {
               checked={isChecked(service.id)}
             />
             {service.label}
-          </label>)
+          </label>
+        );
       })}
     </>
   );
-}
+};

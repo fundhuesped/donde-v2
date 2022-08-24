@@ -1,6 +1,6 @@
 import React from 'react';
-import {GetStaticProps, NextPage} from "next";
-import EstablishmentAdmin from "../../../components/Establishment/EstablishmentAdmin";
+import { GetStaticProps, NextPage } from 'next';
+import EstablishmentAdmin from '../../../components/Establishment/EstablishmentAdmin';
 
 type StaticProps = {
   googleMapsApiKey: string;
@@ -9,7 +9,7 @@ export async function getStaticPaths() {
   return {
     paths: [{ params: { id: '1' } }],
     fallback: 'blocking',
-  }
+  };
 }
 export const getStaticProps: GetStaticProps<StaticProps> = async () => {
   const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY;
@@ -20,7 +20,7 @@ export const getStaticProps: GetStaticProps<StaticProps> = async () => {
     props: {
       googleMapsApiKey,
     },
-    revalidate: 10
+    revalidate: 10,
   };
 };
 const anEstablishmentModel = {
@@ -40,13 +40,11 @@ const anEstablishmentModel = {
   tosCheckbox: false,
   additionalDescription: 'gran calle, mejor hospital',
   availability: 'Lunes-Lunes 00:00-00:00',
-  location: { lat: -34.6989, lng: -64.7597 }
+  location: { lat: -34.6989, lng: -64.7597 },
 };
 
 const EstablishmentEdit: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
-  return (
-    <EstablishmentAdmin googleMapsApiKey={googleMapsApiKey} establishment={anEstablishmentModel}/>
-  );
+  return <EstablishmentAdmin googleMapsApiKey={googleMapsApiKey} establishment={anEstablishmentModel} />;
 };
 
 export default EstablishmentEdit;

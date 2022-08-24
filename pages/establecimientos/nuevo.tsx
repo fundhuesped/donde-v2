@@ -1,6 +1,6 @@
 import React from 'react';
-import {GetStaticProps, NextPage} from "next";
-import EstablishmentAdmin from "../../components/Establishment/EstablishmentAdmin";
+import { GetStaticProps, NextPage } from 'next';
+import EstablishmentAdmin from '../../components/Establishment/EstablishmentAdmin';
 
 type StaticProps = {
   googleMapsApiKey: string;
@@ -17,9 +17,7 @@ export const getStaticProps: GetStaticProps<StaticProps> = async () => {
   };
 };
 const EstablishmentNew: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
-  return (
-    <EstablishmentAdmin googleMapsApiKey={googleMapsApiKey}/>
-  );
+  return <EstablishmentAdmin googleMapsApiKey={googleMapsApiKey} />;
 };
 
 export default EstablishmentNew;
