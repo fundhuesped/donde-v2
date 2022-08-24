@@ -1,34 +1,47 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { SortTableArrows } from './SortTableArrows';
+import classNames from 'classnames';
 
 type Props = React.PropsWithChildren<{
-  columns: { label: string; accessor: string; className: string; sortable?: boolean }[];
   onColumnSort: (accessor: string) => void;
 }>;
 
+type ColumnHeaderProp = {
+  children?: ReactNode;
+  className?: string;
+  onColumnSort?: () => void;
+};
+const ColumnHeader = React.memo<ColumnHeaderProp>((props) => {
+  const { children, className, onColumnSort } = props;
+  return (
+    <th className={classNames('py-3 px-2', className)}>
+      {onColumnSort ? (
+        <div className="flex items-center">
+          {children}
+          <button className="ml-2" onClick={onColumnSort}>
+            <SortTableArrows />
+          </button>
+        </div>
+      ) : (
+        children
+      )}
+    </th>
+  );
+});
+
 const TableHead = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
-  const { columns, onColumnSort } = props;
+  const { onColumnSort } = props;
 
   return (
     <>
       <thead>
         <tr className="text-sm text-gray-700 font-light">
-          {columns.map(({ label, accessor, className, sortable }) => {
-            return (
-              <th key={`id-${accessor}`} className={className}>
-                {sortable ? (
-                  <div className="flex aling-center justify-center">
-                    {label}
-                    <button className="ml-2" onClick={() => onColumnSort(accessor)}>
-                      <SortTableArrows />
-                    </button>
-                  </div>
-                ) : (
-                  label
-                )}
-              </th>
-            );
-          })}
+          <ColumnHeader>Nombre</ColumnHeader>
+          <ColumnHeader>Apellido</ColumnHeader>
+          <ColumnHeader onColumnSort={() => onColumnSort('createdAt')}>Fecha</ColumnHeader>
+          <ColumnHeader>País</ColumnHeader>
+          <ColumnHeader onColumnSort={() => onColumnSort('status')}>Estado</ColumnHeader>
+          <ColumnHeader className={'text-center'}>Acciones</ColumnHeader>
         </tr>
       </thead>
     </>

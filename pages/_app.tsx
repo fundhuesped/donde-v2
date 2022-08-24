@@ -8,6 +8,10 @@ import '@fontsource/open-sans';
 import '@fontsource/open-sans/700.css';
 import { SessionProvider } from 'next-auth/react';
 import Script from 'next/script';
+import axios from 'axios';
+import { responseTransformer } from '../axios/transformers';
+
+axios.defaults.transformResponse = [responseTransformer];
 
 export default function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const [isScrollDisabled, setIsScrollDisabled] = useState(false);
