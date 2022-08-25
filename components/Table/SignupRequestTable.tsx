@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Search } from '../Search';
 import { TableBody } from './SignupRequestsTableBody';
 import TableHead from './TableHead';
-import { useAsyncEffect } from '../../hooks/useAsyncEffect';
 import { SignupRequest, SignupRequests, signupRequestsSchema } from '../../model/signup';
 import axios from 'axios';
+import useSWR from 'swr';
 
 type Props = React.PropsWithChildren<{
   className?: string;
@@ -18,16 +18,14 @@ const Table = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
   const [sortField, setSortField] = useState('');
   const [order, setOrder] = useState('asc');
 
+  const { data, mutate } = useSWR('/api/admin/registros', (url) => axios.get(url).then((res) => res.data));
+
   const [signupRequests, setSignupRequests] = useState<SignupRequests>([]);
-  useAsyncEffect(async (isMounted) => {
-    const res = await axios.get<unknown>('/api/admin/registros');
-    if (isMounted()) {
-      const data = res.data;
-      if (signupRequestsSchema.isValidSync(data)) {
-        setSignupRequests(data);
-      }
+  useEffect(() => {
+    if (signupRequestsSchema.isValidSync(data)) {
+      setSignupRequests(data);
     }
-  }, []);
+  }, [data]);
 
   const [filteredSolicitudes, setFilteredSolicitudes] = useState<SignupRequests>([]);
 
@@ -74,7 +72,7 @@ const Table = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
       <div className="table w-full">
         <table className="w-full text-sm text-left text-gray-500">
           <TableHead onColumnSort={onColumnSort} />
-          <TableBody filteredSolicitudes={filteredSolicitudes} />
+          <TableBody filteredSolicitudes={filteredSolicitudes} onUpdateData={() => mutate()} />
         </table>
       </div>
     </div>

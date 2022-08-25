@@ -9,6 +9,7 @@ import axios from 'axios';
 type Props = React.PropsWithChildren<{
   className?: string;
   filteredSolicitudes: SignupRequests;
+  onUpdateData?: () => void;
 }>;
 
 type CellProps = {
@@ -21,7 +22,7 @@ const Cell = React.memo<CellProps>((props) => {
 });
 
 export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
-  const { filteredSolicitudes } = props;
+  const { filteredSolicitudes, onUpdateData } = props;
   const [index, setIndex] = useState<number>(0);
   const [showModal, setShowModal] = useState<boolean>(false);
 
@@ -30,12 +31,14 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
     setIndex(index);
   };
 
-  const approveSignupRequest = (request: SignupRequest) => {
-    void axios.post(`/api/admin/registros/${request.userId}/aprobar`);
+  const approveSignupRequest = async (request: SignupRequest) => {
+    await axios.post(`/api/admin/registros/${request.userId}/aprobar`);
+    onUpdateData?.();
   };
 
-  const rejectSignupRequest = (request: SignupRequest) => {
-    void axios.post(`/api/admin/registros/${request.userId}/rechazar`);
+  const rejectSignupRequest = async (request: SignupRequest) => {
+    await axios.post(`/api/admin/registros/${request.userId}/rechazar`);
+    onUpdateData?.();
   };
 
   return (
@@ -43,7 +46,7 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
       <tbody className="text-sm">
         {filteredSolicitudes.map((data, index) => {
           return (
-            <tr key={`id-${data.userId}`} className="border-b border-gray-200 hover:bg-gray-100">
+            <tr key={data.userId} className="border-b border-gray-200 hover:bg-gray-100">
               <Cell>{data.firstName}</Cell>
               <Cell>{data.lastName}</Cell>
               <Cell>{formatDate(data.createdAt)}</Cell>
