@@ -5,6 +5,7 @@ import { SignupRequest, SignupRequests } from '../../model/signup';
 import classNames from 'classnames';
 import { formatDate } from '../../utils/dates';
 import axios from 'axios';
+import { OrganizationType } from '@prisma/client';
 
 type Props = React.PropsWithChildren<{
   className?: string;
@@ -110,7 +111,7 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
                 <li>Nombre de la organización: {filteredSolicitudes[index].organizationName}</li>
                 <li>País: {filteredSolicitudes[index].organizationCountry}</li>
                 <li>Rol: {filteredSolicitudes[index].organizationRole}</li>
-                <li>Tipo de organización: {filteredSolicitudes[index].organizationType}</li>
+                <li>Tipo de organización: {formatOrganizationType(filteredSolicitudes[index].organizationType)}</li>
                 <li>Sitio: {filteredSolicitudes[index].organizationWebsite}</li>
               </ul>
             </div>
@@ -134,3 +135,16 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
     </>
   );
 });
+
+function formatOrganizationType(type: string) {
+  switch (type) {
+    case OrganizationType.SOCIAL_ORGANIZATION:
+      return 'Organización social';
+    case OrganizationType.PRIVATE_INSTITUTION:
+      return 'Institución privada';
+    case OrganizationType.PUBLIC_INSTITUTION:
+      return 'Institución pública';
+    default:
+      return 'Otro';
+  }
+}
