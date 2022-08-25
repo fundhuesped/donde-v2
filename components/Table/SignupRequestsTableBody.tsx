@@ -4,6 +4,7 @@ import { Modal } from '../Modal';
 import { SignupRequest, SignupRequests } from '../../model/signup';
 import classNames from 'classnames';
 import { formatDate } from '../../utils/dates';
+import axios from 'axios';
 
 type Props = React.PropsWithChildren<{
   className?: string;
@@ -27,6 +28,10 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
   const handlerShowModal = (index: number) => {
     setShowModal(true);
     setIndex(index);
+  };
+
+  const approveSignupRequest = (request: SignupRequest) => {
+    void axios.post(`/api/admin/registros/${request.userId}/aprobar`);
   };
 
   return (
@@ -54,6 +59,7 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
                 <button
                   className="btn-primary w-1/3 p-1 flex aling-center justify-center text-sm mr-2 rounded-xl pr-2"
                   type="button"
+                  onClick={() => approveSignupRequest(data)}
                 >
                   <CheckIcon className="mx-1 mt-0.5 text-inherit w-4"></CheckIcon>
                   Aprobar

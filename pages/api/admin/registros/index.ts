@@ -1,7 +1,7 @@
 import { NextApiHandler } from 'next';
 import { Prisma } from '@prisma/client';
-import { prismaClient } from '../../../server/prisma/client';
-import { SignupRequests } from '../../../model/signup';
+import { prismaClient } from '../../../../server/prisma/client';
+import { SignupRequests } from '../../../../model/signup';
 
 const userSignupRequestData = Prisma.validator<Prisma.UserArgs>()({
   select: {
