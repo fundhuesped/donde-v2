@@ -10,6 +10,9 @@
     "fmt:check": "prettier -l .",
     "fmt:fix": "prettier -w ."
   },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "dependencies": {
     "@fontsource/open-sans": "^4.5.10",
     "@fontsource/poppins": "^4.5.8",
