@@ -6,9 +6,9 @@ const handler: NextApiHandler = async (req, res) => {
     return res.status(405).json({ error: 'This endpoint only supports GET requests' });
   }
 
-  const services = await prismaClient.service.findMany()
+  const services = await prismaClient.service.findMany();
 
-  return res.status(200).json(services)
+  return res.status(200).json(services);
 };
 
 export default handler;

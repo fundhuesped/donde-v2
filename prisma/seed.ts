@@ -1,5 +1,5 @@
-import {PrismaClient} from "@prisma/client";
-const prisma = new PrismaClient()
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
 async function main() {
   await prisma.establishment.create({
@@ -11,29 +11,29 @@ async function main() {
             subtype: 'Subtipo 1',
             service: {
               create: {
-                name: 'Servicio 1'
-              }
-            }
+                name: 'Servicio 1',
+              },
+            },
           },
           {
             service: {
               create: {
-                name: 'Servicio 2'
-              }
-            }
+                name: 'Servicio 2',
+              },
+            },
           },
-        ]
-      }
-    }
-  })
+        ],
+      },
+    },
+  });
 }
 
 main()
   .then(async () => {
-    await prisma.$disconnect()
+    await prisma.$disconnect();
   })
   .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
