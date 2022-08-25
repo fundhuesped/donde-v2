@@ -34,6 +34,10 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
     void axios.post(`/api/admin/registros/${request.userId}/aprobar`);
   };
 
+  const rejectSignupRequest = (request: SignupRequest) => {
+    void axios.post(`/api/admin/registros/${request.userId}/rechazar`);
+  };
+
   return (
     <>
       <tbody className="text-sm">
@@ -51,7 +55,7 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
                 {data.status == 'ACTIVE' && (
                   <span className="text-white bg-success py-2 px-3 rounded-full text-sm">Aprobada</span>
                 )}
-                {data.status == 'REJECTED' && (
+                {data.status == 'BLOCKED' && (
                   <span className="text-white bg-danger py-2 px-3 rounded-full text-sm">Rechazada</span>
                 )}
               </Cell>
@@ -67,6 +71,7 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
                 <button
                   className="btn-secondary w-1/3 p-1 flex aling-center justify-center text-sm mr-2 rounded-xl pr-2"
                   type="button"
+                  onClick={() => rejectSignupRequest(data)}
                 >
                   <XIcon className="mx-1 mt-0.5 text-inherit w-4"></XIcon>
                   Rechazar
