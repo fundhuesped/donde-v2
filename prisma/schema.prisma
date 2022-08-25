@@ -39,3 +39,25 @@ enum OrganizationType {
   PRIVATE_INSTITUTION
   OTHER
 }
+
+model Establishment {
+  id        String                      @id @default(uuid()) @db.Uuid
+  name      String                      @db.VarChar(100)
+  services  ServicesOnEstablishments[]
+}
+
+model Service {
+  id                String                      @id @default(uuid()) @db.Uuid
+  name              String                      @unique @db.VarChar(100)
+  establishments    ServicesOnEstablishments[]
+}
+
+model ServicesOnEstablishments {
+  establishment     Establishment   @relation(fields: [establishmentId], references: [id])
+  establishmentId   String          @db.Uuid
+  service           Service         @relation(fields: [serviceId], references: [id])
+  serviceId         String          @db.Uuid
+  subtype           String?         @db.VarChar(100)
+
+  @@id([establishmentId, serviceId])
+}
