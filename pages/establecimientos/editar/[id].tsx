@@ -1,17 +1,11 @@
 import React from 'react';
-import { GetStaticProps, NextPage } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import EstablishmentAdmin from '../../../components/Establishment/EstablishmentAdmin';
 
-type StaticProps = {
+type ServerSideProps = {
   googleMapsApiKey: string;
 };
-export async function getStaticPaths() {
-  return {
-    paths: [{ params: { id: '1' } }],
-    fallback: 'blocking',
-  };
-}
-export const getStaticProps: GetStaticProps<StaticProps> = async () => {
+export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
   const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY;
   if (!googleMapsApiKey) {
     throw new Error('Environment variable not set: GOOGLE_MAPS_API_KEY');
@@ -20,7 +14,6 @@ export const getStaticProps: GetStaticProps<StaticProps> = async () => {
     props: {
       googleMapsApiKey,
     },
-    revalidate: 10,
   };
 };
 const anEstablishmentModel = {
@@ -40,10 +33,10 @@ const anEstablishmentModel = {
   tosCheckbox: false,
   additionalDescription: 'gran calle, mejor hospital',
   availability: 'Lunes-Lunes 00:00-00:00',
-  location: { lat: -34.6989, lng: -64.7597 },
+  location: { lat: -34.58956, lng: -58.4040549 },
 };
 
-const EstablishmentEdit: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
+const EstablishmentEdit: NextPage<ServerSideProps> = ({ googleMapsApiKey }) => {
   return <EstablishmentAdmin googleMapsApiKey={googleMapsApiKey} establishment={anEstablishmentModel} />;
 };
 
