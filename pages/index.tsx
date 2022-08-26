@@ -90,7 +90,6 @@ const Home: NextPage = React.memo(() => {
     ),
   );
   const servicesSelected = Object.values(services).some((service) => service.selected);
-  console.log(servicesSelected);
 
   const toggleService = (serviceId: string) => {
     const serviceToUpdate = services[serviceId];
@@ -135,7 +134,7 @@ const Home: NextPage = React.memo(() => {
         Dónde es una plataforma de geolocalización de servicios de <strong>salud sexual y reproductiva</strong> creada por
         Fundación Huesped.
       </p>
-      <MainContainer className={'w-full lg:w-3/5 lg:mx-4 mt-4 pt-8'}>
+      <MainContainer className={'w-full lg:w-3/5 lg:mx-4 mt-4 pt-8 lg:flex-grow-0'}>
         <div className="w-full flex flex-col justify-center">
           <div className="flex-col">
             <h2 className={'text-2xl text-black font-title font-bold text-center'}>¿Qué estás buscando?</h2>
