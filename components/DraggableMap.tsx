@@ -8,7 +8,7 @@ type DraggableMapProps = {
   apiKey: string;
   onChildMouseDown?: () => void;
   onChildMouseUp?: () => void;
-  onChildMouseMove: (key, childProps, mouse) => Promise<void>;
+  onChildMouseMove: (key: any, childProps: any, mouse: any) => Promise<void>;
   location: { lat: number; lng: number } | undefined;
   onChange: ({ bounds }: { bounds: any }) => void;
 };
