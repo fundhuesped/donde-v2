@@ -4,7 +4,7 @@ import { Card, CardHeader, CardList, CardListItem } from '../components/Card';
 import classNames from 'classnames';
 import { Pill } from '../components/Pill';
 import GoogleMapReact, { Bounds } from 'google-map-react';
-import { Marker } from '../components/Marker';
+import { Marker, UserMarker } from '../components/Marker';
 import MainContainer from '../components/MainContainer';
 import places from '../assets/establishments.json';
 import { formatEstablishmentLocation } from '../utils/establishments';
@@ -31,6 +31,7 @@ export const getStaticProps: GetStaticProps<StaticProps> = async () => {
 const markers = places.flatMap((place, index) => {
   // TODO: no se si es el mejor lugar para hacer esto
   if (typeof place.lat !== 'number' || typeof place.lng !== 'number') return [];
+
   return [
     {
       ...place,
@@ -75,6 +76,10 @@ const getMapPosition = (coords: Coordinates | undefined): MapPosition => {
   return { coords: defaultCoords, zoom: defaultZoom };
 };
 
+function isValidMarkerValue(marker: number) {
+  return marker >= 0;
+}
+
 const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
   const router = useRouter();
 
@@ -103,7 +108,11 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
 
   const [activeMarker, setActiveMarker] = useState<any>(null);
   const handleMarkerClick = (marker: number) => {
-    setActiveMarker(markers[marker - 1]);
+    const markerValue = marker - 1;
+
+    if (isValidMarkerValue(markerValue)) {
+      setActiveMarker(markers[markerValue]);
+    }
   };
 
   const handleClose = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -151,6 +160,8 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
                   setBounds(bounds);
                 }}
               >
+                <UserMarker key={-1} lat={mapPosition.coords.lat} lng={mapPosition.coords.lng} />
+
                 {markers
                   .filter((marker) => bounds !== null && markerWithinBoundaries(marker, bounds))
                   .map((marker) => {
