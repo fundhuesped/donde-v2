@@ -1,14 +1,14 @@
+import isEmpty from 'lodash/isEmpty';
+import { GetStaticProps, NextPage } from 'next';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 import React, { RefObject, useEffect, useState } from 'react';
+import { usePlacesWidget } from 'react-google-autocomplete';
+import servicesData from '../assets/services.json';
 import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
 import { Pill } from '../components/Pill';
-import servicesData from '../assets/services.json';
-import { usePlacesWidget } from 'react-google-autocomplete';
-import { useRouter } from 'next/router';
 import { Coordinates } from '../model/map';
-import { GetStaticProps, NextPage } from 'next';
-import Head from 'next/head';
-import isEmpty from 'lodash/isEmpty';
 
 type StaticProps = {
   googleMapsApiKey: string;
@@ -96,7 +96,7 @@ const Search: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
           ))}
         </div>
       </div>
-      <MainContainer className={'mt-8 pt-8 lg:mx-auto lg:grow-0 lg:p-8 lg:min-w-60rem'}>
+      <MainContainer className={'mt-8 pt-8 lg:mx-auto lg:grow-0 lg:p-8 lg:min-w-desktop'}>
         <h2 className={'text-xl text-black font-title font-bold'}>¿En qué lugar estas buscando?</h2>
         <p className={'text-xs text-black mt-2 mb-4'}>
           Podés buscar por ciudad, departamento o barrio. También podés buscar por el nombre o la dirección de un centro que ya
@@ -111,7 +111,7 @@ const Search: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
         />
         <div className={'mt-8'}>
           <Button
-            className={'bg-white w-full lg:max-w-sm lg:mx-auto'}
+            className={'bg-white w-full lg:mx-auto lg:max-w-[24rem]'}
             disabled={isMissingSearchInfo}
             type={'primary'}
             onClick={handleSearchButtonClicked}

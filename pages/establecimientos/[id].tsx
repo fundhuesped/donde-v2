@@ -111,7 +111,7 @@ export const Establishment: NextPage = React.memo(() => {
         <title>Dónde - {name}</title>
       </Head>
 
-      <MainContainer>
+      <MainContainer className={'lg:w-desktop lg:mx-auto'}>
         <header className={'mt-10 ml-4'}>
           <CardHeader className={'font-title text-lg'}>{name}</CardHeader>
           <CardParagraph>{type}</CardParagraph>

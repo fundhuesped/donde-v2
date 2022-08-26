@@ -1,7 +1,7 @@
-import React, { HTMLProps, ReactNode, useState } from 'react';
 import { ChevronDownIcon, ChevronLeftIcon, QuestionMarkCircleIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
 import Head from 'next/head';
+import { HTMLProps, ReactNode, useState } from 'react';
 
 const FAQLink = (props: HTMLProps<HTMLAnchorElement>) => {
   const { className, children, ...rest } = props;
@@ -105,8 +105,7 @@ export default function FAQs() {
       <Head>
         <title>Dónde - Preguntas Frecuentes</title>
       </Head>
-
-      <main className={'px-6 my-2 lg:mx-auto lg:min-w-60rem lg:max-w-60rem'}>
+      <main className={'px-6 my-2 lg:mx-auto lg:w-desktop'}>
         <h1 className={'text-lg text-black font-bold mb-8'}>Preguntas frecuentes</h1>
         <ul>
           {ITEMS.map((item, index) => (

@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
 import { ClockIcon, LocationMarkerIcon, SupportIcon, XIcon } from '@heroicons/react/outline';
-import { Card, CardHeader, CardList, CardListItem } from '../components/Card';
 import classNames from 'classnames';
-import { Pill } from '../components/Pill';
 import GoogleMapReact, { Bounds } from 'google-map-react';
-import { Marker } from '../components/Marker';
-import MainContainer from '../components/MainContainer';
-import places from '../assets/establishments.json';
-import { formatEstablishmentLocation } from '../utils/establishments';
-import { useRouter } from 'next/router';
 import { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import places from '../assets/establishments.json';
+import { Card, CardHeader, CardList, CardListItem } from '../components/Card';
+import MainContainer from '../components/MainContainer';
+import { Marker } from '../components/Marker';
+import { Pill } from '../components/Pill';
+import { formatEstablishmentLocation } from '../utils/establishments';
 
 type StaticProps = {
   googleMapsApiKey: string;
@@ -132,7 +132,7 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
       <MainContainer className={'relative overflow-hidden px-0'}>
         {mapPosition && (
           <>
-            <div className={classNames('w-full lg:px-64')} style={{ height: 'calc(100vh - 56px - 1.5rem)' }}>
+            <div className={classNames('w-full lg:mx-auto')} style={{ height: 'calc(100vh - 56px - 1.5rem)' }}>
               <GoogleMapReact
                 bootstrapURLKeys={{
                   key: googleMapsApiKey,
@@ -160,7 +160,10 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
             </div>
 
             {activeMarker !== null && (
-              <Card onClick={handleDetailsClick} className={'fixed bottom-8 right-4 left-4 cursor-pointer'}>
+              <Card
+                onClick={handleDetailsClick}
+                className={'fixed bottom-8 right-4 left-4 cursor-pointer lg:w-desktop lg:mx-auto'}
+              >
                 <header className={'flex flex-row justify-between items-center mb-2'}>
                   <CardHeader>{activeMarker.establecimiento}</CardHeader>
                   <button className={'w-5 text-dark-gray'} onClick={handleClose}>
