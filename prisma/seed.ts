@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
+import { EstablishmentType, EstablishmentStatus } from '@prisma/client';
 
 async function main() {
   const preservativos = await prisma.service.create({
@@ -49,6 +50,17 @@ async function main() {
   await prisma.establishment.create({
     data: {
       name: 'Hospital de Pediatría Garrahan',
+      idHuesped: 136772,
+      type: EstablishmentType.HEALTH_ESTABLISHMENT,
+      street: 'Combate de Los Pozos',
+      streetNumber: 1881,
+      city: 'Parque Patricios',
+      department: 'COMUNA 4',
+      province: 'Ciudad Autónoma De Buenos Aires',
+      country: 'Argentina',
+      status: EstablishmentStatus.PUBLISHED,
+      latitude: -34.62994536,
+      longitude: -58.39187918,
       specialties: {
         create: [
           {
