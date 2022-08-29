@@ -1,10 +1,10 @@
 import { ReactNode } from 'react';
-import Condones from '../assets/images/Icons/CondonIcon.svg';
-import CentroInfectologia from '../assets/images/Icons/IconCentroInfectologia.svg';
-import InterrupcionEmbarazo from '../assets/images/Icons/IconInterrupcionEmbarazo.svg';
-import Anticonceptivos from '../assets/images/Icons/IconMetodosAnticonceptivos.svg';
-import Vacunatorios from '../assets/images/Icons/IconVacunatorios.svg';
-import TestDeVIH from '../assets/images/Icons/TestDeVIH.svg';
+import CentroInfectologia from '../assets/images/icons/IconCentros.svg';
+import InterrupcionEmbarazo from '../assets/images/icons/IconIVE.svg';
+import Anticonceptivos from '../assets/images/icons/IconMAC.svg';
+import Condones from '../assets/images/icons/IconPreservativos.svg';
+import TestDeVIH from '../assets/images/icons/IconTestVIH.svg';
+import Vacunatorios from '../assets/images/icons/IconVacunas.svg';
 
 export const SERVICE_ICONS: Record<string, ReactNode> = {
   preservativos: <Condones />,

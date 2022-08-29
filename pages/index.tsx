@@ -65,9 +65,9 @@ export const ServiceButton = (props: ServiceProps) => {
       name={id}
       onClick={onClick}
       className={`bg-white w-full lg:w-80 lg:mr-2 !justify-start my-2 text-base !text-black ${fontWeight} ${borderColor}`}
-      iconSize={'large'}
+      iconSize={'medium'}
       type={'tertiary'}
-      iconImg={icon}
+      icon={icon}
       alignment={'left'}
     >
       {description}
