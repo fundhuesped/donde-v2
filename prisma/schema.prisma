@@ -91,10 +91,6 @@ model Establishment {
   status        EstablishmentStatus
   latitude      Decimal                         @db.Decimal(8,6)
   longitude     Decimal                         @db.Decimal(9,6)
-  phone         String?
-  mail          String?
-  schedule      String?
-  comments      String?
 }
 
 model SpecialtiesOnEstablishments {
