@@ -8,16 +8,16 @@ const handler: NextApiHandler = async (req, res) => {
 
   const { service } = req.query;
   const { establishment } = req.query;
-  let query:any = {};
+  let query: any = {};
 
   if (service) {
     query = {
       where: {
         service: {
-          name: service
-        }
-      }
-    }
+          name: service,
+        },
+      },
+    };
   }
 
   if (establishment) {
@@ -27,12 +27,12 @@ const handler: NextApiHandler = async (req, res) => {
         establishments: {
           some: {
             establishment: {
-              name: establishment
-            }
-          }
-        }
-      }
-    }
+              name: establishment,
+            },
+          },
+        },
+      },
+    };
   }
 
   const specializations = await prismaClient.specialization.findMany(query);

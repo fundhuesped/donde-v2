@@ -15,13 +15,13 @@ const handler: NextApiHandler = async (req, res) => {
           some: {
             specialization: {
               service: {
-                name: { in: services }
-              }
-            }
-          }
-        }
-      }
-    }
+                name: { in: services },
+              },
+            },
+          },
+        },
+      },
+    };
   }
 
   const establishmentsForService = await prismaClient.establishment.findMany(query);
