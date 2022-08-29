@@ -186,9 +186,6 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
                     {formatEstablishmentLocation(activeMarker)}
                     {/*<span className={'text-xs text-medium-gray'}>- A 400 metros</span>*/}
                   </CardListItem>
-                  {activeMarker.horario_testeo !== null && (
-                    <CardListItem icon={<ClockIcon className={'text-primary'} />}>{activeMarker.horario_testeo}</CardListItem>
-                  )}
                   <CardListItem icon={<SupportIcon className={'text-primary'} />}>Test de HIV</CardListItem>
                 </CardList>
                 <footer className={classNames('mt-4')}>
