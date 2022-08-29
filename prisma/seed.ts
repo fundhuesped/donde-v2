@@ -5,7 +5,7 @@ async function main() {
   const preservativos = await prisma.service.create({
     data: {
       name: 'preservativos',
-      icon: 'preservativos.svg',
+      icon: 'Condones.svg',
     },
   });
   const aborto = await prisma.service.create({
@@ -15,7 +15,7 @@ async function main() {
     },
   });
 
-  const preservativosEspecializacion = await prisma.specialization.create({
+  const preservativosEspecializacion = await prisma.specialty.create({
     data: {
       name: 'preservativos',
       service: {
@@ -25,9 +25,9 @@ async function main() {
       },
     },
   });
-  const aborto1 = await prisma.specialization.create({
+  const aborto1 = await prisma.specialty.create({
     data: {
-      name: 'especializacion 1',
+      name: 'No está confirmado que asesore o realice interrupción legal del embarazo.',
       service: {
         connect: {
           id: aborto.id,
@@ -35,9 +35,9 @@ async function main() {
       },
     },
   });
-  const aborto2 = await prisma.specialization.create({
+  const aborto2 = await prisma.specialty.create({
     data: {
-      name: 'especializacion 2',
+      name: 'Ofrece asesoramiento y realiza interrupción legal del embarazo.',
       service: {
         connect: {
           id: aborto.id,
@@ -48,18 +48,18 @@ async function main() {
 
   await prisma.establishment.create({
     data: {
-      name: 'garrahan',
-      specializations: {
+      name: 'Hospital de Pediatría Garrahan',
+      specialties: {
         create: [
           {
-            specialization: {
+            specialty: {
               connect: {
                 id: preservativosEspecializacion.id,
               },
             },
           },
           {
-            specialization: {
+            specialty: {
               connect: {
                 id: aborto1.id,
               },
