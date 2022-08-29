@@ -9,13 +9,6 @@ async function main() {
       icon: 'Condones.svg',
     },
   });
-  const aborto = await prisma.service.create({
-    data: {
-      name: 'aborto',
-      icon: 'aborto.svg',
-    },
-  });
-
   const preservativosEspecializacion = await prisma.specialty.create({
     data: {
       name: 'preservativos',
@@ -26,9 +19,84 @@ async function main() {
       },
     },
   });
+
+  const centrosInfectologia = await prisma.service.create({
+    data: {
+      name: 'Centros de Infectología',
+      icon: 'infectologia.svg',
+    },
+  });
+  const infectologiaEspecializacion = await prisma.specialty.create({
+    data: {
+      name: 'Centros de Infectología',
+      service: {
+        connect: {
+          id: centrosInfectologia.id,
+        },
+      },
+    },
+  });
+
+  const tests = await prisma.service.create({
+    data: {
+      name: 'Test de ITS',
+      icon: 'its.svg',
+    },
+  });
+  const testEspecializacion = await prisma.specialty.create({
+    data: {
+      name: 'Test de ITS',
+      service: {
+        connect: {
+          id: tests.id,
+        },
+      },
+    },
+  });
+
+  const anticonceptivos = await prisma.service.create({
+    data: {
+      name: 'Métodos anticonceptivos',
+      icon: 'anticonceptivos.svg',
+    },
+  });
+  const anticonceptivosEspecializacion = await prisma.specialty.create({
+    data: {
+      name: 'Métodos anticonceptivo',
+      service: {
+        connect: {
+          id: anticonceptivos.id,
+        },
+      },
+    },
+  });
+
+  const vacunatorios = await prisma.service.create({
+    data: {
+      name: 'Vacunatorios',
+      icon: 'vacuntorios.svg',
+    },
+  });
+  const vacunatoriosEspecializacion = await prisma.specialty.create({
+    data: {
+      name: 'Vacunatorios',
+      service: {
+        connect: {
+          id: vacunatorios.id,
+        },
+      },
+    },
+  });
+
+  const aborto = await prisma.service.create({
+    data: {
+      name: 'Interrupción voluntaria del embarazo',
+      icon: 'ive.svg',
+    },
+  });
   const aborto1 = await prisma.specialty.create({
     data: {
-      name: 'No está confirmado que asesore o realice interrupción legal del embarazo.',
+      name: 'No está confirmado que asesore o realice interrupción legal del embarazo',
       service: {
         connect: {
           id: aborto.id,
@@ -38,7 +106,27 @@ async function main() {
   });
   const aborto2 = await prisma.specialty.create({
     data: {
-      name: 'Ofrece asesoramiento y realiza interrupción legal del embarazo.',
+      name: 'Ofrece asesoramiento sobre interrupción voluntaria del embarazo',
+      service: {
+        connect: {
+          id: aborto.id,
+        },
+      },
+    },
+  });
+  const aborto3 = await prisma.specialty.create({
+    data: {
+      name: 'Ofrece asesoramiento y derivación sobre interrupción voluntaria del embarazo',
+      service: {
+        connect: {
+          id: aborto.id,
+        },
+      },
+    },
+  });
+  const aborto4 = await prisma.specialty.create({
+    data: {
+      name: 'Ofrece asesoramiento y realiza interrupción legal del embarazo',
       service: {
         connect: {
           id: aborto.id,
@@ -50,10 +138,9 @@ async function main() {
   await prisma.establishment.create({
     data: {
       name: 'Hospital de Pediatría Garrahan',
-      idHuesped: 136772,
       type: EstablishmentType.HEALTH_ESTABLISHMENT,
       street: 'Combate de Los Pozos',
-      streetNumber: 1881,
+      streetNumber: '1881',
       city: 'Parque Patricios',
       department: 'COMUNA 4',
       province: 'Ciudad Autónoma De Buenos Aires',

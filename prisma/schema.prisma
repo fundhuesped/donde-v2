@@ -73,21 +73,20 @@ model Specialty {
 
 model Establishment {
   id            String                          @id @default(uuid()) @db.Uuid
-  name          String
+  officialId    String?                         @db.VarChar(100)
+  name          String                          @db.VarChar(100)
   specialties   SpecialtiesOnEstablishments[]
-  idOficial     String?
-  idHuesped     Int                             @default(autoincrement())
   type          EstablishmentType
-  street        String
-  streetNumber  Int?
-  apartment     String?
-  intersection  String?
-  details       String?
-  website       String?
-  city          String
-  department    String
-  province      String
-  country       String
+  street        String                          @db.VarChar(100)
+  streetNumber  String?                         @db.VarChar(100)
+  apartment     String?                         @db.VarChar(100)
+  intersection  String?                         @db.VarChar(100)
+  details       String?                         @db.VarChar(100)
+  website       String?                         @db.VarChar(100)
+  city          String                          @db.VarChar(100)
+  department    String                          @db.VarChar(100)
+  province      String                          @db.VarChar(100)
+  country       String                          @db.VarChar(100)
   status        EstablishmentStatus
   latitude      Decimal                         @db.Decimal(8,6)
   longitude     Decimal                         @db.Decimal(9,6)
