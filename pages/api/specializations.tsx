@@ -6,20 +6,28 @@ const handler: NextApiHandler = async (req, res) => {
     return res.status(405).json({ error: 'This endpoint only supports GET requests' });
   }
 
+  const { service } = req.query;
   const { establishment } = req.query;
-  let query = {};
+  let query:any = {};
+
+  if (service) {
+    query = {
+      where: {
+        service: {
+          name: service
+        }
+      }
+    }
+  }
 
   if (establishment) {
     query = {
       where: {
-        specializations: {
+        ...query.where,
+        establishments: {
           some: {
-            establishments: {
-              some: {
-                establishment: {
-                  name: establishment
-                }
-              }
+            establishment: {
+              name: establishment
             }
           }
         }
@@ -27,9 +35,9 @@ const handler: NextApiHandler = async (req, res) => {
     }
   }
 
-  const services = await prismaClient.service.findMany(query);
+  const specializations = await prismaClient.specialization.findMany(query);
 
-  return res.status(200).json(services);
+  return res.status(200).json(specializations);
 };
 
 export default handler;

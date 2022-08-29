@@ -2,23 +2,66 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
+  const preservativos = await prisma.service.create({
+    data: {
+      name: 'preservativos',
+      icon: 'preservativos.svg'
+    }
+  })
+  const aborto = await prisma.service.create({
+    data: {
+      name: 'aborto',
+      icon: 'aborto.svg'
+    }
+  })
+
+  const preservativosEspecializacion = await prisma.specialization.create({
+    data: {
+      name: 'preservativos',
+      service: {
+        connect: {
+          id: preservativos.id
+        }
+      }
+    }
+  })
+  const aborto1 = await prisma.specialization.create({
+    data: {
+      name: 'especializacion 1',
+      service: {
+        connect: {
+          id: aborto.id
+        }
+      }
+    }
+  })
+  const aborto2 = await prisma.specialization.create({
+    data: {
+      name: 'especializacion 2',
+      service: {
+        connect: {
+          id: aborto.id
+        }
+      }
+    }
+  })
+
   await prisma.establishment.create({
     data: {
-      name: 'Hospital 1',
-      services: {
+      name: 'garrahan',
+      specializations: {
         create: [
           {
-            subtype: 'Subtipo 1',
-            service: {
-              create: {
-                name: 'Servicio 1',
+            specialization: {
+              connect: {
+                id: preservativosEspecializacion.id
               },
             },
           },
           {
-            service: {
-              create: {
-                name: 'Servicio 2',
+            specialization: {
+              connect: {
+                id: aborto1.id
               },
             },
           },
