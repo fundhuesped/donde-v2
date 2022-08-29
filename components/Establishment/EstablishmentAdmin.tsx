@@ -192,16 +192,16 @@ const EstablishmentAdmin = (props: { googleMapsApiKey: string; establishment?: E
                 setBounds(bounds);
               }}
             />
-            <AvailabilityField key={'workingHourTo'} onChange={handleFormUpdate} availability={availability} />
+            {/*<AvailabilityField key={'workingHourTo'} onChange={handleFormUpdate} availability={availability} />*/}
             <AvailableServices onChange={handleFormUpdate} availableServices={availableServices} services={services} />
-            <ContactInfoField
+            {/*<ContactInfoField
               key={'email'}
               onChange={handleFieldChange}
               website={website}
               phone={phone}
               whatsApp={whatsApp}
               email={email}
-            />
+            />*/}
 
             <h1 className={'mt-6 mb-2 font-bold text-black'}>¿Algo más que quieras agregar sobre el lugar?</h1>
             <p className={'text-xs mb-2'}>
