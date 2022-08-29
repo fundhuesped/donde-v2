@@ -1,4 +1,4 @@
-import { ChatAltIcon, InformationCircleIcon, LoginIcon, LogoutIcon, MenuIcon } from '@heroicons/react/outline';
+import { ChatAltIcon, InformationCircleIcon, LockClosedIcon, LoginIcon, LogoutIcon, MenuIcon } from '@heroicons/react/outline';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -9,6 +9,7 @@ import { Button } from './Button';
 import MainContainer from './MainContainer';
 import { useAuthenticatedUser } from '../hooks/useAuthenticatedUser';
 import { signOut } from 'next-auth/react';
+import { UserRole } from '@prisma/client';
 
 export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: () => void }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -89,6 +90,23 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
     );
   };
 
+  const AdminLink = () => {
+    return (
+      <Button
+        onClick={async () => {
+          await router.push({ pathname: '/admin/solicitudes' });
+          setIsMenuOpen(false);
+        }}
+        className={'border-ultra-light-gray'}
+        type={'tertiary'}
+        alignment={'left'}
+        icon={<LockClosedIcon className={'h-6 w-5'} />}
+      >
+        Admin
+      </Button>
+    );
+  };
+
   return (
     <header className={'flex items-center py-5 px-content'}>
       {!isHome && <BackButton />}
@@ -115,6 +133,7 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
             <SobreDondeButton />
             <PreguntasFrecuentesButton />
             {user ? <LogoutButton /> : <LoginButton />}
+            {user?.role === UserRole.ADMIN && <AdminLink />}
           </MainContainer>
         </div>
       )}
