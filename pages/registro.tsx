@@ -119,7 +119,7 @@ const SignUp: NextPage = () => {
       <form className={'px-5'} onSubmit={handleSubmit(handleSignUp)}>
         <h1 className="text-xl font-bold mb-4 text-center">Registro</h1>
         <p className="text-sm text-center">
-          Para ser colaboradore de <b>Dónde</b> y poder agregar establicientos dentro de la aplicación, complete el siguiente
+          Para ser colaboradore de <b>Dónde</b> y poder agregar establecimientos dentro de la aplicación, complete el siguiente
           formulario para solicitar una cuenta.
         </p>
         <div className="flex flex-wrap -mx-3 my-6">
