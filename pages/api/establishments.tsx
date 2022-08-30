@@ -54,7 +54,7 @@ const getEstablishments = async (req: NextApiRequest, res: NextApiResponse<any>)
 };
 
 const createEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
-  if (!establishmentSchema.isValidSync(req.body, { context: { create: true } })) {
+  if (!establishmentSchema.isValidSync(req.body)) {
     return res.status(400).end();
   }
   const specialties = mapSpecialtiesToPrismaObject(req.body.specialties);
