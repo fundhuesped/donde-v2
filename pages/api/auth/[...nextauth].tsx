@@ -33,15 +33,15 @@ export default NextAuth({
       },
     }),
   ],
+  session: {
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
   callbacks: {
     jwt: async ({ token, user }): Promise<JWT> => {
-      if (!user) {
-        return token;
-      }
-      return { ...token, user };
+      return user ? { ...token, user } : token;
     },
     session: async ({ session, token }): Promise<Session> => {
-      session.user = token['user'] as any;
       return {
         ...session,
         user: token['user'] as any,
