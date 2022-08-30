@@ -19,6 +19,7 @@ export const Button: React.FC<Props> = React.memo((props) => {
   return (
     <button
       onClick={onClick}
+      disabled={disabled}
       name={name}
       className={classNames(
         className,

@@ -15,6 +15,13 @@ import Head from 'next/head';
 type StaticProps = {
   googleMapsApiKey: string;
 };
+export const markerWithinBoundaries = (marker: Coordinates, bounds: Bounds) => {
+  const northLat = bounds.nw.lat;
+  const southLat = bounds.sw.lat;
+  const westLng = bounds.nw.lng;
+  const eastLng = bounds.ne.lng;
+  return marker.lat < northLat && marker.lat > southLat && marker.lng > westLng && marker.lng < eastLng;
+};
 
 export const getStaticProps: GetStaticProps<StaticProps> = async () => {
   const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY;
@@ -122,14 +129,6 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
 
   const handleDetailsClick = () => {
     router.push(`/establecimientos/${activeMarker.placeId}`);
-  };
-
-  const markerWithinBoundaries = (marker: Coordinates, bounds: Bounds) => {
-    const northLat = bounds.nw.lat;
-    const southLat = bounds.sw.lat;
-    const westLng = bounds.nw.lng;
-    const eastLng = bounds.ne.lng;
-    return marker.lat < northLat && marker.lat > southLat && marker.lng > westLng && marker.lng < eastLng;
   };
 
   return (
