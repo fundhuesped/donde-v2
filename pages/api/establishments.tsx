@@ -19,7 +19,7 @@ const handler: NextApiHandler = async (req, res) => {
 const getEstablishments = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   let where = {};
   const servicesSchema = yup.array().of(yup.string().uuid());
-  const services = req.query.specialties?.split(',');
+  const services = req.query.specialties;
   if (!servicesSchema.isValidSync(services)) {
     return res.status(400).end();
   }
@@ -54,7 +54,7 @@ const getEstablishments = async (req: NextApiRequest, res: NextApiResponse<any>)
 };
 
 const createEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
-  if (!establishmentSchema.isValidSync(req.body, { context: { require: true } })) {
+  if (!establishmentSchema.isValidSync(req.body, { context: { create: true } })) {
     return res.status(400).end();
   }
   const specialties = mapSpecialtiesToPrismaObject(req.body.specialties);
