@@ -14,6 +14,7 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { Service } from '../../model/services';
 import Head from 'next/head';
+import Link from 'next/link';
 
 interface WebSiteButtonProps {
   website: string;
@@ -22,9 +23,12 @@ interface WebSiteButtonProps {
 const WebSiteButton = React.memo<WebSiteButtonProps>((props) => {
   const { website } = props;
   return (
-    <a href={website} role="button">
-      <Icon type="secondary" circle={true} icon={<GlobeAltIcon className={'text-primary'} />} label={'Sitio Web'} />
-    </a>
+    <Link href={website} passHref>
+      {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+      <a target={'_blank'} role="button">
+        <Icon type="secondary" circle={true} icon={<GlobeAltIcon className={'text-primary'} />} label={'Sitio Web'} />
+      </a>
+    </Link>
   );
 });
 
