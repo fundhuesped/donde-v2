@@ -1,7 +1,7 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { prismaClient } from '../../server/prisma/client';
 import { EstablishmentStatus } from '@prisma/client';
-import { establishmentSchema } from '../../model/establishment';
+import { createEstablishmentSchema as establishmentSchema } from '../../model/establishment';
 import specialties from './specialties';
 import * as yup from 'yup';
 
@@ -57,7 +57,7 @@ const createEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
   if (!establishmentSchema.isValidSync(req.body, { context: { create: true } })) {
     return res.status(400).end();
   }
-  const specialties = mapSpecialtiesToPrismaObject(req.body.specialties);
+  const specialties = mapSpecialtiesToPrismaObject(req.body.specialties as string[]);
   const establishment = await prismaClient.establishment.create({
     data: {
       ...req.body,
@@ -68,7 +68,7 @@ const createEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
   return res.status(201).json(establishment);
 };
 
-export const mapSpecialtiesToPrismaObject = (specialties: Array<string>) => {
+export const mapSpecialtiesToPrismaObject = (specialties: string[]) => {
   const specialtiesObjects = specialties.map((specialtyId: string) => {
     return {
       specialty: {

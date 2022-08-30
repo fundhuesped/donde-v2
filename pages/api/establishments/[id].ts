@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { NextApiHandler } from 'next';
 import { prismaClient } from '../../../server/prisma/client';
-import { establishmentSchema } from '../../../model/establishment';
+import { editEstablishmentSchema as establishmentSchema } from '../../../model/establishment';
 import { EstablishmentStatus } from '@prisma/client';
 import { mapSpecialtiesToPrismaObject } from '../establishments';
 import * as yup from 'yup';
@@ -18,13 +18,14 @@ const handler: NextApiHandler = async (req, res) => {
 };
 
 const getEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
-  const idSchema = yup.string().uuid();
-  if (!idSchema.isValidSync(req.query.id)) {
+  const idSchema = yup.string().uuid().required();
+  const id = req.query.id;
+  if (!idSchema.isValidSync(id)) {
     return res.status(400).end();
   }
   const establishment = await prismaClient.establishment.findUnique({
     where: {
-      id: req.query.id,
+      id: req.query.id as string,
     },
   });
   if (establishment) {
@@ -40,7 +41,7 @@ const updateEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
   }
   let data = {};
   if (req.body.specialties) {
-    const specialties = mapSpecialtiesToPrismaObject(req.body.specialties);
+    const specialties = mapSpecialtiesToPrismaObject(req.body.specialties as string[]);
     data = { specialties: specialties };
   }
   const establishment = await prismaClient.establishment.update({
