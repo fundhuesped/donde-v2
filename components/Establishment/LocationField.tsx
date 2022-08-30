@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { DraggableMap, DraggableMapProps } from '../DraggableMap';
+import { Bounds } from 'google-map-react';
 
 type LocationFieldProps = {
   onChange: (event: { currentTarget: { value: string; name: string } }) => void;
@@ -7,12 +9,24 @@ type LocationFieldProps = {
   streetNumber: string;
   floor: string;
   surroundingStreets: string;
-};
+} & Omit<DraggableMapProps, 'onChange'>;
 export const LocationField = (props: LocationFieldProps) => {
-  const { onChange, fullAddress, streetName, streetNumber, floor, surroundingStreets } = props;
+  const {
+    onChange,
+    fullAddress,
+    streetName,
+    streetNumber,
+    floor,
+    surroundingStreets,
+    apiKey,
+    onChildMouseMove: handleChildMouseMove,
+    location,
+  } = props;
+  const [bounds, setBounds] = useState<Bounds | null>(null);
+
   return (
     <>
-      <h1 className={'my-4 text-justify font-bold text-black'}>¿Dónde queda?</h1>
+      <h3 className={'my-4 text-justify font-bold text-black'}>¿Dónde queda?</h3>
       <input
         name={'fullAddress'}
         className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 '}
@@ -51,6 +65,15 @@ export const LocationField = (props: LocationFieldProps) => {
         value={surroundingStreets}
       />
       <p className={'mt-8 text-xs mb-2'}>Posicioná la ubicación correcta en el mapa</p>
+      <DraggableMap
+        key={'markerPosition'}
+        apiKey={apiKey}
+        onChildMouseMove={(key, childProps, mouse) => handleChildMouseMove(key, childProps, mouse)}
+        location={location}
+        onChange={({ bounds }) => {
+          setBounds(bounds);
+        }}
+      />
     </>
   );
 };

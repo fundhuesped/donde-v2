@@ -1,15 +1,14 @@
 import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import EstablishmentAdmin from '../../../components/Establishment/EstablishmentAdmin';
+import { tryGetGoogleMapsApiKey } from '../../../utils/establishments';
 
 type ServerSideProps = {
   googleMapsApiKey: string;
 };
+
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
-  const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY;
-  if (!googleMapsApiKey) {
-    throw new Error('Environment variable not set: GOOGLE_MAPS_API_KEY');
-  }
+  const googleMapsApiKey = tryGetGoogleMapsApiKey();
   return {
     props: {
       googleMapsApiKey,

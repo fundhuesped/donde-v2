@@ -15,10 +15,10 @@ type EstablishmentSearchStepProps = {
 export const EstablishmentSearchStep = React.forwardRef<HTMLInputElement, EstablishmentSearchStepProps>(
   (props: EstablishmentSearchStepProps, ref) => {
     const { onChange, onClick, name, address, location } = props;
-    const [canValidate, setCanValidate] = useState(false);
+    const [isValid, setIsValid] = useState(false);
     useEffect(() => {
       const validationFields = [name, address, location];
-      setCanValidate(validationFields.every((field) => !isEmpty(field)));
+      setIsValid(validationFields.every((field) => !isEmpty(field)));
     }, [name, address, location]);
     return (
       <>
@@ -37,7 +37,7 @@ export const EstablishmentSearchStep = React.forwardRef<HTMLInputElement, Establ
           onChange={onChange}
           value={address}
         />
-        <Button className={'w-full my-5'} disabled={!canValidate} type={'primary'} onClick={onClick}>
+        <Button className={'w-full my-5'} disabled={!isValid} type={'primary'} onClick={onClick}>
           Continuar
         </Button>
       </>

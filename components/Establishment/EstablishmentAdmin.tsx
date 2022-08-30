@@ -1,24 +1,20 @@
 import React, { RefObject, useState } from 'react';
 import isEmpty from 'lodash/isEmpty';
 import values from 'lodash/values';
-import { Bounds } from 'google-map-react';
 import { usePlacesWidget } from 'react-google-autocomplete';
 import MainContainer from '../../components/MainContainer';
 import { Button } from '../../components/Button';
 import Select from '../../components/Select';
-import Toast from '../../components/Toast';
-import { DraggableMap } from '../../components/DraggableMap';
+import Alert from '../Alert';
 import { EstablishmentSearchStep } from '../../components/Establishment/EstablishmentSearchStep';
-import { AvailabilityField } from '../../components/Establishment/AvailabilityField';
 import { AvailableServices } from '../../components/Establishment/AvailableServices';
 import { LocationField } from '../../components/Establishment/LocationField';
-import { ContactInfoField } from '../../components/Establishment/ContactInfoField';
+import SERVICES from '../../assets/services.json';
 
 const types = [
   { value: 'publico', label: 'Público' },
   { value: 'arancelado', label: 'Arancelado' },
 ];
-const services = [{ id: 'hiv', label: 'Test de HIV' }];
 
 export type EstablishmentModel = {
   name: string;
@@ -65,7 +61,6 @@ const EstablishmentAdmin = (props: { googleMapsApiKey: string; establishment?: E
   const [form, setForm] = useState<EstablishmentModel>(establishment || emptyEstablishmentModel);
   const [isFormCompleted, setIsFormCompleted] = useState(false);
 
-  const [bounds, setBounds] = useState<Bounds | null>(null);
   const handleFormUpdate = (fieldsToUpdate: Partial<EstablishmentModel>) => {
     setForm((prevState) => {
       const updatedForm = { ...prevState, ...fieldsToUpdate };
@@ -181,19 +176,13 @@ const EstablishmentAdmin = (props: { googleMapsApiKey: string; establishment?: E
               streetNumber={streetNumber}
               floor={floor}
               surroundingStreets={surroundingStreets}
+              apiKey={googleMapsApiKey}
+              onChildMouseMove={handleChildMouseMove}
+              location={location}
             />
 
-            <DraggableMap
-              key={'markerPosition'}
-              apiKey={googleMapsApiKey}
-              onChildMouseMove={(key, childProps, mouse) => handleChildMouseMove(key, childProps, mouse)}
-              location={location}
-              onChange={({ bounds }) => {
-                setBounds(bounds);
-              }}
-            />
             {/*<AvailabilityField key={'workingHourTo'} onChange={handleFormUpdate} availability={availability} />*/}
-            <AvailableServices onChange={handleFormUpdate} availableServices={availableServices} services={services} />
+            <AvailableServices onChange={handleFormUpdate} availableServices={availableServices} services={SERVICES} />
             {/*<ContactInfoField
               key={'email'}
               onChange={handleFieldChange}
@@ -227,7 +216,7 @@ const EstablishmentAdmin = (props: { googleMapsApiKey: string; establishment?: E
               <p className={'text-xs'}>Acepto los términos y condiciones y la publicación de los datos en el sitio</p>
             </div>
             {isError && (
-              <Toast
+              <Alert
                 title={'El establecimiento ya existe'}
                 message={'Este establecimiento ya existe en nuestra base de datos.'}
               />

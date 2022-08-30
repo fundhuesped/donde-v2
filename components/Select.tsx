@@ -21,8 +21,7 @@ const Select: React.FC<Props> = (props) => {
     >
       {items.map((item) => (
         <option key={item.value} value={item.value}>
-          {' '}
-          {item.label}{' '}
+          {item.label}
         </option>
       ))}
     </select>

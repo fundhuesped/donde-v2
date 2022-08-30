@@ -4,7 +4,7 @@ import GoogleMapReact from 'google-map-react';
 import { Marker } from './Marker';
 import React, { useState } from 'react';
 
-type DraggableMapProps = {
+export type DraggableMapProps = {
   apiKey: string;
   onChildMouseDown?: () => void;
   onChildMouseUp?: () => void;

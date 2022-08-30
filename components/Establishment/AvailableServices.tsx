@@ -2,7 +2,7 @@ import React from 'react';
 
 type AvailableServicesProps = {
   onChange: (event: { [key: string]: any }) => void;
-  services: { id: string; label: string }[];
+  services: { id: string; name: string }[];
   availableServices: Set<string>;
 };
 export const AvailableServices = (props: AvailableServicesProps) => {
@@ -18,7 +18,7 @@ export const AvailableServices = (props: AvailableServicesProps) => {
     onChange({ availableServices: updatedServices });
   };
   const isChecked = (serviceId: string) => availableServices.has(serviceId);
-
+  debugger;
   return (
     <>
       <h1 className={'my-6 text-justify font-bold text-black'}>¿Qué servicios brinda el lugar?</h1>
@@ -32,7 +32,7 @@ export const AvailableServices = (props: AvailableServicesProps) => {
               onChange={handleChange}
               checked={isChecked(service.id)}
             />
-            {service.label}
+            {service.name}
           </label>
         );
       })}

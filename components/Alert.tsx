@@ -1,7 +1,7 @@
 import React from 'react';
 import { ExclamationCircleIcon } from '@heroicons/react/outline';
 
-const Toast = (props: { title: string; message: string }) => {
+const Alert = (props: { title: string; message: string }) => {
   const { title, message } = props;
   return (
     <div className={'outline outline-1 outline-orange-400 rounded-xl flex flex-col p-4'}>
@@ -14,4 +14,4 @@ const Toast = (props: { title: string; message: string }) => {
   );
 };
 
-export default Toast;
+export default Alert;
