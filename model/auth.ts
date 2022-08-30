@@ -1,10 +1,10 @@
-import * as PrismaClient from '@prisma/client';
-import * as yup from 'yup';
+import { z } from 'zod';
+import { UserRole } from '@prisma/client';
 
-export type AuthenticatedUser = yup.InferType<typeof authenticatedUserSchema>;
-export const authenticatedUserSchema = yup.object({
-  email: yup.string().required(),
-  firstName: yup.string().required(),
-  lastName: yup.string().required(),
-  role: yup.mixed().oneOf(Object.values(PrismaClient.UserRole)).required(),
+export type AuthenticatedUser = z.infer<typeof AuthenticatedUserSchema>;
+export const AuthenticatedUserSchema = z.object({
+  email: z.string().email(),
+  firstName: z.string(),
+  lastName: z.string(),
+  role: z.enum([UserRole.ADMIN, UserRole.COLLABORATOR]),
 });
