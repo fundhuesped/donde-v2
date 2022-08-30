@@ -17,7 +17,7 @@ export const createEstablishmentSchema = yup.object({
   country: yup.string().required(),
   latitude: yup.number().min(-90).max(90).required(),
   longitude: yup.number().min(-180).max(180).required(),
-  specialties: yup.array().of(yup.string().uuid()).min(1).required(),
+  specialties: yup.array().of(yup.string().uuid().required()).min(1).required(),
 });
 
 export const editEstablishmentSchema = yup.object({
@@ -37,5 +37,5 @@ export const editEstablishmentSchema = yup.object({
   country: yup.string(),
   latitude: yup.number(),
   longitude: yup.number(),
-  specialties: yup.array(),
+  specialties: yup.array().of(yup.string().uuid().required()).min(1),
 });

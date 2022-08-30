@@ -25,7 +25,7 @@ const getEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) 
   }
   const establishment = await prismaClient.establishment.findUnique({
     where: {
-      id: req.query.id as string,
+      id: id,
     },
   });
   if (establishment) {
@@ -41,7 +41,7 @@ const updateEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
   }
   let data = {};
   if (req.body.specialties) {
-    const specialties = mapSpecialtiesToPrismaObject(req.body.specialties as string[]);
+    const specialties = mapSpecialtiesToPrismaObject(req.body.specialties);
     data = { specialties: specialties };
   }
   const establishment = await prismaClient.establishment.update({
