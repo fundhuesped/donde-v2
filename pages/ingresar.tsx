@@ -57,9 +57,9 @@ const SignIn: NextPage = () => {
             <input
               {...register('email')}
               id="email"
-              name='email'
+              name="email"
               className="input-style placeholder-icon"
-              placeholder="Nombre de usuario"              
+              placeholder="Nombre de usuario"
             />
             <p className="color-primary text-sm">{errors.email?.message}</p>
           </div>
