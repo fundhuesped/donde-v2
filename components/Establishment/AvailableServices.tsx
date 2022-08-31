@@ -3,13 +3,13 @@ import React from 'react';
 type AvailableServicesProps = {
   onChange: (event: { [key: string]: any }) => void;
   services: { id: string; name: string }[];
-  availableServices: Set<string>;
+  specialties: Set<string>;
 };
 export const AvailableServices = (props: AvailableServicesProps) => {
-  const { availableServices, services, onChange } = props;
+  const { specialties, services, onChange } = props;
   const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
     const { name, checked } = event.currentTarget;
-    let updatedServices = new Set(availableServices);
+    let updatedServices = new Set(specialties);
     if (checked) {
       updatedServices.add(name);
     } else {
@@ -17,7 +17,7 @@ export const AvailableServices = (props: AvailableServicesProps) => {
     }
     onChange({ availableServices: updatedServices });
   };
-  const isChecked = (serviceId: string) => availableServices.has(serviceId);
+  const isChecked = (serviceId: string) => specialties.has(serviceId);
   debugger;
   return (
     <>

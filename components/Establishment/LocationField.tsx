@@ -5,19 +5,19 @@ import { Bounds } from 'google-map-react';
 type LocationFieldProps = {
   onChange: (event: { currentTarget: { value: string; name: string } }) => void;
   fullAddress: string;
-  streetName: string;
+  street: string;
   streetNumber: string;
-  floor: string;
-  surroundingStreets: string;
+  apartment: string;
+  intersection: string;
 } & Omit<DraggableMapProps, 'onChange'>;
 export const LocationField = (props: LocationFieldProps) => {
   const {
     onChange,
     fullAddress,
-    streetName,
+    street,
     streetNumber,
-    floor,
-    surroundingStreets,
+    apartment,
+    intersection,
     apiKey,
     onChildMouseMove: handleChildMouseMove,
     location,
@@ -35,11 +35,11 @@ export const LocationField = (props: LocationFieldProps) => {
         value={fullAddress}
       />
       <input
-        name={'streetName'}
+        name={'street'}
         className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 mt-6'}
         placeholder={'Calle'}
         onChange={onChange}
-        value={streetName}
+        value={street}
       />
       <div className={'flex justify-between mt-6'}>
         <input
@@ -50,19 +50,19 @@ export const LocationField = (props: LocationFieldProps) => {
           value={streetNumber}
         />
         <input
-          name={'floor'}
+          name={'apartment'}
           className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 max-w-[45%]'}
           placeholder={'Piso'}
           onChange={onChange}
-          value={floor}
+          value={apartment}
         />
       </div>
       <input
-        name={'surroundingStreets'}
+        name={'intersection'}
         className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 mt-6'}
         placeholder={'Entre calles'}
         onChange={onChange}
-        value={surroundingStreets}
+        value={intersection}
       />
       <p className={'mt-8 text-xs mb-2'}>Posicioná la ubicación correcta en el mapa</p>
       <DraggableMap

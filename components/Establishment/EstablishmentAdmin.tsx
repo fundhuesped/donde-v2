@@ -1,14 +1,15 @@
 import React, { RefObject, useState } from 'react';
+import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
 import values from 'lodash/values';
 import { usePlacesWidget } from 'react-google-autocomplete';
 import MainContainer from '../../components/MainContainer';
-import { Button } from '../../components/Button';
+import { Button } from '../Button';
 import Select from '../../components/Select';
 import Alert from '../Alert';
-import { EstablishmentSearchStep } from '../../components/Establishment/EstablishmentSearchStep';
-import { AvailableServices } from '../../components/Establishment/AvailableServices';
-import { LocationField } from '../../components/Establishment/LocationField';
+import { EstablishmentSearchStep } from './EstablishmentSearchStep';
+import { AvailableServices } from './AvailableServices';
+import { LocationField } from './LocationField';
 import SERVICES from '../../assets/services.json';
 
 const types = [
@@ -18,40 +19,48 @@ const types = [
 
 export type EstablishmentModel = {
   name: string;
-  address: string;
-  streetName: string;
   type: string;
-  fullAddress: string;
+  street: string;
   streetNumber: string;
-  floor: string;
-  surroundingStreets: string;
-  availableServices: Set<string>;
+  apartment: string;
+  intersection: string;
+  fullAddress: string;
+  specialties: Set<string>;
   website: string;
   phone: string;
   email: string;
   whatsApp: string;
   tosCheckbox: boolean;
   location?: { lat: number; lng: number };
-  additionalDescription: string;
+  details: string;
   availability: string;
+  address: string;
+  country: string;
+  province: string;
+  city: string;
+  department: string;
 };
 const emptyEstablishmentModel = {
   name: '',
   address: '',
-  streetName: '',
+  street: '',
+  streetNumber: '',
   type: 'publico',
   fullAddress: '',
-  streetNumber: '',
-  floor: '',
-  surroundingStreets: '',
-  availableServices: new Set<string>(),
+  apartment: '',
+  intersection: '',
+  specialties: new Set<string>(),
   website: '',
   phone: '',
   whatsApp: '',
   email: '',
   tosCheckbox: false,
-  additionalDescription: '',
+  details: '',
   availability: '',
+  country: '',
+  province: '',
+  city: '',
+  department: '',
 };
 
 const EstablishmentAdmin = (props: { googleMapsApiKey: string; establishment?: EstablishmentModel }) => {
@@ -75,6 +84,17 @@ const EstablishmentAdmin = (props: { googleMapsApiKey: string; establishment?: E
         address_components,
         geometry: { location },
       } = place;
+      debugger;
+      const country = address_components.find((component: { types: string[] }) => component.types.includes('country'))?.long_name;
+      const province = address_components.find((component: { types: string[] }) =>
+        component.types.includes('administrative_area_level_1'),
+      )?.long_name;
+      const city = address_components.find((component: { types: string[] }) =>
+        component.types.includes('administrative_area_level_2'),
+      )?.long_name;
+      const department = address_components.find((component: { types: string[] }) =>
+        component.types.includes('locality'),
+      )?.long_name;
       const streetName = address_components.find((component: { types: string[] }) =>
         component.types.includes('route'),
       )?.long_name;
@@ -83,13 +103,17 @@ const EstablishmentAdmin = (props: { googleMapsApiKey: string; establishment?: E
       )?.long_name;
       handleFormUpdate({
         fullAddress: place.formatted_address,
-        streetName,
+        street: streetName,
         streetNumber,
         address: place.formatted_address,
         location: {
           lat: location.lat(),
           lng: location.lng(),
         },
+        country,
+        province,
+        city,
+        department,
       });
     },
     options: {
@@ -106,7 +130,8 @@ const EstablishmentAdmin = (props: { googleMapsApiKey: string; establishment?: E
     const { name: elementName, checked } = event.currentTarget;
     handleFormUpdate({ [elementName]: checked });
   };
-  const handleFormSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleFormSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    await axios.post(`/api/establishments/`);
     setIsError(true);
   };
   const handleContinueButtonClicked = () => {
@@ -118,21 +143,21 @@ const EstablishmentAdmin = (props: { googleMapsApiKey: string; establishment?: E
   };
   const {
     name,
-    streetName,
+    street,
     address,
     type,
     fullAddress,
     streetNumber,
-    floor,
-    surroundingStreets,
-    availableServices,
+    apartment,
+    intersection,
+    specialties,
     website,
     phone,
     whatsApp,
     email,
     tosCheckbox,
     location,
-    additionalDescription,
+    details,
     availability,
   } = form;
   return (
@@ -172,17 +197,17 @@ const EstablishmentAdmin = (props: { googleMapsApiKey: string; establishment?: E
               key={'surroundingStreets'}
               onChange={handleFieldChange}
               fullAddress={fullAddress}
-              streetName={streetName}
+              street={street}
               streetNumber={streetNumber}
-              floor={floor}
-              surroundingStreets={surroundingStreets}
+              apartment={apartment}
+              intersection={intersection}
               apiKey={googleMapsApiKey}
               onChildMouseMove={handleChildMouseMove}
               location={location}
             />
 
             {/*<AvailabilityField key={'workingHourTo'} onChange={handleFormUpdate} availability={availability} />*/}
-            <AvailableServices onChange={handleFormUpdate} availableServices={availableServices} services={SERVICES} />
+            <AvailableServices onChange={handleFormUpdate} specialties={specialties} services={SERVICES} />
             {/*<ContactInfoField
               key={'email'}
               onChange={handleFieldChange}
@@ -197,8 +222,8 @@ const EstablishmentAdmin = (props: { googleMapsApiKey: string; establishment?: E
               Por ejemplo referencias de acceso, o cualquier otro dato relevante sobre el establecimiento
             </p>
             <textarea
-              name={'additionalDescription'}
-              value={additionalDescription}
+              name={'details'}
+              value={details}
               onChange={handleFieldChange}
               className={'w-full p-4 mt-2 rounded-lg'}
               rows={4}
