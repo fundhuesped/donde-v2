@@ -1,5 +1,5 @@
 import isEmpty from 'lodash/isEmpty';
-import { GetStaticProps, NextPage } from 'next';
+import {GetServerSideProps, GetStaticProps, NextPage} from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { RefObject, useEffect, useState } from 'react';
@@ -9,24 +9,34 @@ import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
 import { Pill } from '../components/Pill';
 import { Coordinates } from '../model/map';
+import {prismaClient} from "../server/prisma/client";
 
-type StaticProps = {
-  googleMapsApiKey: string;
+type AvailableService = {
+  id: string;
+  name: string;
+  icon: string;
 };
 
-export const getStaticProps: GetStaticProps<StaticProps> = async () => {
+type ServerSideProps = {
+  googleMapsApiKey: string,
+  availableServices: AvailableService[],
+};
+
+export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
   const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY;
   if (!googleMapsApiKey) {
     throw new Error('Environment variable not set: GOOGLE_MAPS_API_KEY');
   }
+  const services = await prismaClient.service.findMany();
   return {
     props: {
-      googleMapsApiKey,
+      availableServices: services,
+      googleMapsApiKey
     },
   };
 };
 
-const Search: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
+const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices }) => {
   const router = useRouter();
 
   const { ref: autocompleteInputRef }: { ref: RefObject<HTMLInputElement> } = usePlacesWidget({
@@ -50,8 +60,8 @@ const Search: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
     : [];
   const searchedServices =
     searchedServiceIds && searchedServiceIds.length !== 0
-      ? servicesData.filter((service) => searchedServiceIds.includes(service.id))
-      : servicesData;
+      ? availableServices.filter((service) => searchedServiceIds.includes(service.id))
+      : availableServices;
   const services = searchedServices.map((service) => service);
 
   const [searchLocation, setSearchLocation] = useState('');
