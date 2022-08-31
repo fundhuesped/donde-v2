@@ -1,21 +1,27 @@
 import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import EstablishmentAdmin from '../../components/Establishment/EstablishmentAdmin';
-import { tryGetGoogleMapsApiKey } from '../../utils/establishments';
-
-type ServerSideProops = {
-  googleMapsApiKey: string;
+import { tryGetAvailableSpecialities, tryGetGoogleMapsApiKey } from '../../utils/establishments';
+export type AvailableSpecialty = {
+  id: string;
+  name: string;
 };
-export const getServerSideProps: GetServerSideProps<ServerSideProops> = async () => {
+type ServerSideProps = {
+  googleMapsApiKey: string;
+  availableSpecialties: AvailableSpecialty[];
+};
+export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
   const googleMapsApiKey = tryGetGoogleMapsApiKey();
+  const availableSpecialties = await tryGetAvailableSpecialities();
   return {
     props: {
       googleMapsApiKey,
+      availableSpecialties,
     },
   };
 };
-const EstablishmentNew: NextPage<ServerSideProops> = ({ googleMapsApiKey }) => {
-  return <EstablishmentAdmin googleMapsApiKey={googleMapsApiKey} />;
+const EstablishmentNew: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableSpecialties }) => {
+  return <EstablishmentAdmin googleMapsApiKey={googleMapsApiKey} availableSpecialties={availableSpecialties} />;
 };
 
 export default EstablishmentNew;

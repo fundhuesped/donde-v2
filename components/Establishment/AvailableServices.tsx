@@ -1,8 +1,10 @@
 import React from 'react';
+import { AvailableSpecialty } from '../../pages/establecimientos/nuevo';
+import capitalize from 'lodash/capitalize';
 
 type AvailableServicesProps = {
   onChange: (event: { [key: string]: any }) => void;
-  services: { id: string; name: string }[];
+  services: AvailableSpecialty[];
   specialties: Set<string>;
 };
 export const AvailableServices = (props: AvailableServicesProps) => {
@@ -15,27 +17,28 @@ export const AvailableServices = (props: AvailableServicesProps) => {
     } else {
       updatedServices.delete(name);
     }
-    onChange({ availableServices: updatedServices });
+    onChange({ specialties: updatedServices });
   };
   const isChecked = (serviceId: string) => specialties.has(serviceId);
-  debugger;
   return (
     <>
       <h1 className={'my-6 text-justify font-bold text-black'}>¿Qué servicios brinda el lugar?</h1>
-      {services?.map((service) => {
-        return (
-          <label key={service.id}>
-            <input
-              name={service.id}
-              className={'mr-2 text-xs'}
-              type={'checkbox'}
-              onChange={handleChange}
-              checked={isChecked(service.id)}
-            />
-            {service.name}
-          </label>
-        );
-      })}
+      <div className={'flex flex-col'}>
+        {services?.map((service) => {
+          return (
+            <label key={service.id}>
+              <input
+                name={service.id}
+                className={'mr-2 text-xs'}
+                type={'checkbox'}
+                onChange={handleChange}
+                checked={isChecked(service.id)}
+              />
+              {capitalize(service.name)}
+            </label>
+          );
+        })}
+      </div>
     </>
   );
 };

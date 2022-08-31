@@ -2,8 +2,8 @@ import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { prismaClient } from '../../server/prisma/client';
 import { EstablishmentStatus } from '@prisma/client';
 import { createEstablishmentSchema as establishmentSchema } from '../../model/establishment';
-import specialties from './specialties';
 import * as yup from 'yup';
+import isEmpty from 'lodash/isEmpty';
 
 const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
@@ -69,6 +69,7 @@ const createEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
 };
 
 export const mapSpecialtiesToPrismaObject = (specialties: string[]) => {
+  if (isEmpty(specialties)) return { create: [] };
   const specialtiesObjects = specialties.map((specialtyId: string) => {
     return {
       specialty: {

@@ -1,17 +1,30 @@
 import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
-import EstablishmentAdmin from '../../../components/Establishment/EstablishmentAdmin';
-import { tryGetGoogleMapsApiKey } from '../../../utils/establishments';
+import EstablishmentAdmin, {
+  emptyEstablishmentModel,
+  EstablishmentModel,
+} from '../../../components/Establishment/EstablishmentAdmin';
+import { tryGetAvailableSpecialities, tryGetGoogleMapsApiKey } from '../../../utils/establishments';
+import axios from 'axios';
+import { AvailableSpecialty } from '../nuevo';
 
 type ServerSideProps = {
   googleMapsApiKey: string;
+  establishment: EstablishmentModel;
+  availableSpecialties: AvailableSpecialty[];
 };
 
-export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
+export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (context) => {
+  const { id } = context.query;
+  const { data: establishment } = await axios.get(`${process.env['HOST']}/api/establishments/${id}`);
   const googleMapsApiKey = tryGetGoogleMapsApiKey();
+  const availableSpecialties = await tryGetAvailableSpecialities();
+
   return {
     props: {
       googleMapsApiKey,
+      establishment,
+      availableSpecialties,
     },
   };
 };
@@ -32,11 +45,29 @@ const anEstablishmentModel = {
   tosCheckbox: false,
   additionalDescription: 'gran calle, mejor hospital',
   availability: 'Lunes-Lunes 00:00-00:00',
-  location: { lat: -34.58956, lng: -58.4040549 },
+  latitude: -34.58956,
+  longitude: -58.4040549,
 };
-
-const EstablishmentEdit: NextPage<ServerSideProps> = ({ googleMapsApiKey }) => {
-  return <EstablishmentAdmin googleMapsApiKey={googleMapsApiKey} establishment={anEstablishmentModel} />;
+const mapIntoEstablishmentModel = (establishment: any) => {
+  const specialties = establishment.specialties?.map((specialty) => specialty.specialtyId) || [];
+  return {
+    ...emptyEstablishmentModel,
+    ...establishment,
+    specialties: new Set(specialties),
+    latitude: parseFloat(establishment.latitude),
+    longitude: parseFloat(establishment.longitude),
+    fullAddress: establishment.province,
+  };
+};
+const EstablishmentEdit: NextPage<ServerSideProps> = ({ googleMapsApiKey, establishment, availableSpecialties }) => {
+  const establishmentModel = mapIntoEstablishmentModel(establishment);
+  return (
+    <EstablishmentAdmin
+      googleMapsApiKey={googleMapsApiKey}
+      establishment={establishmentModel}
+      availableSpecialties={availableSpecialties}
+    />
+  );
 };
 
 export default EstablishmentEdit;

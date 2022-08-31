@@ -20,7 +20,8 @@ export const LocationField = (props: LocationFieldProps) => {
     intersection,
     apiKey,
     onChildMouseMove: handleChildMouseMove,
-    location,
+    latitude,
+    longitude,
   } = props;
   const [bounds, setBounds] = useState<Bounds | null>(null);
 
@@ -69,7 +70,8 @@ export const LocationField = (props: LocationFieldProps) => {
         key={'markerPosition'}
         apiKey={apiKey}
         onChildMouseMove={(key, childProps, mouse) => handleChildMouseMove(key, childProps, mouse)}
-        location={location}
+        latitude={latitude}
+        longitude={longitude}
         onChange={({ bounds }) => {
           setBounds(bounds);
         }}
