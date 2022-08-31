@@ -16,6 +16,7 @@
 2. Set up the database and run schema migrations.
    1. Run `docker-compose up -d` to bring up the database.
    2. Run `npx prisma db push` to run all schema migrations.
+   3. Run `npx prisma db seed` to seed the db.
 
 ### Run the app
 

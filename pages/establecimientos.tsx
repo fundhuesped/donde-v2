@@ -1,4 +1,4 @@
-import { ClockIcon, LocationMarkerIcon, SupportIcon, XIcon } from '@heroicons/react/outline';
+import { LocationMarkerIcon, SupportIcon, XIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
 import GoogleMapReact, { Bounds } from 'google-map-react';
 import { GetStaticProps, NextPage } from 'next';
@@ -14,6 +14,13 @@ import { formatEstablishmentLocation } from '../utils/establishments';
 
 type StaticProps = {
   googleMapsApiKey: string;
+};
+export const markerWithinBoundaries = (marker: Coordinates, bounds: Bounds) => {
+  const northLat = bounds.nw.lat;
+  const southLat = bounds.sw.lat;
+  const westLng = bounds.nw.lng;
+  const eastLng = bounds.ne.lng;
+  return marker.lat < northLat && marker.lat > southLat && marker.lng > westLng && marker.lng < eastLng;
 };
 
 export const getStaticProps: GetStaticProps<StaticProps> = async () => {
@@ -31,6 +38,7 @@ export const getStaticProps: GetStaticProps<StaticProps> = async () => {
 const markers = places.flatMap((place, index) => {
   // TODO: no se si es el mejor lugar para hacer esto
   if (typeof place.lat !== 'number' || typeof place.lng !== 'number') return [];
+
   return [
     {
       ...place,
@@ -75,6 +83,10 @@ const getMapPosition = (coords: Coordinates | undefined): MapPosition => {
   return { coords: defaultCoords, zoom: defaultZoom };
 };
 
+function isValidMarkerValue(marker: number) {
+  return marker >= 0;
+}
+
 const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
   const router = useRouter();
 
@@ -103,7 +115,11 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
 
   const [activeMarker, setActiveMarker] = useState<any>(null);
   const handleMarkerClick = (marker: number) => {
-    setActiveMarker(markers[marker - 1]);
+    const markerValue = marker - 1;
+
+    if (isValidMarkerValue(markerValue)) {
+      setActiveMarker(markers[markerValue]);
+    }
   };
 
   const handleClose = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -113,14 +129,6 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
 
   const handleDetailsClick = () => {
     router.push(`/establecimientos/${activeMarker.placeId}`);
-  };
-
-  const markerWithinBoundaries = (marker: Coordinates, bounds: Bounds) => {
-    const northLat = bounds.nw.lat;
-    const southLat = bounds.sw.lat;
-    const westLng = bounds.nw.lng;
-    const eastLng = bounds.ne.lng;
-    return marker.lat < northLat && marker.lat > southLat && marker.lng > westLng && marker.lng < eastLng;
   };
 
   return (
@@ -175,9 +183,6 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
                     {formatEstablishmentLocation(activeMarker)}
                     {/*<span className={'text-xs text-medium-gray'}>- A 400 metros</span>*/}
                   </CardListItem>
-                  {activeMarker.horario_testeo !== null && (
-                    <CardListItem icon={<ClockIcon className={'text-primary'} />}>{activeMarker.horario_testeo}</CardListItem>
-                  )}
                   <CardListItem icon={<SupportIcon className={'text-primary'} />}>Test de HIV</CardListItem>
                 </CardList>
                 <footer className={classNames('mt-4')}>

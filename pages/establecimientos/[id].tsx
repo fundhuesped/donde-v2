@@ -97,7 +97,6 @@ export const Establishment: NextPage = React.memo(() => {
   const {
     establecimiento: name,
     tipo: type,
-    horario_testeo: businessHours,
     web_testeo: website,
     tel_testeo: phone,
     observaciones_testeo: additionalInfo,
@@ -121,7 +120,6 @@ export const Establishment: NextPage = React.memo(() => {
             <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
               {address} {addressNotes && <span className={'text-xs text-medium-gray'}>- {addressNotes}</span>}
             </CardListItem>
-            {businessHours && <CardListItem icon={<ClockIcon className={'text-primary'} />}>{businessHours}</CardListItem>}
           </CardList>
 
           <CardSubHeader>Servicios disponibles</CardSubHeader>

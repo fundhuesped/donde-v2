@@ -7,3 +7,11 @@ function placeInfo(data: string | number | null | undefined) {
 export function formatEstablishmentLocation(place: any) {
   return `${placeInfo(place.calle)} ${placeInfo(place.altura)}, ${placeInfo(place.nombre_ciudad)}`;
 }
+
+export const tryGetGoogleMapsApiKey = () => {
+  const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY!;
+  if (!googleMapsApiKey) {
+    throw new Error('Environment variable not set: GOOGLE_MAPS_API_KEY');
+  }
+  return googleMapsApiKey;
+};
