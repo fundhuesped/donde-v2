@@ -79,15 +79,15 @@ model Establishment {
   name         String                        @db.VarChar(100)
   specialties  SpecialtiesOnEstablishments[]
   type         EstablishmentType
-  street       String                        @db.VarChar(100)
+  street       String                        @db.VarChar(200)
   streetNumber String?                       @db.VarChar(100)
   apartment    String?                       @db.VarChar(100)
-  intersection String?                       @db.VarChar(100)
-  details      String?                       @db.VarChar(100)
-  website      String?                       @db.VarChar(100)
-  city         String                        @db.VarChar(100)
-  department   String                        @db.VarChar(100)
-  province     String                        @db.VarChar(100)
+  intersection String?                       @db.VarChar(400)
+  details      String?                       @db.VarChar(500)
+  website      String?                       @db.VarChar(2048)
+  city         String                        @db.VarChar(200)
+  department   String                        @db.VarChar(200)
+  province     String                        @db.VarChar(200)
   country      String                        @db.VarChar(100)
   status       EstablishmentStatus
   latitude     Decimal                       @db.Decimal(8, 6)
