@@ -1,7 +1,7 @@
 import { Icon } from '../../components/Icon';
 import { Pill } from '../../components/Pill';
 import { Card, CardHeader, CardList, CardListItem, CardParagraph, CardSubHeader } from '../../components/Card';
-import { ClockIcon, GlobeAltIcon, LocationMarkerIcon } from '@heroicons/react/outline';
+import { GlobeAltIcon, LocationMarkerIcon } from '@heroicons/react/outline';
 import { PhoneIcon, ShareIcon } from '@heroicons/react/solid';
 import WhatsAppLogo from '../../assets/images/WhatsAppLogo.svg';
 import React from 'react';
@@ -14,6 +14,7 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { Service } from '../../model/services';
 import Head from 'next/head';
+import isEmpty from 'lodash/isEmpty';
 
 interface WebSiteButtonProps {
   website: string;
@@ -79,6 +80,25 @@ const ShareButton = (props: { name: string }) => {
       />
     </button>
   );
+};
+
+// Esta función retorna solo el primer número de teléfono si el campo viene con más de uno.
+// Por ejemplo "(011) 4312-3883 (011) 4321-6711", es recortado para ser "(011) 4312-3883"
+// Si no hay telefono, no retorna nada.
+const sanitizePhone = (phone: string) => {
+  if (isEmpty(phone)) return phone;
+
+  const firstClosingParenthesesIndex = phone.indexOf(')');
+  const secondOpeningParenthesesIndex = phone.substring(firstClosingParenthesesIndex).indexOf('(');
+
+  // Este chequeo es para ver si hay un segundo paréntesis que abre.
+  // Por ejemplo en "(011) 4312-3883", no hay un paréntesis que abre después del primero que cierra
+  // "(011) 4312-3883".substring(firstClosingParenthesesIndex).indexOf('(') = -1;
+  if (secondOpeningParenthesesIndex > 0) {
+    return phone.substring(0, firstClosingParenthesesIndex + secondOpeningParenthesesIndex);
+  } else {
+    return phone;
+  }
 };
 
 export const Establishment: NextPage = React.memo(() => {
@@ -147,7 +167,7 @@ export const Establishment: NextPage = React.memo(() => {
 
         <div className={'flex justify-center space-x-7 my-9'}>
           {website && <WebSiteButton website={website} />}
-          {phone && <PhoneButton phone={phone} />}
+          {phone && <PhoneButton phone={sanitizePhone(phone)} />}
           <ShareButton name={name} />
           {whatsAppPhone && <WhatsAppButton phone={whatsAppPhone} />}
         </div>
