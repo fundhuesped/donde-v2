@@ -22,9 +22,6 @@ const schema = yup
 
 const SignIn: NextPage = () => {
   const router = useRouter();
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   const {
@@ -33,10 +30,10 @@ const SignIn: NextPage = () => {
     formState: { errors },
   } = useForm<FormValues>({ resolver: yupResolver(schema) });
 
-  const handleSignIn = async () => {
+  const handleSignIn = async (data: FormValues) => {
     const res = await signIn('credentials', {
-      email,
-      password,
+      email: data.email,
+      password: data.password,
       redirect: false,
     });
     if (res?.error && res?.status === 401) {
@@ -60,10 +57,9 @@ const SignIn: NextPage = () => {
             <input
               {...register('email')}
               id="email"
+              name='email'
               className="input-style placeholder-icon"
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Nombre de usuario"
-              value={email}
+              placeholder="Nombre de usuario"              
             />
             <p className="color-primary text-sm">{errors.email?.message}</p>
           </div>
@@ -78,10 +74,9 @@ const SignIn: NextPage = () => {
               {...register('password')}
               type="password"
               id="password"
+              name="password"
               className="input-style placeholder-icon"
-              value={password}
               placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
-              onChange={(e) => setPassword(e.target.value)}
             />
             <p className="color-primary text-sm">{errors.password?.message}</p>
             {error && <p className="color-primary text-sm mt-4">{error}</p>}
