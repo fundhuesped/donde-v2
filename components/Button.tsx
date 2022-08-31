@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import React, { ReactNode } from 'react';
-import { Icon, IconProps } from './Icon';
+import { Icon } from './Icon';
 
 type Props = React.PropsWithChildren<
   {
@@ -23,7 +23,7 @@ export const Button: React.FC<Props> = React.memo((props) => {
       name={name}
       className={classNames(
         className,
-        'px-3 font-bold flex items-center justify-center rounded-2xl border-2',
+        'px-2 font-bold flex items-center justify-center rounded-2xl lg:max-h-14 py-content border-2 ',
         { 'rounded-xl': ['primary', 'secondary'].includes(type) },
         {
           'bg-primary text-white': type === 'primary' && !disabled,
