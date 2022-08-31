@@ -1,15 +1,14 @@
 import isEmpty from 'lodash/isEmpty';
-import {GetServerSideProps, GetStaticProps, NextPage} from 'next';
+import { GetServerSideProps, GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { RefObject, useEffect, useState } from 'react';
 import { usePlacesWidget } from 'react-google-autocomplete';
-import servicesData from '../assets/services.json';
 import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
 import { Pill } from '../components/Pill';
 import { Coordinates } from '../model/map';
-import {prismaClient} from "../server/prisma/client";
+import { prismaClient } from '../server/prisma/client';
 
 type AvailableService = {
   id: string;
@@ -18,8 +17,8 @@ type AvailableService = {
 };
 
 type ServerSideProps = {
-  googleMapsApiKey: string,
-  availableServices: AvailableService[],
+  googleMapsApiKey: string;
+  availableServices: AvailableService[];
 };
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
@@ -31,7 +30,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () 
   return {
     props: {
       availableServices: services,
-      googleMapsApiKey
+      googleMapsApiKey,
     },
   };
 };

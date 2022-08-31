@@ -3,14 +3,11 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useState } from 'react';
-import servicesData from '../assets/services.json';
 import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
 import { SERVICE_ICONS } from '../config/services';
-import {GetServerSideProps} from "next";
-import {tryGetGoogleMapsApiKey} from "../utils/establishments";
-import {prismaClient} from "../server/prisma/client";
-import {Prisma} from "@prisma/client";
+import { GetServerSideProps } from 'next';
+import { prismaClient } from '../server/prisma/client';
 
 type Service = {
   id: string;
@@ -41,7 +38,7 @@ const SearchButton = React.memo<SearchButtonProps>((props: SearchButtonProps) =>
 });
 
 type ServerSideProps = {
-  availableServices: AvailableService[],
+  availableServices: AvailableService[];
 };
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
@@ -98,10 +95,10 @@ export const ServiceButton = (props: ServiceProps) => {
   );
 };
 
-const Home: NextPage<ServerSideProps> = React.memo(({availableServices}) => {
+const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
   const [services, setServices] = useState<Record<string, Service>>(
     Object.fromEntries(
-      availableServices.map((serviceData:AvailableService) => [
+      availableServices.map((serviceData: AvailableService) => [
         serviceData.id,
         {
           id: serviceData.id,
