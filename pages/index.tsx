@@ -3,16 +3,23 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useState } from 'react';
-import servicesData from '../assets/services.json';
 import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
 import { SERVICE_ICONS } from '../config/services';
+import { GetServerSideProps } from 'next';
+import { prismaClient } from '../server/prisma/client';
 
 type Service = {
   id: string;
   name: string;
   icon: ReactNode;
   selected: boolean;
+};
+
+type AvailableService = {
+  id: string;
+  name: string;
+  icon: string;
 };
 
 interface SearchButtonProps {
@@ -29,6 +36,19 @@ const SearchButton = React.memo<SearchButtonProps>((props: SearchButtonProps) =>
     </Button>
   );
 });
+
+type ServerSideProps = {
+  availableServices: AvailableService[];
+};
+
+export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
+  const services = await prismaClient.service.findMany();
+  return {
+    props: {
+      availableServices: services,
+    },
+  };
+};
 
 interface SearchAllButtonProps {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
@@ -75,15 +95,15 @@ export const ServiceButton = (props: ServiceProps) => {
   );
 };
 
-const Home: NextPage = React.memo(() => {
+const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
   const [services, setServices] = useState<Record<string, Service>>(
     Object.fromEntries(
-      servicesData.map((serviceData) => [
+      availableServices.map((serviceData: AvailableService) => [
         serviceData.id,
         {
           id: serviceData.id,
           name: serviceData.name,
-          icon: SERVICE_ICONS[serviceData.id],
+          icon: SERVICE_ICONS[serviceData.icon],
           selected: false,
         },
       ]),

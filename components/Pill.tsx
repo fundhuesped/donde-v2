@@ -1,14 +1,15 @@
 import classNames from 'classnames';
 import React from 'react';
 
-type Props = React.PropsWithChildren<{}>;
+type Props = React.PropsWithChildren<{}> & React.HTMLProps<HTMLSpanElement>;
 
 export const Pill = React.memo<Props>((props) => {
-  const { children } = props;
+  const { children, className } = props;
 
   return (
     <span
       className={classNames(
+        className,
         'bg-ultra-light-gray',
         'border border-light-gray rounded-full',
         'py-1 px-4',
