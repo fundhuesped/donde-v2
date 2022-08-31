@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import places from '../assets/establishments.json';
 import { Card, CardHeader, CardList, CardListItem } from '../components/Card';
 import MainContainer from '../components/MainContainer';
-import { Marker } from '../components/Marker';
+import { Marker, UserMarker } from '../components/Marker';
 import { Pill } from '../components/Pill';
 import { formatEstablishmentLocation } from '../utils/establishments';
 
@@ -159,6 +159,8 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
                   setBounds(bounds);
                 }}
               >
+                <UserMarker key={-1} lat={mapPosition.coords.lat} lng={mapPosition.coords.lng} />
+
                 {markers
                   .filter((marker) => bounds !== null && markerWithinBoundaries(marker, bounds))
                   .map((marker) => {
@@ -168,10 +170,7 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
             </div>
 
             {activeMarker !== null && (
-              <Card
-                onClick={handleDetailsClick}
-                className={'fixed bottom-8 right-4 left-4 cursor-pointer lg:w-desktop lg:mx-auto'}
-              >
+              <Card onClick={handleDetailsClick} className={'fixed bottom-8 right-4 left-4 cursor-pointer lg:w-auto lg:mx-auto'}>
                 <header className={'flex flex-row justify-between items-center mb-2'}>
                   <CardHeader>{activeMarker.establecimiento}</CardHeader>
                   <button className={'w-5 text-dark-gray'} onClick={handleClose}>

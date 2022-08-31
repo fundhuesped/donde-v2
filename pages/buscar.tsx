@@ -119,7 +119,7 @@ const Search: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
             Buscar
           </Button>
           <Button
-            className={'w-full mt-4 lg:max-w-sm lg:mx-auto'}
+            className={'w-full mt-4 lg:max-w-[24rem] lg:mx-auto'}
             type={'secondary'}
             onClick={handleSearchButtonByLocationClicked}
           >
