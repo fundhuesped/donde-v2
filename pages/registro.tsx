@@ -66,8 +66,6 @@ const SignUp: NextPage = () => {
     defaultValues,
   });
 
-  console.log(useForm<FormValues>, 'useForm<FormValues>');
-
   const handleSignUp = async (data: FormValues) => {
     await fetch('/api/auth/signup', {
       body: JSON.stringify({
