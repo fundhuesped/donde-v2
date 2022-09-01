@@ -77,7 +77,7 @@ enum LegacyPublishedStatus {
   FALSE = -1,
 }
 
-const LegacyPublishedStatusSchema = z.union([z.literal(1), z.literal(1)]);
+const LegacyPublishedStatusSchema = z.union([z.literal(1), z.literal(-1)]);
 
 type LegacyDataRecord = z.infer<typeof LegacyDataRecordSchema>;
 const LegacyDataRecordSchema = z.object({
