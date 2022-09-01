@@ -8,6 +8,7 @@ import MainContainer from '../components/MainContainer';
 import { SERVICE_ICONS } from '../config/services';
 import { GetServerSideProps } from 'next';
 import { prismaClient } from '../server/prisma/client';
+import { ExclamationIcon } from '@heroicons/react/solid';
 
 type Service = {
   id: string;
@@ -103,7 +104,7 @@ const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
         {
           id: serviceData.id,
           name: serviceData.name,
-          icon: SERVICE_ICONS[serviceData.icon],
+          icon: <ExclamationIcon />,
           selected: false,
         },
       ]),
