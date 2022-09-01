@@ -92,7 +92,7 @@ const SignIn: NextPage = () => {
           ¿No tienes cuenta?{' '}
           <button
             className="ml-2 color-primary font-bold"
-            type='button'
+            type="button"
             onClick={async () => {
               await router.push('/registro');
             }}

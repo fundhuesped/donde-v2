@@ -29,8 +29,8 @@ const defaultValues = {
   organizationType: '',
   organizationRole: '',
   organizationCountry: '',
-  organizationWebsite: ''
-}
+  organizationWebsite: '',
+};
 
 const schema = yup
   .object({
@@ -41,10 +41,13 @@ const schema = yup
     organizationType: yup.string().required('El tipo de organización es requerido'),
     organizationRole: yup.string().required('Por favor escriba su rol'),
     organizationCountry: yup.string().required('Por favor escriba el pais de la organización'),
-    organizationWebsite: yup.string().matches(
-      /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-      'Por favor escriba un link correcto'
-  ).required('Por favor escriba el sitio web de su organización'),
+    organizationWebsite: yup
+      .string()
+      .matches(
+        /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+        'Por favor escriba un link correcto',
+      )
+      .required('Por favor escriba el sitio web de su organización'),
   })
   .required();
 
@@ -58,12 +61,12 @@ const SignUp: NextPage = () => {
     register,
     handleSubmit,
     formState: { errors, dirtyFields },
-  } = useForm<FormValues>({ 
-      resolver: yupResolver(schema), 
-      defaultValues  
-    });
+  } = useForm<FormValues>({
+    resolver: yupResolver(schema),
+    defaultValues,
+  });
 
-  console.log(useForm<FormValues>, 'useForm<FormValues>')
+  console.log(useForm<FormValues>, 'useForm<FormValues>');
 
   const handleSignUp = async (data: FormValues) => {
     await fetch('/api/auth/signup', {
@@ -144,8 +147,8 @@ const SignUp: NextPage = () => {
               {...register('firstName')}
               className="input-style"
               placeholder="Nombre"
-              id='firstName'
-              name='firstName'
+              id="firstName"
+              name="firstName"
             ></input>
             <p className="color-primary text-sm">{errors.firstName?.message}</p>
           </div>
@@ -155,19 +158,13 @@ const SignUp: NextPage = () => {
             ) : (
               ''
             )}
-            <input
-              {...register('lastName')}
-              className="input-style"
-              placeholder="Apellido"
-              id='lastName'
-              name='lastName'
-            ></input>
+            <input {...register('lastName')} className="input-style" placeholder="Apellido" id="lastName" name="lastName"></input>
             <p className="color-primary text-sm">{errors.lastName?.message}</p>
           </div>
         </div>
         <div className="flex flex-wrap -mx-3 my-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            {!dirtyFields.email  ? (
+            {!dirtyFields.email ? (
               <p style={{ color: '#E6334C', margin: '.2em .5em .5em 8.2em', position: 'absolute', width: '1.2em' }}>*</p>
             ) : (
               ''
@@ -176,8 +173,8 @@ const SignUp: NextPage = () => {
               {...register('email')}
               className="input-style"
               placeholder="Correo electrónico"
-              id='email'
-              name='email'
+              id="email"
+              name="email"
             ></input>
             <p className="color-primary text-sm">{errors.email?.message}</p>
           </div>
@@ -192,8 +189,8 @@ const SignUp: NextPage = () => {
               type="password"
               className="input-style"
               placeholder="Contraseña"
-              id='password'
-              name='password'
+              id="password"
+              name="password"
             ></input>
             <p className="color-primary text-sm">{errors.lastName?.message}</p>
           </div>
@@ -209,8 +206,8 @@ const SignUp: NextPage = () => {
               {...register('organizationName')}
               className="input-style"
               placeholder="Nombre de la organización"
-              id='organizationName'
-              name='organizationName'
+              id="organizationName"
+              name="organizationName"
             ></input>
             <p className="color-primary text-sm">{errors.organizationName?.message}</p>
           </div>
@@ -224,8 +221,8 @@ const SignUp: NextPage = () => {
               {...register('organizationRole')}
               className="input-style"
               placeholder="Rol en la organización"
-              id='organizationRole'
-              name='organizationRole'
+              id="organizationRole"
+              name="organizationRole"
             ></input>
             <p className="color-primary text-sm">{errors.organizationRole?.message}</p>
           </div>
@@ -241,8 +238,8 @@ const SignUp: NextPage = () => {
               {...register('organizationType')}
               className="select-style"
               placeholder="Tipo de organización"
-              id='organizationType'
-              name='organizationType'
+              id="organizationType"
+              name="organizationType"
               defaultValue=""
             >
               <option value="" disabled hidden>
@@ -265,8 +262,8 @@ const SignUp: NextPage = () => {
               {...register('organizationCountry')}
               className="input-style select-style"
               placeholder="País de la organización"
-              id='organizationCountry'
-              name='organizationCountry'
+              id="organizationCountry"
+              name="organizationCountry"
               defaultValue=""
             >
               <option className="text-gray-300" value="" disabled hidden>
@@ -290,8 +287,8 @@ const SignUp: NextPage = () => {
               {...register('organizationWebsite')}
               className="input-style"
               placeholder="Sitio web o RRSS de la organización"
-              id='organizationWebsite'
-              name='organizationWebsite'
+              id="organizationWebsite"
+              name="organizationWebsite"
             ></input>
             <p className="color-primary text-sm">{errors.organizationWebsite?.message}</p>
           </div>
