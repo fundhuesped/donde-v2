@@ -293,6 +293,10 @@ function mapLegacyBoolean(legacyValue: LegacyDataBoolean): boolean {
   }
 }
 
+function mapLegacyString(legacyValue: string | undefined): string | null {
+  return legacyValue ? legacyValue : null;
+}
+
 function getSpecialtyIdsForLegacyDataRecord(record: LegacyDataRecord, defaultSpecialties: DefaultSpecialtiesByService): string[] {
   const specialtyIds = [];
   if (mapLegacyBoolean(record[LegacyDataField.SERVICE_PRESERVATIVOS])) {
@@ -354,8 +358,8 @@ async function main() {
       type: mapLegacyEstablishmentType(record[LegacyDataField.TYPE]),
       status: mapLegacyPublishedStatus(record[LegacyDataField.PUBLISHED]),
       street: record[LegacyDataField.STREET].toString(),
-      apartment: record[LegacyDataField.APARTMENT]?.toString(),
-      streetNumber: record[LegacyDataField.STREET_NUMBER]?.toString(),
+      apartment: mapLegacyString(record[LegacyDataField.APARTMENT]?.toString()),
+      streetNumber: mapLegacyString(record[LegacyDataField.STREET_NUMBER]?.toString()),
       city: record[LegacyDataField.CITY],
       department: record[LegacyDataField.DEPARTMENT],
       province: record[LegacyDataField.PROVINCE],
