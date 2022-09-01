@@ -123,7 +123,7 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
       </button>
 
       {isMenuOpen && (
-        <div className={'absolute min-h-full w-full left-0 top-10 flex lg:max-w-[20%] lg:left-auto lg:right-0'}>
+        <div className={'absolute min-h-full w-full left-0 top-10 flex lg:max-w-[18%] lg:left-auto lg:right-0'}>
           <MainContainer ref={innerRef} className={'z-50 mt-6 pt-6'}>
             {user && (
               <h3 className={'text-lg text-primary font-bold ml-4 mb-4'}>

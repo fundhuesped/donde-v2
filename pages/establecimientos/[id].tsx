@@ -115,7 +115,7 @@ export const Establishment: NextPage = React.memo(() => {
           <CardHeader className={'font-title text-lg'}>{name}</CardHeader>
           <CardParagraph>{type}</CardParagraph>
         </header>
-        <Card className={'my-4 pb-6 lg:mx-2.5'}>
+        <Card className={'my-4 pb-6'}>
           <CardList>
             <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
               {address} {addressNotes && <span className={'text-xs text-medium-gray'}>- {addressNotes}</span>}

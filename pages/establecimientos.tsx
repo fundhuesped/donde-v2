@@ -170,7 +170,10 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
             </div>
 
             {activeMarker !== null && (
-              <Card onClick={handleDetailsClick} className={'fixed bottom-8 right-4 left-4 cursor-pointer lg:w-auto lg:mx-auto'}>
+              <Card
+                onClick={handleDetailsClick}
+                className={'fixed bottom-8 right-4 left-4 cursor-pointer lg:w-desktop lg:mx-auto'}
+              >
                 <header className={'flex flex-row justify-between items-center mb-2'}>
                   <CardHeader>{activeMarker.establecimiento}</CardHeader>
                   <button className={'w-5 text-dark-gray'} onClick={handleClose}>

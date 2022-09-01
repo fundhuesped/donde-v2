@@ -18,7 +18,7 @@ export const Icon = React.memo<IconProps>((props) => {
       <div
         className={classNames(
           className,
-          'flex items-center justify-center bg-inherit',
+          'flex items-center justify-center',
           { 'w-6 h-6 p-1': size === 'small' },
           { 'w-8 h-8 p-1.5': size === 'medium' },
           { 'w-14 h-14 p-4': size === 'large' },
