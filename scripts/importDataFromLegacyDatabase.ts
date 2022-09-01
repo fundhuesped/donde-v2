@@ -342,6 +342,7 @@ async function main() {
 
   console.info('Upserting establishments...');
 
+  let successCount = 0;
   const failedRecords: { record: LegacyDataRecord; error: unknown }[] = [];
   const defaultSpecialties = await fetchDefaultSpecialties();
 
@@ -384,14 +385,17 @@ async function main() {
           update: specialtyOnEstablishment,
         });
       }
+
+      successCount += 1;
     } catch (error) {
       failedRecords.push({ record, error });
     }
   }
 
-  const successCount = legacyData.length - failedRecords.length;
+  const processedCount = successCount + failedRecords.length;
+  const totalCount = legacyData.length;
   console.info(`Done upserting establishments.`);
-  console.info(`Upserted ${successCount}/${legacyData.length}, ${failedRecords.length} failed`);
+  console.info(`Processed ${processedCount}/${totalCount} - ${successCount} succeeded, ${failedRecords.length} failed`);
   console.error(failedRecords);
 }
 
