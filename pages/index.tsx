@@ -9,18 +9,13 @@ import { SERVICE_ICONS } from '../config/services';
 import { GetServerSideProps } from 'next';
 import { prismaClient } from '../server/prisma/client';
 import { ExclamationIcon } from '@heroicons/react/solid';
+import {Service} from "../model/services";
 
-type Service = {
+type ServicePill = {
   id: string;
   name: string;
   icon: ReactNode;
   selected: boolean;
-};
-
-type AvailableService = {
-  id: string;
-  name: string;
-  icon: string;
 };
 
 interface SearchButtonProps {
@@ -39,7 +34,7 @@ const SearchButton = React.memo<SearchButtonProps>((props: SearchButtonProps) =>
 });
 
 type ServerSideProps = {
-  availableServices: AvailableService[];
+  availableServices: Service[];
 };
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
@@ -97,9 +92,9 @@ export const ServiceButton = (props: ServiceProps) => {
 };
 
 const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
-  const [services, setServices] = useState<Record<string, Service>>(
+  const [services, setServices] = useState<Record<string, ServicePill>>(
     Object.fromEntries(
-      availableServices.map((serviceData: AvailableService) => [
+      availableServices.map((serviceData: Service) => [
         serviceData.id,
         {
           id: serviceData.id,
@@ -127,7 +122,7 @@ const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
   };
 
   const router = useRouter();
-  const search = (servicesToSearch: Service[]) => {
+  const search = (servicesToSearch: ServicePill[]) => {
     if (servicesToSearch.length > 0) {
       router.push({
         pathname: '/buscar',

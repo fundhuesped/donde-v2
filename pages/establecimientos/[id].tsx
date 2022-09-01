@@ -1,18 +1,17 @@
 import { GlobeAltIcon, LocationMarkerIcon } from '@heroicons/react/outline';
 import { ExclamationIcon, PhoneIcon, ShareIcon } from '@heroicons/react/solid';
-import { NextPage } from 'next';
+import {GetServerSideProps, NextPage} from 'next';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import React from 'react';
-import places from '../../assets/establishments.json';
 import WhatsAppLogo from '../../assets/images/WhatsAppLogo.svg';
-import services from '../../assets/services.json';
 import { Card, CardHeader, CardList, CardListItem, CardParagraph, CardSubHeader } from '../../components/Card';
 import { Icon } from '../../components/Icon';
 import MainContainer from '../../components/MainContainer';
 import { Pill } from '../../components/Pill';
 import { Service } from '../../model/services';
 import { formatEstablishmentLocation } from '../../utils/establishments';
+import { Establishment as EstablishmentModel } from "../../model/establishment";
+import {getEstablishment} from "../../server/api/establishments";
 
 interface WebSiteButtonProps {
   website: string;
@@ -56,7 +55,7 @@ const WhatsAppButton = React.memo<WhatsAppButtonProps>((props) => {
 
 const ShareButton = (props: { name: string }) => {
   const { name } = props;
-  const supportsSharing = !!navigator.share;
+  const supportsSharing = typeof navigator !== 'undefined' && !!navigator.share;
   const shareEstablishment = () => {
     const title = `${name} | Dónde`;
     const url = window.location.href;
@@ -80,12 +79,23 @@ const ShareButton = (props: { name: string }) => {
   );
 };
 
-export const Establishment: NextPage = React.memo(() => {
-  const router = useRouter();
-  const { id: idParam } = router.query;
-  const id = idParam && typeof idParam === 'string' ? parseInt(idParam) : undefined;
-  const establishment = places.find((place) => place.placeId === id);
+type ServerSideProps = {
+  establishment: EstablishmentModel;
+  services: Service[];
+};
 
+export const getServerSideProps: GetServerSideProps<ServerSideProps> = async ({query}) => {
+  const establishment = await getEstablishment(query.id);
+  const services = establishment.specialties.map((specialty:any) => specialty.specialty.service);
+  return {
+    props: {
+      establishment,
+      services,
+    },
+  };
+};
+
+export const Establishment: NextPage<ServerSideProps> = React.memo(({establishment, services}) => {
   if (!establishment) {
     return null;
   }
@@ -94,11 +104,10 @@ export const Establishment: NextPage = React.memo(() => {
   const whatsAppPhone = null;
 
   const {
-    establecimiento: name,
-    tipo: type,
-    web_testeo: website,
-    tel_testeo: phone,
-    observaciones_testeo: additionalInfo,
+    name,
+    type,
+    website,
+    details: additionalInfo,
   } = establishment;
 
   const address = formatEstablishmentLocation(establishment);
@@ -146,7 +155,6 @@ export const Establishment: NextPage = React.memo(() => {
 
         <div className={'flex justify-center space-x-7 my-9'}>
           {website && <WebSiteButton website={website} />}
-          {phone && <PhoneButton phone={phone} />}
           <ShareButton name={name} />
           {whatsAppPhone && <WhatsAppButton phone={whatsAppPhone} />}
         </div>

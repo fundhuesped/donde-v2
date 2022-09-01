@@ -39,3 +39,23 @@ export const editEstablishmentSchema = yup.object({
   longitude: yup.number(),
   specialties: yup.array().of(yup.string().uuid().required()).min(1),
 });
+
+export type Establishment = {
+  id: string,
+  officialId: string|null,
+  name: string,
+  type: string,
+  street: string,
+  streetNumber: string|null,
+  apartment: string|null,
+  intersection: string|null,
+  details: string|null,
+  website: string|null,
+  city: string,
+  department: string,
+  province: string,
+  country: string,
+  latitude: PrismaClient.Prisma.Decimal,
+  longitude: PrismaClient.Prisma.Decimal,
+  specialties: any,
+}

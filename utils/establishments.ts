@@ -5,7 +5,7 @@ function placeInfo(data: string | number | null | undefined) {
 }
 
 export function formatEstablishmentLocation(place: any) {
-  return `${placeInfo(place.calle)} ${placeInfo(place.altura)}, ${placeInfo(place.nombre_ciudad)}`;
+  return `${placeInfo(place.street)} ${placeInfo(place.streetNumber)}, ${placeInfo(place.city)}`;
 }
 
 export const tryGetGoogleMapsApiKey = () => {
