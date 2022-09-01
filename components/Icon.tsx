@@ -26,7 +26,6 @@ export const Icon = React.memo<IconProps>((props) => {
           { 'bg-wingu-primary': type === 'primary' && !disabled },
           { 'bg-wingu-gray-400': type === 'primary' && disabled },
           { 'bg-wingu-secondary': type === 'tertiary' },
-          { 'bg-white': type === 'secondary' },
         )}
       >
         {IconInner}
