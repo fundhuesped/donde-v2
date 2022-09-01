@@ -5,8 +5,8 @@ import { EstablishmentType, EstablishmentStatus } from '@prisma/client';
 async function main() {
   const preservativos = await prisma.service.create({
     data: {
-      name: 'preservativos',
-      icon: 'Condones.svg',
+      name: 'Preservativos',
+      icon: 'preservativos',
     },
   });
   const preservativosEspecializacion = await prisma.specialty.create({
@@ -23,7 +23,7 @@ async function main() {
   const centrosInfectologia = await prisma.service.create({
     data: {
       name: 'Centros de Infectología',
-      icon: 'infectologia.svg',
+      icon: 'infectologia',
     },
   });
   const infectologiaEspecializacion = await prisma.specialty.create({
@@ -40,7 +40,7 @@ async function main() {
   const tests = await prisma.service.create({
     data: {
       name: 'Test de ITS',
-      icon: 'its.svg',
+      icon: 'test-its',
     },
   });
   const testEspecializacion = await prisma.specialty.create({
@@ -57,7 +57,7 @@ async function main() {
   const anticonceptivos = await prisma.service.create({
     data: {
       name: 'Métodos anticonceptivos',
-      icon: 'anticonceptivos.svg',
+      icon: 'anticonceptivos',
     },
   });
   const anticonceptivosEspecializacion = await prisma.specialty.create({
@@ -74,7 +74,7 @@ async function main() {
   const vacunatorios = await prisma.service.create({
     data: {
       name: 'Vacunatorios',
-      icon: 'vacuntorios.svg',
+      icon: 'vacunatorios',
     },
   });
   const vacunatoriosEspecializacion = await prisma.specialty.create({
@@ -91,7 +91,7 @@ async function main() {
   const aborto = await prisma.service.create({
     data: {
       name: 'Interrupción voluntaria del embarazo',
-      icon: 'ive.svg',
+      icon: 'aborto',
     },
   });
   const aborto1 = await prisma.specialty.create({

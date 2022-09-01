@@ -1,19 +1,19 @@
-import { Icon } from '../../components/Icon';
-import { Pill } from '../../components/Pill';
-import { Card, CardHeader, CardList, CardListItem, CardParagraph, CardSubHeader } from '../../components/Card';
-import { ClockIcon, GlobeAltIcon, LocationMarkerIcon } from '@heroicons/react/outline';
+import { GlobeAltIcon, LocationMarkerIcon } from '@heroicons/react/outline';
 import { PhoneIcon, ShareIcon } from '@heroicons/react/solid';
-import WhatsAppLogo from '../../assets/images/WhatsAppLogo.svg';
+import { NextPage } from 'next';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 import React from 'react';
 import places from '../../assets/establishments.json';
+import WhatsAppLogo from '../../assets/images/WhatsAppLogo.svg';
 import services from '../../assets/services.json';
-import { formatEstablishmentLocation } from '../../utils/establishments';
-import { SERVICE_ICONS } from '../../config/services';
+import { Card, CardHeader, CardList, CardListItem, CardParagraph, CardSubHeader } from '../../components/Card';
+import { Icon } from '../../components/Icon';
 import MainContainer from '../../components/MainContainer';
-import { NextPage } from 'next';
-import { useRouter } from 'next/router';
+import { Pill } from '../../components/Pill';
+import { SERVICE_ICONS } from '../../config/services';
 import { Service } from '../../model/services';
-import Head from 'next/head';
+import { formatEstablishmentLocation } from '../../utils/establishments';
 
 interface WebSiteButtonProps {
   website: string;
@@ -115,7 +115,7 @@ export const Establishment: NextPage = React.memo(() => {
           <CardHeader className={'font-title text-lg'}>{name}</CardHeader>
           <CardParagraph>{type}</CardParagraph>
         </header>
-        <Card className={'my-4 pb-6'}>
+        <Card className={'my-4 pb-6 lg:mx-2.5'}>
           <CardList>
             <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
               {address} {addressNotes && <span className={'text-xs text-medium-gray'}>- {addressNotes}</span>}

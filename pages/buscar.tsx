@@ -1,32 +1,41 @@
+import isEmpty from 'lodash/isEmpty';
+import { GetServerSideProps, GetStaticProps, NextPage } from 'next';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 import React, { RefObject, useEffect, useState } from 'react';
+import { usePlacesWidget } from 'react-google-autocomplete';
 import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
 import { Pill } from '../components/Pill';
-import servicesData from '../assets/services.json';
-import { usePlacesWidget } from 'react-google-autocomplete';
-import { useRouter } from 'next/router';
 import { Coordinates } from '../model/map';
-import { GetStaticProps, NextPage } from 'next';
-import Head from 'next/head';
-import isEmpty from 'lodash/isEmpty';
+import { prismaClient } from '../server/prisma/client';
 
-type StaticProps = {
-  googleMapsApiKey: string;
+type AvailableService = {
+  id: string;
+  name: string;
+  icon: string;
 };
 
-export const getStaticProps: GetStaticProps<StaticProps> = async () => {
+type ServerSideProps = {
+  googleMapsApiKey: string;
+  availableServices: AvailableService[];
+};
+
+export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
   const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY;
   if (!googleMapsApiKey) {
     throw new Error('Environment variable not set: GOOGLE_MAPS_API_KEY');
   }
+  const services = await prismaClient.service.findMany();
   return {
     props: {
+      availableServices: services,
       googleMapsApiKey,
     },
   };
 };
 
-const Search: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
+const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices }) => {
   const router = useRouter();
 
   const { ref: autocompleteInputRef }: { ref: RefObject<HTMLInputElement> } = usePlacesWidget({
@@ -50,8 +59,8 @@ const Search: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
     : [];
   const searchedServices =
     searchedServiceIds && searchedServiceIds.length !== 0
-      ? servicesData.filter((service) => searchedServiceIds.includes(service.id))
-      : servicesData;
+      ? availableServices.filter((service) => searchedServiceIds.includes(service.id))
+      : availableServices;
   const services = searchedServices.map((service) => service);
 
   const [searchLocation, setSearchLocation] = useState('');
@@ -92,7 +101,9 @@ const Search: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
         <div className={'px-content'}>
           <p className="text-black text-xs mb-2">Estás buscando</p>
           {services.map((service) => (
-            <Pill key={service.id}>{service.name}</Pill>
+            <Pill key={service.id} className={'mb-1 mr-1 inline-block'}>
+              {service.name}
+            </Pill>
           ))}
         </div>
       </div>
@@ -119,7 +130,7 @@ const Search: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
             Buscar
           </Button>
           <Button
-            className={'w-full mt-4 lg:max-w-sm lg:mx-auto'}
+            className={'w-full mt-4 lg:max-w-[24rem] lg:mx-auto'}
             type={'secondary'}
             onClick={handleSearchButtonByLocationClicked}
           >

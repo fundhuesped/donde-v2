@@ -116,14 +116,24 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
               </ul>
             </div>
             <div className="w-full flex justify-end py-3">
-              <button className="btn-primary w-1/3 p-1 flex justify-center aling-center text-sm mr-2 rounded-xl" type="button">
+              <button
+                className="btn-primary w-1/3 p-1 flex justify-center aling-center text-sm mr-2 rounded-xl"
+                type="button"
+                onClick={() => {
+                  approveSignupRequest(filteredSolicitudes[index]);
+                  setShowModal(false);
+                }}
+              >
                 <CheckIcon className="mr-1 mt- mt-0.5 text-inherit w-4"></CheckIcon>
                 Aprobar
               </button>
               <button
                 className="btn-secondary w-1/3 p-1 flex justify-center aling-center text-sm mr-2 rounded-xl"
                 type="button"
-                onClick={() => setShowModal(false)}
+                onClick={() => {
+                  rejectSignupRequest(filteredSolicitudes[index]);
+                  setShowModal(false);
+                }}
               >
                 <XIcon className="mr-1 mt- mt-0.5 text-inherit w-4"></XIcon>
                 Rechazar

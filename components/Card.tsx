@@ -9,7 +9,7 @@ type CardProps = React.PropsWithChildren<{
 export const Card = React.memo<CardProps>((props) => {
   const { children, className, ...restProps } = props;
   return (
-    <div className={classNames(className, 'bg-white flex flex-col drop-shadow-wingu rounded-2xl p-4')} {...restProps}>
+    <div className={classNames(className, 'bg-white flex flex-col drop-shadow-wingu rounded-2xl p-4 lg:mx-96')} {...restProps}>
       {children}
     </div>
   );
