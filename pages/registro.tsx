@@ -20,6 +20,18 @@ type FormValues = {
   organizationWebsite: string;
 };
 
+const defaultValues = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: '',
+  organizationName: '',
+  organizationType: '',
+  organizationRole: '',
+  organizationCountry: '',
+  organizationWebsite: '',
+};
+
 const schema = yup
   .object({
     email: yup.string().email('El correo debe tener este formato ejemplo@correo.com').required('Por favor escriba su correo'),
@@ -29,21 +41,18 @@ const schema = yup
     organizationType: yup.string().required('El tipo de organización es requerido'),
     organizationRole: yup.string().required('Por favor escriba su rol'),
     organizationCountry: yup.string().required('Por favor escriba el pais de la organización'),
-    organizationWebsite: yup.string().required('Por favor escriba el sitio web de su organización'),
+    organizationWebsite: yup
+      .string()
+      .matches(
+        /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
+        'Por favor escriba un link correcto',
+      )
+      .required('Por favor escriba el sitio web de su organización'),
   })
   .required();
 
 const SignUp: NextPage = () => {
   const router = useRouter();
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [organizationName, setOrganizationName] = useState('');
-  const [organizationType, setOrganizationType] = useState('');
-  const [organizationRole, setOrganizationRol] = useState('');
-  const [organizationCountry, setOrganizationCountry] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [organizationWebsite, setOrganizationWebsite] = useState('');
   const [showModal, setShowModal] = useState<boolean>(false);
   const [response, setResponse] = useState(false);
   const [error, setError] = useState('');
@@ -51,21 +60,24 @@ const SignUp: NextPage = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({ resolver: yupResolver(schema) });
+    formState: { errors, dirtyFields },
+  } = useForm<FormValues>({
+    resolver: yupResolver(schema),
+    defaultValues,
+  });
 
-  const handleSignUp = async () => {
+  const handleSignUp = async (data: FormValues) => {
     await fetch('/api/auth/signup', {
       body: JSON.stringify({
-        email,
-        firstName,
-        lastName,
-        password,
-        organizationName,
-        organizationType,
-        organizationRole,
-        organizationCountry,
-        organizationWebsite,
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        password: data.password,
+        organizationName: data.organizationName,
+        organizationType: data.organizationType,
+        organizationRole: data.organizationRole,
+        organizationCountry: data.organizationCountry,
+        organizationWebsite: data.organizationWebsite,
       }),
       method: 'POST',
       headers: {
@@ -124,7 +136,7 @@ const SignUp: NextPage = () => {
         </p>
         <div className="flex flex-wrap -mx-3 my-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            {firstName == '' ? (
+            {!dirtyFields.firstName ? (
               <p style={{ color: '#E6334C', margin: '.2em .5em .5em 4em', position: 'absolute', width: '1.2em' }}>*</p>
             ) : (
               ''
@@ -133,30 +145,24 @@ const SignUp: NextPage = () => {
               {...register('firstName')}
               className="input-style"
               placeholder="Nombre"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              id="firstName"
+              name="firstName"
             ></input>
             <p className="color-primary text-sm">{errors.firstName?.message}</p>
           </div>
           <div className="w-full md:w-1/2 px-3">
-            {lastName == '' ? (
+            {!dirtyFields.lastName ? (
               <p style={{ color: '#E6334C', margin: '.2em .5em .5em 4em', position: 'absolute', width: '1.2em' }}>*</p>
             ) : (
               ''
             )}
-            <input
-              {...register('lastName')}
-              className="input-style"
-              placeholder="Apellido"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            ></input>
+            <input {...register('lastName')} className="input-style" placeholder="Apellido" id="lastName" name="lastName"></input>
             <p className="color-primary text-sm">{errors.lastName?.message}</p>
           </div>
         </div>
         <div className="flex flex-wrap -mx-3 my-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            {email == '' ? (
+            {!dirtyFields.email ? (
               <p style={{ color: '#E6334C', margin: '.2em .5em .5em 8.2em', position: 'absolute', width: '1.2em' }}>*</p>
             ) : (
               ''
@@ -165,13 +171,13 @@ const SignUp: NextPage = () => {
               {...register('email')}
               className="input-style"
               placeholder="Correo electrónico"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="email"
+              name="email"
             ></input>
             <p className="color-primary text-sm">{errors.email?.message}</p>
           </div>
           <div className="w-full md:w-1/2 px-3">
-            {password == '' ? (
+            {!dirtyFields.password ? (
               <p style={{ color: '#E6334C', margin: '.2em .5em .5em 5.3em', position: 'absolute', width: '1.2em' }}>*</p>
             ) : (
               ''
@@ -181,15 +187,15 @@ const SignUp: NextPage = () => {
               type="password"
               className="input-style"
               placeholder="Contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              id="password"
+              name="password"
             ></input>
             <p className="color-primary text-sm">{errors.lastName?.message}</p>
           </div>
         </div>
         <div className="flex flex-wrap -mx-3 my-6">
           <div className="w-full md:w-1/2 px-3">
-            {organizationName == '' ? (
+            {!dirtyFields.organizationName ? (
               <p style={{ color: '#E6334C', margin: '.2em .5em .5em 11.8em', position: 'absolute', width: '1.2em' }}>*</p>
             ) : (
               ''
@@ -198,13 +204,13 @@ const SignUp: NextPage = () => {
               {...register('organizationName')}
               className="input-style"
               placeholder="Nombre de la organización"
-              value={organizationName}
-              onChange={(e) => setOrganizationName(e.target.value)}
+              id="organizationName"
+              name="organizationName"
             ></input>
             <p className="color-primary text-sm">{errors.organizationName?.message}</p>
           </div>
           <div className="w-full md:w-1/2 px-3">
-            {organizationRole == '' ? (
+            {!dirtyFields.organizationRole ? (
               <p style={{ color: '#E6334C', margin: '.2em .5em .5em 9.6em', position: 'absolute', width: '1.2em' }}>*</p>
             ) : (
               ''
@@ -213,15 +219,15 @@ const SignUp: NextPage = () => {
               {...register('organizationRole')}
               className="input-style"
               placeholder="Rol en la organización"
-              value={organizationRole}
-              onChange={(e) => setOrganizationRol(e.target.value)}
+              id="organizationRole"
+              name="organizationRole"
             ></input>
             <p className="color-primary text-sm">{errors.organizationRole?.message}</p>
           </div>
         </div>
         <div className="flex flex-wrap -mx-3 my-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            {organizationType == '' ? (
+            {!dirtyFields.organizationType ? (
               <p style={{ color: '#E6334C', margin: '.2em .5em .5em 9.4em', position: 'absolute', width: '1.2em' }}>*</p>
             ) : (
               ''
@@ -230,8 +236,8 @@ const SignUp: NextPage = () => {
               {...register('organizationType')}
               className="select-style"
               placeholder="Tipo de organización"
-              value={organizationType}
-              onChange={(e) => setOrganizationType(e.target.value)}
+              id="organizationType"
+              name="organizationType"
               defaultValue=""
             >
               <option value="" disabled hidden>
@@ -245,7 +251,7 @@ const SignUp: NextPage = () => {
             <p className="color-primary text-sm">{errors.organizationType?.message}</p>
           </div>
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            {organizationCountry == '' ? (
+            {!dirtyFields.organizationCountry ? (
               <p style={{ color: '#E6334C', margin: '.2em .5em .5em 10.2em', position: 'absolute', width: '1.2em' }}>*</p>
             ) : (
               ''
@@ -254,8 +260,8 @@ const SignUp: NextPage = () => {
               {...register('organizationCountry')}
               className="input-style select-style"
               placeholder="País de la organización"
-              value={organizationCountry}
-              onChange={(e) => setOrganizationCountry(e.target.value)}
+              id="organizationCountry"
+              name="organizationCountry"
               defaultValue=""
             >
               <option className="text-gray-300" value="" disabled hidden>
@@ -270,7 +276,7 @@ const SignUp: NextPage = () => {
         </div>
         <div className="flex flex-wrap -mx-3 my-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            {organizationWebsite == '' ? (
+            {!dirtyFields.organizationWebsite ? (
               <p style={{ color: '#E6334C', margin: '.2em .5em .5em 15em', position: 'absolute', width: '1.2em' }}>*</p>
             ) : (
               ''
@@ -279,8 +285,8 @@ const SignUp: NextPage = () => {
               {...register('organizationWebsite')}
               className="input-style"
               placeholder="Sitio web o RRSS de la organización"
-              value={organizationWebsite}
-              onChange={(e) => setOrganizationWebsite(e.target.value)}
+              id="organizationWebsite"
+              name="organizationWebsite"
             ></input>
             <p className="color-primary text-sm">{errors.organizationWebsite?.message}</p>
           </div>
