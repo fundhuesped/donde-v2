@@ -4,6 +4,7 @@ import { parse } from 'csv-parse/sync';
 import { z } from 'zod';
 import { EstablishmentStatus, EstablishmentType, Prisma, Specialty } from '@prisma/client';
 import { prismaClient } from '../server/prisma/client';
+import {ServiceIcon} from "../config/services";
 
 const argv = yargs.strict().showHelpOnFail(true).string('csv').demandOption('csv').parseSync();
 
@@ -111,27 +112,27 @@ const SERVICES_DATA: ServicesData = {
   preservativos: {
     id: 'e502b8c8-cf55-4126-a777-cbac12fa8e52',
     name: 'Preservativos',
-    icon: 'Preservativos',
+    icon: ServiceIcon.PRESERVATIVOS,
   },
   its: {
     id: 'd3009057-7f1e-4225-bf27-2e46384b2585',
     name: 'Test de ITS',
-    icon: 'ITS',
+    icon: ServiceIcon.ITS,
   },
   vacunatorio: {
     id: 'ba958f83-5319-4bc7-b901-aaac19a57ac0',
     name: 'Vacunatorios',
-    icon: 'Vacunatorios',
+    icon: ServiceIcon.VACUNATORIOS,
   },
   mac: {
     id: '01a57be5-7569-40d5-9d18-805426773378',
     name: 'Métodos anticonceptivos',
-    icon: 'MAC',
+    icon: ServiceIcon.MAC,
   },
   aborto: {
     id: 'b70f5413-e71d-4661-a916-6244039bf731',
     name: 'Interrupción voluntaria del embarazo',
-    icon: 'IVE',
+    icon: ServiceIcon.ABORTO,
   },
 };
 
