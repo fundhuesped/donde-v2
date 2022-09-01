@@ -1,4 +1,4 @@
-import {ReactNode} from 'react';
+import { ReactNode } from 'react';
 import InterrupcionEmbarazo from '../assets/images/icons/IconIVE.svg';
 import Anticonceptivos from '../assets/images/icons/IconMAC.svg';
 import Condones from '../assets/images/icons/IconPreservativos.svg';
