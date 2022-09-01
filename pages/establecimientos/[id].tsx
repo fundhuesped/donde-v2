@@ -1,5 +1,5 @@
 import { GlobeAltIcon, LocationMarkerIcon } from '@heroicons/react/outline';
-import { PhoneIcon, ShareIcon } from '@heroicons/react/solid';
+import { ExclamationIcon, PhoneIcon, ShareIcon } from '@heroicons/react/solid';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -11,7 +11,6 @@ import { Card, CardHeader, CardList, CardListItem, CardParagraph, CardSubHeader 
 import { Icon } from '../../components/Icon';
 import MainContainer from '../../components/MainContainer';
 import { Pill } from '../../components/Pill';
-import { SERVICE_ICONS } from '../../config/services';
 import { Service } from '../../model/services';
 import { formatEstablishmentLocation } from '../../utils/establishments';
 
@@ -126,7 +125,7 @@ export const Establishment: NextPage = React.memo(() => {
           <CardList>
             {services.map((service: Service) => {
               return (
-                <CardListItem key={service.id} icon={SERVICE_ICONS[service.id]}>
+                <CardListItem key={service.id} icon={<ExclamationIcon />}>
                   {service.name}
                 </CardListItem>
               );
