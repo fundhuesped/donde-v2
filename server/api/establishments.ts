@@ -1,8 +1,8 @@
-import * as yup from "yup";
-import {prismaClient} from "../prisma/client";
-import {Establishment} from "../../model/establishment";
+import * as yup from 'yup';
+import { prismaClient } from '../prisma/client';
+import { Establishment } from '../../model/establishment';
 
-export const getEstablishment = async (id:any):Promise<Establishment> => {
+export const getEstablishment = async (id: any): Promise<Establishment> => {
   const idSchema = yup.string().uuid().required();
   if (!idSchema.isValidSync(id)) {
     throw new Error('Invalid id');
@@ -16,12 +16,12 @@ export const getEstablishment = async (id:any):Promise<Establishment> => {
         include: {
           specialty: {
             include: {
-              service: true
-            }
-          }
-        }
-      }
-    }
+              service: true,
+            },
+          },
+        },
+      },
+    },
   });
   if (establishment) {
     return establishment;

@@ -41,21 +41,21 @@ export const editEstablishmentSchema = yup.object({
 });
 
 export type Establishment = {
-  id: string,
-  officialId: string|null,
-  name: string,
-  type: string,
-  street: string,
-  streetNumber: string|null,
-  apartment: string|null,
-  intersection: string|null,
-  details: string|null,
-  website: string|null,
-  city: string,
-  department: string,
-  province: string,
-  country: string,
-  latitude: PrismaClient.Prisma.Decimal,
-  longitude: PrismaClient.Prisma.Decimal,
-  specialties: any,
-}
+  id: string;
+  officialId: string | null;
+  name: string;
+  type: string;
+  street: string;
+  streetNumber: string | null;
+  apartment: string | null;
+  intersection: string | null;
+  details: string | null;
+  website: string | null;
+  city: string;
+  department: string;
+  province: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  specialties: any;
+};

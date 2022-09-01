@@ -1,6 +1,6 @@
 import { GlobeAltIcon, LocationMarkerIcon } from '@heroicons/react/outline';
 import { ExclamationIcon, PhoneIcon, ShareIcon } from '@heroicons/react/solid';
-import {GetServerSideProps, NextPage} from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import React from 'react';
 import WhatsAppLogo from '../../assets/images/WhatsAppLogo.svg';
@@ -10,8 +10,8 @@ import MainContainer from '../../components/MainContainer';
 import { Pill } from '../../components/Pill';
 import { Service } from '../../model/services';
 import { formatEstablishmentLocation } from '../../utils/establishments';
-import { Establishment as EstablishmentModel } from "../../model/establishment";
-import {getEstablishment} from "../../server/api/establishments";
+import { Establishment as EstablishmentModel } from '../../model/establishment';
+import { getEstablishment } from '../../server/api/establishments';
 
 interface WebSiteButtonProps {
   website: string;
@@ -84,9 +84,9 @@ type ServerSideProps = {
   services: Service[];
 };
 
-export const getServerSideProps: GetServerSideProps<ServerSideProps> = async ({query}) => {
+export const getServerSideProps: GetServerSideProps<ServerSideProps> = async ({ query }) => {
   const establishment = await getEstablishment(query.id);
-  const services = establishment.specialties.map((specialty:any) => specialty.specialty.service);
+  const services = establishment.specialties.map((specialty: any) => specialty.specialty.service);
   return {
     props: {
       establishment,
@@ -95,7 +95,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async ({q
   };
 };
 
-export const Establishment: NextPage<ServerSideProps> = React.memo(({establishment, services}) => {
+export const Establishment: NextPage<ServerSideProps> = React.memo(({ establishment, services }) => {
   if (!establishment) {
     return null;
   }
@@ -103,12 +103,7 @@ export const Establishment: NextPage<ServerSideProps> = React.memo(({establishme
   const addressNotes = null;
   const whatsAppPhone = null;
 
-  const {
-    name,
-    type,
-    website,
-    details: additionalInfo,
-  } = establishment;
+  const { name, type, website, details: additionalInfo } = establishment;
 
   const address = formatEstablishmentLocation(establishment);
 

@@ -9,7 +9,7 @@ import { SERVICE_ICONS } from '../config/services';
 import { GetServerSideProps } from 'next';
 import { prismaClient } from '../server/prisma/client';
 import { ExclamationIcon } from '@heroicons/react/solid';
-import {Service} from "../model/services";
+import { Service } from '../model/services';
 
 type ServicePill = {
   id: string;
