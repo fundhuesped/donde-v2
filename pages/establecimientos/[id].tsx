@@ -20,7 +20,13 @@ const WebSiteButton = React.memo<WebSiteButtonProps>((props) => {
   const { website } = props;
   return (
     <a href={website} role="button">
-      <Icon type="secondary" circle={true} icon={<GlobeAltIcon className={'text-primary'} />} label={'Sitio Web'} />
+      <Icon
+        type="secondary"
+        circle={true}
+        className={'bg-white'}
+        icon={<GlobeAltIcon className={'text-primary'} />}
+        label={'Sitio Web'}
+      />
     </a>
   );
 });
@@ -33,7 +39,13 @@ const PhoneButton = React.memo<PhoneButtonProps>((props) => {
   const { phone } = props;
   return (
     <a href={'tel:' + phone} role="button">
-      <Icon type="secondary" circle={true} icon={<PhoneIcon className={'text-primary'} />} label={'Llamar'} />
+      <Icon
+        type="secondary"
+        circle={true}
+        className={'bg-white'}
+        icon={<PhoneIcon className={'text-primary'} />}
+        label={'Llamar'}
+      />
     </a>
   );
 });
@@ -47,7 +59,7 @@ const WhatsAppButton = React.memo<WhatsAppButtonProps>((props) => {
   return (
     // https://faq.whatsapp.com/general/chats/how-to-use-click-to-chat
     <a href={'https://wa.me/' + phone} role="button">
-      <Icon type="secondary" circle={true} icon={<WhatsAppLogo />} label={'WhatsApp'} />
+      <Icon type="secondary" circle={true} className={'bg-white'} icon={<WhatsAppLogo />} label={'WhatsApp'} />
     </a>
   );
 });
@@ -71,6 +83,7 @@ const ShareButton = (props: { name: string }) => {
       <Icon
         type="secondary"
         circle={true}
+        className={'bg-white'}
         icon={<ShareIcon className={'text-primary'} />}
         label={supportsSharing ? 'Compartir' : 'Copiar'}
       />
@@ -122,7 +135,7 @@ export const Establishment: NextPage<ServerSideProps> = React.memo(({ establishm
           <CardHeader className={'font-title text-lg'}>{name}</CardHeader>
           <CardParagraph>{type}</CardParagraph>
         </header>
-        <Card className={'my-4 pb-6 lg:mx-2.5'}>
+        <Card className={'my-4 pb-6'}>
           <CardList>
             <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
               {address} {addressNotes && <span className={'text-xs text-medium-gray'}>- {addressNotes}</span>}

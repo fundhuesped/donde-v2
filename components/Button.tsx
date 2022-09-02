@@ -23,7 +23,7 @@ export const Button: React.FC<Props> = React.memo((props) => {
       name={name}
       className={classNames(
         className,
-        'px-2 font-bold flex items-center justify-center rounded-2xl lg:max-h-14 py-content border-2 ',
+        'px-3 font-bold flex items-center justify-center rounded-2xl border-2 lg:max-h-14',
         { 'rounded-xl': ['primary', 'secondary'].includes(type) },
         {
           'bg-primary text-white': type === 'primary' && !disabled,
@@ -39,7 +39,7 @@ export const Button: React.FC<Props> = React.memo((props) => {
         },
       )}
     >
-      {icon && <Icon type={type} disabled={disabled} size={iconSize} icon={icon} />}
+      {icon && <Icon type={type} disabled={disabled} size={iconSize} icon={icon} className={'mr-2'} />}
       <span className={classNames({ 'text-left': alignment === 'left' }, 'py-3')}>{children}</span>
     </button>
   );
