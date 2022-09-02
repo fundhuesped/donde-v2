@@ -1,12 +1,13 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 import { EstablishmentType, EstablishmentStatus } from '@prisma/client';
+import { ServiceIcon } from '../model/services';
 
 async function main() {
   const preservativos = await prisma.service.create({
     data: {
       name: 'Preservativos',
-      icon: 'preservativos',
+      icon: ServiceIcon.PRESERVATIVOS,
     },
   });
   const preservativosEspecializacion = await prisma.specialty.create({
@@ -20,27 +21,10 @@ async function main() {
     },
   });
 
-  const centrosInfectologia = await prisma.service.create({
-    data: {
-      name: 'Centros de Infectología',
-      icon: 'infectologia',
-    },
-  });
-  const infectologiaEspecializacion = await prisma.specialty.create({
-    data: {
-      name: 'Centros de Infectología',
-      service: {
-        connect: {
-          id: centrosInfectologia.id,
-        },
-      },
-    },
-  });
-
   const tests = await prisma.service.create({
     data: {
       name: 'Test de ITS',
-      icon: 'test-its',
+      icon: ServiceIcon.ITS,
     },
   });
   const testEspecializacion = await prisma.specialty.create({
@@ -57,7 +41,7 @@ async function main() {
   const anticonceptivos = await prisma.service.create({
     data: {
       name: 'Métodos anticonceptivos',
-      icon: 'anticonceptivos',
+      icon: ServiceIcon.MAC,
     },
   });
   const anticonceptivosEspecializacion = await prisma.specialty.create({
@@ -74,7 +58,7 @@ async function main() {
   const vacunatorios = await prisma.service.create({
     data: {
       name: 'Vacunatorios',
-      icon: 'vacunatorios',
+      icon: ServiceIcon.VACUNATORIOS,
     },
   });
   const vacunatoriosEspecializacion = await prisma.specialty.create({
@@ -91,7 +75,7 @@ async function main() {
   const aborto = await prisma.service.create({
     data: {
       name: 'Interrupción voluntaria del embarazo',
-      icon: 'aborto',
+      icon: ServiceIcon.ABORTO,
     },
   });
   const aborto1 = await prisma.specialty.create({
