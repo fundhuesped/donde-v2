@@ -7,8 +7,6 @@ import isEmpty from 'lodash/isEmpty';
 
 const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
-    case 'GET':
-      return getEstablishments(req, res);
     case 'POST':
       return createEstablishment(req, res);
     default:
@@ -16,6 +14,7 @@ const handler: NextApiHandler = async (req, res) => {
   }
 };
 
+// TODO: mover a server/api/establishments
 const getEstablishments = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   let where = {};
   const servicesSchema = yup.array().of(yup.string().uuid());
