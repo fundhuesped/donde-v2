@@ -1,15 +1,14 @@
 import { ViewGridIcon } from '@heroicons/react/outline';
 import type { NextPage } from 'next';
+import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useState } from 'react';
 import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
-import { SERVICE_ICONS } from '../config/services';
-import { GetServerSideProps } from 'next';
 import { prismaClient } from '../server/prisma/client';
-import { ExclamationIcon } from '@heroicons/react/solid';
-import { Service } from '../model/services';
+import { Service, serviceSchema } from '../model/services';
+import { SERVICE_ICONS } from '../config/services';
 
 type ServicePill = {
   id: string;
@@ -41,7 +40,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () 
   const services = await prismaClient.service.findMany();
   return {
     props: {
-      availableServices: services,
+      availableServices: services.map((service) => serviceSchema.validateSync(service)),
     },
   };
 };
@@ -99,7 +98,7 @@ const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
         {
           id: serviceData.id,
           name: serviceData.name,
-          icon: <ExclamationIcon />,
+          icon: SERVICE_ICONS[serviceData.icon],
           selected: false,
         },
       ]),
@@ -142,7 +141,7 @@ const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
   };
 
   return (
-    <div className={'flex flex-wrap justify-center lg:bg-modal-image lg:bg-white'}>
+    <div className={'flex flex-wrap flex-grow content-start justify-center lg:bg-modal-image lg:bg-white'}>
       <Head>
         <title>Dónde</title>
       </Head>

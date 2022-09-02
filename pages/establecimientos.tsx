@@ -4,18 +4,21 @@ import GoogleMapReact, { Bounds } from 'google-map-react';
 import { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import places from '../assets/establishments.json';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Card, CardHeader, CardList, CardListItem } from '../components/Card';
 import MainContainer from '../components/MainContainer';
 import { Marker, UserMarker } from '../components/Marker';
 import { Pill } from '../components/Pill';
 import { formatEstablishmentLocation } from '../utils/establishments';
+import axios from 'axios';
+import { Establishment } from '../model/establishment';
+import useSWR from 'swr';
+const USER_MARKER_ID = 'USER_MARKER_ID';
 
 type StaticProps = {
   googleMapsApiKey: string;
 };
-export const markerWithinBoundaries = (marker: Coordinates, bounds: Bounds) => {
+export const establishmentWithinBoundaries = (marker: Coordinates, bounds: Bounds) => {
   const northLat = bounds.nw.lat;
   const southLat = bounds.sw.lat;
   const westLng = bounds.nw.lng;
@@ -34,20 +37,6 @@ export const getStaticProps: GetStaticProps<StaticProps> = async () => {
     },
   };
 };
-
-const markers = places.flatMap((place, index) => {
-  // TODO: no se si es el mejor lugar para hacer esto
-  if (typeof place.lat !== 'number' || typeof place.lng !== 'number') return [];
-
-  return [
-    {
-      ...place,
-      key: index,
-      lat: place.lat,
-      lng: place.lng,
-    },
-  ];
-});
 
 const defaultCoords = { lat: -34.6989, lng: -64.7597 };
 const defaultZoom = 15;
@@ -83,18 +72,28 @@ const getMapPosition = (coords: Coordinates | undefined): MapPosition => {
   return { coords: defaultCoords, zoom: defaultZoom };
 };
 
-function isValidMarkerValue(marker: number) {
-  return marker >= 0;
-}
-
 const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
   const router = useRouter();
 
   const { coords: serializedCoords } = router.query;
-  const coords =
-    serializedCoords && typeof serializedCoords === 'string' ? JSON.parse(decodeURIComponent(serializedCoords)) : undefined;
+  const coords = useMemo(
+    () =>
+      serializedCoords && typeof serializedCoords === 'string' ? JSON.parse(decodeURIComponent(serializedCoords)) : undefined,
+    [serializedCoords],
+  );
 
   const [mapPosition, setMapPosition] = useState<MapPosition | null>(null);
+
+  const servicesQueryParam = router.query.services;
+  const searchedServiceIds = servicesQueryParam
+    ? Array.isArray(servicesQueryParam)
+      ? servicesQueryParam
+      : [servicesQueryParam]
+    : [];
+
+  const { data: establishments } = useSWR(router.isReady ? '/api/establishments' : null, (url) =>
+    axios.get(url, { params: { services: searchedServiceIds } }).then((res) => res.data),
+  );
 
   useEffect(() => {
     if (!router.isReady) {
@@ -113,22 +112,23 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
 
   const [bounds, setBounds] = useState<Bounds | null>(null);
 
-  const [activeMarker, setActiveMarker] = useState<any>(null);
-  const handleMarkerClick = (marker: number) => {
-    const markerValue = marker - 1;
-
-    if (isValidMarkerValue(markerValue)) {
-      setActiveMarker(markers[markerValue]);
+  const [activeEstablishment, setActiveEstablishment] = useState<Establishment | null>(null);
+  const handleMarkerClick = (establishmentId: string) => {
+    if (establishmentId === USER_MARKER_ID) {
+      return;
     }
+    setActiveEstablishment(establishments.find((establishment: Establishment) => establishment.id === establishmentId) ?? null);
   };
 
   const handleClose = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
-    setActiveMarker(null);
+    setActiveEstablishment(null);
   };
 
   const handleDetailsClick = () => {
-    router.push(`/establecimientos/${activeMarker.placeId}`);
+    if (activeEstablishment) {
+      router.push(`/establecimientos/${activeEstablishment.id}`);
+    }
   };
 
   return (
@@ -159,30 +159,41 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
                   setBounds(bounds);
                 }}
               >
-                <UserMarker key={-1} lat={mapPosition.coords.lat} lng={mapPosition.coords.lng} />
+                <UserMarker key={USER_MARKER_ID} lat={mapPosition.coords.lat} lng={mapPosition.coords.lng} />
 
-                {markers
-                  .filter((marker) => bounds !== null && markerWithinBoundaries(marker, bounds))
-                  .map((marker) => {
-                    return <Marker {...marker} key={marker.key} />;
-                  })}
+                {establishments &&
+                  establishments
+                    .filter(
+                      (establishment: Establishment) =>
+                        bounds !== null &&
+                        establishmentWithinBoundaries(
+                          {
+                            lat: establishment.latitude,
+                            lng: establishment.longitude,
+                          },
+                          bounds,
+                        ),
+                    )
+                    .map((establishment: Establishment) => {
+                      return <Marker lat={establishment.latitude} lng={establishment.longitude} key={establishment.id} />;
+                    })}
               </GoogleMapReact>
             </div>
 
-            {activeMarker !== null && (
+            {activeEstablishment !== null && (
               <Card
                 onClick={handleDetailsClick}
                 className={'fixed bottom-8 right-4 left-4 cursor-pointer lg:w-desktop lg:mx-auto'}
               >
                 <header className={'flex flex-row justify-between items-center mb-2'}>
-                  <CardHeader>{activeMarker.establecimiento}</CardHeader>
+                  <CardHeader>{activeEstablishment.name}</CardHeader>
                   <button className={'w-5 text-dark-gray'} onClick={handleClose}>
                     <XIcon />
                   </button>
                 </header>
                 <CardList>
                   <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
-                    {formatEstablishmentLocation(activeMarker)}
+                    {formatEstablishmentLocation(activeEstablishment)}
                     {/*<span className={'text-xs text-medium-gray'}>- A 400 metros</span>*/}
                   </CardListItem>
                   <CardListItem icon={<SupportIcon className={'text-primary'} />}>Test de HIV</CardListItem>
