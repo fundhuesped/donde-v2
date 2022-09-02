@@ -44,7 +44,13 @@ export type Establishment = {
   id: string;
   officialId: string | null;
   name: string;
-  type: string;
+  type:
+    | 'HEALTH_ESTABLISHMENT'
+    | 'SOCIAL_ORGANIZATION'
+    | 'PUBLIC_INSTITUTION'
+    | 'PRIVATE_INSTITUTION'
+    | 'EDUCATIONAL_INSTITUTION'
+    | 'OTHER';
   street: string;
   streetNumber: string | null;
   apartment: string | null;
@@ -60,4 +66,12 @@ export type Establishment = {
   specialties: (PrismaClient.SpecialtiesOnEstablishments & {
     specialty: PrismaClient.Specialty & { service: PrismaClient.Service };
   })[];
+};
+export const establishmentTypes = {
+  HEALTH_ESTABLISHMENT: 'Establecimiento de salud',
+  SOCIAL_ORGANIZATION: 'Organizacion social',
+  PUBLIC_INSTITUTION: 'Público',
+  PRIVATE_INSTITUTION: 'Privado',
+  EDUCATIONAL_INSTITUTION: 'Institucion educacional',
+  OTHER: 'Otro',
 };

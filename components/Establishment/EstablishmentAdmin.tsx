@@ -1,4 +1,4 @@
-import React, { RefObject, useEffect, useState } from 'react';
+import React, { RefObject, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import pick from 'lodash/pick';
@@ -13,15 +13,8 @@ import { AvailableServices } from './AvailableServices';
 import { LocationField } from './LocationField';
 import { AvailableSpecialty } from '../../pages/establecimientos/nuevo';
 import isNil from 'lodash/isNil';
+import { establishmentTypes } from '../../model/establishment';
 
-const types = {
-  HEALTH_ESTABLISHMENT: 'Establecimiento de salud',
-  SOCIAL_ORGANIZATION: 'Organizacion social',
-  PUBLIC_INSTITUTION: 'Público',
-  PRIVATE_INSTITUTION: 'Arancelado',
-  EDUCATIONAL_INSTITUTION: 'Institucion educacional',
-  OTHER: 'Otro',
-};
 export type EstablishmentModel = {
   id?: string;
   name: string;
@@ -245,7 +238,7 @@ const EstablishmentAdmin = (props: {
               placeholder={'Tipo de establecimiento'}
               onSelect={handleFieldChange}
               value={type}
-              items={types}
+              items={establishmentTypes}
             />
             <LocationField
               key={'surroundingStreets'}
