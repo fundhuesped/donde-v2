@@ -13,6 +13,8 @@ import { formatEstablishmentLocation, formatEstablishmentType } from '../../util
 import { Establishment as EstablishmentModel } from '../../model/establishment';
 import { getEstablishment } from '../../server/api/establishments';
 import { SERVICE_ICONS } from '../../config/services';
+import Link from 'next/link';
+import { useAuthenticatedUser } from '../../hooks/useAuthenticatedUser';
 
 interface WebSiteButtonProps {
   website: string;
@@ -115,6 +117,8 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async ({ 
 };
 
 export const Establishment: NextPage<ServerSideProps> = React.memo(({ establishment, services }) => {
+  const user = useAuthenticatedUser();
+
   if (!establishment) {
     return null;
   }
@@ -133,11 +137,17 @@ export const Establishment: NextPage<ServerSideProps> = React.memo(({ establishm
         <title>Dónde - {name}</title>
       </Head>
 
-      <MainContainer className={'lg:w-desktop lg:mx-auto'}>
+      <MainContainer className={'lg:w-desktop lg:mx-auto relative'}>
         <header className={'mt-10 ml-4'}>
           <CardHeader className={'font-title text-lg'}>{name}</CardHeader>
           <CardParagraph>{establishmentType}</CardParagraph>
         </header>
+        {user && (
+          <Link href={`/establecimientos/editar/${establishment.id}`}>
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+            <a className={'color-primary font-bold absolute top-8 right-8'}>Editar</a>
+          </Link>
+        )}
         <Card className={'my-4 pb-6'}>
           <CardList>
             <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
