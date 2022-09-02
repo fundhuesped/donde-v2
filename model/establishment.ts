@@ -1,6 +1,6 @@
 import * as PrismaClient from '@prisma/client';
 import * as yup from 'yup';
-import {Service, Specialty, SpecialtiesOnEstablishments} from "@prisma/client";
+import { Service, Specialty, SpecialtiesOnEstablishments } from '@prisma/client';
 
 export const createEstablishmentSchema = yup.object({
   officialId: yup.string(),
@@ -58,5 +58,5 @@ export type Establishment = {
   country: string;
   latitude: number;
   longitude: number;
-  specialties: (SpecialtiesOnEstablishments & { specialty: Specialty & { service: Service; }; })[];
+  specialties: (SpecialtiesOnEstablishments & { specialty: Specialty & { service: Service } })[];
 };
