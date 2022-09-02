@@ -7,7 +7,7 @@ export const getEstablishment = async (id: any): Promise<Establishment> => {
   if (!idSchema.isValidSync(id)) {
     throw new Error('Invalid id');
   }
-  const establishment = await prismaClient.establishment.findUnique({
+  return await prismaClient.establishment.findUniqueOrThrow({
     where: {
       id: id,
     },
@@ -23,8 +23,4 @@ export const getEstablishment = async (id: any): Promise<Establishment> => {
       },
     },
   });
-  if (establishment) {
-    return establishment;
-  }
-  throw new Error('Establishment not found');
 };

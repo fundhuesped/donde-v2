@@ -12,7 +12,6 @@ import { Service } from '../../model/services';
 import { formatEstablishmentLocation } from '../../utils/establishments';
 import { Establishment as EstablishmentModel } from '../../model/establishment';
 import { getEstablishment } from '../../server/api/establishments';
-
 interface WebSiteButtonProps {
   website: string;
 }
@@ -80,13 +79,18 @@ const ShareButton = (props: { name: string }) => {
 };
 
 type ServerSideProps = {
-  establishment: EstablishmentModel;
-  services: Service[];
+  establishment: EstablishmentModel | undefined;
+  services: Service[] | undefined;
 };
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async ({ query }) => {
-  const establishment = await getEstablishment(query.id);
-  const services = establishment.specialties.map((specialty: any) => specialty.specialty.service);
+  let establishment;
+  try {
+    establishment = await getEstablishment(query.id);
+  } catch {
+    establishment = undefined;
+  }
+  const services = establishment?.specialties.map((specialty) => specialty.specialty.service);
   return {
     props: {
       establishment,
@@ -127,7 +131,7 @@ export const Establishment: NextPage<ServerSideProps> = React.memo(({ establishm
 
           <CardSubHeader>Servicios disponibles</CardSubHeader>
           <CardList>
-            {services.map((service: Service) => {
+            {services?.map((service: Service) => {
               return (
                 <CardListItem key={service.id} icon={<ExclamationIcon />}>
                   {service.name}
