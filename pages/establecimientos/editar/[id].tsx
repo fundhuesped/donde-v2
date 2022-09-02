@@ -1,25 +1,49 @@
 import React from 'react';
-import { GetServerSideProps, NextPage } from 'next';
+import {GetServerSideProps, NextPage} from 'next';
+import * as yup from 'yup';
 import EstablishmentAdmin, {
   emptyEstablishmentModel,
   EstablishmentModel,
 } from '../../../components/Establishment/EstablishmentAdmin';
-import { tryGetAvailableSpecialities, tryGetGoogleMapsApiKey } from '../../../utils/establishments';
+import {tryGetGoogleMapsApiKey} from '../../../utils/establishments';
 import axios from 'axios';
-import { AvailableSpecialty } from '../nuevo';
+import {AvailableSpecialty} from '../nuevo';
+import * as PrismaClient from '@prisma/client';
+import isEmpty from 'lodash/isEmpty';
+import {tryGetAvailableSpecialities} from "../../../server/api/specialties";
 
 type ServerSideProps = {
   googleMapsApiKey: string;
   establishment: EstablishmentModel;
   availableSpecialties: AvailableSpecialty[];
 };
-
+const establishmentSchema = yup.object({
+  id: yup.string().uuid().required(),
+  officialId: yup.string().nullable(),
+  name: yup.string(),
+  type: yup.mixed().oneOf(Object.values(PrismaClient.EstablishmentType)),
+  street: yup.string().required(),
+  streetNumber: yup.string(),
+  apartment: yup.string(),
+  intersection: yup.string(),
+  details: yup.string(),
+  website: yup.string().url(),
+  city: yup.string(),
+  department: yup.string(),
+  province: yup.string().required(),
+  country: yup.string().required(),
+  latitude: yup.number(),
+  longitude: yup.number(),
+  specialties: yup
+    .array()
+    .of(yup.object({ specialty: yup.object({ id: yup.string().uuid(), service: yup.object({ name: yup.string() }) }) }))
+});
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (context) => {
   const { id } = context.query;
-  const { data: establishment } = await axios.get(`${process.env['HOST']}/api/establishments/${id}`);
+  const { data } = await axios.get(`${process.env['HOST']}/api/establishments/${id}`);
   const googleMapsApiKey = tryGetGoogleMapsApiKey();
   const availableSpecialties = await tryGetAvailableSpecialities();
-
+  const establishment = establishmentSchema.validateSync(data);
   return {
     props: {
       googleMapsApiKey,
@@ -48,14 +72,18 @@ const anEstablishmentModel = {
   latitude: -34.58956,
   longitude: -58.4040549,
 };
+
+
 const mapIntoEstablishmentModel = (establishment: any) => {
-  const specialties = establishment.specialties?.map((specialty) => specialty.specialtyId) || [];
+  console.log(establishment)
+  const specialties = establishment.specialties.map((specialty: Specialty) => {
+    return specialty.specialty.id
+  }) || [];
+
   return {
     ...emptyEstablishmentModel,
     ...establishment,
     specialties: new Set(specialties),
-    latitude: parseFloat(establishment.latitude),
-    longitude: parseFloat(establishment.longitude),
     fullAddress: establishment.province,
   };
 };

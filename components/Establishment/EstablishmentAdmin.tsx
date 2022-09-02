@@ -175,10 +175,11 @@ const EstablishmentAdmin = (props: {
       const payload = buildEstablishmentPayload(form);
       if (isNewEstablishment) {
         const { data } = await axios.post('/api/establishments/', payload);
-        await router.push({ pathname: `/establecimientos/editar/${data.id}` });
+        await router.push({ pathname: `/establecimientos/${data.id}` });
       } else {
         await axios.put(`/api/establishments/${establishment?.id}`, payload);
         setIsUpdateSuccessful(true);
+        await router.push({ pathname: `/establecimientos/${establishment?.id}` });
       }
     } catch (e: any) {
       console.log(e.message);
