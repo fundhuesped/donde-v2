@@ -5,7 +5,8 @@ type Props = {
   placeholder?: string;
   className?: string;
   items: { [key: string]: string };
-} & React.HTMLProps<HTMLSelectElement>;
+  onSelect: (event: { currentTarget: { value: string; name: string } }) => void;
+} & Omit<React.HTMLProps<HTMLSelectElement>, 'onSelect'>;
 const Select: React.FC<Props> = (props) => {
   const { className, onSelect: handleSelect, value, placeholder, name, items } = props;
   const [selectedValue, setSelectedValue] = useState(value || placeholder);
@@ -16,7 +17,7 @@ const Select: React.FC<Props> = (props) => {
     handleSelect &&
       handleSelect({
         currentTarget: {
-          value: key,
+          value: key!,
           name: name!,
         },
       });
