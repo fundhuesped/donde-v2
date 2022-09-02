@@ -1,11 +1,17 @@
+import { Establishment, establishmentTypes } from '../model/establishment';
+
 function placeInfo(data: string | number | null | undefined) {
   if (!data) return '';
   if (typeof data === 'number') return data;
   return data;
 }
 
-export function formatEstablishmentLocation(place: any) {
+export function formatEstablishmentLocation(place: Establishment): string {
   return `${placeInfo(place.street)} ${placeInfo(place.streetNumber)}, ${placeInfo(place.city)}`;
+}
+
+export function formatEstablishmentType(establishment: Establishment): string {
+  return establishmentTypes[establishment.type];
 }
 
 export const tryGetGoogleMapsApiKey = () => {
