@@ -13,6 +13,10 @@ import { formatEstablishmentLocation } from '../utils/establishments';
 import axios from 'axios';
 import { Establishment } from '../model/establishment';
 import useSWR from 'swr';
+import { uniqBy } from 'lodash';
+import { SERVICE_ICONS } from '../config/services';
+import { ServiceIcon } from '../model/services';
+
 const USER_MARKER_ID = 'USER_MARKER_ID';
 
 type StaticProps = {
@@ -196,7 +200,14 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
                     {formatEstablishmentLocation(activeEstablishment)}
                     {/*<span className={'text-xs text-medium-gray'}>- A 400 metros</span>*/}
                   </CardListItem>
-                  <CardListItem icon={<SupportIcon className={'text-primary'} />}>Test de HIV</CardListItem>
+                  {uniqBy(
+                    activeEstablishment.specialties.map((specialty) => specialty.specialty.service),
+                    (service) => service.id,
+                  ).map((service) => (
+                    <CardListItem key={service.id} icon={SERVICE_ICONS[service.icon as ServiceIcon]}>
+                      {service.name}
+                    </CardListItem>
+                  ))}
                 </CardList>
                 <footer className={classNames('mt-4')}>
                   <Pill>Cargado por Fundación Huesped</Pill>
