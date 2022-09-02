@@ -82,13 +82,19 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
         pathname: '/establecimientos',
         query: {
           coords: encodeURIComponent(JSON.stringify(coords)),
+          services: searchedServiceIds,
         },
       });
     }
   };
 
   const handleSearchButtonByLocationClicked = () => {
-    router.push('/establecimientos');
+    router.push({
+      pathname: '/establecimientos',
+      query: {
+        services: searchedServiceIds,
+      },
+    });
   };
 
   return (
