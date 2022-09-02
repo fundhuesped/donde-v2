@@ -27,11 +27,11 @@ export type EstablishmentModel = {
   name: string;
   type: string;
   street: string;
-  streetNumber: string;
-  apartment: string;
-  intersection: string;
-  details: string;
-  website: string;
+  streetNumber: string | null;
+  apartment: string | null;
+  intersection: string | null;
+  details: string | null;
+  website: string | null;
   city: string;
   department: string;
   province: string;
@@ -278,7 +278,7 @@ const EstablishmentAdmin = (props: {
             </p>
             <textarea
               name={'details'}
-              value={details}
+              value={details || undefined}
               onChange={handleFieldChange}
               className={'w-full p-4 mt-2 rounded-lg'}
               rows={4}

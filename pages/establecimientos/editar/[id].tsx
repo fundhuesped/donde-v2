@@ -1,49 +1,27 @@
 import React from 'react';
-import {GetServerSideProps, NextPage} from 'next';
-import * as yup from 'yup';
+import { GetServerSideProps, NextPage } from 'next';
 import EstablishmentAdmin, {
   emptyEstablishmentModel,
   EstablishmentModel,
 } from '../../../components/Establishment/EstablishmentAdmin';
-import {tryGetGoogleMapsApiKey} from '../../../utils/establishments';
-import axios from 'axios';
-import {AvailableSpecialty} from '../nuevo';
+import { tryGetGoogleMapsApiKey } from '../../../utils/establishments';
+import { AvailableSpecialty } from '../nuevo';
 import * as PrismaClient from '@prisma/client';
-import isEmpty from 'lodash/isEmpty';
-import {tryGetAvailableSpecialities} from "../../../server/api/specialties";
+import { tryGetAvailableSpecialities } from '../../../server/api/specialties';
+import { getEstablishment } from '../../../server/api/establishments';
+import { Establishment } from '../../../model/establishment';
 
 type ServerSideProps = {
   googleMapsApiKey: string;
-  establishment: EstablishmentModel;
+  establishment: Establishment;
   availableSpecialties: AvailableSpecialty[];
 };
-const establishmentSchema = yup.object({
-  id: yup.string().uuid().required(),
-  officialId: yup.string().nullable(),
-  name: yup.string(),
-  type: yup.mixed().oneOf(Object.values(PrismaClient.EstablishmentType)),
-  street: yup.string().required(),
-  streetNumber: yup.string(),
-  apartment: yup.string(),
-  intersection: yup.string(),
-  details: yup.string(),
-  website: yup.string().url(),
-  city: yup.string(),
-  department: yup.string(),
-  province: yup.string().required(),
-  country: yup.string().required(),
-  latitude: yup.number(),
-  longitude: yup.number(),
-  specialties: yup
-    .array()
-    .of(yup.object({ specialty: yup.object({ id: yup.string().uuid(), service: yup.object({ name: yup.string() }) }) }))
-});
+
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (context) => {
   const { id } = context.query;
-  const { data } = await axios.get(`${process.env['HOST']}/api/establishments/${id}`);
+  const establishment = await getEstablishment(id);
   const googleMapsApiKey = tryGetGoogleMapsApiKey();
   const availableSpecialties = await tryGetAvailableSpecialities();
-  const establishment = establishmentSchema.validateSync(data);
   return {
     props: {
       googleMapsApiKey,
@@ -73,12 +51,17 @@ const anEstablishmentModel = {
   longitude: -58.4040549,
 };
 
-
-const mapIntoEstablishmentModel = (establishment: any) => {
-  console.log(establishment)
-  const specialties = establishment.specialties.map((specialty: Specialty) => {
-    return specialty.specialty.id
-  }) || [];
+const mapIntoEstablishmentModel = (establishment: Establishment): EstablishmentModel => {
+  const specialties =
+    establishment.specialties.map(
+      (
+        specialty: PrismaClient.SpecialtiesOnEstablishments & {
+          specialty: PrismaClient.Specialty & { service: PrismaClient.Service };
+        },
+      ) => {
+        return specialty.specialty.id;
+      },
+    ) || [];
 
   return {
     ...emptyEstablishmentModel,

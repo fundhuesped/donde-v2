@@ -2,10 +2,10 @@ import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import EstablishmentAdmin from '../../components/Establishment/EstablishmentAdmin';
 import { tryGetGoogleMapsApiKey } from '../../utils/establishments';
-import {tryGetAvailableSpecialities} from "../../server/api/specialties";
+import { tryGetAvailableSpecialities } from '../../server/api/specialties';
 export type AvailableSpecialty = {
   id: string;
-  name: string;
+  name: string | null;
 };
 type ServerSideProps = {
   googleMapsApiKey: string;

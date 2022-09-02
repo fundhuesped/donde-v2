@@ -34,7 +34,7 @@ export const AvailableServices = (props: AvailableServicesProps) => {
                 onChange={handleChange}
                 checked={isChecked(service.id)}
               />
-              {capitalize(service.name)}
+              {capitalize(service.name || undefined)}
             </label>
           );
         })}

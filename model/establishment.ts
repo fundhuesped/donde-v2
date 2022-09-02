@@ -57,5 +57,7 @@ export type Establishment = {
   country: string;
   latitude: number;
   longitude: number;
-  specialties: (PrismaClient.SpecialtiesOnEstablishments & { specialty: PrismaClient.Specialty & { service: PrismaClient.Service } })[];
+  specialties: (PrismaClient.SpecialtiesOnEstablishments & {
+    specialty: PrismaClient.Specialty & { service: PrismaClient.Service };
+  })[];
 };

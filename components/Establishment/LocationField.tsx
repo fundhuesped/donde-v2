@@ -6,9 +6,9 @@ type LocationFieldProps = {
   onChange: (event: { currentTarget: { value: string; name: string } }) => void;
   fullAddress: string;
   street: string;
-  streetNumber: string;
-  apartment: string;
-  intersection: string;
+  streetNumber: string | null;
+  apartment: string | null;
+  intersection: string | null;
 } & Omit<DraggableMapProps, 'onChange'>;
 export const LocationField = (props: LocationFieldProps) => {
   const {
@@ -48,14 +48,14 @@ export const LocationField = (props: LocationFieldProps) => {
           className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 max-w-[45%]'}
           placeholder={'Número'}
           onChange={onChange}
-          value={streetNumber}
+          value={streetNumber || undefined}
         />
         <input
           name={'apartment'}
           className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 max-w-[45%]'}
           placeholder={'Piso'}
           onChange={onChange}
-          value={apartment}
+          value={apartment || undefined}
         />
       </div>
       <input
@@ -63,7 +63,7 @@ export const LocationField = (props: LocationFieldProps) => {
         className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 mt-6'}
         placeholder={'Entre calles'}
         onChange={onChange}
-        value={intersection}
+        value={intersection || undefined}
       />
       <p className={'mt-8 text-xs mb-2'}>Posicioná la ubicación correcta en el mapa</p>
       <DraggableMap
