@@ -1,6 +1,5 @@
 import * as PrismaClient from '@prisma/client';
 import * as yup from 'yup';
-import { Service, Specialty, SpecialtiesOnEstablishments } from '@prisma/client';
 
 export const createEstablishmentSchema = yup.object({
   officialId: yup.string(),
@@ -45,7 +44,13 @@ export type Establishment = {
   id: string;
   officialId: string | null;
   name: string;
-  type: string;
+  type:
+    | 'HEALTH_ESTABLISHMENT'
+    | 'SOCIAL_ORGANIZATION'
+    | 'PUBLIC_INSTITUTION'
+    | 'PRIVATE_INSTITUTION'
+    | 'EDUCATIONAL_INSTITUTION'
+    | 'OTHER';
   street: string;
   streetNumber: string | null;
   apartment: string | null;
@@ -58,5 +63,15 @@ export type Establishment = {
   country: string;
   latitude: number;
   longitude: number;
-  specialties: (SpecialtiesOnEstablishments & { specialty: Specialty & { service: Service } })[];
+  specialties: (PrismaClient.SpecialtiesOnEstablishments & {
+    specialty: PrismaClient.Specialty & { service: PrismaClient.Service };
+  })[];
+};
+export const establishmentTypes = {
+  HEALTH_ESTABLISHMENT: 'Establecimiento de salud público',
+  SOCIAL_ORGANIZATION: 'Organizacion social',
+  PUBLIC_INSTITUTION: 'Organismo público',
+  PRIVATE_INSTITUTION: 'Privado',
+  EDUCATIONAL_INSTITUTION: 'Establecimiento educativo',
+  OTHER: 'Otro',
 };

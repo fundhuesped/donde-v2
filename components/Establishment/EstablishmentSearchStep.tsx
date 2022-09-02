@@ -1,25 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import isEmpty from 'lodash/isEmpty';
 import { Button } from '../Button';
+import isNil from 'lodash/isNil';
 type EstablishmentSearchStepProps = {
   onChange: (event: { currentTarget: { value: string; name: string } }) => void;
   name: string;
   address: string;
-  location?: {
-    lat: number;
-    lng: number;
-  };
+  latitude?: number;
+  longitude?: number;
   onClick: () => void;
 };
 
 export const EstablishmentSearchStep = React.forwardRef<HTMLInputElement, EstablishmentSearchStepProps>(
   (props: EstablishmentSearchStepProps, ref) => {
-    const { onChange, onClick, name, address, location } = props;
+    const { onChange, onClick, name, address, latitude, longitude } = props;
     const [isValid, setIsValid] = useState(false);
     useEffect(() => {
-      const validationFields = [name, address, location];
-      setIsValid(validationFields.every((field) => !isEmpty(field)));
-    }, [name, address, location]);
+      const validationFields = [name, address, latitude, longitude];
+      setIsValid(validationFields.every((field) => !isNil(field)));
+    }, [name, address, latitude, longitude]);
     return (
       <>
         <input

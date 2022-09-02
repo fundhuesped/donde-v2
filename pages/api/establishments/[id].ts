@@ -27,6 +27,17 @@ const getEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) 
     where: {
       id: id,
     },
+    include: {
+      specialties: {
+        include: {
+          specialty: {
+            include: {
+              service: true,
+            },
+          },
+        },
+      },
+    },
   });
   if (establishment) {
     return res.status(200).json(establishment);
@@ -39,22 +50,29 @@ const updateEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
   if (!establishmentSchema.isValidSync(req.body)) {
     return res.status(400).end();
   }
-  let data = {};
-  if (req.body.specialties) {
-    const specialties = mapSpecialtiesToPrismaObject(req.body.specialties);
-    data = { specialties: specialties };
-  }
-  const establishment = await prismaClient.establishment.update({
+  const disconnectPreviouslyConnectedFeatures = prismaClient.establishment.update({
+    where: {
+      id: req.body.id,
+    },
+    data: {
+      specialties: {
+        deleteMany: {},
+      },
+    },
+  });
+  const specialties = mapSpecialtiesToPrismaObject(req.body.specialties!);
+  const createNewEstablishment = prismaClient.establishment.update({
     where: {
       id: req.body.id,
     },
     data: {
       ...req.body,
       status: EstablishmentStatus.PUBLISHED,
-      ...data,
+      specialties,
     },
   });
-  return res.status(200).json(establishment);
+  await prismaClient.$transaction([disconnectPreviouslyConnectedFeatures, createNewEstablishment]);
+  return res.status(200).end();
 };
 
 export default handler;

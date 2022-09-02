@@ -9,7 +9,7 @@ import { Icon } from '../../components/Icon';
 import MainContainer from '../../components/MainContainer';
 import { Pill } from '../../components/Pill';
 import { Service } from '../../model/services';
-import { formatEstablishmentLocation } from '../../utils/establishments';
+import { formatEstablishmentLocation, formatEstablishmentType } from '../../utils/establishments';
 import { Establishment as EstablishmentModel } from '../../model/establishment';
 import { getEstablishment } from '../../server/api/establishments';
 interface WebSiteButtonProps {
@@ -120,9 +120,10 @@ export const Establishment: NextPage<ServerSideProps> = React.memo(({ establishm
   const addressNotes = null;
   const whatsAppPhone = null;
 
-  const { name, type, website, details: additionalInfo } = establishment;
+  const { name, website, details: additionalInfo } = establishment;
 
   const address = formatEstablishmentLocation(establishment);
+  const establishmentType = formatEstablishmentType(establishment);
 
   return (
     <>
@@ -133,7 +134,7 @@ export const Establishment: NextPage<ServerSideProps> = React.memo(({ establishm
       <MainContainer className={'lg:w-desktop lg:mx-auto'}>
         <header className={'mt-10 ml-4'}>
           <CardHeader className={'font-title text-lg'}>{name}</CardHeader>
-          <CardParagraph>{type}</CardParagraph>
+          <CardParagraph>{establishmentType}</CardParagraph>
         </header>
         <Card className={'my-4 pb-6'}>
           <CardList>

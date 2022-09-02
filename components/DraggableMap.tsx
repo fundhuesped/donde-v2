@@ -9,14 +9,15 @@ export type DraggableMapProps = {
   onChildMouseDown?: () => void;
   onChildMouseUp?: () => void;
   onChildMouseMove: (key: any, childProps: any, mouse: any) => Promise<void>;
-  location: { lat: number; lng: number } | undefined;
+  latitude?: number;
+  longitude?: number;
   onChange: ({ bounds }: { bounds: any }) => void;
 };
 
 export const DraggableMap = (props: DraggableMapProps) => {
   const [isMapDraggable, setIsMapDraggable] = useState(false);
 
-  const { apiKey, onChildMouseDown, onChildMouseUp, onChildMouseMove, location, onChange } = props;
+  const { apiKey, onChildMouseDown, onChildMouseUp, onChildMouseMove, onChange, latitude, longitude } = props;
 
   const handleChildMouseDown = () => {
     setIsMapDraggable(false);
@@ -32,7 +33,7 @@ export const DraggableMap = (props: DraggableMapProps) => {
   };
   return (
     <div className={classNames('w-full mb-8 rounded-2xl')} style={{ height: '14rem' }}>
-      {location && (
+      {latitude && longitude && (
         <GoogleMapReact
           bootstrapURLKeys={{
             key: apiKey,
@@ -47,12 +48,12 @@ export const DraggableMap = (props: DraggableMapProps) => {
           onChildMouseDown={handleChildMouseDown}
           onChildMouseUp={handleChildMouseUp}
           onChildMouseMove={onChildMouseMove}
-          defaultCenter={{ lat: location.lat, lng: location.lng }}
+          defaultCenter={{ lat: latitude, lng: longitude }}
           defaultZoom={17}
           resetBoundsOnResize={true}
           onChange={onChange}
         >
-          <Marker lat={location.lat} lng={location.lng} />
+          <Marker lat={latitude} lng={longitude} />
         </GoogleMapReact>
       )}
     </div>

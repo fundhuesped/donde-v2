@@ -5,22 +5,23 @@ import { Bounds } from 'google-map-react';
 type LocationFieldProps = {
   onChange: (event: { currentTarget: { value: string; name: string } }) => void;
   fullAddress: string;
-  streetName: string;
-  streetNumber: string;
-  floor: string;
-  surroundingStreets: string;
+  street: string;
+  streetNumber: string | null;
+  apartment: string | null;
+  intersection: string | null;
 } & Omit<DraggableMapProps, 'onChange'>;
 export const LocationField = (props: LocationFieldProps) => {
   const {
     onChange,
     fullAddress,
-    streetName,
+    street,
     streetNumber,
-    floor,
-    surroundingStreets,
+    apartment,
+    intersection,
     apiKey,
     onChildMouseMove: handleChildMouseMove,
-    location,
+    latitude,
+    longitude,
   } = props;
   const [bounds, setBounds] = useState<Bounds | null>(null);
 
@@ -35,11 +36,11 @@ export const LocationField = (props: LocationFieldProps) => {
         value={fullAddress}
       />
       <input
-        name={'streetName'}
+        name={'street'}
         className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 mt-6'}
         placeholder={'Calle'}
         onChange={onChange}
-        value={streetName}
+        value={street}
       />
       <div className={'flex justify-between mt-6'}>
         <input
@@ -47,29 +48,30 @@ export const LocationField = (props: LocationFieldProps) => {
           className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 max-w-[45%]'}
           placeholder={'Número'}
           onChange={onChange}
-          value={streetNumber}
+          value={streetNumber || undefined}
         />
         <input
-          name={'floor'}
+          name={'apartment'}
           className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 max-w-[45%]'}
           placeholder={'Piso'}
           onChange={onChange}
-          value={floor}
+          value={apartment || undefined}
         />
       </div>
       <input
-        name={'surroundingStreets'}
+        name={'intersection'}
         className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 mt-6'}
         placeholder={'Entre calles'}
         onChange={onChange}
-        value={surroundingStreets}
+        value={intersection || undefined}
       />
       <p className={'mt-8 text-xs mb-2'}>Posicioná la ubicación correcta en el mapa</p>
       <DraggableMap
         key={'markerPosition'}
         apiKey={apiKey}
         onChildMouseMove={(key, childProps, mouse) => handleChildMouseMove(key, childProps, mouse)}
-        location={location}
+        latitude={latitude}
+        longitude={longitude}
         onChange={({ bounds }) => {
           setBounds(bounds);
         }}
