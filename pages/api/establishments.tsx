@@ -24,8 +24,7 @@ const getEstablishments = async (req: NextApiRequest, res: NextApiResponse<any>)
   let where = {};
   const queryParse = queryParamsSchema.safeParse(req.query);
   if (!queryParse.success) {
-    res.status(400).send(queryParse.error.message).end();
-    return;
+    return res.status(400).send(queryParse.error.message);
   }
 
   const query = queryParse.data;
