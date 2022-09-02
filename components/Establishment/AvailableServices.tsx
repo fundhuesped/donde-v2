@@ -1,10 +1,10 @@
 import React from 'react';
-import { AvailableSpecialty } from '../../pages/establecimientos/nuevo';
 import capitalize from 'lodash/capitalize';
+import { Specialty } from '../../model/specialty';
 
 type AvailableServicesProps = {
   onChange: (event: { [key: string]: any }) => void;
-  services: AvailableSpecialty[];
+  services: Specialty[];
   specialties: Set<string>;
 };
 export const AvailableServices = (props: AvailableServicesProps) => {

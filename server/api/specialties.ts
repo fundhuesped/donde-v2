@@ -1,7 +1,7 @@
 import { prismaClient } from '../prisma/client';
-import { AvailableSpecialty } from '../../pages/establecimientos/nuevo';
+import { Specialty } from '../../model/specialty';
 
-export const tryGetAvailableSpecialities = async (): Promise<AvailableSpecialty[]> => {
+export const tryGetAvailableSpecialities = async (): Promise<Specialty[]> => {
   try {
     return await prismaClient.specialty.findMany();
   } catch (e) {
