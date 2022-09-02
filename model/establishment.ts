@@ -68,10 +68,10 @@ export type Establishment = {
   })[];
 };
 export const establishmentTypes = {
-  HEALTH_ESTABLISHMENT: 'Establecimiento de salud',
+  HEALTH_ESTABLISHMENT: 'Establecimiento de salud público',
   SOCIAL_ORGANIZATION: 'Organizacion social',
-  PUBLIC_INSTITUTION: 'Público',
+  PUBLIC_INSTITUTION: 'Organismo público',
   PRIVATE_INSTITUTION: 'Privado',
-  EDUCATIONAL_INSTITUTION: 'Institucion educacional',
+  EDUCATIONAL_INSTITUTION: 'Establecimiento educativo',
   OTHER: 'Otro',
 };
