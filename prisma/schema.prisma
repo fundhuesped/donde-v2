@@ -90,8 +90,8 @@ model Establishment {
   province     String                        @db.VarChar(200)
   country      String                        @db.VarChar(100)
   status       EstablishmentStatus
-  latitude     Decimal                       @db.Decimal(8, 6)
-  longitude    Decimal                       @db.Decimal(9, 6)
+  latitude     Float
+  longitude    Float
 }
 
 model SpecialtiesOnEstablishments {

@@ -1,5 +1,6 @@
 import * as PrismaClient from '@prisma/client';
 import * as yup from 'yup';
+import { Service, Specialty, SpecialtiesOnEstablishments } from '@prisma/client';
 
 export const createEstablishmentSchema = yup.object({
   officialId: yup.string(),
@@ -39,3 +40,23 @@ export const editEstablishmentSchema = yup.object({
   longitude: yup.number(),
   specialties: yup.array().of(yup.string().uuid().required()).min(1),
 });
+
+export type Establishment = {
+  id: string;
+  officialId: string | null;
+  name: string;
+  type: string;
+  street: string;
+  streetNumber: string | null;
+  apartment: string | null;
+  intersection: string | null;
+  details: string | null;
+  website: string | null;
+  city: string;
+  department: string;
+  province: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  specialties: (SpecialtiesOnEstablishments & { specialty: Specialty & { service: Service } })[];
+};
