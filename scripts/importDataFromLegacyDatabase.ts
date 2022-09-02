@@ -4,7 +4,7 @@ import { parse } from 'csv-parse/sync';
 import { z } from 'zod';
 import { EstablishmentStatus, EstablishmentType, Prisma, Specialty } from '@prisma/client';
 import { prismaClient } from '../server/prisma/client';
-import {ServiceIcon} from "../model/services";
+import { ServiceIcon } from '../model/services';
 
 const argv = yargs.strict().showHelpOnFail(true).string('csv').demandOption('csv').parseSync();
 

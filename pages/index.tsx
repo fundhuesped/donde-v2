@@ -1,14 +1,14 @@
-import {ViewGridIcon} from '@heroicons/react/outline';
-import type {NextPage} from 'next';
-import {GetServerSideProps} from 'next';
+import { ViewGridIcon } from '@heroicons/react/outline';
+import type { NextPage } from 'next';
+import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import {useRouter} from 'next/router';
-import React, {ReactNode, useState} from 'react';
-import {Button} from '../components/Button';
+import { useRouter } from 'next/router';
+import React, { ReactNode, useState } from 'react';
+import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
-import {prismaClient} from '../server/prisma/client';
-import {Service, serviceSchema} from '../model/services';
-import {SERVICE_ICONS} from "../config/services";
+import { prismaClient } from '../server/prisma/client';
+import { Service, serviceSchema } from '../model/services';
+import { SERVICE_ICONS } from '../config/services';
 
 type ServicePill = {
   id: string;
@@ -40,7 +40,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () 
   const services = await prismaClient.service.findMany();
   return {
     props: {
-      availableServices: services.map(service => serviceSchema.validateSync(service)),
+      availableServices: services.map((service) => serviceSchema.validateSync(service)),
     },
   };
 };

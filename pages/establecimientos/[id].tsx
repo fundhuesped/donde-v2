@@ -1,18 +1,18 @@
-import {GlobeAltIcon, LocationMarkerIcon} from '@heroicons/react/outline';
-import {PhoneIcon, ShareIcon} from '@heroicons/react/solid';
-import {GetServerSideProps, NextPage} from 'next';
+import { GlobeAltIcon, LocationMarkerIcon } from '@heroicons/react/outline';
+import { PhoneIcon, ShareIcon } from '@heroicons/react/solid';
+import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import React from 'react';
 import WhatsAppLogo from '../../assets/images/WhatsAppLogo.svg';
-import {Card, CardHeader, CardList, CardListItem, CardParagraph, CardSubHeader} from '../../components/Card';
-import {Icon} from '../../components/Icon';
+import { Card, CardHeader, CardList, CardListItem, CardParagraph, CardSubHeader } from '../../components/Card';
+import { Icon } from '../../components/Icon';
 import MainContainer from '../../components/MainContainer';
-import {Pill} from '../../components/Pill';
-import {Service, serviceSchema} from '../../model/services';
-import {formatEstablishmentLocation, formatEstablishmentType} from '../../utils/establishments';
-import {Establishment as EstablishmentModel} from '../../model/establishment';
-import {getEstablishment} from '../../server/api/establishments';
-import {SERVICE_ICONS} from "../../config/services";
+import { Pill } from '../../components/Pill';
+import { Service, serviceSchema } from '../../model/services';
+import { formatEstablishmentLocation, formatEstablishmentType } from '../../utils/establishments';
+import { Establishment as EstablishmentModel } from '../../model/establishment';
+import { getEstablishment } from '../../server/api/establishments';
+import { SERVICE_ICONS } from '../../config/services';
 
 interface WebSiteButtonProps {
   website: string;
@@ -105,7 +105,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async ({ 
   } catch {
     establishment = undefined;
   }
-  const services = establishment?.specialties.map((specialty) =>  serviceSchema.validateSync(specialty.specialty.service));
+  const services = establishment?.specialties.map((specialty) => serviceSchema.validateSync(specialty.specialty.service));
   return {
     props: {
       establishment,
