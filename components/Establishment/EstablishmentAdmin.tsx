@@ -11,9 +11,9 @@ import Alert from '../Alert';
 import { EstablishmentSearchStep } from './EstablishmentSearchStep';
 import { AvailableServices } from './AvailableServices';
 import { LocationField } from './LocationField';
-import { AvailableSpecialty } from '../../pages/establecimientos/nuevo';
 import isNil from 'lodash/isNil';
 import { establishmentTypes } from '../../model/establishment';
+import { Specialty } from '../../model/specialty';
 
 export type EstablishmentModel = {
   id?: string;
@@ -66,7 +66,7 @@ export const emptyEstablishmentModel = {
 const EstablishmentAdmin = (props: {
   googleMapsApiKey: string;
   establishment?: EstablishmentModel;
-  availableSpecialties: AvailableSpecialty[];
+  availableSpecialties: Specialty[];
 }) => {
   const { googleMapsApiKey, establishment, availableSpecialties } = props;
   const router = useRouter();

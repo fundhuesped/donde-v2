@@ -5,16 +5,16 @@ import EstablishmentAdmin, {
   EstablishmentModel,
 } from '../../../components/Establishment/EstablishmentAdmin';
 import { tryGetGoogleMapsApiKey } from '../../../utils/establishments';
-import { AvailableSpecialty } from '../nuevo';
 import * as PrismaClient from '@prisma/client';
 import { tryGetAvailableSpecialities } from '../../../server/api/specialties';
 import { getEstablishment } from '../../../server/api/establishments';
 import { Establishment } from '../../../model/establishment';
+import { Specialty } from '../../../model/specialty';
 
 type ServerSideProps = {
   googleMapsApiKey: string;
   establishment: Establishment;
-  availableSpecialties: AvailableSpecialty[];
+  availableSpecialties: Specialty[];
 };
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (context) => {

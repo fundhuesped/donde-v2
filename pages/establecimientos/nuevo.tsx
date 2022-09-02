@@ -3,13 +3,11 @@ import { GetServerSideProps, NextPage } from 'next';
 import EstablishmentAdmin from '../../components/Establishment/EstablishmentAdmin';
 import { tryGetGoogleMapsApiKey } from '../../utils/establishments';
 import { tryGetAvailableSpecialities } from '../../server/api/specialties';
-export type AvailableSpecialty = {
-  id: string;
-  name: string | null;
-};
+import { Specialty } from '../../model/specialty';
+
 type ServerSideProps = {
   googleMapsApiKey: string;
-  availableSpecialties: AvailableSpecialty[];
+  availableSpecialties: Specialty[];
 };
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
   const googleMapsApiKey = tryGetGoogleMapsApiKey();
