@@ -3,7 +3,7 @@ import { NextApiHandler } from 'next';
 import { prismaClient } from '../../../server/prisma/client';
 import { editEstablishmentSchema as establishmentSchema } from '../../../model/establishment';
 import { EstablishmentStatus } from '@prisma/client';
-import { mapSpecialtiesToPrismaObject } from '../establishments';
+import { mapSpecialtiesToPrismaObject } from './index';
 import * as yup from 'yup';
 
 const handler: NextApiHandler = async (req, res) => {
