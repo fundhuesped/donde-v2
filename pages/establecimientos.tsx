@@ -118,9 +118,6 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
 
   const [activeEstablishment, setActiveEstablishment] = useState<Establishment | null>(null);
   const handleMarkerClick = (establishmentId: string) => {
-    if (establishmentId === USER_MARKER_ID) {
-      return;
-    }
     setActiveEstablishment(establishments.find((establishment: Establishment) => establishment.id === establishmentId) ?? null);
   };
 
@@ -154,10 +151,10 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
                 options={{
                   fullscreenControl: false,
                   zoomControl: false,
+                  draggableCursor: 'default',
                 }}
                 defaultCenter={mapPosition.coords}
                 defaultZoom={mapPosition.zoom}
-                onChildClick={handleMarkerClick}
                 resetBoundsOnResize={true}
                 onChange={({ bounds }) => {
                   setBounds(bounds);
@@ -179,7 +176,14 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
                         ),
                     )
                     .map((establishment: Establishment) => {
-                      return <Marker lat={establishment.latitude} lng={establishment.longitude} key={establishment.id} />;
+                      return (
+                        <Marker
+                          key={establishment.id}
+                          lat={establishment.latitude}
+                          lng={establishment.longitude}
+                          onClick={() => handleMarkerClick(establishment.id)}
+                        />
+                      );
                     })}
               </GoogleMapReact>
             </div>
