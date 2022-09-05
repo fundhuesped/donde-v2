@@ -47,7 +47,7 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
     },
     options: {
       componentRestrictions: { country: 'ar' },
-      types: ['sublocality', 'locality', 'street_address', 'intersection'],
+      types: ['geocode'],
     },
   });
 
