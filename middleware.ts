@@ -12,19 +12,20 @@ type RouteMatcher = {
 type RouteAuthorizationConfig = {
   matcher: RouteMatcher;
   roles: UserRole[];
+  status?: number;
 };
 
-const ADMIN_ROUTES: RouteMatcher[] = [{ path: '/api/admin' }, { path: '/admin' }];
+const ADMIN_ROUTES: RouteMatcher[] = [{ path: '/admin' }];
+const ADMIN_API_ROUTES: RouteMatcher[] = [{ path: '/api/admin' }];
 
-const COLLABORATOR_ROUTES: RouteMatcher[] = [
-  { path: '/establecimientos/nuevo' },
-  { path: '/establecimientos/editar' },
-  { path: '/api/establishments', methods: ['POST', 'PUT'] },
-];
+const COLLABORATOR_ROUTES: RouteMatcher[] = [{ path: '/establecimientos/editar' }];
+const COLLABORATOR_API_ROUTES: RouteMatcher[] = [{ path: '/api/establishments', methods: ['POST', 'PUT'] }];
 
 const ROUTE_AUTORIZATION_CONFIGS: RouteAuthorizationConfig[] = [
-  ...ADMIN_ROUTES.map((matcher) => ({ matcher, roles: [UserRole.ADMIN] })),
-  ...COLLABORATOR_ROUTES.map((matcher) => ({ matcher, roles: [UserRole.ADMIN, UserRole.COLLABORATOR] })),
+  ...ADMIN_ROUTES.map((matcher) => ({ matcher, roles: [UserRole.ADMIN], status: 404 })),
+  ...COLLABORATOR_ROUTES.map((matcher) => ({ matcher, roles: [UserRole.ADMIN, UserRole.COLLABORATOR], status: 404 })),
+  ...ADMIN_API_ROUTES.map((matcher) => ({ matcher, roles: [UserRole.ADMIN] })),
+  ...COLLABORATOR_API_ROUTES.map((matcher) => ({ matcher, roles: [UserRole.ADMIN, UserRole.COLLABORATOR] })),
 ];
 
 function getRouteAuthorizationConfig(req: NextRequest) {
@@ -42,7 +43,13 @@ export const middleware = async (req: NextRequest) => {
     const userParse = AuthenticatedUserSchema.safeParse(token?.user);
 
     if (!userParse.success || !routeAuthorizationConfig.roles.includes(userParse.data.role)) {
-      return new NextResponse(null, { status: 403 });
+      if (routeAuthorizationConfig.status === 404) {
+        const destination = req.nextUrl.clone();
+        destination.pathname = '/404';
+        return NextResponse.rewrite(destination);
+      } else {
+        return new NextResponse(null, { status: routeAuthorizationConfig.status ?? 403 });
+      }
     }
   }
 
