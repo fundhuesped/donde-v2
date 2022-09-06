@@ -1,7 +1,7 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { prismaClient } from '../../server/prisma/client';
+import { prismaClient } from '../../../server/prisma/client';
 import { EstablishmentStatus } from '@prisma/client';
-import { createEstablishmentSchema as establishmentSchema } from '../../model/establishment';
+import { createEstablishmentSchema as establishmentSchema } from '../../../model/establishment';
 import { z } from 'zod';
 import isEmpty from 'lodash/isEmpty';
 
