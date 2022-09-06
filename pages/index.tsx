@@ -6,9 +6,9 @@ import { useRouter } from 'next/router';
 import React, { ReactNode, useState } from 'react';
 import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
-import { prismaClient } from '../server/prisma/client';
-import { Service, serviceSchema } from '../model/services';
 import { SERVICE_ICONS } from '../config/services';
+import { Service, serviceSchema } from '../model/services';
+import { prismaClient } from '../server/prisma/client';
 
 type ServicePill = {
   id: string;
@@ -141,7 +141,7 @@ const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
   };
 
   return (
-    <div className={'flex flex-wrap flex-grow content-start justify-center lg:bg-modal-image lg:bg-white'}>
+    <div className={'flex flex-wrap flex-grow content-start justify-center lg:bg-modal-image lg:bg-white h-desktop lg:h-auto'}>
       <Head>
         <title>Dónde</title>
       </Head>
@@ -149,7 +149,7 @@ const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
         Dónde es una plataforma de geolocalización de servicios de <strong>salud sexual y reproductiva</strong> creada por
         Fundación Huesped.
       </p>
-      <MainContainer className={'w-full lg:w-3/5 lg:mx-4 mt-4 pt-8 lg:flex-grow-0'}>
+      <MainContainer className={'w-full h-full lg:h-2/3 lg:w-3/5 lg:mx-4 mt-4 pt-8 lg:flex-grow-0'}>
         <div className="w-full flex flex-col justify-center">
           <div className="flex-col">
             <h2 className={'text-2xl text-black font-title font-bold text-center'}>¿Qué estás buscando?</h2>
