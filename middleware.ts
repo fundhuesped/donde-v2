@@ -19,7 +19,7 @@ const ADMIN_ROUTES: RouteMatcher[] = [{ path: '/api/admin' }, { path: '/admin' }
 const COLLABORATOR_ROUTES: RouteMatcher[] = [
   { path: '/establecimientos/nuevo' },
   { path: '/establecimientos/editar' },
-  { path: '/api/establishments/', methods: ['POST', 'PUT'] },
+  { path: '/api/establishments', methods: ['POST', 'PUT'] },
 ];
 
 const ROUTE_AUTORIZATION_CONFIGS: RouteAuthorizationConfig[] = [
