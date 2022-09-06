@@ -1,14 +1,14 @@
+import isEmpty from 'lodash/isEmpty';
+import { GetStaticProps, NextPage } from 'next';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 import React, { RefObject, useEffect, useState } from 'react';
+import { usePlacesWidget } from 'react-google-autocomplete';
+import servicesData from '../assets/services.json';
 import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
 import { Pill } from '../components/Pill';
-import servicesData from '../assets/services.json';
-import { usePlacesWidget } from 'react-google-autocomplete';
-import { useRouter } from 'next/router';
 import { Coordinates } from '../model/map';
-import { GetStaticProps, NextPage } from 'next';
-import Head from 'next/head';
-import isEmpty from 'lodash/isEmpty';
 
 type StaticProps = {
   googleMapsApiKey: string;

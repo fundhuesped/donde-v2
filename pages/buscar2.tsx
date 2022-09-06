@@ -4,15 +4,19 @@ import GoogleMapReact, { Bounds } from 'google-map-react';
 import { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { RefObject, useEffect, useState } from 'react';
 import places from '../assets/establishments.json';
 import servicesData from '../assets/services.json';
+import { Button } from '../components/Button';
 import { Card, CardHeader, CardList, CardListItem } from '../components/Card';
-import EstablishmentListSidebar from '../components/Establishment/EstablishmentListSidebar';
+import EstablishmentSearchSidebar from '../components/Establishment/EstablishmentSearchSidebar';
 import MainContainer from '../components/MainContainer';
 import { Marker, UserMarker } from '../components/Marker';
 import { Pill } from '../components/Pill';
 import { formatEstablishmentLocation } from '../utils/establishments';
+
+import isEmpty from 'lodash/isEmpty';
+import { usePlacesWidget } from 'react-google-autocomplete';
 
 type StaticProps = {
   googleMapsApiKey: string;
@@ -89,7 +93,7 @@ function isValidMarkerValue(marker: number) {
   return marker >= 0;
 }
 
-const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
+const SearchEstablishmentDesktop: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
   const router = useRouter();
 
   const { coords: serializedCoords } = router.query;
@@ -97,6 +101,13 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
     serializedCoords && typeof serializedCoords === 'string' ? JSON.parse(decodeURIComponent(serializedCoords)) : undefined;
 
   const [mapPosition, setMapPosition] = useState<MapPosition | null>(null);
+
+  // *******************************
+
+  const [searchLocation, setSearchLocation] = useState('');
+  const [location, setLocation] = useState('');
+  const [coordenates, setCoordenates] = useState<Coordinates>({} as Coordinates);
+  const [isMissingSearchInfo, setIsMissingSearchInfo] = useState(true);
 
   useEffect(() => {
     if (!router.isReady) {
@@ -133,6 +144,23 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
     router.push(`/establecimientos/${activeMarker.placeId}`);
   };
 
+  const establishments = markers.filter((marker) => bounds !== null && markerWithinBoundaries(marker, bounds));
+
+  // *******************************
+
+  const { ref: autocompleteInputRef }: { ref: RefObject<HTMLInputElement> } = usePlacesWidget({
+    apiKey: googleMapsApiKey,
+    onPlaceSelected: (place) => {
+      setSearchLocation(place.formatted_address);
+      setLocation(place.formatted_address);
+      setCoordenates({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
+    },
+    options: {
+      componentRestrictions: { country: 'ar' },
+      types: ['sublocality', 'locality', 'street_address', 'intersection'],
+    },
+  });
+
   const servicesQueryParam = router.query.services;
   const searchedServiceIds = servicesQueryParam
     ? Array.isArray(servicesQueryParam)
@@ -145,7 +173,28 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
       : servicesData;
   const services = searchedServices.map((service) => service);
 
-  const establishments = markers.filter((marker) => bounds !== null && markerWithinBoundaries(marker, bounds));
+  useEffect(() => {
+    setIsMissingSearchInfo(isEmpty(location) || isEmpty(coords));
+  }, [location, coords]);
+
+  const handleSearchLocationChange = (event: React.FormEvent<HTMLInputElement>) => {
+    setSearchLocation(event.currentTarget.value);
+  };
+
+  const handleSearchButtonClicked = () => {
+    if (!isMissingSearchInfo) {
+      router.push({
+        pathname: '/establecimientos',
+        query: {
+          coords: encodeURIComponent(JSON.stringify(coords)),
+        },
+      });
+    }
+  };
+
+  const handleSearchButtonByLocationClicked = () => {
+    router.push('/establecimientos');
+  };
 
   return (
     <>
@@ -157,7 +206,28 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
         {mapPosition && (
           <div className={'flex'}>
             <div className={'lg:w-1/3'}>
-              <EstablishmentListSidebar services={services} establishments={establishments}></EstablishmentListSidebar>
+              <EstablishmentSearchSidebar services={services}>
+                <input
+                  ref={autocompleteInputRef}
+                  className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 mt-4'}
+                  placeholder={'Ingresá la ubicación'}
+                  value={searchLocation}
+                  onChange={handleSearchLocationChange}
+                />
+                <div className={'mt-8'}>
+                  <Button
+                    className={'bg-white w-full max-h-12'}
+                    disabled={isMissingSearchInfo}
+                    type={'primary'}
+                    onClick={handleSearchButtonClicked}
+                  >
+                    Buscar
+                  </Button>
+                  <Button className={'w-full mt-4 max-h-12'} type={'secondary'} onClick={handleSearchButtonByLocationClicked}>
+                    Buscar por mi ubicación actual
+                  </Button>
+                </div>
+              </EstablishmentSearchSidebar>
             </div>
 
             <div className={classNames('w-full lg:w-2/3 lg:mx-auto ')} style={{ height: 'calc(100vh - 56px - 1.5rem)' }}>
@@ -219,4 +289,4 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
   );
 };
 
-export default Establishments;
+export default SearchEstablishmentDesktop;
