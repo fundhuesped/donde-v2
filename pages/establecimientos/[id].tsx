@@ -162,10 +162,13 @@ export const EstablishmentPage: NextPage<ServerSideProps> = React.memo(({ establ
               .map((specialties) => {
                 const [[defaultSpecialty], [subSpecialty]] = partition(specialties, ({ specialty }) => specialty.name === null);
                 const specialty = subSpecialty ?? defaultSpecialty;
+                if (!specialty) {
+                  return null;
+                }
                 const service = specialty.specialty.service;
                 return (
                   <CardListItem key={service.id} icon={SERVICE_ICONS[service.icon as ServiceIcon]}>
-                    {specialty ? (
+                    {specialty.specialty.name ? (
                       <>
                         <span>{service.name}</span>
                         <span className={'text-medium-gray text-xs'}> - {specialty.specialty.name}</span>
