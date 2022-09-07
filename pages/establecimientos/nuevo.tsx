@@ -2,16 +2,16 @@ import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import EstablishmentAdmin from '../../components/Establishment/EstablishmentAdmin';
 import { tryGetGoogleMapsApiKey } from '../../utils/establishments';
-import { tryGetAvailableSpecialities } from '../../server/api/specialties';
-import { Specialty } from '../../model/specialty';
+import { getSpecialtiesWithServices } from '../../server/api/specialties';
+import { SpecialtyWithService } from '../../model/specialty';
 
 type ServerSideProps = {
   googleMapsApiKey: string;
-  availableSpecialties: Specialty[];
+  availableSpecialties: SpecialtyWithService[];
 };
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
   const googleMapsApiKey = tryGetGoogleMapsApiKey();
-  const availableSpecialties = await tryGetAvailableSpecialities();
+  const availableSpecialties = await getSpecialtiesWithServices();
   return {
     props: {
       googleMapsApiKey,

@@ -6,22 +6,23 @@ import EstablishmentAdmin, {
 } from '../../../components/Establishment/EstablishmentAdmin';
 import { tryGetGoogleMapsApiKey } from '../../../utils/establishments';
 import * as PrismaClient from '@prisma/client';
-import { tryGetAvailableSpecialities } from '../../../server/api/specialties';
+import { getSpecialtiesWithServices } from '../../../server/api/specialties';
 import { getEstablishment } from '../../../server/api/establishments';
 import { Establishment } from '../../../model/establishment';
-import { Specialty } from '../../../model/specialty';
+import { SpecialtyWithService } from '../../../model/specialty';
 
 type ServerSideProps = {
   googleMapsApiKey: string;
   establishment: Establishment;
-  availableSpecialties: Specialty[];
+  availableSpecialties: SpecialtyWithService[];
 };
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (context) => {
   const { id } = context.query;
   const establishment = await getEstablishment(id);
   const googleMapsApiKey = tryGetGoogleMapsApiKey();
-  const availableSpecialties = await tryGetAvailableSpecialities();
+  const availableSpecialties = await getSpecialtiesWithServices();
+
   return {
     props: {
       googleMapsApiKey,
@@ -29,26 +30,6 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (co
       availableSpecialties,
     },
   };
-};
-const anEstablishmentModel = {
-  name: 'Hospital de ejemplo',
-  address: 'Calle falsa 123',
-  streetName: 'Calle falsa 123',
-  type: 'publico',
-  fullAddress: 'Calle falsa 123, La quiaca, Saturno',
-  streetNumber: '123',
-  floor: '1',
-  surroundingStreets: 'Calle a y Calle b',
-  availableServices: new Set<string>(),
-  website: 'www.callefalsa.com',
-  phone: '1111111111',
-  whatsApp: '1122221111',
-  email: 'calle@falsa.com',
-  tosCheckbox: false,
-  additionalDescription: 'gran calle, mejor hospital',
-  availability: 'Lunes-Lunes 00:00-00:00',
-  latitude: -34.58956,
-  longitude: -58.4040549,
 };
 
 const mapIntoEstablishmentModel = (establishment: Establishment): EstablishmentModel => {

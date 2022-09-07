@@ -13,7 +13,8 @@ import { AvailableServices } from './AvailableServices';
 import { LocationField } from './LocationField';
 import isNil from 'lodash/isNil';
 import { establishmentTypes } from '../../model/establishment';
-import { Specialty } from '../../model/specialty';
+import { SpecialtyWithService } from '../../model/specialty';
+import _, { isNull, omit, omitBy } from 'lodash';
 
 export type EstablishmentModel = {
   id?: string;
@@ -66,14 +67,14 @@ export const emptyEstablishmentModel = {
 const EstablishmentAdmin = (props: {
   googleMapsApiKey: string;
   establishment?: EstablishmentModel;
-  availableSpecialties: Specialty[];
+  availableSpecialties: SpecialtyWithService[];
 }) => {
   const { googleMapsApiKey, establishment, availableSpecialties } = props;
   const router = useRouter();
   const [isError, setIsError] = useState(false);
   const [isUpdateSuccessful, setIsUpdateSuccessful] = useState(false);
   const [isSearchStepCompleted, setIsSearchStepCompleted] = useState(false);
-  const [isNewEstablishment, setIsNewEstablishment] = useState(isNil(establishment?.id));
+  const isNewEstablishment = isNil(establishment?.id);
   const [form, setForm] = useState<EstablishmentModel>(establishment || emptyEstablishmentModel);
   const [isFormCompleted, setIsFormCompleted] = useState(false);
   const handleFormUpdate = (fieldsToUpdate: Partial<EstablishmentModel>) => {
@@ -143,23 +144,26 @@ const EstablishmentAdmin = (props: {
     const { name: elementName, checked } = event.currentTarget;
     handleFormUpdate({ [elementName]: checked });
   };
-  const buildEstablishmentPayload = (establishment: EstablishmentModel) => {
-    const establishmentPayload = pick(establishment, [
-      'name',
-      'type',
-      'street',
-      'streetNumber',
-      'apartment',
-      'intersection',
-      'details',
-      'website',
-      'city',
-      'department',
-      'province',
-      'country',
-      'latitude',
-      'longitude',
-    ]);
+  const buildEstablishmentPayload = (establishment: Partial<EstablishmentModel>) => {
+    const establishmentPayload = _(establishment)
+      .omitBy(isNull)
+      .pick([
+        'name',
+        'type',
+        'street',
+        'streetNumber',
+        'apartment',
+        'intersection',
+        'details',
+        'website',
+        'city',
+        'department',
+        'province',
+        'country',
+        'latitude',
+        'longitude',
+      ])
+      .value();
 
     return { ...establishmentPayload, specialties: Array.from(specialties) };
   };
@@ -255,7 +259,11 @@ const EstablishmentAdmin = (props: {
             />
 
             {/*<AvailabilityField key={'workingHourTo'} onChange={handleFormUpdate} availability={availability} />*/}
-            <AvailableServices onChange={handleFormUpdate} specialties={specialties} services={availableSpecialties} />
+            <AvailableServices
+              onChange={handleFormUpdate}
+              activeSpecialties={specialties}
+              availableSpecialties={availableSpecialties}
+            />
             {/*<ContactInfoField
               key={'email'}
               onChange={handleFieldChange}
@@ -277,17 +285,18 @@ const EstablishmentAdmin = (props: {
               rows={4}
               placeholder={'Escribí tus comentarios aca'}
             ></textarea>
-            <div className={'flex mt-10 mb-8'}>
+            <label className={'cursor-pointer flex mt-10 mb-8'} htmlFor="terms-checkbox">
               <input
+                id="terms-checkbox"
                 key={'tosCheckbox'}
                 name={'tosCheckbox'}
-                className={'mr-2 '}
+                className={'mr-2 cursor-pointer'}
                 type={'checkbox'}
                 onChange={handleCheckboxChange}
                 checked={tosCheckbox}
               />
               <p className={'text-xs'}>Acepto los términos y condiciones y la publicación de los datos en el sitio</p>
-            </div>
+            </label>
             {isError && (
               <Alert title={'Error durante la creacion de establecimiento'} message={'Hubo un problema en el servidor'} />
             )}
