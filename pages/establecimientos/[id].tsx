@@ -14,7 +14,6 @@ import { getEstablishment } from '../../server/api/establishments';
 import { SERVICE_ICONS } from '../../config/services';
 import Link from 'next/link';
 import { useAuthenticatedUser } from '../../hooks/useAuthenticatedUser';
-import { SpecialtyWithService } from '../../model/specialty';
 import { Establishment } from '../../model/establishment';
 import _, { partition } from 'lodash';
 
@@ -99,7 +98,6 @@ const ShareButton = (props: { name: string }) => {
 
 type ServerSideProps = {
   establishment: Establishment | undefined;
-  services: SpecialtyWithService[] | undefined;
 };
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async ({ query }) => {
