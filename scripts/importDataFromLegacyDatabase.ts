@@ -328,8 +328,9 @@ function getSpecialtyIdsForLegacyDataRecord(record: LegacyDataRecord, defaultSpe
         abortoSpecialtyId = ABORTO_SPECIALTIES_DATA.asesoramientoEInterrupcion.id;
         break;
       default:
-        specialtyIds.push(defaultSpecialties.aborto.id);
+        abortoSpecialtyId = ABORTO_SPECIALTIES_DATA.noConfirmado.id;
     }
+    specialtyIds.push(abortoSpecialtyId);
   }
   return specialtyIds;
 }
