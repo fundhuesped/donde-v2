@@ -67,9 +67,8 @@ const EstablishmentAdmin = (props: {
   googleMapsApiKey: string;
   establishment?: EstablishmentModel;
   availableSpecialties: Specialty[];
-  availableServices: { id: string; name: string }[];
 }) => {
-  const { googleMapsApiKey, establishment, availableSpecialties, availableServices } = props;
+  const { googleMapsApiKey, establishment, availableSpecialties } = props;
   const router = useRouter();
   const [isError, setIsError] = useState(false);
   const [isUpdateSuccessful, setIsUpdateSuccessful] = useState(false);
@@ -256,12 +255,7 @@ const EstablishmentAdmin = (props: {
             />
 
             {/*<AvailabilityField key={'workingHourTo'} onChange={handleFormUpdate} availability={availability} />*/}
-            <AvailableServices
-              onChange={handleFormUpdate}
-              specialties={specialties}
-              availableSpecialties={availableSpecialties}
-              availableServices={availableServices}
-            />
+            <AvailableServices onChange={handleFormUpdate} specialties={specialties} services={availableSpecialties} />
             {/*<ContactInfoField
               key={'email'}
               onChange={handleFieldChange}
