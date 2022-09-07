@@ -285,17 +285,18 @@ const EstablishmentAdmin = (props: {
               rows={4}
               placeholder={'Escribí tus comentarios aca'}
             ></textarea>
-            <div className={'flex mt-10 mb-8'}>
+            <label className={'cursor-pointer flex mt-10 mb-8'} htmlFor="terms-checkbox">
               <input
+                id="terms-checkbox"
                 key={'tosCheckbox'}
                 name={'tosCheckbox'}
-                className={'mr-2 '}
+                className={'mr-2 cursor-pointer'}
                 type={'checkbox'}
                 onChange={handleCheckboxChange}
                 checked={tosCheckbox}
               />
               <p className={'text-xs'}>Acepto los términos y condiciones y la publicación de los datos en el sitio</p>
-            </div>
+            </label>
             {isError && (
               <Alert title={'Error durante la creacion de establecimiento'} message={'Hubo un problema en el servidor'} />
             )}
