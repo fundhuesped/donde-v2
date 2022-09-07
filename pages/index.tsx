@@ -141,7 +141,7 @@ const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
   };
 
   return (
-    <div className={'flex flex-wrap flex-grow content-start justify-center lg:bg-modal-image lg:bg-white h-desktop lg:h-auto'}>
+    <div className={'flex flex-wrap flex-grow content-start justify-center lg:bg-modal-image lg:bg-white'}>
       <Head>
         <title>Dónde</title>
       </Head>
@@ -149,7 +149,7 @@ const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
         Dónde es una plataforma de geolocalización de servicios de <strong>salud sexual y reproductiva</strong> creada por
         Fundación Huesped.
       </p>
-      <MainContainer className={'w-full h-full lg:h-2/3 lg:w-3/5 lg:mx-4 mt-4 pt-8 lg:flex-grow-0'}>
+      <MainContainer className={'w-full h-screen lg:h-full lg:w-3/5 lg:mx-4 mt-4 pt-8 lg:flex-grow-0'}>
         <div className="w-full flex flex-col justify-center">
           <div className="flex-col">
             <h2 className={'text-2xl text-black font-title font-bold text-center'}>¿Qué estás buscando?</h2>
