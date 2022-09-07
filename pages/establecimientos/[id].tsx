@@ -8,13 +8,15 @@ import { Card, CardHeader, CardList, CardListItem, CardParagraph, CardSubHeader 
 import { Icon } from '../../components/Icon';
 import MainContainer from '../../components/MainContainer';
 import { Pill } from '../../components/Pill';
-import { Service, serviceSchema } from '../../model/services';
+import { ServiceIcon } from '../../model/services';
 import { formatEstablishmentLocation, formatEstablishmentType } from '../../utils/establishments';
-import { Establishment as EstablishmentModel } from '../../model/establishment';
 import { getEstablishment } from '../../server/api/establishments';
 import { SERVICE_ICONS } from '../../config/services';
 import Link from 'next/link';
 import { useAuthenticatedUser } from '../../hooks/useAuthenticatedUser';
+import { SpecialtyWithService } from '../../model/specialty';
+import { Establishment } from '../../model/establishment';
+import _, { partition } from 'lodash';
 
 interface WebSiteButtonProps {
   website: string;
@@ -96,8 +98,8 @@ const ShareButton = (props: { name: string }) => {
 };
 
 type ServerSideProps = {
-  establishment: EstablishmentModel | undefined;
-  services: Service[] | undefined;
+  establishment: Establishment | undefined;
+  services: SpecialtyWithService[] | undefined;
 };
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async ({ query }) => {
@@ -107,16 +109,14 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async ({ 
   } catch {
     establishment = undefined;
   }
-  const services = establishment?.specialties.map((specialty) => serviceSchema.validateSync(specialty.specialty.service));
   return {
     props: {
       establishment,
-      services,
     },
   };
 };
 
-export const Establishment: NextPage<ServerSideProps> = React.memo(({ establishment, services }) => {
+export const EstablishmentPage: NextPage<ServerSideProps> = React.memo(({ establishment }) => {
   const user = useAuthenticatedUser();
 
   if (!establishment) {
@@ -157,13 +157,30 @@ export const Establishment: NextPage<ServerSideProps> = React.memo(({ establishm
 
           <CardSubHeader>Servicios disponibles</CardSubHeader>
           <CardList>
-            {services?.map((service: Service) => {
-              return (
-                <CardListItem key={service.id} icon={SERVICE_ICONS[service.icon]}>
-                  {service.name}
-                </CardListItem>
-              );
-            })}
+            {_(establishment.specialties)
+              .groupBy(({ specialty }) => specialty.service.id)
+              .values()
+              .sortBy((specialties) => specialties[0]!.specialty.service.name)
+              .map((specialties) => {
+                const [[defaultSpecialty], [subSpecialty]] = partition(specialties, ({ specialty }) => specialty.name === null);
+                if (!defaultSpecialty) {
+                  return null;
+                }
+                const service = defaultSpecialty.specialty.service;
+                return (
+                  <CardListItem key={service.id} icon={SERVICE_ICONS[service.icon as ServiceIcon]}>
+                    {subSpecialty ? (
+                      <>
+                        <span>{service.name}</span>
+                        <span className={'text-medium-gray text-xs'}> - {subSpecialty.specialty.name}</span>
+                      </>
+                    ) : (
+                      service.name
+                    )}
+                  </CardListItem>
+                );
+              })
+              .value()}
           </CardList>
 
           {additionalInfo && (
@@ -188,4 +205,4 @@ export const Establishment: NextPage<ServerSideProps> = React.memo(({ establishm
   );
 });
 
-export default Establishment;
+export default EstablishmentPage;

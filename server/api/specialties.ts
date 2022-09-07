@@ -1,9 +1,13 @@
 import { prismaClient } from '../prisma/client';
-import { Specialty } from '../../model/specialty';
+import { SpecialtyWithService } from '../../model/specialty';
 
-export const tryGetAvailableSpecialities = async (): Promise<Specialty[]> => {
+export const getSpecialtiesWithServices = async (): Promise<SpecialtyWithService[]> => {
   try {
-    return await prismaClient.specialty.findMany();
+    return await prismaClient.specialty.findMany({
+      include: {
+        service: true,
+      },
+    });
   } catch (e) {
     throw new Error('Unable to get services from database');
   }

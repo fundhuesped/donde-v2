@@ -6,32 +6,28 @@ import EstablishmentAdmin, {
 } from '../../../components/Establishment/EstablishmentAdmin';
 import { tryGetGoogleMapsApiKey } from '../../../utils/establishments';
 import * as PrismaClient from '@prisma/client';
-import { tryGetAvailableSpecialities } from '../../../server/api/specialties';
+import { getSpecialtiesWithServices } from '../../../server/api/specialties';
 import { getEstablishment } from '../../../server/api/establishments';
 import { Establishment } from '../../../model/establishment';
-import { Specialty } from '../../../model/specialty';
-import { tryGetServices } from '../../../server/api/services';
+import { SpecialtyWithService } from '../../../model/specialty';
 
 type ServerSideProps = {
   googleMapsApiKey: string;
   establishment: Establishment;
-  availableSpecialties: Specialty[];
-  availableServices: { id: string; name: string }[];
+  availableSpecialties: SpecialtyWithService[];
 };
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (context) => {
   const { id } = context.query;
   const establishment = await getEstablishment(id);
   const googleMapsApiKey = tryGetGoogleMapsApiKey();
-  const availableSpecialties = await tryGetAvailableSpecialities();
-  const availableServices = (await tryGetServices()).map((service) => ({ id: service.id, name: service.name }));
+  const availableSpecialties = await getSpecialtiesWithServices();
 
   return {
     props: {
       googleMapsApiKey,
       establishment,
       availableSpecialties,
-      availableServices,
     },
   };
 };
@@ -55,19 +51,13 @@ const mapIntoEstablishmentModel = (establishment: Establishment): EstablishmentM
     fullAddress: establishment.province,
   };
 };
-const EstablishmentEdit: NextPage<ServerSideProps> = ({
-  googleMapsApiKey,
-  establishment,
-  availableSpecialties,
-  availableServices,
-}) => {
+const EstablishmentEdit: NextPage<ServerSideProps> = ({ googleMapsApiKey, establishment, availableSpecialties }) => {
   const establishmentModel = mapIntoEstablishmentModel(establishment);
   return (
     <EstablishmentAdmin
       googleMapsApiKey={googleMapsApiKey}
       establishment={establishmentModel}
       availableSpecialties={availableSpecialties}
-      availableServices={availableServices}
     />
   );
 };

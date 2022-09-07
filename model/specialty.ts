@@ -1,5 +1,7 @@
-export type Specialty = {
+import { Service } from '@prisma/client';
+
+export type SpecialtyWithService = {
   id: string;
   name: string | null;
-  serviceId?: string | null;
+  service: Service;
 };
