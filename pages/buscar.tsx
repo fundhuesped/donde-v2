@@ -1,5 +1,5 @@
 import isEmpty from 'lodash/isEmpty';
-import { GetServerSideProps, GetStaticProps, NextPage } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { RefObject, useEffect, useState } from 'react';
@@ -9,6 +9,7 @@ import MainContainer from '../components/MainContainer';
 import { Pill } from '../components/Pill';
 import { Coordinates } from '../model/map';
 import { prismaClient } from '../server/prisma/client';
+import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../config/thirdParty';
 
 type AvailableService = {
   id: string;
@@ -45,10 +46,7 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
       setLocation(place.formatted_address);
       setCoords({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
     },
-    options: {
-      componentRestrictions: { country: 'ar' },
-      types: ['geocode'],
-    },
+    options: GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS,
   });
 
   const servicesQueryParam = router.query.services;

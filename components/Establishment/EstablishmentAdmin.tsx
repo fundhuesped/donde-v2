@@ -15,6 +15,7 @@ import isNil from 'lodash/isNil';
 import { establishmentTypes } from '../../model/establishment';
 import { SpecialtyWithService } from '../../model/specialty';
 import _, { isNull, omit, omitBy } from 'lodash';
+import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../../config/thirdParty';
 
 export type EstablishmentModel = {
   id?: string;
@@ -130,10 +131,7 @@ const EstablishmentAdmin = (props: {
         department,
       });
     },
-    options: {
-      componentRestrictions: { country: 'ar' },
-      types: ['locality', 'street_address', 'sublocality', 'health', 'intersection'],
-    },
+    options: GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS,
   });
 
   const handleFieldChange = (event: { currentTarget: { value: string; name: string } }) => {
