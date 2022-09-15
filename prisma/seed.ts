@@ -1,12 +1,13 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 import { EstablishmentType, EstablishmentStatus } from '@prisma/client';
+import { ServiceIcon } from '../model/services';
 
 async function main() {
   const preservativos = await prisma.service.create({
     data: {
-      name: 'preservativos',
-      icon: 'Condones.svg',
+      name: 'Preservativos',
+      icon: ServiceIcon.PRESERVATIVOS,
     },
   });
   const preservativosEspecializacion = await prisma.specialty.create({
@@ -20,27 +21,10 @@ async function main() {
     },
   });
 
-  const centrosInfectologia = await prisma.service.create({
-    data: {
-      name: 'Centros de Infectología',
-      icon: 'infectologia.svg',
-    },
-  });
-  const infectologiaEspecializacion = await prisma.specialty.create({
-    data: {
-      name: 'Centros de Infectología',
-      service: {
-        connect: {
-          id: centrosInfectologia.id,
-        },
-      },
-    },
-  });
-
   const tests = await prisma.service.create({
     data: {
       name: 'Test de ITS',
-      icon: 'its.svg',
+      icon: ServiceIcon.ITS,
     },
   });
   const testEspecializacion = await prisma.specialty.create({
@@ -57,7 +41,7 @@ async function main() {
   const anticonceptivos = await prisma.service.create({
     data: {
       name: 'Métodos anticonceptivos',
-      icon: 'anticonceptivos.svg',
+      icon: ServiceIcon.MAC,
     },
   });
   const anticonceptivosEspecializacion = await prisma.specialty.create({
@@ -74,7 +58,7 @@ async function main() {
   const vacunatorios = await prisma.service.create({
     data: {
       name: 'Vacunatorios',
-      icon: 'vacuntorios.svg',
+      icon: ServiceIcon.VACUNATORIOS,
     },
   });
   const vacunatoriosEspecializacion = await prisma.specialty.create({
@@ -91,7 +75,7 @@ async function main() {
   const aborto = await prisma.service.create({
     data: {
       name: 'Interrupción voluntaria del embarazo',
-      icon: 'ive.svg',
+      icon: ServiceIcon.ABORTO,
     },
   });
   const aborto1 = await prisma.specialty.create({

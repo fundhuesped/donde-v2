@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import MainContainer from '../components/MainContainer';
+import Head from 'next/head';
 
 type FormValues = {
   email: string;
@@ -22,9 +23,6 @@ const schema = yup
 
 const SignIn: NextPage = () => {
   const router = useRouter();
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   const {
@@ -33,10 +31,10 @@ const SignIn: NextPage = () => {
     formState: { errors },
   } = useForm<FormValues>({ resolver: yupResolver(schema) });
 
-  const handleSignIn = async () => {
+  const handleSignIn = async (data: FormValues) => {
     const res = await signIn('credentials', {
-      email,
-      password,
+      email: data.email,
+      password: data.password,
       redirect: false,
     });
     if (res?.error && res?.status === 401) {
@@ -47,65 +45,70 @@ const SignIn: NextPage = () => {
   };
 
   return (
-    <MainContainer className={'mt-6 pt-8 container mx-auto w-full lg:w-[35rem] md:max-h-[28rem] lg:rounded-b-3xl px-[3rem]'}>
-      <h1 className="text-xl font-bold text-center">Ingresar</h1>
-      <form className={'mt-7'} onSubmit={handleSubmit(handleSignIn)}>
-        <div className="mb-6">
-          <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-            Correo electrónico
-          </label>
+    <>
+      <Head>
+        <title>Dónde - Ingresar</title>
+      </Head>
 
-          <div>
-            <UserIcon style={{ margin: '.4em .5em .5em .7em', position: 'absolute', width: '1.2em' }} color="#E6334C" />
-            <input
-              {...register('email')}
-              id="email"
-              className="input-style placeholder-icon"
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Nombre de usuario"
-              value={email}
-            />
-            <p className="color-primary text-sm">{errors.email?.message}</p>
+      <MainContainer className={'mt-6 pt-8 container mx-auto w-full lg:w-[35rem] md:max-h-[28rem] lg:rounded-b-3xl px-[3rem]'}>
+        <h1 className="text-xl font-bold text-center">Ingresar</h1>
+        <form className={'mt-7'} onSubmit={handleSubmit(handleSignIn)}>
+          <div className="mb-6">
+            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+              Correo electrónico
+            </label>
+
+            <div>
+              <UserIcon style={{ margin: '.4em .5em .5em .7em', position: 'absolute', width: '1.2em' }} color="#E6334C" />
+              <input
+                {...register('email')}
+                id="email"
+                name="email"
+                className="input-style placeholder-icon"
+                placeholder="Nombre de usuario"
+              />
+              <p className="color-primary text-sm">{errors.email?.message}</p>
+            </div>
           </div>
-        </div>
-        <div className="mb-8">
-          <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-            Contraseña
-          </label>
-          <div>
-            <KeyIcon style={{ margin: '.4em .5em .5em .7em', position: 'absolute', width: '1.2em' }} color="#E6334C" />
-            <input
-              {...register('password')}
-              type="password"
-              id="password"
-              className="input-style placeholder-icon"
-              value={password}
-              placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <p className="color-primary text-sm">{errors.password?.message}</p>
-            {error && <p className="color-primary text-sm mt-4">{error}</p>}
+          <div className="mb-8">
+            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+              Contraseña
+            </label>
+            <div>
+              <KeyIcon style={{ margin: '.4em .5em .5em .7em', position: 'absolute', width: '1.2em' }} color="#E6334C" />
+              <input
+                {...register('password')}
+                type="password"
+                id="password"
+                name="password"
+                className="input-style placeholder-icon"
+                placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
+              />
+              <p className="color-primary text-sm">{errors.password?.message}</p>
+              {error && <p className="color-primary text-sm mt-4">{error}</p>}
+            </div>
+            <small className={'flex justify-end pt-3 color-primary font-bold'}>¿Olvidaste la contraseña?</small>
           </div>
-          <small className={'flex justify-end pt-3 color-primary font-bold'}>¿Olvidaste la contraseña?</small>
-        </div>
-        <div className="mb-6">
-          <button type="submit" className="btn-primary">
-            Iniciar sesión
-          </button>
-        </div>
-        <small className={'flex justify-center'}>
-          ¿No tienes cuenta?{' '}
-          <button
-            className="ml-2 color-primary font-bold"
-            onClick={async () => {
-              await router.push('/registro');
-            }}
-          >
-            Solicitar
-          </button>
-        </small>
-      </form>
-    </MainContainer>
+          <div className="mb-6">
+            <button type="submit" className="btn-primary">
+              Iniciar sesión
+            </button>
+          </div>
+          <small className={'flex justify-center'}>
+            ¿No tienes cuenta?{' '}
+            <button
+              className="ml-2 color-primary font-bold"
+              type="button"
+              onClick={async () => {
+                await router.push('/registro');
+              }}
+            >
+              Solicitar
+            </button>
+          </small>
+        </form>
+      </MainContainer>
+    </>
   );
 };
 

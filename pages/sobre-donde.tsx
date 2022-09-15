@@ -1,8 +1,7 @@
-import React from 'react';
-import { Button } from '../components/Button';
-import Link from 'next/link';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { Button } from '../components/Button';
 
 function ComenzarBusquedaButton() {
   const router = useRouter();
@@ -33,7 +32,7 @@ export default function About() {
         </p>
         <p className={'text-base text-justify mb-6'}>
           Buscá el lugar más cercano para acceder a preservativos, métodos anticonceptivos, información sobre interrupción
-          voluntaria del embarazo, test de ITS, vacunatorios y centros de infectología.
+          voluntaria del embarazo, test de infecciones de transmisión sexual (ITS) y vacunatorios.
         </p>
         <p className={'text-base text-justify mb-6'}>Esta es una plataforma de código abierto pensada por Fundación Huésped.</p>
         <p className={'p-2 bg-ultra-light-salmon rounded-2xl text-center'}>

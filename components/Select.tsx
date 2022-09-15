@@ -1,17 +1,28 @@
 import React, { ReactNode, useState } from 'react';
 import classNames from 'classnames';
+import { keys } from 'lodash';
 type Props = {
   placeholder?: string;
   className?: string;
-  items: { value: string; label: string }[];
-} & React.HTMLProps<HTMLSelectElement>;
+  items: { [key: string]: string };
+  onSelect: (event: { currentTarget: { value: string; name: string } }) => void;
+} & Omit<React.HTMLProps<HTMLSelectElement>, 'onSelect'>;
 const Select: React.FC<Props> = (props) => {
   const { className, onSelect: handleSelect, value, placeholder, name, items } = props;
   const [selectedValue, setSelectedValue] = useState(value || placeholder);
   const handleChange = (event: React.FormEvent<HTMLSelectElement>) => {
-    setSelectedValue(event.currentTarget.value);
-    handleSelect && handleSelect(event);
+    const { currentTarget } = event;
+    setSelectedValue(currentTarget.value);
+    const key = keys(items).find((key) => items[key] === currentTarget.value);
+    handleSelect &&
+      handleSelect({
+        currentTarget: {
+          value: key!,
+          name: name!,
+        },
+      });
   };
+
   return (
     <select
       name={name}
@@ -19,9 +30,9 @@ const Select: React.FC<Props> = (props) => {
       onChange={handleChange}
       value={selectedValue}
     >
-      {items.map((item) => (
-        <option key={item.value} value={item.value}>
-          {item.label}
+      {keys(items).map((key) => (
+        <option key={key} value={items[key]}>
+          {items[key]}
         </option>
       ))}
     </select>

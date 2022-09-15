@@ -1,4 +1,12 @@
-import { ChatAltIcon, InformationCircleIcon, LockClosedIcon, LoginIcon, LogoutIcon, MenuIcon } from '@heroicons/react/outline';
+import {
+  ChatAltIcon,
+  InformationCircleIcon,
+  LockClosedIcon,
+  LoginIcon,
+  LogoutIcon,
+  MenuIcon,
+  PlusCircleIcon,
+} from '@heroicons/react/outline';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -90,6 +98,23 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
     );
   };
 
+  const NewEstablishmentLink = () => {
+    return (
+      <Button
+        onClick={async () => {
+          await router.push({ pathname: '/establecimientos/nuevo' });
+          setIsMenuOpen(false);
+        }}
+        className={'border-ultra-light-gray'}
+        type={'tertiary'}
+        alignment={'left'}
+        icon={<PlusCircleIcon className={'h-6 w-5'} />}
+      >
+        Nuevo Establecimiento
+      </Button>
+    );
+  };
+
   const AdminLink = () => {
     return (
       <Button
@@ -123,7 +148,7 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
       </button>
 
       {isMenuOpen && (
-        <div className={'absolute min-h-full w-full left-0 top-10 flex lg:max-w-[20%] lg:left-auto lg:right-0'}>
+        <div className={'absolute min-h-full w-full left-0 top-10 flex lg:max-w-[18%] lg:left-auto lg:right-0'}>
           <MainContainer ref={innerRef} className={'z-50 mt-6 pt-6'}>
             {user && (
               <h3 className={'text-lg text-primary font-bold ml-4 mb-4'}>
@@ -133,6 +158,7 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
             <SobreDondeButton />
             <PreguntasFrecuentesButton />
             {user ? <LogoutButton /> : <LoginButton />}
+            {user && <NewEstablishmentLink />}
             {user?.role === UserRole.ADMIN && <AdminLink />}
           </MainContainer>
         </div>

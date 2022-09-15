@@ -1,70 +1,99 @@
 import React, { RefObject, useState } from 'react';
+import { useRouter } from 'next/router';
+import axios from 'axios';
+import pick from 'lodash/pick';
 import isEmpty from 'lodash/isEmpty';
-import values from 'lodash/values';
 import { usePlacesWidget } from 'react-google-autocomplete';
 import MainContainer from '../../components/MainContainer';
-import { Button } from '../../components/Button';
+import { Button } from '../Button';
 import Select from '../../components/Select';
 import Alert from '../Alert';
-import { EstablishmentSearchStep } from '../../components/Establishment/EstablishmentSearchStep';
-import { AvailableServices } from '../../components/Establishment/AvailableServices';
-import { LocationField } from '../../components/Establishment/LocationField';
-import SERVICES from '../../assets/services.json';
-
-const types = [
-  { value: 'publico', label: 'Público' },
-  { value: 'arancelado', label: 'Arancelado' },
-];
+import { EstablishmentSearchStep } from './EstablishmentSearchStep';
+import { AvailableServices } from './AvailableServices';
+import { LocationField } from './LocationField';
+import isNil from 'lodash/isNil';
+import { establishmentTypes } from '../../model/establishment';
+import { SpecialtyWithService } from '../../model/specialty';
+import _, { isNull, omit, omitBy } from 'lodash';
+import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../../config/thirdParty';
 
 export type EstablishmentModel = {
+  id?: string;
   name: string;
-  address: string;
-  streetName: string;
   type: string;
+  street: string;
+  streetNumber: string | null;
+  apartment: string | null;
+  intersection: string | null;
+  details: string | null;
+  website: string | null;
+  city: string;
+  department: string;
+  province: string;
+  country: string;
+  latitude?: number;
+  longitude?: number;
+  specialties: Set<string>;
   fullAddress: string;
-  streetNumber: string;
-  floor: string;
-  surroundingStreets: string;
-  availableServices: Set<string>;
-  website: string;
   phone: string;
   email: string;
   whatsApp: string;
   tosCheckbox: boolean;
-  location?: { lat: number; lng: number };
-  additionalDescription: string;
   availability: string;
+  address: string;
 };
-const emptyEstablishmentModel = {
+export const emptyEstablishmentModel = {
   name: '',
   address: '',
-  streetName: '',
-  type: 'publico',
-  fullAddress: '',
+  street: '',
   streetNumber: '',
-  floor: '',
-  surroundingStreets: '',
-  availableServices: new Set<string>(),
+  type: 'PUBLIC_INSTITUTION',
+  fullAddress: '',
+  apartment: '',
+  intersection: '',
+  specialties: new Set<string>(),
   website: '',
   phone: '',
   whatsApp: '',
   email: '',
   tosCheckbox: false,
-  additionalDescription: '',
+  details: '',
   availability: '',
+  country: '',
+  province: '',
+  city: '',
+  department: '',
 };
 
-const EstablishmentAdmin = (props: { googleMapsApiKey: string; establishment?: EstablishmentModel }) => {
-  const { googleMapsApiKey, establishment } = props;
+const EstablishmentAdmin = (props: {
+  googleMapsApiKey: string;
+  establishment?: EstablishmentModel;
+  availableSpecialties: SpecialtyWithService[];
+}) => {
+  const { googleMapsApiKey, establishment, availableSpecialties } = props;
+  const router = useRouter();
   const [isError, setIsError] = useState(false);
-  const [isNewEstablishment, setIsNewEstablishment] = useState(isEmpty(establishment));
+  const [isUpdateSuccessful, setIsUpdateSuccessful] = useState(false);
+  const [isSearchStepCompleted, setIsSearchStepCompleted] = useState(false);
+  const isNewEstablishment = isNil(establishment?.id);
   const [form, setForm] = useState<EstablishmentModel>(establishment || emptyEstablishmentModel);
   const [isFormCompleted, setIsFormCompleted] = useState(false);
-
   const handleFormUpdate = (fieldsToUpdate: Partial<EstablishmentModel>) => {
     setForm((prevState) => {
       const updatedForm = { ...prevState, ...fieldsToUpdate };
-      setIsFormCompleted(values(updatedForm).every((field) => field || !isEmpty(field)) && updatedForm.tosCheckbox);
+      const fieldsToValidate = [
+        updatedForm.name,
+        updatedForm.longitude,
+        updatedForm.latitude,
+        updatedForm.tosCheckbox,
+        updatedForm.fullAddress,
+      ];
+      setIsFormCompleted(
+        (fieldsToValidate.every((field) => field || !isEmpty(field)) &&
+          updatedForm.tosCheckbox &&
+          updatedForm.specialties?.size > 0) ||
+          false,
+      );
       return updatedForm;
     });
   };
@@ -75,27 +104,34 @@ const EstablishmentAdmin = (props: { googleMapsApiKey: string; establishment?: E
         address_components,
         geometry: { location },
       } = place;
-      const streetName = address_components.find((component: { types: string[] }) =>
-        component.types.includes('route'),
-      )?.long_name;
+      const country = address_components.find((component: { types: string[] }) => component.types.includes('country'))?.long_name;
+      const province =
+        address_components.find((component: { types: string[] }) => component.types.includes('administrative_area_level_1'))
+          ?.long_name || '';
+      const city =
+        address_components.find((component: { types: string[] }) => component.types.includes('administrative_area_level_2'))
+          ?.long_name || '';
+      const department =
+        address_components.find((component: { types: string[] }) => component.types.includes('locality'))?.long_name || city;
+      const streetName =
+        address_components.find((component: { types: string[] }) => component.types.includes('route'))?.long_name || '';
       const streetNumber = address_components.find((component: { types: string[] }) =>
         component.types.includes('street_number'),
       )?.long_name;
       handleFormUpdate({
         fullAddress: place.formatted_address,
-        streetName,
+        street: streetName,
         streetNumber,
         address: place.formatted_address,
-        location: {
-          lat: location.lat(),
-          lng: location.lng(),
-        },
+        latitude: location.lat(),
+        longitude: location.lng(),
+        country,
+        province,
+        city,
+        department,
       });
     },
-    options: {
-      componentRestrictions: { country: 'ar' },
-      types: ['locality', 'street_address', 'sublocality', 'health', 'intersection'],
-    },
+    options: GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS,
   });
 
   const handleFieldChange = (event: { currentTarget: { value: string; name: string } }) => {
@@ -106,33 +142,70 @@ const EstablishmentAdmin = (props: { googleMapsApiKey: string; establishment?: E
     const { name: elementName, checked } = event.currentTarget;
     handleFormUpdate({ [elementName]: checked });
   };
-  const handleFormSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setIsError(true);
+  const buildEstablishmentPayload = (establishment: Partial<EstablishmentModel>) => {
+    const establishmentPayload = _(establishment)
+      .omitBy(isNull)
+      .pick([
+        'name',
+        'type',
+        'street',
+        'streetNumber',
+        'apartment',
+        'intersection',
+        'details',
+        'website',
+        'city',
+        'department',
+        'province',
+        'country',
+        'latitude',
+        'longitude',
+      ])
+      .value();
+
+    return { ...establishmentPayload, specialties: Array.from(specialties) };
+  };
+  const handleFormSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    try {
+      const payload = buildEstablishmentPayload(form);
+      if (isNewEstablishment) {
+        const { data } = await axios.post('/api/establishments/', payload);
+        await router.push({ pathname: `/establecimientos/${data.id}` });
+      } else {
+        await axios.put(`/api/establishments/${establishment?.id}`, payload);
+        setIsUpdateSuccessful(true);
+        await router.push({ pathname: `/establecimientos/${establishment?.id}` });
+      }
+    } catch (e: any) {
+      console.log(e.message);
+      setIsError(true);
+    }
   };
   const handleContinueButtonClicked = () => {
-    setIsNewEstablishment(false);
+    setIsSearchStepCompleted(true);
   };
 
   const handleChildMouseMove = async (hoverKey: any, childProps: any, mouse: any) => {
-    handleFormUpdate({ location: { lat: mouse.lat, lng: mouse.lng } });
+    handleFormUpdate({ latitude: mouse.lat, longitude: mouse.lng });
   };
   const {
     name,
-    streetName,
+    street,
     address,
     type,
     fullAddress,
     streetNumber,
-    floor,
-    surroundingStreets,
-    availableServices,
+    apartment,
+    intersection,
+    specialties,
     website,
     phone,
     whatsApp,
     email,
     tosCheckbox,
-    location,
-    additionalDescription,
+    latitude,
+    longitude,
+    details,
     availability,
   } = form;
   return (
@@ -140,18 +213,19 @@ const EstablishmentAdmin = (props: { googleMapsApiKey: string; establishment?: E
       <h1 className={'px-content text-justify font-bold text-black'}>Nuevo establecimiento</h1>
       <MainContainer className={'mt-4 pt-8'}>
         <p>Por favor, completá los datos del lugar</p>
-        {isNewEstablishment && (
+        {isNewEstablishment && !isSearchStepCompleted && (
           <EstablishmentSearchStep
             key={'name'}
             onChange={handleFieldChange}
             name={name}
             ref={autocompleteInputRef}
             address={address}
-            location={location}
+            latitude={latitude}
+            longitude={longitude}
             onClick={handleContinueButtonClicked}
           />
         )}
-        {!isNewEstablishment && (
+        {(isSearchStepCompleted || !isNewEstablishment) && (
           <>
             <input
               key={'name'}
@@ -166,23 +240,28 @@ const EstablishmentAdmin = (props: { googleMapsApiKey: string; establishment?: E
               placeholder={'Tipo de establecimiento'}
               onSelect={handleFieldChange}
               value={type}
-              items={types}
+              items={establishmentTypes}
             />
             <LocationField
               key={'surroundingStreets'}
               onChange={handleFieldChange}
               fullAddress={fullAddress}
-              streetName={streetName}
+              street={street}
               streetNumber={streetNumber}
-              floor={floor}
-              surroundingStreets={surroundingStreets}
+              apartment={apartment}
+              intersection={intersection}
               apiKey={googleMapsApiKey}
               onChildMouseMove={handleChildMouseMove}
-              location={location}
+              latitude={latitude}
+              longitude={longitude}
             />
 
             {/*<AvailabilityField key={'workingHourTo'} onChange={handleFormUpdate} availability={availability} />*/}
-            <AvailableServices onChange={handleFormUpdate} availableServices={availableServices} services={SERVICES} />
+            <AvailableServices
+              onChange={handleFormUpdate}
+              activeSpecialties={specialties}
+              availableSpecialties={availableSpecialties}
+            />
             {/*<ContactInfoField
               key={'email'}
               onChange={handleFieldChange}
@@ -197,29 +276,30 @@ const EstablishmentAdmin = (props: { googleMapsApiKey: string; establishment?: E
               Por ejemplo referencias de acceso, o cualquier otro dato relevante sobre el establecimiento
             </p>
             <textarea
-              name={'additionalDescription'}
-              value={additionalDescription}
+              name={'details'}
+              value={details || undefined}
               onChange={handleFieldChange}
               className={'w-full p-4 mt-2 rounded-lg'}
               rows={4}
               placeholder={'Escribí tus comentarios aca'}
             ></textarea>
-            <div className={'flex mt-10 mb-8'}>
+            <label className={'cursor-pointer flex mt-10 mb-8'} htmlFor="terms-checkbox">
               <input
+                id="terms-checkbox"
                 key={'tosCheckbox'}
                 name={'tosCheckbox'}
-                className={'mr-2 '}
+                className={'mr-2 cursor-pointer'}
                 type={'checkbox'}
                 onChange={handleCheckboxChange}
                 checked={tosCheckbox}
               />
               <p className={'text-xs'}>Acepto los términos y condiciones y la publicación de los datos en el sitio</p>
-            </div>
+            </label>
             {isError && (
-              <Alert
-                title={'El establecimiento ya existe'}
-                message={'Este establecimiento ya existe en nuestra base de datos.'}
-              />
+              <Alert title={'Error durante la creacion de establecimiento'} message={'Hubo un problema en el servidor'} />
+            )}
+            {isUpdateSuccessful && (
+              <Alert title={'Edicion exitosa!'} message={'El establecimiento fue editado correctamente'} success={true} />
             )}
             <Button className={'w-full my-5'} disabled={!isFormCompleted} type={'primary'} onClick={handleFormSubmit}>
               Agregar establecimiento

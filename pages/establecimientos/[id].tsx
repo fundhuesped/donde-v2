@@ -1,19 +1,21 @@
-import { Icon } from '../../components/Icon';
-import { Pill } from '../../components/Pill';
-import { Card, CardHeader, CardList, CardListItem, CardParagraph, CardSubHeader } from '../../components/Card';
-import { ClockIcon, GlobeAltIcon, LocationMarkerIcon } from '@heroicons/react/outline';
+import { GlobeAltIcon, LocationMarkerIcon } from '@heroicons/react/outline';
 import { PhoneIcon, ShareIcon } from '@heroicons/react/solid';
-import WhatsAppLogo from '../../assets/images/WhatsAppLogo.svg';
-import React from 'react';
-import places from '../../assets/establishments.json';
-import services from '../../assets/services.json';
-import { formatEstablishmentLocation } from '../../utils/establishments';
-import { SERVICE_ICONS } from '../../config/services';
-import MainContainer from '../../components/MainContainer';
-import { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import { Service } from '../../model/services';
+import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
+import React from 'react';
+import WhatsAppLogo from '../../assets/images/WhatsAppLogo.svg';
+import { Card, CardHeader, CardList, CardListItem, CardParagraph, CardSubHeader } from '../../components/Card';
+import { Icon } from '../../components/Icon';
+import MainContainer from '../../components/MainContainer';
+import { Pill } from '../../components/Pill';
+import { ServiceIcon } from '../../model/services';
+import { formatEstablishmentLocation, formatEstablishmentType } from '../../utils/establishments';
+import { getEstablishment } from '../../server/api/establishments';
+import { SERVICE_ICONS } from '../../config/services';
+import Link from 'next/link';
+import { useAuthenticatedUser } from '../../hooks/useAuthenticatedUser';
+import { Establishment } from '../../model/establishment';
+import _, { partition } from 'lodash';
 
 interface WebSiteButtonProps {
   website: string;
@@ -23,7 +25,13 @@ const WebSiteButton = React.memo<WebSiteButtonProps>((props) => {
   const { website } = props;
   return (
     <a href={website} role="button">
-      <Icon type="secondary" circle={true} icon={<GlobeAltIcon className={'text-primary'} />} label={'Sitio Web'} />
+      <Icon
+        type="secondary"
+        circle={true}
+        className={'bg-white'}
+        icon={<GlobeAltIcon className={'text-primary'} />}
+        label={'Sitio Web'}
+      />
     </a>
   );
 });
@@ -36,7 +44,13 @@ const PhoneButton = React.memo<PhoneButtonProps>((props) => {
   const { phone } = props;
   return (
     <a href={'tel:' + phone} role="button">
-      <Icon type="secondary" circle={true} icon={<PhoneIcon className={'text-primary'} />} label={'Llamar'} />
+      <Icon
+        type="secondary"
+        circle={true}
+        className={'bg-white'}
+        icon={<PhoneIcon className={'text-primary'} />}
+        label={'Llamar'}
+      />
     </a>
   );
 });
@@ -50,14 +64,14 @@ const WhatsAppButton = React.memo<WhatsAppButtonProps>((props) => {
   return (
     // https://faq.whatsapp.com/general/chats/how-to-use-click-to-chat
     <a href={'https://wa.me/' + phone} role="button">
-      <Icon type="secondary" circle={true} icon={<WhatsAppLogo />} label={'WhatsApp'} />
+      <Icon type="secondary" circle={true} className={'bg-white'} icon={<WhatsAppLogo />} label={'WhatsApp'} />
     </a>
   );
 });
 
 const ShareButton = (props: { name: string }) => {
   const { name } = props;
-  const supportsSharing = !!navigator.share;
+  const supportsSharing = typeof navigator !== 'undefined' && !!navigator.share;
   const shareEstablishment = () => {
     const title = `${name} | Dónde`;
     const url = window.location.href;
@@ -74,6 +88,7 @@ const ShareButton = (props: { name: string }) => {
       <Icon
         type="secondary"
         circle={true}
+        className={'bg-white'}
         icon={<ShareIcon className={'text-primary'} />}
         label={supportsSharing ? 'Compartir' : 'Copiar'}
       />
@@ -81,11 +96,26 @@ const ShareButton = (props: { name: string }) => {
   );
 };
 
-export const Establishment: NextPage = React.memo(() => {
-  const router = useRouter();
-  const { id: idParam } = router.query;
-  const id = idParam && typeof idParam === 'string' ? parseInt(idParam) : undefined;
-  const establishment = places.find((place) => place.placeId === id);
+type ServerSideProps = {
+  establishment: Establishment | undefined;
+};
+
+export const getServerSideProps: GetServerSideProps<ServerSideProps> = async ({ query }) => {
+  let establishment;
+  try {
+    establishment = await getEstablishment(query.id);
+  } catch {
+    establishment = undefined;
+  }
+  return {
+    props: {
+      establishment,
+    },
+  };
+};
+
+export const EstablishmentPage: NextPage<ServerSideProps> = React.memo(({ establishment }) => {
+  const user = useAuthenticatedUser();
 
   if (!establishment) {
     return null;
@@ -94,15 +124,10 @@ export const Establishment: NextPage = React.memo(() => {
   const addressNotes = null;
   const whatsAppPhone = null;
 
-  const {
-    establecimiento: name,
-    tipo: type,
-    web_testeo: website,
-    tel_testeo: phone,
-    observaciones_testeo: additionalInfo,
-  } = establishment;
+  const { name, website, details: additionalInfo } = establishment;
 
   const address = formatEstablishmentLocation(establishment);
+  const establishmentType = formatEstablishmentType(establishment);
 
   return (
     <>
@@ -110,11 +135,17 @@ export const Establishment: NextPage = React.memo(() => {
         <title>Dónde - {name}</title>
       </Head>
 
-      <MainContainer className={'lg:w-desktop lg:mx-auto'}>
+      <MainContainer className={'lg:w-desktop lg:mx-auto relative'}>
         <header className={'mt-10 ml-4'}>
           <CardHeader className={'font-title text-lg'}>{name}</CardHeader>
-          <CardParagraph>{type}</CardParagraph>
+          <CardParagraph>{establishmentType}</CardParagraph>
         </header>
+        {user && (
+          <Link href={`/establecimientos/editar/${establishment.id}`}>
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+            <a className={'color-primary font-bold absolute top-8 right-8'}>Editar</a>
+          </Link>
+        )}
         <Card className={'my-4 pb-6'}>
           <CardList>
             <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
@@ -124,13 +155,31 @@ export const Establishment: NextPage = React.memo(() => {
 
           <CardSubHeader>Servicios disponibles</CardSubHeader>
           <CardList>
-            {services.map((service: Service) => {
-              return (
-                <CardListItem key={service.id} icon={SERVICE_ICONS[service.id]}>
-                  {service.name}
-                </CardListItem>
-              );
-            })}
+            {_(establishment.specialties)
+              .groupBy(({ specialty }) => specialty.service.id)
+              .values()
+              .sortBy((specialties) => specialties[0]!.specialty.service.name)
+              .map((specialties) => {
+                const [[defaultSpecialty], [subSpecialty]] = partition(specialties, ({ specialty }) => specialty.name === null);
+                const specialty = subSpecialty ?? defaultSpecialty;
+                if (!specialty) {
+                  return null;
+                }
+                const service = specialty.specialty.service;
+                return (
+                  <CardListItem key={service.id} icon={SERVICE_ICONS[service.icon as ServiceIcon]}>
+                    {specialty.specialty.name ? (
+                      <>
+                        <span>{service.name}</span>
+                        <span className={'text-medium-gray text-xs'}> - {specialty.specialty.name}</span>
+                      </>
+                    ) : (
+                      service.name
+                    )}
+                  </CardListItem>
+                );
+              })
+              .value()}
           </CardList>
 
           {additionalInfo && (
@@ -147,7 +196,6 @@ export const Establishment: NextPage = React.memo(() => {
 
         <div className={'flex justify-center space-x-7 my-9'}>
           {website && <WebSiteButton website={website} />}
-          {phone && <PhoneButton phone={phone} />}
           <ShareButton name={name} />
           {whatsAppPhone && <WhatsAppButton phone={whatsAppPhone} />}
         </div>
@@ -156,4 +204,4 @@ export const Establishment: NextPage = React.memo(() => {
   );
 });
 
-export default Establishment;
+export default EstablishmentPage;
