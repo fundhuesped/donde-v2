@@ -94,7 +94,7 @@ const ShareButton = (props: { name: string }) => {
 
 type Props = React.PropsWithChildren<{
   establishment: Establishment;
-  setActiveEstablishment: Dispatch<SetStateAction<string>>;
+  setActiveEstablishment: (x: string | null) => void;
 }>;
 
 export const EstablishmentDetail = React.memo<Props>((props) => {
