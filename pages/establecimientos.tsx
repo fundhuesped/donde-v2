@@ -3,7 +3,7 @@ import axios from 'axios';
 import classNames from 'classnames';
 import GoogleMapReact, { Bounds } from 'google-map-react';
 import { uniqBy } from 'lodash';
-import { GetStaticProps, NextPage } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -30,7 +30,7 @@ type AvailableService = {
   icon: string;
 };
 
-type StaticProps = {
+type ServerSideProps = {
   googleMapsApiKey: string;
   availableServices: AvailableService[];
 };
@@ -43,7 +43,7 @@ export const establishmentWithinBoundaries = (marker: Coordinates, bounds: Bound
   return marker.lat < northLat && marker.lat > southLat && marker.lng > westLng && marker.lng < eastLng;
 };
 
-export const getStaticProps: GetStaticProps<StaticProps> = async () => {
+export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
   const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY;
   if (!googleMapsApiKey) {
     throw new Error('Environment variable not set: GOOGLE_MAPS_API_KEY');
@@ -53,7 +53,6 @@ export const getStaticProps: GetStaticProps<StaticProps> = async () => {
     props: {
       googleMapsApiKey,
       availableServices: services,
-      fallback: false,
     },
   };
 };
@@ -92,7 +91,7 @@ const getMapPosition = (coords: Coordinates | undefined): MapPosition => {
   return { coords: defaultCoords, zoom: defaultZoom };
 };
 
-const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey, availableServices }) => {
+const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices }) => {
   const router = useRouter();
 
   const { coords: serializedCoords } = router.query;
@@ -103,6 +102,7 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey, availableServ
   );
 
   const [mapPosition, setMapPosition] = useState<MapPosition | null>(null);
+  const [mapVisibility, setMapVisibility] = useState('block');
 
   const servicesQueryParam = router.query.services;
   const searchedServiceIds = servicesQueryParam
@@ -148,10 +148,8 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey, availableServ
     }
   };
 
-  const [mapVisibility, setMapVisibility] = useState('hidden');
-
   useEffect(() => {
-    setMapVisibility('hidden');
+    setMapVisibility('block');
   }, []);
 
   const searchedServices =

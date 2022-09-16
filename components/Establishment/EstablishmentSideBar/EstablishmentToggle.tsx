@@ -33,7 +33,13 @@ const EstablishmentToggle = React.memo<Props>((props) => {
         </div>
 
         <label className="inline-flex relative items-center cursor-pointer z-30">
-          <input type="checkbox" onChange={() => changeMapVisibility(mapVisibility)} id="toggle" className="sr-only peer"></input>
+          <input
+            checked={mapVisibility == 'block' ? true : false}
+            type="checkbox"
+            onChange={() => changeMapVisibility(mapVisibility)}
+            id="toggle"
+            className="sr-only peer"
+          ></input>
           <div className="w-80 h-10 bg-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-white rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:bg-primary after:rounded-full after:h-10 after:w-40 after:transition-all peer-checked:bg-white"></div>
         </label>
       </div>
