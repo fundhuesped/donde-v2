@@ -23,16 +23,21 @@ const EstablishmentToggle = React.memo<Props>((props) => {
       }
     >
       <div className={mapVisibility == 'block' ? 'absolute top-2' : ''}>
-        <div className="absolute flex justify-center ">
-          <span className="color-black z-40 bg-transparent" style={{ margin: '.5em 1em .5em 3em' }}>
-            Ver lista
-          </span>
-          <span className="color-black z-40 bg-transparent" style={{ margin: '.5em 1em .5em 5em' }}>
-            Ver Mapa
-          </span>
-        </div>
-
         <label className="inline-flex relative items-center cursor-pointer z-30">
+          <div className="absolute flex justify-center ">
+            <span
+              className={`z-40 bg-transparent text-${mapVisibility == 'hidden' ? 'white' : 'primary'}`}
+              style={{ margin: '.5em 1em .5em 3em' }}
+            >
+              Ver lista
+            </span>
+            <span
+              className={`z-40 bg-transparent text-${mapVisibility == 'hidden' ? 'primary' : 'white'}`}
+              style={{ margin: '.5em 1em .5em 5em' }}
+            >
+              Ver Mapa
+            </span>
+          </div>
           <input
             checked={mapVisibility == 'block' ? true : false}
             type="checkbox"
