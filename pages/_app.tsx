@@ -1,15 +1,15 @@
-import '../styles/globals.css';
-import type { AppProps } from 'next/app';
-import { useState } from 'react';
-import { Header } from '../components/Header';
-import '@fontsource/poppins';
-import '@fontsource/poppins/700.css';
 import '@fontsource/open-sans';
 import '@fontsource/open-sans/700.css';
-import { SessionProvider } from 'next-auth/react';
-import Script from 'next/script';
+import '@fontsource/poppins';
+import '@fontsource/poppins/700.css';
 import axios from 'axios';
+import { SessionProvider } from 'next-auth/react';
+import type { AppProps } from 'next/app';
+import Script from 'next/script';
+import { useState } from 'react';
 import { responseTransformer } from '../axios/transformers';
+import { Header } from '../components/Header';
+import '../styles/globals.css';
 
 axios.defaults.transformResponse = [responseTransformer];
 

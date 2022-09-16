@@ -8,20 +8,33 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
-import { Card, CardHeader, CardList, CardListItem } from '../components/Card';
+import { Card, CardHeader, CardList, CardListItem, CardSubHeader } from '../components/Card';
+import EstablishmentSideBar from '../components/Establishment/EstablishmentSideBar';
+import EstablishmentHeader from '../components/Establishment/EstablishmentSideBar/EstablishmentHeader';
+import EstablishmentList from '../components/Establishment/EstablishmentSideBar/EstablishmentList';
+import EstablishmentToggle from '../components/Establishment/EstablishmentSideBar/EstablishmentToggle';
 import MainContainer from '../components/MainContainer';
 import { Marker, UserMarker } from '../components/Marker';
 import { Pill } from '../components/Pill';
 import { SERVICE_ICONS } from '../config/services';
 import { Establishment } from '../model/establishment';
 import { ServiceIcon } from '../model/services';
+import { prismaClient } from '../server/prisma/client';
 import { formatEstablishmentLocation } from '../utils/establishments';
 
 const USER_MARKER_ID = 'USER_MARKER_ID';
 
+type AvailableService = {
+  id: string;
+  name: string;
+  icon: string;
+};
+
 type StaticProps = {
   googleMapsApiKey: string;
+  availableServices: AvailableService[];
 };
+
 export const establishmentWithinBoundaries = (marker: Coordinates, bounds: Bounds) => {
   const northLat = bounds.nw.lat;
   const southLat = bounds.sw.lat;
@@ -35,9 +48,11 @@ export const getStaticProps: GetStaticProps<StaticProps> = async () => {
   if (!googleMapsApiKey) {
     throw new Error('Environment variable not set: GOOGLE_MAPS_API_KEY');
   }
+  const services = await prismaClient.service.findMany();
   return {
     props: {
       googleMapsApiKey,
+      availableServices: services,
     },
   };
 };
@@ -76,7 +91,7 @@ const getMapPosition = (coords: Coordinates | undefined): MapPosition => {
   return { coords: defaultCoords, zoom: defaultZoom };
 };
 
-const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
+const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey, availableServices }) => {
   const router = useRouter();
 
   const { coords: serializedCoords } = router.query;
@@ -132,7 +147,31 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
     }
   };
 
-  console.log(establishments, 'filteredEstablishments');
+  const [mapVisibility, setMapVisibility] = useState('hidden');
+
+  useEffect(() => {
+    setMapVisibility('hidden');
+  }, []);
+
+  const searchedServices =
+    searchedServiceIds && searchedServiceIds.length !== 0
+      ? availableServices.filter((service) => searchedServiceIds.includes(service.id))
+      : availableServices;
+  const services = searchedServices.map((service) => service);
+
+  const establishmentInScreen =
+    establishments &&
+    establishments.filter(
+      (establishment: Establishment) =>
+        bounds !== null &&
+        establishmentWithinBoundaries(
+          {
+            lat: establishment.latitude,
+            lng: establishment.longitude,
+          },
+          bounds,
+        ),
+    );
 
   return (
     <>
@@ -140,10 +179,25 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
         <title>Dónde - Establecimientos</title>
       </Head>
 
-      <MainContainer className={'relative overflow-hidden px-0'}>
+      <MainContainer className={'relative px-0 h-screen'}>
         {mapPosition && (
-          <>
-            <div className={classNames('w-full lg:mx-auto')} style={{ height: 'calc(100vh - 56px - 1.5rem)' }}>
+          <div className={'flex'}>
+            <div className={'w-full lg:w-1/3'}>
+              <EstablishmentSideBar>
+                <div>
+                  <EstablishmentHeader services={services}>
+                    <EstablishmentToggle setMapVisibility={setMapVisibility} mapVisibility={mapVisibility} />
+                  </EstablishmentHeader>
+                </div>
+                {mapVisibility == 'hidden' ? (
+                  <EstablishmentList services={services} establishments={establishmentInScreen} />
+                ) : (
+                  ''
+                )}
+              </EstablishmentSideBar>
+            </div>
+
+            <div className={classNames(`${mapVisibility} z-50 lg:block lg:w-2/3 lg:mx-auto h-4/6 lg:h-screen`)}>
               <GoogleMapReact
                 bootstrapURLKeys={{
                   key: googleMapsApiKey,
@@ -189,14 +243,12 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
                     })}
               </GoogleMapReact>
             </div>
-
+            {/* {activeEstablishment !== null && <EstablishmentDetail establishment={activeEstablishment} />} */}
             {activeEstablishment !== null && (
-              <Card
-                onClick={handleDetailsClick}
-                className={'fixed bottom-8 right-4 left-4 cursor-pointer lg:w-desktop lg:mx-auto'}
-              >
+              <Card onClick={handleDetailsClick} className={'fixed top-8 right-4 left-4 cursor-pointer lg:w-1/4 lg:mx-auto'}>
                 <header className={'flex flex-row justify-between items-center mb-2'}>
                   <CardHeader>{activeEstablishment.name}</CardHeader>
+                  {/* <CardParagraph>{activeEstablishment}</CardParagraph> */}
                   <button className={'w-5 text-dark-gray'} onClick={handleClose}>
                     <XIcon />
                   </button>
@@ -206,6 +258,7 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
                     {formatEstablishmentLocation(activeEstablishment)}
                     {/*<span className={'text-xs text-medium-gray'}>- A 400 metros</span>*/}
                   </CardListItem>
+                  <CardSubHeader>Servicios disponibles</CardSubHeader>
                   {uniqBy(
                     activeEstablishment.specialties.map((specialty) => specialty.specialty.service),
                     (service) => service.id,
@@ -220,7 +273,7 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey }) => {
                 </footer>
               </Card>
             )}
-          </>
+          </div>
         )}
       </MainContainer>
     </>
