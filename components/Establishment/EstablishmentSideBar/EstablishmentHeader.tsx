@@ -1,16 +1,17 @@
-import { ChevronLeftIcon, PlusIcon } from '@heroicons/react/outline';
+import { PlusIcon } from '@heroicons/react/outline';
 import React from 'react';
 import Filter from '../../../assets/images/Filter.svg';
+import { BackButton } from '../../BackButton';
 import { Pill } from '../../Pill';
 
 type Props = React.PropsWithChildren<{ services: { id: string; name: string }[] }>;
 const EstablishmentHeader = React.memo<Props>((props) => {
   const { children, services } = props;
   return (
-    <div className={'mt-1  mb-6 lg:mb-0 bg-white lg:bg-inherit'}>
+    <div className={'mt-1 mb-6 lg:mb-0 bg-white lg:bg-inherit'}>
       <div className="py-4 lg:py-1">
         <div className="w-full flex justify-between">
-          <ChevronLeftIcon className="block lg:hidden w-6 mx-3" />
+          <BackButton className="ml-2 lg:absolute lg:left-4" />
           <h2 className={'font-title text-lg lg:text-2xl text-black font-bold'}>Resultados de búsqueda</h2>
           <div className="block lg:hidden mx-5">
             <button className="flex bg-inherent text-primary border-none text-sm font-bold mt-1.5">
@@ -23,9 +24,9 @@ const EstablishmentHeader = React.memo<Props>((props) => {
         </div>
 
         <div className="mt-4 w-full flex-col lg:flex-row flex justify-between">
-          <div className="flex flex-wrap w-3/4 h-auto ml-2 lg:ml-0">
+          <div className="flex flex-wrap w-full lg:w-3/4 h-auto ml-2 lg:ml-0">
             {services.map((service) => (
-              <Pill type={'secondary'} className={'py-2 mr-2 mb-1 w-fit h-max-12'} key={service.id}>
+              <Pill type={'secondary'} className={'py-2 mr-1 mb-1 lg:py-1 w-fit h-max-12'} key={service.id}>
                 {service.name}
               </Pill>
             ))}

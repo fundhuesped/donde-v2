@@ -1,14 +1,14 @@
 import React from 'react';
 
 type Props = React.PropsWithChildren<{
-  setMapVisibility: Dispatch<SetStateAction<string>>;
+  setMapVisibility: (x: string) => void;
   mapVisibility: string;
 }>;
 
 const EstablishmentToggle = React.memo<Props>((props) => {
   const { setMapVisibility, mapVisibility } = props;
 
-  const changeMapVisibility = (visibility) => {
+  const changeMapVisibility = (visibility: string) => {
     if (visibility == 'hidden') {
       setMapVisibility('block');
     } else {
@@ -17,8 +17,12 @@ const EstablishmentToggle = React.memo<Props>((props) => {
   };
 
   return (
-    <div className="flex justify-center lg:hidden transition duration-200 ease-in w-full rounded-t-3xl lg:rounded-none pt-4 h-12 bg-ultra-light-gray">
-      <div className="">
+    <div
+      className={
+        'flex justify-center lg:hidden transition duration-200 ease-in w-full rounded-t-3xl lg:rounded-none pt-4 h-12 bg-ultra-light-gray '
+      }
+    >
+      <div className={mapVisibility == 'block' ? 'absolute top-2' : ''}>
         <div className="absolute flex justify-center ">
           <span className="color-black z-40 bg-transparent" style={{ margin: '.5em 1em .5em 3em' }}>
             Ver lista

@@ -182,7 +182,7 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey, availableServ
       <MainContainer className={'relative px-0 h-screen'}>
         {mapPosition && (
           <div className={'flex'}>
-            <div className={'w-full lg:w-1/3'}>
+            <div className={'absolute lg:relative w-full lg:w-1/3'}>
               <EstablishmentSideBar>
                 <div>
                   <EstablishmentHeader services={services}>
@@ -197,7 +197,8 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey, availableServ
               </EstablishmentSideBar>
             </div>
 
-            <div className={classNames(`${mapVisibility} z-50 lg:block lg:w-2/3 lg:mx-auto h-4/6 lg:h-screen`)}>
+            {/* <div className={classNames(`${mapVisibility} lg:block lg:w-2/3 lg:mx-auto h-4/6 lg:h-screen`)}> */}
+            <div className={classNames(`${mapVisibility} lg:block w-full h-screen lg:mx-auto`)}>
               <GoogleMapReact
                 bootstrapURLKeys={{
                   key: googleMapsApiKey,
