@@ -133,38 +133,38 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
     );
   };
 
-  return (
-    !isEstablishment && (
-      <header className={'flex items-center py-5 px-content'}>
-        {!isHome && <BackButton />}
+  return !isEstablishment ? (
+    <header className={'flex items-center py-5 px-content'}>
+      {!isHome && <BackButton />}
 
-        <Link href="/">
-          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-          <a>
-            <DondeLogo className={'translate-y-0.5'} />
-          </a>
-        </Link>
+      <Link href="/">
+        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+        <a>
+          <DondeLogo className={'translate-y-0.5'} />
+        </a>
+      </Link>
 
-        <button onClick={handleClickMenu} className={'ml-auto'}>
-          <MenuIcon className="w-6 text-dark-gray" />
-        </button>
+      <button onClick={handleClickMenu} className={'ml-auto'}>
+        <MenuIcon className="w-6 text-dark-gray" />
+      </button>
 
-        {isMenuOpen && (
-          <div className={'absolute min-h-full w-full left-0 top-10 flex lg:max-w-[20%] lg:left-auto lg:right-0'}>
-            <MainContainer ref={innerRef} className={'z-50 mt-6 pt-6'}>
-              {user && (
-                <h3 className={'text-lg text-primary font-bold ml-4 mb-4'}>
-                  ¡Hola {user.firstName} {user.lastName}!
-                </h3>
-              )}
-              <SobreDondeButton />
-              <PreguntasFrecuentesButton />
-              {user ? <LogoutButton /> : <LoginButton />}
-              {user?.role === UserRole.ADMIN && <AdminLink />}
-            </MainContainer>
-          </div>
-        )}
-      </header>
-    )
+      {isMenuOpen && (
+        <div className={'absolute min-h-full w-full left-0 top-10 flex lg:max-w-[20%] lg:left-auto lg:right-0'}>
+          <MainContainer ref={innerRef} className={'z-50 mt-6 pt-6'}>
+            {user && (
+              <h3 className={'text-lg text-primary font-bold ml-4 mb-4'}>
+                ¡Hola {user.firstName} {user.lastName}!
+              </h3>
+            )}
+            <SobreDondeButton />
+            <PreguntasFrecuentesButton />
+            {user ? <LogoutButton /> : <LoginButton />}
+            {user?.role === UserRole.ADMIN && <AdminLink />}
+          </MainContainer>
+        </div>
+      )}
+    </header>
+  ) : (
+    <></>
   );
 }
