@@ -1,13 +1,10 @@
 import { GlobeAltIcon, LocationMarkerIcon, PhoneIcon, ShareIcon, XIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
-import { partition } from 'lodash';
 import Link from 'next/link';
 import React from 'react';
 import WhatsAppLogo from '../../../assets/images/WhatsAppLogo.svg';
-import { SERVICE_ICONS } from '../../../config/services';
 import { useAuthenticatedUser } from '../../../hooks/useAuthenticatedUser';
 import { Establishment } from '../../../model/establishment';
-import { ServiceIcon } from '../../../model/services';
 import { formatEstablishmentLocation, formatEstablishmentType } from '../../../utils/establishments';
 import { Card, CardHeader, CardList, CardListItem, CardParagraph, CardSubHeader } from '../../Card';
 import { Icon } from '../../Icon';
@@ -141,7 +138,7 @@ export const EstablishmentDetail = React.memo<Props>((props) => {
         </CardListItem>
         {/*<span className={'text-xs text-medium-gray'}>- A 400 metros</span>*/}
         <CardSubHeader>Servicios disponibles</CardSubHeader>
-        <CardList>
+        {/* <CardList>
           {_(establishment.specialties)
             .groupBy(({ specialty }) => specialty.service.id)
             .values()
@@ -167,7 +164,7 @@ export const EstablishmentDetail = React.memo<Props>((props) => {
               );
             })
             .value()}
-        </CardList>
+        </CardList> */}
       </CardList>
       <footer className={classNames('mt-4')}>
         {additionalInfo && (
