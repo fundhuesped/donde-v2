@@ -53,6 +53,7 @@ export const getStaticProps: GetStaticProps<StaticProps> = async () => {
     props: {
       googleMapsApiKey,
       availableServices: services,
+      fallback: false,
     },
   };
 };
@@ -246,7 +247,10 @@ const Establishments: NextPage<StaticProps> = ({ googleMapsApiKey, availableServ
             </div>
             {/* {activeEstablishment !== null && <EstablishmentDetail establishment={activeEstablishment} />} */}
             {activeEstablishment !== null && (
-              <Card onClick={handleDetailsClick} className={'fixed top-8 right-4 left-4 cursor-pointer lg:w-1/4 lg:mx-auto'}>
+              <Card
+                onClick={handleDetailsClick}
+                className={`${mapVisibility} lg:block fixed top-8 right-4 left-4 cursor-pointer lg:w-1/4 lg:mx-auto`}
+              >
                 <header className={'flex flex-row justify-between items-center mb-2'}>
                   <CardHeader>{activeEstablishment.name}</CardHeader>
                   {/* <CardParagraph>{activeEstablishment}</CardParagraph> */}
