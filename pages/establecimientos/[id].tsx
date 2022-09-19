@@ -1,21 +1,22 @@
 import { GlobeAltIcon, LocationMarkerIcon } from '@heroicons/react/outline';
 import { PhoneIcon, ShareIcon } from '@heroicons/react/solid';
+import _, { partition } from 'lodash';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import React from 'react';
 import WhatsAppLogo from '../../assets/images/WhatsAppLogo.svg';
+import { BackButton } from '../../components/BackButton';
 import { Card, CardHeader, CardList, CardListItem, CardParagraph, CardSubHeader } from '../../components/Card';
 import { Icon } from '../../components/Icon';
 import MainContainer from '../../components/MainContainer';
 import { Pill } from '../../components/Pill';
-import { ServiceIcon } from '../../model/services';
-import { formatEstablishmentLocation, formatEstablishmentType } from '../../utils/establishments';
-import { getEstablishment } from '../../server/api/establishments';
 import { SERVICE_ICONS } from '../../config/services';
-import Link from 'next/link';
 import { useAuthenticatedUser } from '../../hooks/useAuthenticatedUser';
 import { Establishment } from '../../model/establishment';
-import _, { partition } from 'lodash';
+import { ServiceIcon } from '../../model/services';
+import { getEstablishment } from '../../server/api/establishments';
+import { formatEstablishmentLocation, formatEstablishmentType } from '../../utils/establishments';
 
 interface WebSiteButtonProps {
   website: string;
@@ -135,6 +136,9 @@ export const EstablishmentPage: NextPage<ServerSideProps> = React.memo(({ establ
         <title>Dónde - {name}</title>
       </Head>
 
+      <div className="w-full p-5">
+        <BackButton className="ml-2 lg:absolute lg:left-4" />
+      </div>
       <MainContainer className={'lg:w-desktop lg:mx-auto relative'}>
         <header className={'mt-10 ml-4'}>
           <CardHeader className={'font-title text-lg'}>{name}</CardHeader>

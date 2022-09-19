@@ -35,7 +35,7 @@ const EstablishmentList = React.memo<Props>((props) => {
     <div
       className={`${
         mapVisibility == 'hidden' ? 'block' : 'hidden'
-      } lg:block bg-ultra-light-gray lg:bg-inherit w-100 h-full lg:h-5/6 scroll-style overflow-auto hover:overflow-y-scroll relative mt-4`}
+      } lg:block bg-ultra-light-gray lg:bg-inherit w-100 h-full lg:h-5/6 scroll-style overflow-auto relative mt-4`}
     >
       {establishments && establishments.length ? (
         establishments.map((establishment) => {
@@ -64,8 +64,8 @@ const EstablishmentList = React.memo<Props>((props) => {
                   </CardListItem>
                 ))}
               </CardList>
-              <footer className={classNames('mt-4 w-full p-0 flex justify-start')}>
-                <Pill className="{text-xs}">Cargado por Fundación Huesped</Pill>
+              <footer className={classNames('mt-4 w-full p-0 flex justify-start cursor-pointer')}>
+                <Pill className="{text-xs }">Cargado por Fundación Huesped</Pill>
               </footer>
             </Card>
           );

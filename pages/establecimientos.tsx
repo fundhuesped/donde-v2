@@ -243,7 +243,7 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
             {activeEstablishment !== null && (
               <Card
                 onClick={handleDetailsClick}
-                className={`${mapVisibility} lg:block fixed top-16 lg:top-8 right-4 left-4 lg:left-96 cursor-pointer lg:w-1/4`}
+                className={`${mapVisibility} lg:block fixed top-16 lg:top-8 right-4 left-4 lg:left-80 lg:ml-44 ml-0 cursor-pointer lg:w-1/4`}
               >
                 <header className={'flex flex-row justify-between items-center mb-2'}>
                   <CardHeader>{activeEstablishment.name}</CardHeader>
