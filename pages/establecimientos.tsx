@@ -183,7 +183,7 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
           <div className={'flex'}>
             <div className={'absolute lg:relative w-full lg:w-1/3'}>
               <EstablishmentSideBar>
-                <div>
+                <div className="h-fit">
                   <EstablishmentHeader services={services}>
                     <EstablishmentToggle setMapVisibility={setMapVisibility} mapVisibility={mapVisibility} />
                   </EstablishmentHeader>
