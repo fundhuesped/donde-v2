@@ -1,26 +1,20 @@
-import { LocationMarkerIcon, XIcon } from '@heroicons/react/outline';
 import axios from 'axios';
 import classNames from 'classnames';
 import GoogleMapReact, { Bounds } from 'google-map-react';
-import { uniqBy } from 'lodash';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
-import { Card, CardHeader, CardList, CardListItem, CardSubHeader } from '../components/Card';
 import EstablishmentSideBar from '../components/Establishment/EstablishmentSideBar';
+import { EstablishmentDetail } from '../components/Establishment/EstablishmentSideBar/EstablishmentDetail';
 import EstablishmentHeader from '../components/Establishment/EstablishmentSideBar/EstablishmentHeader';
 import EstablishmentList from '../components/Establishment/EstablishmentSideBar/EstablishmentList';
 import EstablishmentToggle from '../components/Establishment/EstablishmentSideBar/EstablishmentToggle';
 import MainContainer from '../components/MainContainer';
 import { Marker, UserMarker } from '../components/Marker';
-import { Pill } from '../components/Pill';
-import { SERVICE_ICONS } from '../config/services';
 import { Establishment } from '../model/establishment';
-import { ServiceIcon } from '../model/services';
 import { prismaClient } from '../server/prisma/client';
-import { formatEstablishmentLocation } from '../utils/establishments';
 
 const USER_MARKER_ID = 'USER_MARKER_ID';
 
@@ -238,40 +232,14 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
                       );
                     })}
               </GoogleMapReact>
+              {activeEstablishment !== null && (
+                <EstablishmentDetail
+                  activeEstablishment={activeEstablishment}
+                  setActiveEstablishment={setActiveEstablishment}
+                  className={mapVisibility}
+                />
+              )}
             </div>
-            {/* {activeEstablishment !== null && <EstablishmentDetail establishment={activeEstablishment} />} */}
-            {activeEstablishment !== null && (
-              <Card
-                onClick={handleDetailsClick}
-                className={`${mapVisibility} lg:block fixed top-16 lg:top-8 right-4 left-4 lg:left-80 lg:ml-44 ml-0 cursor-pointer lg:w-1/4`}
-              >
-                <header className={'flex flex-row justify-between items-center mb-2'}>
-                  <CardHeader>{activeEstablishment.name}</CardHeader>
-                  {/* <CardParagraph>{activeEstablishment}</CardParagraph> */}
-                  <button className={'w-5 text-dark-gray'} onClick={handleClose}>
-                    <XIcon />
-                  </button>
-                </header>
-                <CardList>
-                  <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
-                    {formatEstablishmentLocation(activeEstablishment)}
-                    {/*<span className={'text-xs text-medium-gray'}>- A 400 metros</span>*/}
-                  </CardListItem>
-                  <CardSubHeader>Servicios disponibles</CardSubHeader>
-                  {uniqBy(
-                    activeEstablishment.specialties.map((specialty) => specialty.specialty.service),
-                    (service) => service.id,
-                  ).map((service) => (
-                    <CardListItem key={service.id} icon={SERVICE_ICONS[service.icon as ServiceIcon]}>
-                      {service.name}
-                    </CardListItem>
-                  ))}
-                </CardList>
-                <footer className={classNames('mt-4')}>
-                  <Pill>Cargado por Fundación Huesped</Pill>
-                </footer>
-              </Card>
-            )}
           </div>
         )}
       </MainContainer>

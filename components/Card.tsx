@@ -47,10 +47,12 @@ export const CardParagraph = React.memo<CardParagraphProps>((props) => {
   return <p className={classNames(className, 'text-black text-sm leading-6')}>{children}</p>;
 });
 
-type CardIconListProps = React.PropsWithChildren<{}>;
+type CardIconListProps = React.PropsWithChildren<{
+  id?: string;
+}>;
 export const CardList = React.memo<CardIconListProps>((props) => {
-  const { children } = props;
-  return <ul>{children}</ul>;
+  const { children, id } = props;
+  return <ul id={id}>{children}</ul>;
 });
 
 type CardIconLineProps = React.PropsWithChildren<{

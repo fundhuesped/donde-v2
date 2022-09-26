@@ -1,14 +1,16 @@
-import { GlobeAltIcon, LocationMarkerIcon, PhoneIcon, ShareIcon, XIcon } from '@heroicons/react/outline';
+import { GlobeAltIcon, PhoneIcon, ShareIcon, XIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
 import WhatsAppLogo from '../../../assets/images/WhatsAppLogo.svg';
 import { useAuthenticatedUser } from '../../../hooks/useAuthenticatedUser';
 import { Establishment } from '../../../model/establishment';
-import { formatEstablishmentLocation, formatEstablishmentType } from '../../../utils/establishments';
-import { Card, CardHeader, CardList, CardListItem, CardParagraph, CardSubHeader } from '../../Card';
+import { formatEstablishmentType } from '../../../utils/establishments';
+import { Card, CardHeader, CardParagraph, CardSubHeader } from '../../Card';
 import { Icon } from '../../Icon';
 import { Pill } from '../../Pill';
+import EstablishmentTab from '../EstablishmentTab';
 
 interface WebSiteButtonProps {
   website: string;
@@ -90,83 +92,56 @@ const ShareButton = (props: { name: string }) => {
 };
 
 type Props = React.PropsWithChildren<{
-  establishment: Establishment;
-  setActiveEstablishment: (x: string | null) => void;
+  activeEstablishment: Establishment;
+  setActiveEstablishment: (value: Establishment | null) => void;
+  className: string;
 }>;
 
 export const EstablishmentDetail = React.memo<Props>((props) => {
-  const { establishment, setActiveEstablishment } = props;
+  const { activeEstablishment, className, setActiveEstablishment } = props;
+
+  const router = useRouter();
 
   const user = useAuthenticatedUser();
 
-  if (!establishment) {
+  if (!activeEstablishment) {
     return null;
   }
 
-  const addressNotes = null;
   const whatsAppPhone = null;
 
-  const { id, name, website, details: additionalInfo } = establishment;
+  const { id, name, website, details: additionalInfo } = activeEstablishment;
 
-  const address = formatEstablishmentLocation(establishment);
-  const establishmentType = formatEstablishmentType(establishment);
+  const establishmentType = formatEstablishmentType(activeEstablishment);
 
   const handleClose = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     setActiveEstablishment(null);
   };
 
-  return (
-    <Card key={id} className={'fixed top-8 right-4 left-4 cursor-pointer lg:w-1/4 lg:mx-auto'}>
-      <header className={'flex flex-row justify-between items-center mb-2'}>
-        <CardHeader>{name}</CardHeader>
-        <CardParagraph>{establishmentType}</CardParagraph>
+  const handleDetailsClick = (id: string) => {
+    router.push(`/establecimientos/${id}`);
+  };
 
-        <button className={'w-5 text-dark-gray'} onClick={handleClose}>
+  return (
+    <Card key={id} className={`${className} fixed lg:block top-16 lg:top-8 right-4 left-4 lg:left-1/3 lg:w-1/3`}>
+      <header className={'flex flex-row justify-between items-center mb-2'}>
+        <CardHeader className="pt-2">
+          {name}
+          <CardParagraph className="font-light">{establishmentType}</CardParagraph>
+        </CardHeader>
+        {user && (
+          <Link href={`/establecimientos/editar/${activeEstablishment.id}`}>
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+            <a className={'color-primary font-bold absolute top-8 right-12'}>Editar</a>
+          </Link>
+        )}
+        <button className={'w-5 text-dark-gray mr-1 pb-4'} onClick={handleClose}>
           <XIcon />
         </button>
       </header>
-      {user && (
-        <Link href={`/establecimientos/editar/${establishment.id}`}>
-          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-          <a className={'color-primary font-bold absolute top-8 right-8'}>Editar</a>
-        </Link>
-      )}
-      <CardList>
-        <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
-          {address} {addressNotes && <span className={'text-xs text-medium-gray'}>- {addressNotes}</span>}
-        </CardListItem>
-        {/*<span className={'text-xs text-medium-gray'}>- A 400 metros</span>*/}
-        <CardSubHeader>Servicios disponibles</CardSubHeader>
-        {/* <CardList>
-          {_(establishment.specialties)
-            .groupBy(({ specialty }) => specialty.service.id)
-            .values()
-            .sortBy((specialties) => specialties[0]!.specialty.service.name)
-            .map((specialties) => {
-              const [[defaultSpecialty], [subSpecialty]] = partition(specialties, ({ specialty }) => specialty.name === null);
-              const specialty = subSpecialty ?? defaultSpecialty;
-              if (!specialty) {
-                return null;
-              }
-              const service = specialty.specialty.service;
-              return (
-                <CardListItem key={service.id} icon={SERVICE_ICONS[service.icon as ServiceIcon]}>
-                  {specialty.specialty.name ? (
-                    <>
-                      <span>{service.name}</span>
-                      <span className={'text-medium-gray text-xs'}> - {specialty.specialty.name}</span>
-                    </>
-                  ) : (
-                    service.name
-                  )}
-                </CardListItem>
-              );
-            })
-            .value()}
-        </CardList> */}
-      </CardList>
-      <footer className={classNames('mt-4')}>
+      <EstablishmentTab activeEstablishment={activeEstablishment} />
+      <footer className={classNames('mt-4 flex justify-center')}>
         {additionalInfo && (
           <>
             <CardSubHeader>Otros datos</CardSubHeader>
@@ -174,10 +149,12 @@ export const EstablishmentDetail = React.memo<Props>((props) => {
           </>
         )}
 
-        <Pill>Cargado por Fundación Huesped</Pill>
+        <Pill onClick={() => handleDetailsClick(activeEstablishment.id)} className={'cursor-pointer'}>
+          Cargado por Fundación Huesped
+        </Pill>
       </footer>
 
-      <div className={'flex justify-center space-x-7 my-9'}>
+      <div className={'flex justify-center space-x-7 my-3'}>
         {website && <WebSiteButton website={website} />}
         <ShareButton name={name} />
         {whatsAppPhone && <WhatsAppButton phone={whatsAppPhone} />}

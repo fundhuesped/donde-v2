@@ -50,11 +50,6 @@ const EstablishmentList = React.memo<Props>((props) => {
                 <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
                   {establishment.street} {establishment.streetNumber}
                 </CardListItem>
-                {/* {establishment.horario_testeo ? (
-                  <CardListItem icon={<ClockIcon className={'text-primary'} />}>Horario</CardListItem>
-                ) : (
-                  ''
-                )} */}
                 {uniqBy(
                   establishment.specialties.map((specialty) => specialty.specialty.service),
                   (service) => service.id,
