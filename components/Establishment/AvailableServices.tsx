@@ -1,6 +1,5 @@
-import React from 'react';
-import { SpecialtyWithService } from '../../model/specialty';
 import { groupBy, partition } from 'lodash';
+import { SpecialtyWithService } from '../../model/specialty';
 
 type AvailableServicesProps = {
   onChange: (event: { [key: string]: any }) => void;

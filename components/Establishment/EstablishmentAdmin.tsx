@@ -1,21 +1,20 @@
-import React, { RefObject, useState } from 'react';
-import { useRouter } from 'next/router';
 import axios from 'axios';
-import pick from 'lodash/pick';
+import _, { isNull } from 'lodash';
 import isEmpty from 'lodash/isEmpty';
+import isNil from 'lodash/isNil';
+import { useRouter } from 'next/router';
+import React, { RefObject, useState } from 'react';
 import { usePlacesWidget } from 'react-google-autocomplete';
 import MainContainer from '../../components/MainContainer';
-import { Button } from '../Button';
 import Select from '../../components/Select';
-import Alert from '../Alert';
-import { EstablishmentSearchStep } from './EstablishmentSearchStep';
-import { AvailableServices } from './AvailableServices';
-import { LocationField } from './LocationField';
-import isNil from 'lodash/isNil';
+import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../../config/thirdParty';
 import { establishmentTypes } from '../../model/establishment';
 import { SpecialtyWithService } from '../../model/specialty';
-import _, { isNull, omit, omitBy } from 'lodash';
-import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../../config/thirdParty';
+import Alert from '../Alert';
+import { Button } from '../Button';
+import { AvailableServices } from './AvailableServices';
+import { EstablishmentSearchStep } from './EstablishmentSearchStep';
+import { LocationField } from './LocationField';
 
 export type EstablishmentModel = {
   id?: string;
@@ -208,9 +207,14 @@ const EstablishmentAdmin = (props: {
     details,
     availability,
   } = form;
+
   return (
     <>
-      <h1 className={'px-content text-justify font-bold text-black'}>Nuevo establecimiento</h1>
+      {isNewEstablishment ? (
+        <h1 className={'px-content pt-2 text-justify font-bold text-black'}>Nuevo establecimiento</h1>
+      ) : (
+        <h1 className={'px-content pt-2 text-justify font-bold text-black'}>Editar</h1>
+      )}
       <MainContainer className={'mt-4 pt-8'}>
         <p>Por favor, completá los datos del lugar</p>
         {isNewEstablishment && !isSearchStepCompleted && (

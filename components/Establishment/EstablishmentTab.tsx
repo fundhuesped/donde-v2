@@ -22,7 +22,7 @@ const EstablishmentTab = React.memo<Props>((props) => {
       <div className="flex flex-wrap">
         <div className="w-full">
           <ul
-            className="flex mb-0 list-none flex-nowrap pt-3 flex-row hover:overflow-x-scroll overflow-y-hidden scroll-style w-auto"
+            className="flex mb-0 list-none flex-nowrap pt-3 flex-row overflow-x-auto overflow-y-hidden scroll-style w-auto"
             role="tablist"
           >
             <li className="mr-2 mb-2 last:mr-0 flex-auto text-center">

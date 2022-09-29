@@ -35,7 +35,7 @@ const EstablishmentList = React.memo<Props>((props) => {
     <div
       className={`${
         mapVisibility == 'hidden' ? 'block' : 'hidden'
-      } lg:block bg-ultra-light-gray lg:bg-inherit w-100 h-full lg:h-5/6 scroll-style overflow-auto relative mt-4`}
+      } lg:block bg-ultra-light-gray lg:bg-inherit w-100 h-full lg:h-4/6 scroll-style overflow-auto relative mt-4`}
     >
       {establishments && establishments.length ? (
         establishments.map((establishment) => {
@@ -72,21 +72,21 @@ const EstablishmentList = React.memo<Props>((props) => {
             <br />
             Probá cambiar o eliminar algunos filtros o ajustar la zona de búsqueda.
           </p>
-          {user?.role === UserRole.ADMIN && (
-            <div className="hidden lg:block mt-4">
-              <button
-                onClick={async () => {
-                  await router.push({ pathname: '/establecimientos/nuevo' });
-                }}
-                className="flex bg-inherent text-primary border-none text-sm font-bold mt-1.5 mr-3"
-              >
-                <span className="mr-1 mt-0.5">
-                  <PlusIcon className=" w-4 mx-1 text-primary" />
-                </span>
-                Agregar establecimiento
-              </button>
-            </div>
-          )}
+        </div>
+      )}
+      {user?.role === UserRole.ADMIN && (
+        <div className="hidden lg:block mt-4">
+          <button
+            onClick={async () => {
+              await router.push({ pathname: '/establecimientos/nuevo' });
+            }}
+            className="flex bg-inherent text-primary border-none text-sm font-bold mt-1.5 mr-3"
+          >
+            <span className="mr-1 mt-0.5">
+              <PlusIcon className=" w-4 mx-1 text-primary" />
+            </span>
+            Agregar establecimiento
+          </button>
         </div>
       )}
     </div>
