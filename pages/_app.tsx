@@ -22,6 +22,21 @@ export default function MyApp({ Component, pageProps: { session, ...pageProps } 
   return (
     <SessionProvider session={session}>
       <div className={`min-h-screen flex flex-col ${showScroll}`}>
+        {/* <!-- Global site tag (gtag.js) - Google Analytics --> */}
+        <Script
+          strategy="lazyOnload"
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
+        />
+        <Script id="my-script" strategy="lazyOnload">
+          {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {
+          page_path: window.location.pathname,
+          });
+        `}
+        </Script>
         <Header onMenuOpening={handleDisableScroll} />
         <Component {...pageProps} />
         <Script src="https://go.botmaker.com/rest/webchat/p/HLENDRUDLS/init.js" />
