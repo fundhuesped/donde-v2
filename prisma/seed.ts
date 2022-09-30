@@ -10,31 +10,11 @@ async function main() {
       icon: ServiceIcon.PRESERVATIVOS,
     },
   });
-  const preservativosEspecializacion = await prisma.specialty.create({
-    data: {
-      name: 'preservativos',
-      service: {
-        connect: {
-          id: preservativos.id,
-        },
-      },
-    },
-  });
 
   const tests = await prisma.service.create({
     data: {
       name: 'Test de ITS',
       icon: ServiceIcon.ITS,
-    },
-  });
-  const testEspecializacion = await prisma.specialty.create({
-    data: {
-      name: 'Test de ITS',
-      service: {
-        connect: {
-          id: tests.id,
-        },
-      },
     },
   });
 
@@ -44,31 +24,11 @@ async function main() {
       icon: ServiceIcon.MAC,
     },
   });
-  const anticonceptivosEspecializacion = await prisma.specialty.create({
-    data: {
-      name: 'Métodos anticonceptivo',
-      service: {
-        connect: {
-          id: anticonceptivos.id,
-        },
-      },
-    },
-  });
 
   const vacunatorios = await prisma.service.create({
     data: {
       name: 'Vacunatorios',
       icon: ServiceIcon.VACUNATORIOS,
-    },
-  });
-  const vacunatoriosEspecializacion = await prisma.specialty.create({
-    data: {
-      name: 'Vacunatorios',
-      service: {
-        connect: {
-          id: vacunatorios.id,
-        },
-      },
     },
   });
 
@@ -78,46 +38,7 @@ async function main() {
       icon: ServiceIcon.ABORTO,
     },
   });
-  const aborto1 = await prisma.specialty.create({
-    data: {
-      name: 'No está confirmado que asesore o realice interrupción legal del embarazo',
-      service: {
-        connect: {
-          id: aborto.id,
-        },
-      },
-    },
-  });
-  const aborto2 = await prisma.specialty.create({
-    data: {
-      name: 'Ofrece asesoramiento sobre interrupción voluntaria del embarazo',
-      service: {
-        connect: {
-          id: aborto.id,
-        },
-      },
-    },
-  });
-  const aborto3 = await prisma.specialty.create({
-    data: {
-      name: 'Ofrece asesoramiento y derivación sobre interrupción voluntaria del embarazo',
-      service: {
-        connect: {
-          id: aborto.id,
-        },
-      },
-    },
-  });
-  const aborto4 = await prisma.specialty.create({
-    data: {
-      name: 'Ofrece asesoramiento y realiza interrupción legal del embarazo',
-      service: {
-        connect: {
-          id: aborto.id,
-        },
-      },
-    },
-  });
+
 
   await prisma.establishment.create({
     data: {
@@ -132,25 +53,29 @@ async function main() {
       status: EstablishmentStatus.PUBLISHED,
       latitude: -34.62994536,
       longitude: -58.39187918,
-      specialties: {
+      services: {
         create: [
           {
-            specialty: {
+            service: {
               connect: {
-                id: preservativosEspecializacion.id,
+                id: preservativos.id,
               },
             },
+            details: 'Siempre disponible',
+            phoneNumber: '51351433541'
           },
           {
-            specialty: {
+            service: {
               connect: {
-                id: aborto1.id,
+                id: aborto.id,
               },
             },
+            details: 'Ofrece asesoramiento y realiza interrupción legal del embarazo',
+            phoneNumber: '51351433541'
           },
-        ],
+        ]
       },
-    },
+    }
   });
 }
 

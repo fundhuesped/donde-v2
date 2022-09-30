@@ -6,58 +6,56 @@ import EstablishmentAdmin, {
 } from '../../../components/Establishment/EstablishmentAdmin';
 import { tryGetGoogleMapsApiKey } from '../../../utils/establishments';
 import * as PrismaClient from '@prisma/client';
-import { getSpecialtiesWithServices } from '../../../server/api/specialties';
+import { getServices } from '../../../server/api/services';
 import { getEstablishment } from '../../../server/api/establishments';
 import { Establishment } from '../../../model/establishment';
-import { SpecialtyWithService } from '../../../model/specialty';
+import { Service } from '../../../model/services';
 
 type ServerSideProps = {
   googleMapsApiKey: string;
   establishment: Establishment;
-  availableSpecialties: SpecialtyWithService[];
+  availableServices: Service[];
 };
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (context) => {
   const { id } = context.query;
   const establishment = await getEstablishment(id);
   const googleMapsApiKey = tryGetGoogleMapsApiKey();
-  const availableSpecialties = await getSpecialtiesWithServices();
+  const availableServices = await getServices();
 
   return {
     props: {
       googleMapsApiKey,
       establishment,
-      availableSpecialties,
+      availableServices,
     },
   };
 };
 
 const mapIntoEstablishmentModel = (establishment: Establishment): EstablishmentModel => {
-  const specialties =
-    establishment.specialties.map(
+  const services =
+    establishment.services.map(
       (
-        specialty: PrismaClient.SpecialtiesOnEstablishments & {
-          specialty: PrismaClient.Specialty & { service: PrismaClient.Service };
-        },
+        service
       ) => {
-        return specialty.specialty.id;
+        return service.id;
       },
     ) || [];
 
   return {
     ...emptyEstablishmentModel,
     ...establishment,
-    specialties: new Set(specialties),
+    services: new Set(services),
     fullAddress: establishment.province,
   };
 };
-const EstablishmentEdit: NextPage<ServerSideProps> = ({ googleMapsApiKey, establishment, availableSpecialties }) => {
+const EstablishmentEdit: NextPage<ServerSideProps> = ({ googleMapsApiKey, establishment, availableServices }) => {
   const establishmentModel = mapIntoEstablishmentModel(establishment);
   return (
     <EstablishmentAdmin
       googleMapsApiKey={googleMapsApiKey}
       establishment={establishmentModel}
-      availableSpecialties={availableSpecialties}
+      availableServices={availableServices}
     />
   );
 };

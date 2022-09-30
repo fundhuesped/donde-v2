@@ -159,23 +159,23 @@ export const EstablishmentPage: NextPage<ServerSideProps> = React.memo(({ establ
 
           <CardSubHeader>Servicios disponibles</CardSubHeader>
           <CardList>
-            {_(establishment.specialties)
-              .groupBy(({ specialty }) => specialty.service.id)
+            {_(establishment.services)
+              .groupBy(({ service }) => service.id)
               .values()
-              .sortBy((specialties) => specialties[0]!.specialty.service.name)
-              .map((specialties) => {
-                const [[defaultSpecialty], [subSpecialty]] = partition(specialties, ({ specialty }) => specialty.name === null);
-                const specialty = subSpecialty ?? defaultSpecialty;
-                if (!specialty) {
+              .sortBy((services) => services[0]!.service.name)
+              .map((services) => {
+                const [[defaultService], [subService]] = partition(services, ({ service }) => service.name === null);
+                const serviceOnEstablishment = subService ?? defaultService;
+                if (!serviceOnEstablishment) {
                   return null;
                 }
-                const service = specialty.specialty.service;
+                const service = serviceOnEstablishment.service;
                 return (
                   <CardListItem key={service.id} icon={SERVICE_ICONS[service.icon as ServiceIcon]}>
-                    {specialty.specialty.name ? (
+                    {service.name ? (
                       <>
                         <span>{service.name}</span>
-                        <span className={'text-medium-gray text-xs'}> - {specialty.specialty.name}</span>
+                        <span className={'text-medium-gray text-xs'}> - {service.name}</span>
                       </>
                     ) : (
                       service.name

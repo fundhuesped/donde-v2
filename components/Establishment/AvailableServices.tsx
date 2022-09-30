@@ -1,80 +1,80 @@
 import { groupBy, partition } from 'lodash';
-import { SpecialtyWithService } from '../../model/specialty';
+import { Service } from '../../model/services';
 
 type AvailableServicesProps = {
   onChange: (event: { [key: string]: any }) => void;
-  availableSpecialties: SpecialtyWithService[];
-  activeSpecialties: Set<string>;
+  availableServices: Service[];
+  activeServices: Set<string>;
 };
 
 export const AvailableServices = (props: AvailableServicesProps) => {
-  const { activeSpecialties, availableSpecialties, onChange } = props;
-  const isChecked = (specialtyId: string) => activeSpecialties.has(specialtyId);
-  const removeSpecialties = (specialties: string[]) => {
-    const updatedSpecialties = new Set(activeSpecialties);
-    specialties.forEach((specialtyId) => updatedSpecialties.delete(specialtyId));
-    onChange({ specialties: updatedSpecialties });
+  const { activeServices, availableServices, onChange } = props;
+  const isChecked = (serviceId: string) => activeServices.has(serviceId);
+  const removeServices = (services: string[]) => {
+    const updatedServices = new Set(activeServices);
+    services.forEach((serviceId) => updatedServices.delete(serviceId));
+    onChange({ services: updatedServices });
   };
-  const addSpecialty = (defaultSpecialty: string, selectedSpecialty: string | undefined, otherSpecialties: string[]) => {
-    const updatedSpecialties = new Set(activeSpecialties);
-    otherSpecialties.forEach((specialtyId) => updatedSpecialties.delete(specialtyId));
-    updatedSpecialties.add(defaultSpecialty);
-    if (selectedSpecialty) {
-      updatedSpecialties.add(selectedSpecialty);
+  const addService = (defaultService: string, selectedService: string | undefined, otherServices: string[]) => {
+    const updatedServices = new Set(activeServices);
+    otherServices.forEach((serviceId) => updatedServices.delete(serviceId));
+    updatedServices.add(defaultService);
+    if (selectedService) {
+      updatedServices.add(selectedService);
     }
-    onChange({ specialties: updatedSpecialties });
+    onChange({ services: updatedServices });
   };
 
   return (
     <>
       <h1 className={'my-6 text-justify font-bold text-black'}>¿Qué servicios brinda el lugar?</h1>
       <ul className={'flex flex-col'}>
-        {Object.values(groupBy(availableSpecialties, (specialty) => specialty.service.id)).map((specialties) => {
-          const [[defaultSpecialty], otherSpecialties] = partition(specialties, (specialty) => specialty.name === null);
-          if (!defaultSpecialty) {
+        {Object.values(groupBy(availableServices, (service) => service.id)).map((services) => {
+          const [[defaultService], otherServices] = partition(services, (service) => service.name === null);
+          if (!defaultService) {
             return null;
           }
-          const checked = isChecked(defaultSpecialty.id);
-          const selectedSpecialty = otherSpecialties.find((specialty) => activeSpecialties.has(specialty.id));
+          const checked = isChecked(defaultService.id);
+          const selectedService = otherServices.find((service) => activeServices.has(service.id));
           return (
-            <li key={defaultSpecialty.id}>
-              <label className={'cursor-pointer'} htmlFor={`checkbox-${defaultSpecialty.id}`}>
+            <li key={defaultService.id}>
+              <label className={'cursor-pointer'} htmlFor={`checkbox-${defaultService.id}`}>
                 <input
-                  id={`checkbox-${defaultSpecialty.id}`}
-                  name={defaultSpecialty.id}
+                  id={`checkbox-${defaultService.id}`}
+                  name={defaultService.id}
                   className={'cursor-pointer mr-2'}
                   type={'checkbox'}
                   checked={checked}
                   onChange={(event) => {
                     const checked = event.target.checked;
                     if (checked) {
-                      addSpecialty(
-                        defaultSpecialty.id,
-                        selectedSpecialty?.id ?? otherSpecialties[0]?.id,
-                        otherSpecialties.map(({ id }) => id),
+                      addService(
+                        defaultService.id,
+                        selectedService?.id ?? otherServices[0]?.id,
+                        otherServices.map(({ id }) => id),
                       );
                     } else {
-                      removeSpecialties(specialties.map(({ id }) => id));
+                      removeServices(services.map(({ id }) => id));
                     }
                   }}
                 />
-                {defaultSpecialty.service.name}
+                {defaultService.name}
               </label>
-              {otherSpecialties.length > 0 && (
+              {otherServices.length > 0 && (
                 <select
                   className={'bg-white border border-light-gray rounded ml-2'}
-                  defaultValue={selectedSpecialty?.id}
+                  defaultValue={selectedService?.id}
                   onChange={(event) =>
-                    addSpecialty(
-                      defaultSpecialty.id,
+                    addService(
+                      defaultService.id,
                       event.target.value,
-                      otherSpecialties.map(({ id }) => id),
+                      otherServices.map(({ id }) => id),
                     )
                   }
                 >
-                  {otherSpecialties.map((specialty) => (
-                    <option key={specialty.id} value={specialty.id}>
-                      {specialty.name}
+                  {otherServices.map((service) => (
+                    <option key={service.id} value={service.id}>
+                      {service.name}
                     </option>
                   ))}
                 </select>

@@ -33,12 +33,10 @@ const getEstablishments = async (req: NextApiRequest, res: NextApiResponse<any>)
 
   if (services && services.length !== 0) {
     where = {
-      specialties: {
+      services: {
         some: {
-          specialty: {
-            service: {
-              id: { in: services },
-            },
+          service: {
+            id: { in: services },
           },
         },
       },
@@ -47,13 +45,9 @@ const getEstablishments = async (req: NextApiRequest, res: NextApiResponse<any>)
   const establishments = await prismaClient.establishment.findMany({
     where: where,
     include: {
-      specialties: {
+      services: {
         include: {
-          specialty: {
-            include: {
-              service: true,
-            },
-          },
+          service: true,
         },
       },
     },
@@ -65,30 +59,30 @@ const createEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
   if (!establishmentSchema.isValidSync(req.body)) {
     return res.status(400).end();
   }
-  const specialties = mapSpecialtiesToPrismaObject(req.body.specialties);
+  const services = mapServicesToPrismaObject(req.body.services);
   const establishment = await prismaClient.establishment.create({
     data: {
       ...req.body,
       status: EstablishmentStatus.PUBLISHED,
-      specialties: specialties,
+      services: services,
     },
   });
   return res.status(201).json(establishment);
 };
 
-export const mapSpecialtiesToPrismaObject = (specialties: string[]) => {
-  if (isEmpty(specialties)) return { create: [] };
-  const specialtiesObjects = specialties.map((specialtyId: string) => {
+export const mapServicesToPrismaObject = (services: string[]) => {
+  if (isEmpty(services)) return { create: [] };
+  const servicesObjects = services.map((serviceId: string) => {
     return {
-      specialty: {
+      service: {
         connect: {
-          id: specialtyId,
+          id: serviceId,
         },
       },
     };
   });
   return {
-    create: specialtiesObjects,
+    create: servicesObjects,
   };
 };
 

@@ -3,7 +3,7 @@ import { NextApiHandler } from 'next';
 import { prismaClient } from '../../../server/prisma/client';
 import { editEstablishmentSchema as establishmentSchema } from '../../../model/establishment';
 import { EstablishmentStatus } from '@prisma/client';
-import { mapSpecialtiesToPrismaObject } from './index';
+import { mapServicesToPrismaObject } from './index';
 import * as yup from 'yup';
 
 const handler: NextApiHandler = async (req, res) => {
@@ -28,17 +28,15 @@ const getEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) 
       id: id,
     },
     include: {
-      specialties: {
+      services: {
         include: {
-          specialty: {
-            include: {
-              service: true,
-            },
+          service: true,
+          openingTimes: true
           },
         },
       },
-    },
   });
+
   if (establishment) {
     return res.status(200).json(establishment);
   }
@@ -55,12 +53,12 @@ const updateEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
       id: req.body.id,
     },
     data: {
-      specialties: {
+      services: {
         deleteMany: {},
       },
     },
   });
-  const specialties = mapSpecialtiesToPrismaObject(req.body.specialties!);
+  const services = mapServicesToPrismaObject(req.body.services!);
   const createNewEstablishment = prismaClient.establishment.update({
     where: {
       id: req.body.id,
@@ -68,7 +66,7 @@ const updateEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
     data: {
       ...req.body,
       status: EstablishmentStatus.PUBLISHED,
-      specialties,
+      services,
     },
   });
   await prismaClient.$transaction([disconnectPreviouslyConnectedFeatures, createNewEstablishment]);

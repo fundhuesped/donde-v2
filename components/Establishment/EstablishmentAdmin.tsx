@@ -9,7 +9,7 @@ import MainContainer from '../../components/MainContainer';
 import Select from '../../components/Select';
 import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../../config/thirdParty';
 import { establishmentTypes } from '../../model/establishment';
-import { SpecialtyWithService } from '../../model/specialty';
+import { Service } from '../../model/services';
 import Alert from '../Alert';
 import { Button } from '../Button';
 import { AvailableServices } from './AvailableServices';
@@ -32,7 +32,7 @@ export type EstablishmentModel = {
   country: string;
   latitude?: number;
   longitude?: number;
-  specialties: Set<string>;
+  services: Set<string>;
   fullAddress: string;
   phone: string;
   email: string;
@@ -50,7 +50,7 @@ export const emptyEstablishmentModel = {
   fullAddress: '',
   apartment: '',
   intersection: '',
-  specialties: new Set<string>(),
+  services: new Set<string>(),
   website: '',
   phone: '',
   whatsApp: '',
@@ -67,9 +67,9 @@ export const emptyEstablishmentModel = {
 const EstablishmentAdmin = (props: {
   googleMapsApiKey: string;
   establishment?: EstablishmentModel;
-  availableSpecialties: SpecialtyWithService[];
+  availableServices: Service[];
 }) => {
-  const { googleMapsApiKey, establishment, availableSpecialties } = props;
+  const { googleMapsApiKey, establishment, availableServices } = props;
   const router = useRouter();
   const [isError, setIsError] = useState(false);
   const [isUpdateSuccessful, setIsUpdateSuccessful] = useState(false);
@@ -90,7 +90,7 @@ const EstablishmentAdmin = (props: {
       setIsFormCompleted(
         (fieldsToValidate.every((field) => field || !isEmpty(field)) &&
           updatedForm.tosCheckbox &&
-          updatedForm.specialties?.size > 0) ||
+          updatedForm.services?.size > 0) ||
           false,
       );
       return updatedForm;
@@ -162,7 +162,7 @@ const EstablishmentAdmin = (props: {
       ])
       .value();
 
-    return { ...establishmentPayload, specialties: Array.from(specialties) };
+    return { ...establishmentPayload, services: Array.from(services) };
   };
   const handleFormSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
@@ -196,7 +196,7 @@ const EstablishmentAdmin = (props: {
     streetNumber,
     apartment,
     intersection,
-    specialties,
+    services,
     website,
     phone,
     whatsApp,
@@ -263,8 +263,8 @@ const EstablishmentAdmin = (props: {
             {/*<AvailabilityField key={'workingHourTo'} onChange={handleFormUpdate} availability={availability} />*/}
             <AvailableServices
               onChange={handleFormUpdate}
-              activeSpecialties={specialties}
-              availableSpecialties={availableSpecialties}
+              activeServices={services}
+              availableServices={availableServices}
             />
             {/*<ContactInfoField
               key={'email'}

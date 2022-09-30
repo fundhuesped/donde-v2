@@ -6,7 +6,8 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { SERVICE_ICONS } from '../../../config/services';
 import { useAuthenticatedUser } from '../../../hooks/useAuthenticatedUser';
-import { ServiceIcon } from '../../../model/services';
+import { ServiceOnEstablishment } from '../../../model/serviceOnEstablishment';
+import { Service, ServiceIcon, serviceSchema } from '../../../model/services';
 import { Card, CardHeader, CardList, CardListItem } from '../../Card';
 import { Pill } from '../../Pill';
 
@@ -17,7 +18,7 @@ type Props = React.PropsWithChildren<{
     id: string;
     street: string;
     streetNumber: string;
-    specialties: { specialty: { id: string; name: string; service: { id: string; icon: string; name: string } } }[];
+    services: ServiceOnEstablishment[];
   }[];
   mapVisibility: string;
 }>;
@@ -51,7 +52,7 @@ const EstablishmentList = React.memo<Props>((props) => {
                   {establishment.street} {establishment.streetNumber}
                 </CardListItem>
                 {uniqBy(
-                  establishment.specialties.map((specialty) => specialty.specialty.service),
+                  establishment.services.map((service) => service.service),
                   (service) => service.id,
                 ).map((service) => (
                   <CardListItem key={service.id} icon={SERVICE_ICONS[service.icon as ServiceIcon]}>

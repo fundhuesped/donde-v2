@@ -42,8 +42,8 @@ const EstablishmentTab = React.memo<Props>((props) => {
                 Información
               </a>
             </li>
-            {activeEstablishment.specialties.map((specialty, idx) => (
-              <li key={specialty.specialty.service.id} className="mb-2 mr-2 last:mr-0 flex-auto text-center">
+            {activeEstablishment.services.map((service, idx) => (
+              <li key={service.id} className="mb-2 mr-2 last:mr-0 flex-auto text-center">
                 <a
                   className={
                     'truncate ... nav-link font-medium text-xs leading-tight uppercase border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 hover:border-transparent hover:bg-gray-100 focus:border-primary block  bg-white ' +
@@ -54,10 +54,10 @@ const EstablishmentTab = React.memo<Props>((props) => {
                     setOpenTab(idx);
                   }}
                   data-toggle="tab"
-                  href={`#id-${specialty.specialty.service.id}`}
+                  href={`#id-${service.service.id}`}
                   role="tablist"
                 >
-                  {specialty.specialty.service.name}
+                  {service.service.name}
                 </a>
               </li>
             ))}
@@ -71,35 +71,35 @@ const EstablishmentTab = React.memo<Props>((props) => {
                       {address} {addressNotes && <span className={'text-xs text-medium-gray'}>- {addressNotes}</span>}
                     </CardListItem>
                     <CardSubHeader>Servicios disponibles</CardSubHeader>
-                    {activeEstablishment.specialties.map((specialty) => (
+                    {activeEstablishment.services.map((service) => (
                       <CardListItem
-                        key={specialty.specialty.service.id}
-                        icon={SERVICE_ICONS[specialty.specialty.service.icon as ServiceIcon]}
+                        key={service.id}
+                        icon={SERVICE_ICONS[service.service.icon as ServiceIcon]}
                       >
-                        {specialty.specialty.service.name && (
+                        {service.service.name && (
                           <>
-                            <span>{specialty.specialty.service.name}</span>
+                            <span>{service.service.name}</span>
                           </>
                         )}
                       </CardListItem>
                     ))}
                   </CardList>
                 </div>
-                {activeEstablishment.specialties.map((specialty, idx) => (
+                {activeEstablishment.services.map((service, idx) => (
                   <div
-                    key={specialty.specialty.service.id}
+                    key={service.id}
                     className={openTab === idx ? 'block' : 'hidden'}
-                    id={`id-${specialty.specialty.service.id}`}
+                    id={`id-${service.service.id}`}
                   >
-                    <CardList id={`tabs-${specialty.specialty.service.id}`}>
+                    <CardList id={`tabs-${service.service.id}`}>
                       <CardListItem icon={<ClockIcon className={'text-primary'} />}>Horario</CardListItem>
                       <CardSubHeader className={'text-medium-gray text-xs'}>
-                        Descripción del servicio - <span>{specialty.specialty.service.name}</span>
+                        Descripción del servicio - <span>{service.details}</span>
                       </CardSubHeader>
-                      <CardListItem icon={SERVICE_ICONS[specialty.specialty.service.icon as ServiceIcon]}>
-                        {specialty.specialty.service.name && (
+                      <CardListItem icon={SERVICE_ICONS[service.service.icon as ServiceIcon]}>
+                        {service.service.name && (
                           <>
-                            <p>{specialty.specialty.name}</p>
+                            <p>{service.service.name}</p>
                           </>
                         )}
                       </CardListItem>

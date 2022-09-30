@@ -59,17 +59,7 @@ model Service {
   id          String      @id @default(uuid()) @db.Uuid
   name        String      @unique @db.VarChar(100)
   icon        String      @db.VarChar(100)
-  specialties Specialty[]
-}
-
-model Specialty {
-  id             String                        @id @default(uuid()) @db.Uuid
-  name           String?                       @unique @db.VarChar(100)
-  service        Service                       @relation(fields: [serviceId], references: [id])
-  serviceId      String                        @db.Uuid
-  establishments SpecialtiesOnEstablishments[]
-
-  @@index([serviceId])
+  establishments ServiceOnEstablishment[]
 }
 
 model Establishment {
@@ -77,7 +67,7 @@ model Establishment {
   officialId   String?                       @db.VarChar(100)
   legacyId     Int?                          @unique
   name         String                        @db.VarChar(100)
-  specialties  SpecialtiesOnEstablishments[]
+  services     ServiceOnEstablishment[]
   type         EstablishmentType
   street       String                        @db.VarChar(200)
   streetNumber String?                       @db.VarChar(100)
@@ -94,12 +84,32 @@ model Establishment {
   longitude    Float
 }
 
-model SpecialtiesOnEstablishments {
+model ServiceOnEstablishment {
+  id              String        @id @default(uuid()) @db.Uuid
   establishment   Establishment @relation(fields: [establishmentId], references: [id])
   establishmentId String        @db.Uuid
-  specialty       Specialty     @relation(fields: [specialtyId], references: [id])
-  specialtyId     String        @db.Uuid
+  service         Service       @relation(fields: [serviceId], references: [id])
+  serviceId       String        @db.Uuid
+  phoneNumber     String?       @db.VarChar(100)
+  details         String?       @db.Text
+  openingTimes    ServiceOnEstablishmentOpeningTime[]
+}
 
-  @@id([establishmentId, specialtyId])
-  @@index([establishmentId, specialtyId])
+enum Day {
+  M
+  T
+  W
+  R
+  F
+  S
+  U
+}
+
+model ServiceOnEstablishmentOpeningTime {
+  id                             String                       @id @default(uuid()) @db.Uuid
+  serviceOnEstablishment         ServiceOnEstablishment       @relation(fields: [serviceOnEstablishmentId], references: [id])
+  serviceOnEstablishmentId       String                       @db.Uuid
+  day                            Day
+  startTime                      DateTime                     @db.Time()
+  endTime                        DateTime                     @db.Time()
 }
