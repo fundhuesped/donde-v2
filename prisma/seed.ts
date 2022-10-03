@@ -40,7 +40,7 @@ async function main() {
   });
 
 
-  await prisma.establishment.create({
+  const establishment = await prisma.establishment.create({
     data: {
       name: 'Hospital de Pediatría Garrahan',
       type: EstablishmentType.HEALTH_ESTABLISHMENT,
@@ -62,7 +62,31 @@ async function main() {
               },
             },
             details: 'Siempre disponible',
-            phoneNumber: '51351433541'
+            phoneNumber: '51351433541',
+            openingTimes: {
+              create: [
+                {
+                  day: 'M',
+                  startTime: new Date('1970-01-01:08:00Z'),
+                  endTime: new Date('1970-01-01:11:00Z'),
+                },
+                {
+                  day: 'M',
+                  startTime: new Date('1970-01-01:13:00Z'),
+                  endTime: new Date('1970-01-01:15:00Z'),
+                },
+                {
+                  day: 'R',
+                  startTime: new Date('1970-01-01:08:00Z'),
+                  endTime: new Date('1970-01-01:11:00Z'),
+                },
+                {
+                  day: 'S',
+                  startTime: new Date('1970-01-01:09:00Z'),
+                  endTime: new Date('1970-01-01:14:00Z'),
+                }
+              ]
+            }
           },
           {
             service: {
@@ -71,12 +95,37 @@ async function main() {
               },
             },
             details: 'Ofrece asesoramiento y realiza interrupción legal del embarazo',
-            phoneNumber: '51351433541'
+            phoneNumber: '51351433541',
+            openingTimes: {
+              create: [
+                {
+                  day: 'T',
+                  startTime: new Date('1970-01-01:09:00Z'),
+                  endTime: new Date('1970-01-01:10:00Z'),
+                },
+                {
+                  day: 'W',
+                  startTime: new Date('1970-01-01:14:00Z'),
+                  endTime: new Date('1970-01-01:19:00Z'),
+                },
+                {
+                  day: 'R',
+                  startTime: new Date('1970-01-01:12:00Z'),
+                  endTime: new Date('1970-01-01:19:00Z'),
+                },
+                {
+                  day: 'S',
+                  startTime: new Date('1970-01-01:20:00Z'),
+                  endTime: new Date('1970-01-01:23:00Z'),
+                }
+              ]
+            }
           },
         ]
       },
     }
   });
+
 }
 
 main()

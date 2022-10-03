@@ -16,11 +16,11 @@ export type ServiceOnEstablishmentOpeningTime = {
 };
 
 export const Day = {
-    M: 'Monday',
-    T: 'Tuesday',
-    W: 'Wednesday',
-    R: 'Thursday',
-    F: 'Friday',
-    S: 'Saturday',
-    U: 'Sunday',
+    M: 'M',
+    T: 'T',
+    W: 'W',
+    R: 'R',
+    F: 'F',
+    S: 'S',
+    U: 'U',
 }
