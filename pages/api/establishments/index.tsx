@@ -48,10 +48,12 @@ const getEstablishments = async (req: NextApiRequest, res: NextApiResponse<any>)
       services: {
         include: {
           service: true,
+          openingTimes: true
+          },
         },
       },
-    },
   });
+  
   return res.status(200).json(establishments);
 };
 
