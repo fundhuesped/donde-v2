@@ -1,7 +1,6 @@
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
-import { EstablishmentType, EstablishmentStatus } from '@prisma/client';
+import { EstablishmentStatus, EstablishmentType, PrismaClient } from '@prisma/client';
 import { ServiceIcon } from '../model/services';
+const prisma = new PrismaClient();
 
 async function main() {
   const preservativos = await prisma.service.create({
@@ -58,7 +57,7 @@ async function main() {
           {
             service: {
               connect: {
-                id: preservativos.id,
+                id: preservativos.name,
               },
             },
             details: 'Siempre disponible',
