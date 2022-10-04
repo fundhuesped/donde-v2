@@ -108,9 +108,10 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async ({ 
   } catch {
     establishment = undefined;
   }
+
   return {
     props: {
-      establishment,
+      establishment: JSON.parse(JSON.stringify(establishment)),
     },
   };
 };
