@@ -46,12 +46,12 @@ export type Establishment = {
   officialId: string | null;
   name: string;
   type:
-    | 'HEALTH_ESTABLISHMENT'
-    | 'SOCIAL_ORGANIZATION'
-    | 'PUBLIC_INSTITUTION'
-    | 'PRIVATE_INSTITUTION'
-    | 'EDUCATIONAL_INSTITUTION'
-    | 'OTHER';
+  | 'HEALTH_ESTABLISHMENT'
+  | 'SOCIAL_ORGANIZATION'
+  | 'PUBLIC_INSTITUTION'
+  | 'PRIVATE_INSTITUTION'
+  | 'EDUCATIONAL_INSTITUTION'
+  | 'OTHER';
   street: string;
   streetNumber: string | null;
   apartment: string | null;
@@ -65,7 +65,8 @@ export type Establishment = {
   latitude: number;
   longitude: number;
   services: (PrismaClient.ServiceOnEstablishment & {
-    service: PrismaClient.Service
+    service: PrismaClient.Service;
+    openingTimes: PrismaClient.ServiceOnEstablishmentOpeningTime[];
   })[];
 };
 export const establishmentTypes = {

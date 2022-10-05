@@ -1,4 +1,4 @@
-import { ClockIcon, LocationMarkerIcon } from '@heroicons/react/outline';
+import { ClockIcon, LocationMarkerIcon, PhoneIcon } from '@heroicons/react/outline';
 import React from 'react';
 import { SERVICE_ICONS } from '../../config/services';
 import { Establishment } from '../../model/establishment';
@@ -16,6 +16,8 @@ const EstablishmentTab = React.memo<Props>((props) => {
 
   const addressNotes = null;
   const address = formatEstablishmentLocation(activeEstablishment);
+
+  console.log(activeEstablishment.services.map((service) => service));
 
   return (
     <>
@@ -42,8 +44,8 @@ const EstablishmentTab = React.memo<Props>((props) => {
                 Información
               </a>
             </li>
-            {activeEstablishment.services.map((service, idx) => (
-              <li key={service.id} className="mb-2 mr-2 last:mr-0 flex-auto text-center">
+            {activeEstablishment.services.map((serviceOnEstablishment, idx) => (
+              <li key={serviceOnEstablishment.id} className="mb-2 mr-2 last:mr-0 flex-auto text-center">
                 <a
                   className={
                     'truncate ... nav-link font-medium text-xs leading-tight uppercase border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 hover:border-transparent hover:bg-gray-100 focus:border-primary block  bg-white ' +
@@ -54,10 +56,10 @@ const EstablishmentTab = React.memo<Props>((props) => {
                     setOpenTab(idx);
                   }}
                   data-toggle="tab"
-                  href={`#id-${service.service.id}`}
+                  href={`#id-${serviceOnEstablishment.service.id}`}
                   role="tablist"
                 >
-                  {service.service.name}
+                  {serviceOnEstablishment.service.name}
                 </a>
               </li>
             ))}
@@ -71,35 +73,43 @@ const EstablishmentTab = React.memo<Props>((props) => {
                       {address} {addressNotes && <span className={'text-xs text-medium-gray'}>- {addressNotes}</span>}
                     </CardListItem>
                     <CardSubHeader>Servicios disponibles</CardSubHeader>
-                    {activeEstablishment.services.map((service) => (
+                    {activeEstablishment.services.map((serviceOnEstablishment) => (
                       <CardListItem
-                        key={service.id}
-                        icon={SERVICE_ICONS[service.service.icon as ServiceIcon]}
+                        key={serviceOnEstablishment.id}
+                        icon={SERVICE_ICONS[serviceOnEstablishment.service.icon as ServiceIcon]}
                       >
-                        {service.service.name && (
+                        {serviceOnEstablishment.service.name && (
                           <>
-                            <span>{service.service.name}</span>
+                            <span>{serviceOnEstablishment.service.name}</span>
                           </>
                         )}
                       </CardListItem>
                     ))}
                   </CardList>
                 </div>
-                {activeEstablishment.services.map((service, idx) => (
+                {activeEstablishment.services.map((serviceOnEstablishment, idx) => (
                   <div
-                    key={service.id}
+                    key={serviceOnEstablishment.id}
                     className={openTab === idx ? 'block' : 'hidden'}
-                    id={`id-${service.service.id}`}
+                    id={`id-${serviceOnEstablishment.service.id}`}
                   >
-                    <CardList id={`tabs-${service.service.id}`}>
-                      <CardListItem icon={<ClockIcon className={'text-primary'} />}>Horario</CardListItem>
+                    <CardList id={`tabs-${serviceOnEstablishment.service.id}`}>
+                      <CardListItem icon={<PhoneIcon className={'text-primary'} />}>
+                        {serviceOnEstablishment.phoneNumber}
+                      </CardListItem>
+                      <CardListItem icon={<ClockIcon className={'text-primary'} />}>
+                        <span>Lunes 09:30-12:00</span>
+                        <br />
+                        <span>Martes 10:30-12:00</span>
+                        {/* service.openingTimes.day {service.openingTimes.startTime}-{service.openingTimes.endTime} */}
+                      </CardListItem>
                       <CardSubHeader className={'text-medium-gray text-xs'}>
-                        Descripción del servicio - <span>{service.details}</span>
+                        Descripción del servicio - <span>{serviceOnEstablishment.details}</span>
                       </CardSubHeader>
-                      <CardListItem icon={SERVICE_ICONS[service.service.icon as ServiceIcon]}>
-                        {service.service.name && (
+                      <CardListItem icon={SERVICE_ICONS[serviceOnEstablishment.service.icon as ServiceIcon]}>
+                        {serviceOnEstablishment.service.name && (
                           <>
-                            <p>{service.service.name}</p>
+                            <p>{serviceOnEstablishment.service.name}</p>
                           </>
                         )}
                       </CardListItem>
