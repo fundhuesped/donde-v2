@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { NextApiHandler } from 'next';
-import { prismaClient } from '../../../../server/prisma/client';
+import { prismaClient } from '../../../../../server/prisma/client';
+import * as yup from 'yup';
+import { updateServiceOnEstablishmentSchema } from '../../../../../model/serviceOnEstablishment';
 
 const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
@@ -12,11 +14,22 @@ const handler: NextApiHandler = async (req, res) => {
 };
 
 const updateServiceOnEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
-  req.body.id = req.query.id;
+  if (!req.query.serviceId) {
+    return res.status(400).end();
+  }
+  const idSchema = yup.string().uuid().required();
+  const serviceOnEstablishmentId = req.query.serviceId;
+  if (!idSchema.isValidSync(serviceOnEstablishmentId)) {
+    return res.status(400).end();
+  }
+
+  if (!updateServiceOnEstablishmentSchema.isValidSync(req.body)) {
+    return res.status(400).end();
+  }
 
   const disconnectPreviouslyConnectedFeatures = prismaClient.serviceOnEstablishment.update({
     where: {
-      id: req.body.id,
+      id: serviceOnEstablishmentId,
     },
     data: {
       openingTimes: {
@@ -25,11 +38,21 @@ const updateServiceOnEstablishment = async (req: NextApiRequest, res: NextApiRes
     },
   });
 
+  let connectService = undefined
+  if (req.body.serviceId) {
+    connectService =  {
+      connect: {
+        id: req.body.serviceId
+      }
+    };
+  }
+
   const updateServiceOnEstablishment = prismaClient.serviceOnEstablishment.update({
     where: {
-      id: req.body.id,
+      id: serviceOnEstablishmentId,
     },
     data: {
+      service: connectService,
       details: req.body.details,
       phoneNumber: req.body.phoneNumber,
     },

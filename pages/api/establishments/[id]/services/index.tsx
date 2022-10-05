@@ -1,5 +1,7 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { prismaClient } from '../../../../server/prisma/client';
+import { prismaClient } from '../../../../../server/prisma/client';
+import * as yup from 'yup';
+import { createServiceOnEstablishmentSchema } from '../../../../../model/serviceOnEstablishment';
 
 const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
@@ -11,11 +13,15 @@ const handler: NextApiHandler = async (req, res) => {
 };
 
 const createServiceOnEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
-
-  if (!req.query.id) {
+  const idSchema = yup.string().uuid().required();
+  const establishmentId = req.query.id;
+  if (!idSchema.isValidSync(establishmentId)) {
     return res.status(400).end();
   }
-  const establishmentId = req.query.id[0];
+
+  if (!createServiceOnEstablishmentSchema.isValidSync(req.body)) {
+    return res.status(400).end();
+  }
 
   const serviceOnstablishment = await prismaClient.serviceOnEstablishment.create({
     data: {
