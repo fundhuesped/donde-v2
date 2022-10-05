@@ -1,5 +1,6 @@
 import * as PrismaClient from '@prisma/client';
 import * as yup from 'yup';
+import { createServiceOnEstablishmentSchema } from './serviceOnEstablishment';
 
 export const createEstablishmentSchema = yup.object({
   officialId: yup.string(),
@@ -17,7 +18,7 @@ export const createEstablishmentSchema = yup.object({
   country: yup.string().required(),
   latitude: yup.number().min(-90).max(90).required(),
   longitude: yup.number().min(-180).max(180).required(),
-  services: yup.array().of(yup.string().uuid().required()).min(1).required(),
+  services: yup.array().of(createServiceOnEstablishmentSchema).min(1).required(),
 });
 
 export const editEstablishmentSchema = yup.object({
@@ -37,7 +38,7 @@ export const editEstablishmentSchema = yup.object({
   country: yup.string(),
   latitude: yup.number(),
   longitude: yup.number(),
-  services: yup.array().of(yup.string().uuid().required()).min(1),
+  services: yup.array().of(createServiceOnEstablishmentSchema),
 });
 
 export type Establishment = {
