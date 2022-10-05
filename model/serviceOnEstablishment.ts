@@ -1,4 +1,5 @@
 import { Establishment, Service, ServiceOnEstablishmentOpeningTime } from '@prisma/client';
+import * as yup from 'yup';
 
 export type ServiceOnEstablishment = {
   id: string;
@@ -8,3 +9,17 @@ export type ServiceOnEstablishment = {
   details: string | null;
   openingTimes: ServiceOnEstablishmentOpeningTime[];
 };
+
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+
+export const createServiceOnEstablishmentSchema = yup.object({
+  serviceId: yup.string().uuid().required(),
+  phoneNumber: yup.string().matches(phoneRegExp, 'Phone number is not valid'),
+  details: yup.string(),
+});
+
+export const updateServiceOnEstablishmentSchema = yup.object({
+  serviceId: yup.string().uuid(),
+  phoneNumber:  yup.string().matches(phoneRegExp, 'Phone number is not valid'),
+  details: yup.string(),
+});
