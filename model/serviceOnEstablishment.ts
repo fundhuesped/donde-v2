@@ -2,8 +2,9 @@ import { Establishment, Service, ServiceOnEstablishmentOpeningTime } from '@pris
 
 export type ServiceOnEstablishment = {
   id: string;
-  establishment: Establishment;
+  establishmentId: Establishment;
   service: Service;
+  serviceId: string;
   phoneNumber: string | null;
   details: string | null;
   openingTimes: ServiceOnEstablishmentOpeningTime[];
