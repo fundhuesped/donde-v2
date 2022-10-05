@@ -26,7 +26,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (co
   return {
     props: {
       googleMapsApiKey,
-      establishment,
+      establishment: JSON.parse(JSON.stringify(establishment)),
       availableServices,
     },
   };
