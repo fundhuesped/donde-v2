@@ -38,7 +38,7 @@ const getEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) 
   });
 
   if (establishment) {
-    return res.status(200).json(establishment);
+    return res.status(200).json(JSON.parse(JSON.stringify(establishment)));
   }
   return res.status(404).end();
 };

@@ -54,7 +54,7 @@ const getEstablishments = async (req: NextApiRequest, res: NextApiResponse<any>)
       },
   });
   
-  return res.status(200).json(establishments);
+  return res.status(200).json(JSON.parse(JSON.stringify(establishments)));
 };
 
 const createEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
