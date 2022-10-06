@@ -2,6 +2,8 @@ import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { prismaClient } from '../../../../../server/prisma/client';
 import * as yup from 'yup';
 import { createServiceOnEstablishmentSchema } from '../../../../../model/serviceOnEstablishment';
+import { createServiceOnEstablishmentOpeningTimeSchema } from '../../../../../model/openingTime';
+import isEmpty from 'lodash/isEmpty';
 
 const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
@@ -23,6 +25,8 @@ const createServiceOnEstablishment = async (req: NextApiRequest, res: NextApiRes
     return res.status(400).end();
   }
 
+  const openingTimes = mapServicesOnEstablishmentOpeningTimesToPrismaObject(req.body.openingTimes);
+
   const serviceOnstablishment = await prismaClient.serviceOnEstablishment.create({
     data: {
       establishment: {
@@ -37,9 +41,24 @@ const createServiceOnEstablishment = async (req: NextApiRequest, res: NextApiRes
       },
       details: req.body.details,
       phoneNumber: req.body.phoneNumber,
+      openingTimes: openingTimes,
     },
   });
   return res.status(201).json(serviceOnstablishment);
+};
+
+export const mapServicesOnEstablishmentOpeningTimesToPrismaObject = (openingTimes: yup.Asserts<typeof createServiceOnEstablishmentOpeningTimeSchema>[])  => {
+  if (isEmpty(openingTimes)) return { create: [] };
+  const servicesObjects = openingTimes.map(openingTime => {
+    return {
+      day: openingTime.day,
+      startTime: openingTime.startTime,
+      endTime: openingTime.endTime,
+    };
+  });
+  return {
+    create: servicesObjects,
+  };
 };
 
 export default handler;

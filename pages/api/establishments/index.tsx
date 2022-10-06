@@ -7,6 +7,7 @@ import { z } from 'zod';
 import * as yup from 'yup';
 
 import isEmpty from 'lodash/isEmpty';
+import { mapServicesOnEstablishmentOpeningTimesToPrismaObject } from './[id]/services';
 
 const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
@@ -73,6 +74,7 @@ const createEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
       services: services,
     },
   });
+  
   return res.status(201).json(establishment);
 };
 
@@ -87,6 +89,7 @@ export const mapServicesOnEstablishmentToPrismaObject = (services: yup.Asserts<t
       },
       phoneNumber: service.phoneNumber,
       details: service.details,
+      openingTimes: mapServicesOnEstablishmentOpeningTimesToPrismaObject(service.openingTimes)
     };
   });
   return {

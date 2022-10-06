@@ -37,7 +37,7 @@ export const editEstablishmentSchema = yup.object({
   country: yup.string(),
   latitude: yup.number(),
   longitude: yup.number(),
-  services: yup.array().of(createServiceOnEstablishmentSchema),
+  services: yup.array().of(createServiceOnEstablishmentSchema).min(1),
 });
 
 export type Establishment = {
