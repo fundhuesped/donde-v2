@@ -22,7 +22,6 @@ export const createEstablishmentSchema = yup.object({
 });
 
 export const editEstablishmentSchema = yup.object({
-  id: yup.string().uuid().required(),
   officialId: yup.string(),
   name: yup.string(),
   type: yup.mixed().oneOf(Object.values(PrismaClient.EstablishmentType)),
