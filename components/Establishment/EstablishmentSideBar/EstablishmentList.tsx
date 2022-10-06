@@ -7,7 +7,7 @@ import React from 'react';
 import { SERVICE_ICONS } from '../../../config/services';
 import { useAuthenticatedUser } from '../../../hooks/useAuthenticatedUser';
 import { ServiceOnEstablishment } from '../../../model/serviceOnEstablishment';
-import { Service, ServiceIcon, serviceSchema } from '../../../model/services';
+import { ServiceIcon } from '../../../model/services';
 import { Card, CardHeader, CardList, CardListItem } from '../../Card';
 import { Pill } from '../../Pill';
 
@@ -42,7 +42,6 @@ const EstablishmentList = React.memo<Props>((props) => {
         establishments.map((establishment) => {
           return (
             <Card
-              onClick={() => handleDetailsClick(establishment.id)}
               key={establishment.key}
               className={'my-2 pb-6 mx-3 lg:mx-0'}
             >
@@ -60,11 +59,11 @@ const EstablishmentList = React.memo<Props>((props) => {
                   </CardListItem>
                 ))}
               </CardList>
-              <footer className={classNames('mt-4 w-full p-0 flex justify-start cursor-pointer')}>
+              <footer className={classNames('mt-4 w-full p-0 flex justify-start')}>
                 <Pill className="{text-xs }">Cargado por Fundación Huesped</Pill>
               </footer>
             </Card>
-          );
+          ); 
         })
       ) : (
         <div className="mt-4 p-6 lg:p-0 mx-3 lg:mx-0 text-center lg:text-start">

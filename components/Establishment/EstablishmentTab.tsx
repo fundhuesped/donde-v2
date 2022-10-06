@@ -5,6 +5,7 @@ import { Establishment } from '../../model/establishment';
 import { ServiceIcon } from '../../model/services';
 import { formatEstablishmentLocation } from '../../utils/establishments';
 import { CardList, CardListItem, CardSubHeader } from '../Card';
+import { Icon } from '../Icon';
 
 type Props = React.PropsWithChildren<{
   activeEstablishment: Establishment;
@@ -17,7 +18,29 @@ const EstablishmentTab = React.memo<Props>((props) => {
   const addressNotes = null;
   const address = formatEstablishmentLocation(activeEstablishment);
 
-  console.log(activeEstablishment.services.map((service) => service));
+  const getTime = (date:Date) => {
+    const newDate = new Date(date);
+    const hour = newDate.getHours();
+    const minutes = (newDate.getMinutes() < 10 ? '0' : '') + newDate.getMinutes();
+    const time = hour + ':' + minutes;
+    return time;
+  };
+
+  const getDay = (day:string) =>{
+    switch (day) {
+      case "M": return "Lunes"
+      case "T": return "Martes"
+      case "W": return "Miércoles"
+      case "R": return "Jueves"
+      case "F": return "Viernes"
+      case "S": return "Sábado"
+      case "U": return "Domingo"
+    }
+  }
+
+  activeEstablishment.services.map((serviceOnEstablishment) => (console.log(serviceOnEstablishment)))
+  
+
 
   return (
     <>
@@ -30,8 +53,8 @@ const EstablishmentTab = React.memo<Props>((props) => {
             <li className="mr-2 mb-2 last:mr-0 flex-auto text-center">
               <a
                 className={
-                  'nav-link font-medium text-xs leading-tight uppercase border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 hover:border-transparent hover:bg-gray-100 focus:border-primary block  bg-white ' +
-                  (openTab === -1 ? 'text-primary' : 'text-black')
+                  'nav-link font-medium text-xs leading-tight uppercase border-x-0 border-t-0 border-b-2 px-6 py-3 hover:border-transparent hover:bg-gray-100 focus:border-primary block  bg-white ' +
+                  (openTab === -1 ? 'text-primary border-primary' : 'text-black border-transparent')
                 }
                 onClick={(e) => {
                   e.preventDefault();
@@ -45,11 +68,11 @@ const EstablishmentTab = React.memo<Props>((props) => {
               </a>
             </li>
             {activeEstablishment.services.map((serviceOnEstablishment, idx) => (
-              <li key={serviceOnEstablishment.id} className="mb-2 mr-2 last:mr-0 flex-auto text-center">
+              <li key={serviceOnEstablishment.id} className="mb-2 mx-2 last:mr-0 flex-auto ">
                 <a
                   className={
-                    'truncate ... nav-link font-medium text-xs leading-tight uppercase border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 hover:border-transparent hover:bg-gray-100 focus:border-primary block  bg-white ' +
-                    (openTab === idx ? 'text-primary' : 'text-black')
+                    'w-full nav-link font-medium text-xs leading-tight uppercase border-x-0 border-t-0 border-b-2 hover:border-transparent hover:bg-gray-100 focus:border-primary pb-2 bg-white flex justify-center ' +
+                    (openTab === idx ? 'border-primary' : 'border-transparent')
                   }
                   onClick={(e) => {
                     e.preventDefault();
@@ -59,7 +82,8 @@ const EstablishmentTab = React.memo<Props>((props) => {
                   href={`#id-${serviceOnEstablishment.service.id}`}
                   role="tablist"
                 >
-                  {serviceOnEstablishment.service.name}
+                  <Icon size="medium" type="tertiary" icon={SERVICE_ICONS[serviceOnEstablishment.service.icon as ServiceIcon]} />
+                  
                 </a>
               </li>
             ))}
@@ -73,17 +97,31 @@ const EstablishmentTab = React.memo<Props>((props) => {
                       {address} {addressNotes && <span className={'text-xs text-medium-gray'}>- {addressNotes}</span>}
                     </CardListItem>
                     <CardSubHeader>Servicios disponibles</CardSubHeader>
-                    {activeEstablishment.services.map((serviceOnEstablishment) => (
-                      <CardListItem
-                        key={serviceOnEstablishment.id}
-                        icon={SERVICE_ICONS[serviceOnEstablishment.service.icon as ServiceIcon]}
+                    {activeEstablishment.services.map((serviceOnEstablishment, idx) => (
+                      <a
+                        className={
+                          'inherit'
+                        }
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setOpenTab(idx);
+                        }}
+                        data-toggle="tab"
+                        href={`#id-${serviceOnEstablishment.service.id}`}
+                        role="tablist"
                       >
-                        {serviceOnEstablishment.service.name && (
-                          <>
-                            <span>{serviceOnEstablishment.service.name}</span>
-                          </>
-                        )}
-                      </CardListItem>
+
+                            <CardListItem
+                              key={serviceOnEstablishment.id}
+                              icon={SERVICE_ICONS[serviceOnEstablishment.service.icon as ServiceIcon]}
+                            >
+                              {serviceOnEstablishment.service.name && (
+                                <>
+                                  <span>{serviceOnEstablishment.service.name}</span>
+                                </>
+                              )}
+                            </CardListItem>
+                      </a>
                     ))}
                   </CardList>
                 </div>
@@ -98,10 +136,15 @@ const EstablishmentTab = React.memo<Props>((props) => {
                         {serviceOnEstablishment.phoneNumber}
                       </CardListItem>
                       <CardListItem icon={<ClockIcon className={'text-primary'} />}>
-                        <span>Lunes 09:30-12:00</span>
-                        <br />
-                        <span>Martes 10:30-12:00</span>
-                        {/* service.openingTimes.day {service.openingTimes.startTime}-{service.openingTimes.endTime} */}
+                        <div className='flex flex-wrap'>
+                            {serviceOnEstablishment.openingTimes?.map((date) => {
+                            return <span className='mr-2'>{getDay(date.day)}{' '}{getTime(date.startTime)} - {getTime(date.endTime)}</span>
+                          }
+                          )}
+                        </div>
+                         
+                        
+                       
                       </CardListItem>
                       <CardSubHeader className={'text-medium-gray text-xs'}>
                         Descripción del servicio - <span>{serviceOnEstablishment.details}</span>

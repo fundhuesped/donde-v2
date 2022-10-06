@@ -1,4 +1,5 @@
 import { GlobeAltIcon, PhoneIcon, ShareIcon, XIcon } from '@heroicons/react/outline';
+import { UserRole } from '@prisma/client';
 import classNames from 'classnames';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -130,7 +131,7 @@ export const EstablishmentDetail = React.memo<Props>((props) => {
           {name}
           <CardParagraph className="font-light">{establishmentType}</CardParagraph>
         </CardHeader>
-        {user && (
+        {user?.role === UserRole.ADMIN && (
           <Link href={`/establecimientos/editar/${activeEstablishment.id}`}>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a className={'color-primary font-bold absolute top-8 right-12'}>Editar</a>
