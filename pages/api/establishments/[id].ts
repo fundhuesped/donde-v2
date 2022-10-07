@@ -12,6 +12,8 @@ const handler: NextApiHandler = async (req, res) => {
       return getEstablishment(req, res);
     case 'PUT':
       return updateEstablishment(req, res);
+    case 'DELETE':
+      return deleteEstablishment(req, res);
     default:
       return res.status(405).json({ error: 'Method Not Allowed' });
   }
@@ -46,8 +48,8 @@ const getEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) 
 const updateEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   const idSchema = yup.string().uuid().required();
   const establishmentId = req.query.id;
+  
   if (!idSchema.isValidSync(establishmentId)) {
-    console.dir(establishmentId, { depth: null });
     return res.status(400).end();
   }
 
@@ -89,5 +91,22 @@ const updateEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
   
   return res.status(200).end();
 };
+
+const deleteEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
+  const idSchema = yup.string().uuid().required();
+  const establishmentId = req.query.id;
+
+  if (!idSchema.isValidSync(establishmentId)) {
+    return res.status(400).end();
+  }
+
+  await prismaClient.establishment.delete({
+    where: {
+      id: establishmentId,
+    }
+  });
+
+  return res.status(200).end();
+}
 
 export default handler;
