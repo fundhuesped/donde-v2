@@ -57,7 +57,7 @@ async function main() {
           {
             service: {
               connect: {
-                id: preservativos.name,
+                id: preservativos.id,
               },
             },
             details: 'Siempre disponible',
