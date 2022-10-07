@@ -19,7 +19,7 @@ const ADMIN_ROUTES: RouteMatcher[] = [{ path: '/admin' }];
 const ADMIN_API_ROUTES: RouteMatcher[] = [{ path: '/api/admin' }];
 
 const COLLABORATOR_ROUTES: RouteMatcher[] = [{ path: '/establecimientos/nuevo' }, { path: '/establecimientos/editar' }];
-const COLLABORATOR_API_ROUTES: RouteMatcher[] = [{ path: '/api/establishments', methods: ['POST', 'PUT'] }];
+const COLLABORATOR_API_ROUTES: RouteMatcher[] = [{ path: '/api/establishments', methods: ['POST', 'PUT', 'DELETE'] }];
 
 const ROUTE_AUTORIZATION_CONFIGS: RouteAuthorizationConfig[] = [
   ...ADMIN_ROUTES.map((matcher) => ({ matcher, roles: [UserRole.ADMIN], status: 404 })),
