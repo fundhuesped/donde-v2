@@ -23,9 +23,12 @@ DROP TABLE "SpecialtiesOnEstablishments";
 -- DropTable
 DROP TABLE "Specialty";
 
+-- CreateExtension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 -- CreateTable
 CREATE TABLE "ServiceOnEstablishment" (
-    "id" UUID NOT NULL,
+    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
     "establishmentId" UUID NOT NULL,
     "serviceId" UUID NOT NULL,
     "phoneNumber" VARCHAR(100),
@@ -36,7 +39,7 @@ CREATE TABLE "ServiceOnEstablishment" (
 
 -- CreateTable
 CREATE TABLE "ServiceOnEstablishmentOpeningTime" (
-    "id" UUID NOT NULL,
+    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
     "serviceOnEstablishmentId" UUID NOT NULL,
     "day" "Day" NOT NULL,
     "startTime" TIME NOT NULL,
