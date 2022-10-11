@@ -22,7 +22,6 @@ export const createEstablishmentSchema = yup.object({
 });
 
 export const editEstablishmentSchema = yup.object({
-  id: yup.string().uuid().required(),
   officialId: yup.string(),
   name: yup.string(),
   type: yup.mixed().oneOf(Object.values(PrismaClient.EstablishmentType)),
@@ -38,7 +37,7 @@ export const editEstablishmentSchema = yup.object({
   country: yup.string(),
   latitude: yup.number(),
   longitude: yup.number(),
-  services: yup.array().of(createServiceOnEstablishmentSchema),
+  services: yup.array().of(createServiceOnEstablishmentSchema).min(1),
 });
 
 export type Establishment = {

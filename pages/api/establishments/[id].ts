@@ -3,7 +3,7 @@ import { NextApiHandler } from 'next';
 import { prismaClient } from '../../../server/prisma/client';
 import { editEstablishmentSchema as establishmentSchema } from '../../../model/establishment';
 import { EstablishmentStatus } from '@prisma/client';
-import { mapServicesToPrismaObject } from './index';
+import { mapServicesOnEstablishmentToPrismaObject } from './index';
 import * as yup from 'yup';
 
 const handler: NextApiHandler = async (req, res) => {
@@ -12,6 +12,8 @@ const handler: NextApiHandler = async (req, res) => {
       return getEstablishment(req, res);
     case 'PUT':
       return updateEstablishment(req, res);
+    case 'DELETE':
+      return deleteEstablishment(req, res);
     default:
       return res.status(405).json({ error: 'Method Not Allowed' });
   }
@@ -44,24 +46,35 @@ const getEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) 
 };
 
 const updateEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
-  req.body.id = req.query.id;
+  const idSchema = yup.string().uuid().required();
+  const establishmentId = req.query.id;
+  
+  if (!idSchema.isValidSync(establishmentId)) {
+    return res.status(400).end();
+  }
+
   if (!establishmentSchema.isValidSync(req.body)) {
     return res.status(400).end();
   }
-  const disconnectPreviouslyConnectedFeatures = prismaClient.establishment.update({
-    where: {
-      id: req.body.id,
-    },
-    data: {
-      services: {
-        deleteMany: {},
+
+  let disconnectPreviouslyConnectedFeatures = undefined;
+  if (req.body.services) {
+      disconnectPreviouslyConnectedFeatures = prismaClient.establishment.update({
+      where: {
+        id: establishmentId,
       },
-    },
-  });
-  const services = mapServicesToPrismaObject(req.body.services!);
-  const createNewEstablishment = prismaClient.establishment.update({
+      data: {
+        services: {
+          deleteMany: {},
+        },
+      },
+    });
+  }
+
+  const services = mapServicesOnEstablishmentToPrismaObject(req.body.services!);
+  const updateEstablishment = prismaClient.establishment.update({
     where: {
-      id: req.body.id,
+      id: establishmentId,
     },
     data: {
       ...req.body,
@@ -69,8 +82,31 @@ const updateEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
       services,
     },
   });
-  await prismaClient.$transaction([disconnectPreviouslyConnectedFeatures, createNewEstablishment]);
+
+  if (disconnectPreviouslyConnectedFeatures) {
+    await prismaClient.$transaction([disconnectPreviouslyConnectedFeatures, updateEstablishment]);
+  } else {
+    await prismaClient.$transaction([updateEstablishment]);
+  }
+  
   return res.status(200).end();
 };
+
+const deleteEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
+  const idSchema = yup.string().uuid().required();
+  const establishmentId = req.query.id;
+
+  if (!idSchema.isValidSync(establishmentId)) {
+    return res.status(400).end();
+  }
+
+  await prismaClient.establishment.delete({
+    where: {
+      id: establishmentId,
+    }
+  });
+
+  return res.status(200).end();
+}
 
 export default handler;

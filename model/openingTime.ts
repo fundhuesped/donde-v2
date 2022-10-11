@@ -1,8 +1,15 @@
-import { ServiceOnEstablishment } from '@prisma/client';
+import * as PrismaClient from '@prisma/client';
+import * as yup from 'yup';
+
+export const createServiceOnEstablishmentOpeningTimeSchema = yup.object({
+    day: yup.mixed().oneOf(Object.values(PrismaClient.Day)).required(),
+    startTime: yup.date().required(),
+    endTime: yup.date().required(),
+});
 
 export type ServiceOnEstablishmentOpeningTime = {
     id: string;
-    serviceOnEstablishment: ServiceOnEstablishment;
+    serviceOnEstablishment: PrismaClient.ServiceOnEstablishment;
     day:
         | 'M'
         | 'T'

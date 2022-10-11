@@ -93,6 +93,8 @@ model ServiceOnEstablishment {
   phoneNumber     String?       @db.VarChar(100)
   details         String?       @db.Text
   openingTimes    ServiceOnEstablishmentOpeningTime[]
+  @@index([establishmentId])
+  @@index([serviceId])
 }
 
 enum Day {
@@ -112,4 +114,5 @@ model ServiceOnEstablishmentOpeningTime {
   day                            Day
   startTime                      DateTime                     @db.Time()
   endTime                        DateTime                     @db.Time()
+  @@index([serviceOnEstablishmentId])
 }

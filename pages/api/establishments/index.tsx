@@ -7,6 +7,7 @@ import { z } from 'zod';
 import * as yup from 'yup';
 
 import isEmpty from 'lodash/isEmpty';
+import { mapServicesOnEstablishmentOpeningTimesToPrismaObject } from './[id]/services';
 
 const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
@@ -61,17 +62,11 @@ const getEstablishments = async (req: NextApiRequest, res: NextApiResponse<any>)
 };
 
 const createEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
-  establishmentSchema.validate(req.body, { abortEarly: false }).then(function() {
-    // Success
-  }).catch(function (err) {
-    console.dir(err, { depth: null });
-  });
-
   if (!establishmentSchema.isValidSync(req.body)) {
     return res.status(400).end();
   }
 
-  const services = mapServicesToPrismaObject(req.body.services);
+  const services = mapServicesOnEstablishmentToPrismaObject(req.body.services);
   const establishment = await prismaClient.establishment.create({
     data: {
       ...req.body,
@@ -79,10 +74,11 @@ const createEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
       services: services,
     },
   });
+  
   return res.status(201).json(establishment);
 };
 
-export const mapServicesToPrismaObject = (services: yup.Asserts<typeof createServiceOnEstablishmentSchema>[])  => {
+export const mapServicesOnEstablishmentToPrismaObject = (services: yup.Asserts<typeof createServiceOnEstablishmentSchema>[])  => {
   if (isEmpty(services)) return { create: [] };
   const servicesObjects = services.map(service => {
     return {
@@ -93,6 +89,7 @@ export const mapServicesToPrismaObject = (services: yup.Asserts<typeof createSer
       },
       phoneNumber: service.phoneNumber,
       details: service.details,
+      openingTimes: mapServicesOnEstablishmentOpeningTimesToPrismaObject(service.openingTimes)
     };
   });
   return {
