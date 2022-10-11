@@ -1,5 +1,6 @@
 import { GlobeAltIcon, LocationMarkerIcon } from '@heroicons/react/outline';
 import { PhoneIcon, ShareIcon } from '@heroicons/react/solid';
+import { UserRole } from '@prisma/client';
 import _, { partition } from 'lodash';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
@@ -145,7 +146,7 @@ export const EstablishmentPage: NextPage<ServerSideProps> = React.memo(({ establ
           <CardHeader className={'font-title text-lg'}>{name}</CardHeader>
           <CardParagraph>{establishmentType}</CardParagraph>
         </header>
-        {user && (
+        {user?.role === UserRole.ADMIN && (
           <Link href={`/establecimientos/editar/${establishment.id}`}>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a className={'color-primary font-bold absolute top-8 right-8'}>Editar</a>

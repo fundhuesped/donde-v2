@@ -1,5 +1,8 @@
-import { groupBy, partition } from 'lodash';
+import { PencilIcon, PlusIcon } from '@heroicons/react/outline';
+import { useState } from 'react';
 import { Service } from '../../model/services';
+import { Pill } from '../Pill';
+import { NewService } from './NewService';
 
 type AvailableServicesProps = {
   onChange: (event: { [key: string]: any }) => void;
@@ -9,6 +12,8 @@ type AvailableServicesProps = {
 
 export const AvailableServices = (props: AvailableServicesProps) => {
   const { activeServices, availableServices, onChange } = props;
+  const [showModal, setShowModal] = useState<boolean>(false);
+
   const isChecked = (serviceId: string) => activeServices.has(serviceId);
   const removeServices = (services: string[]) => {
     const updatedServices = new Set(activeServices);
@@ -25,11 +30,28 @@ export const AvailableServices = (props: AvailableServicesProps) => {
     onChange({ services: updatedServices });
   };
 
+  console.log(availableServices)
+
   return (
     <>
       <h1 className={'my-6 text-justify font-bold text-black'}>¿Qué servicios brinda el lugar?</h1>
       <ul className={'flex flex-col'}>
-        {Object.values(groupBy(availableServices, (service) => service.id)).map((services) => {
+         <button onClick={()=>setShowModal(true)} className={'flex color-primary font-bold p-2 btn-inherit'}>
+              <span className="mr-1 mt-1">
+                  <PlusIcon className=" w-4 mx-1 text-primary" />
+              </span>
+              Agregar servicio
+          </button>
+          <div className="flex flex-wrap h-auto w-3/4">
+             {availableServices.map((service) => (
+              <Pill type={'primary'} className={'py-1 mr-2 mb-2 h-fit flex align-middle border border-gray-600'} key={service.id}>
+                <span className='mt-1 mr-2'>{service.name}</span>
+                 <PencilIcon className='text-primary w-6 h-6 p-1'/>
+              </Pill>
+            ))}
+          </div>
+         
+        {/* {Object.values(groupBy(availableServices, (service) => service.id)).map((services) => {
           const [[defaultService], otherServices] = partition(services, (service) => service.name === null);
           if (!defaultService) {
             return null;
@@ -81,8 +103,10 @@ export const AvailableServices = (props: AvailableServicesProps) => {
               )}
             </li>
           );
-        })}
+        })} */}
+
       </ul>
+      {showModal ? (<NewService showModal={showModal} setShowModal={setShowModal}/>): ""}
     </>
   );
 };

@@ -6,30 +6,25 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { SERVICE_ICONS } from '../../../config/services';
 import { useAuthenticatedUser } from '../../../hooks/useAuthenticatedUser';
-import { ServiceOnEstablishment } from '../../../model/serviceOnEstablishment';
+import { Establishment } from '../../../model/establishment';
 import { ServiceIcon } from '../../../model/services';
 import { Card, CardHeader, CardList, CardListItem } from '../../Card';
 import { Pill } from '../../Pill';
 
+
 type Props = React.PropsWithChildren<{
-  establishments: {
-    key: number;
-    name: string;
-    id: string;
-    street: string;
-    streetNumber: string;
-    services: ServiceOnEstablishment[];
-  }[];
+  establishments: Establishment[];
   mapVisibility: string;
+  setActiveEstablishment: (x:Establishment | null)=>void;
 }>;
 
 const EstablishmentList = React.memo<Props>((props) => {
-  const { establishments, mapVisibility } = props;
+  const { establishments, mapVisibility, setActiveEstablishment } = props;
   const router = useRouter();
   const user = useAuthenticatedUser();
 
-  const handleDetailsClick = (id: string) => {
-    router.push(`/establecimientos/${id}`);
+  const handleDetailsClick = (establishmentId: string) => {
+    setActiveEstablishment(establishments.find((establishment) => establishment.id === establishmentId) ?? null);
   };
 
   return (
@@ -37,13 +32,14 @@ const EstablishmentList = React.memo<Props>((props) => {
       className={`${
         mapVisibility == 'hidden' ? 'block' : 'hidden'
       } lg:block bg-ultra-light-gray lg:bg-inherit w-100 h-full lg:h-4/6 scroll-style overflow-auto relative mt-4`}
-    >
+    > 
       {establishments && establishments.length ? (
         establishments.map((establishment) => {
           return (
             <Card
-              key={establishment.key}
-              className={'my-2 pb-6 mx-3 lg:mx-0'}
+              key={establishment.id}
+              className={'my-2 pb-6 mx-3 lg:mx-0 cursor-pointer'}
+              onClick={()=>handleDetailsClick(establishment.id)}
             >
               <CardHeader className={'font-title text-lg'}>{establishment.name}</CardHeader>
               <CardList>

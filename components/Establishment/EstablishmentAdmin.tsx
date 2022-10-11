@@ -77,6 +77,7 @@ const EstablishmentAdmin = (props: {
   const isNewEstablishment = isNil(establishment?.id);
   const [form, setForm] = useState<EstablishmentModel>(establishment || emptyEstablishmentModel);
   const [isFormCompleted, setIsFormCompleted] = useState(false);
+
   const handleFormUpdate = (fieldsToUpdate: Partial<EstablishmentModel>) => {
     setForm((prevState) => {
       const updatedForm = { ...prevState, ...fieldsToUpdate };
@@ -266,6 +267,8 @@ const EstablishmentAdmin = (props: {
               activeServices={services}
               availableServices={availableServices}
             />
+           
+
             {/*<ContactInfoField
               key={'email'}
               onChange={handleFieldChange}
@@ -310,6 +313,7 @@ const EstablishmentAdmin = (props: {
             </Button>
           </>
         )}
+        
       </MainContainer>
     </>
   );
