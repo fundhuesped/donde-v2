@@ -3,8 +3,8 @@ import * as yup from 'yup';
 
 export const createServiceOnEstablishmentOpeningTimeSchema = yup.object({
     day: yup.mixed().oneOf(Object.values(PrismaClient.Day)).required(),
-    startTime: yup.date().required(),
-    endTime: yup.date().required(),
+    startTime: yup.string().required(),
+    endTime: yup.string().required(),
 });
 
 export type ServiceOnEstablishmentOpeningTime = {

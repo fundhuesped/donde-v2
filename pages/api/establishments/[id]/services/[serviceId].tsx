@@ -3,6 +3,7 @@ import { NextApiHandler } from 'next';
 import { prismaClient } from '../../../../../server/prisma/client';
 import * as yup from 'yup';
 import { updateServiceOnEstablishmentSchema } from '../../../../../model/serviceOnEstablishment';
+import { mapServicesOnEstablishmentOpeningTimesToPrismaObject } from '.';
 
 const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
@@ -29,24 +30,29 @@ const updateServiceOnEstablishment = async (req: NextApiRequest, res: NextApiRes
     return res.status(400).end();
   }
 
-  const disconnectPreviouslyConnectedFeatures = prismaClient.serviceOnEstablishment.update({
-    where: {
-      id: serviceOnEstablishmentId,
-    },
-    data: {
-      openingTimes: {
-        deleteMany: {},
-      },
-    },
-  });
-
-  let connectService = undefined
+  let connectService = undefined;
   if (req.body.serviceId) {
     connectService =  {
       connect: {
         id: req.body.serviceId
       }
     };
+  }
+
+  let openingTimes = undefined;
+  let disconnectPreviouslyConnectedFeatures = undefined;
+  if (req.body.openingTimes) {
+    disconnectPreviouslyConnectedFeatures = prismaClient.serviceOnEstablishment.update({
+      where: {
+        id: serviceOnEstablishmentId,
+      },
+      data: {
+        openingTimes: {
+          deleteMany: {},
+        },
+      },
+    });
+    openingTimes = mapServicesOnEstablishmentOpeningTimesToPrismaObject(req.body.openingTimes);
   }
 
   const updateServiceOnEstablishment = prismaClient.serviceOnEstablishment.update({
@@ -57,10 +63,15 @@ const updateServiceOnEstablishment = async (req: NextApiRequest, res: NextApiRes
       service: connectService,
       details: req.body.details,
       phoneNumber: req.body.phoneNumber,
+      openingTimes: openingTimes,
     },
   });
 
-  await prismaClient.$transaction([disconnectPreviouslyConnectedFeatures, updateServiceOnEstablishment]);
+  if (disconnectPreviouslyConnectedFeatures) {
+    await prismaClient.$transaction([disconnectPreviouslyConnectedFeatures, updateServiceOnEstablishment]);
+  } else {
+    await prismaClient.$transaction([updateServiceOnEstablishment]);
+  }
 
   return res.status(200).end();
 };
