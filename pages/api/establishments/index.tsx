@@ -103,8 +103,8 @@ export const transformEstablishmentIntoJSONResponse = (establishment: Establishm
   const jsonEstablishment = JSON.parse(JSON.stringify(establishment));
   for (const service of jsonEstablishment.services) {
     for (const openingTimes of service.openingTimes) {
-      openingTimes.startTime = openingTimes.startTime.substring(11, 17);
-      openingTimes.endTime = openingTimes.endTime.substring(11, 17);
+      openingTimes.startTime = openingTimes.startTime.substring(11, 16);
+      openingTimes.endTime = openingTimes.endTime.substring(11, 16);
     }
   }
   return jsonEstablishment;
