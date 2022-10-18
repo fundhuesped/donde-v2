@@ -13,6 +13,17 @@ type HoursProps = {
     openingTimes: ServiceOnEstablishmentOpeningTime[];
 };
 
+export const newDateHandle = (time:string) => {
+    if(time.length == 5){
+        var date = new Date("2019-06-11T"+time);
+        var options = {hour: "numeric", minute: "numeric"};
+        
+        return console.log(new Intl.DateTimeFormat("es", options).format(date))
+    }
+   
+} 
+
+
 export const Hour = ({dayHour, setOpeningTimes, openingTimes, getDays, position}:HoursProps)=>{
 
     const [start, setStart] = useState(dayHour.startTime?dayHour.startTime:"")
@@ -28,13 +39,14 @@ export const Hour = ({dayHour, setOpeningTimes, openingTimes, getDays, position}
 
             const findOpeningTimeIndex = copyOpeningTimes.findIndex((findTime)=> findTime.id === dayHour.id);
             
-            copyOpeningTimes[findOpeningTimeIndex] = {...copyOpeningTimes[findOpeningTimeIndex], endTime: new Date("1970-01-01T" + end + ":00.000Z") , startTime: new Date("1970-01-01T" + start + ":00.000Z")}
+            copyOpeningTimes[findOpeningTimeIndex] = {...copyOpeningTimes[findOpeningTimeIndex],  startTime: start, endTime: end}
 
             setOpeningTimes(copyOpeningTimes)
         }
     }, [end, start])
    
 
+    
     
     return (
         <div  className='flex flex-row justify-evenly px-4 mb-2'>

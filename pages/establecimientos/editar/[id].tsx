@@ -39,6 +39,7 @@ const mapIntoEstablishmentModel = (establishment: Establishment): EstablishmentM
       ) => {
         
         return {
+          id: service.id,
           serviceId: service.serviceId,
           service: service.service,
           phoneNumber: service.phoneNumber,

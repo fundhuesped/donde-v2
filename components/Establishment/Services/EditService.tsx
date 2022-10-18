@@ -4,14 +4,13 @@ import { uniqueId } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Button } from '../../Button';
 import { ServicesModal } from '../AvailableServices';
-import { Hour } from './components/Hour';
-
+import { Hour, newDateHandle } from './components/Hour';
 
 export type Day = "M" | "T" | "W" | "R" | "F" | "S" | "U";
 
 type EditServiceProps = {
     setShowModal: (x: any ) => void;
-    modalService?: {serviceId: string; service: Service; phoneNumber: string | null; details: string | null; openingTimes: ServiceOnEstablishmentOpeningTime[]; }[];
+    modalService?: {id:string; serviceId: string; service: Service; phoneNumber: string | null; details: string | null; openingTimes: ServiceOnEstablishmentOpeningTime[]; }[];
     availableServices: Service[];
     modalServiceId?: string;
     onChange: (event: { [key: string]: any }) => void;
@@ -24,16 +23,6 @@ type Service = {
     name: string;
     icon: string;
 }
-
-const getTime = (date:Date) => {
-    
-    const newDate = new Date(date);
-    var hour = newDate.getHours();
-    const minutes = (newDate.getMinutes() < 10 ? '0' : '') + newDate.getMinutes();
-    const time = hour + ':' + minutes;
-    return time;
-};
-
 
 const EditService = (props:EditServiceProps) => {
     const { setShowModal, modalService, modalServiceId, availableServices, onChange, activeServicesId, activeServices } = props;
@@ -72,8 +61,8 @@ const EditService = (props:EditServiceProps) => {
                     id: uniqueId(),
                     serviceOnEstablishmentId: uniqueId(), 
                     day: day as Day, 
-                    startTime: new Date(0,0), 
-                    endTime: new Date(0,0),
+                    startTime:  newDateHandle("00:00"), 
+                    endTime: newDateHandle("00:00"), 
                 }
             })
             setOpeningTimes([...openingTimes, ...mappedDays])
@@ -86,7 +75,7 @@ const EditService = (props:EditServiceProps) => {
     }
 
     var getDays:{id:string,day:Day,  startTime: string, endTime: string}[] = openingTimes.map(sch=> {        
-        return { id:sch.id ,day:sch.day,  startTime: getTime(sch.startTime), endTime: getTime(sch.endTime)}
+        return { id:sch.id ,day:sch.day,  startTime: sch.startTime, endTime: sch.endTime}
     })
 
     useEffect(() => {
@@ -114,29 +103,48 @@ const EditService = (props:EditServiceProps) => {
              setError("No olvide ingresar el servicio")
             return null;
         }
-        // console.log(modalService)
+        
+
+        const formatGetDays = getDays.map(day=>{ return {day: day.day, startTime: day.startTime, endTime: day.endTime}})
+        console.log(formatGetDays);
    
         const updatedServicesId = new Set(activeServicesId);
         activeServices.map(ser=> updatedServicesId.add(ser.serviceId))
+
+
         const updatedServices = activeServices;
-        const aux:ServicesModal = {      
+
+
+        let aux = {      
+            id: modalService?.length ? modalService[0].id : uniqueId(),
             serviceId: service.id, 
-            service: service, 
             phoneNumber: phoneNumber, 
             details: details,
-            openingTimes: getDays
+            openingTimes: formatGetDays
         }
-        updatedServices.push(aux)
-        console.log(aux)
+
+        if (modalService?.length) {
+            aux.id = modalService[0].id
+            const indexService = updatedServices.findIndex(ser=>ser.id == modalService[0].id)
+            updatedServices[indexService] = aux
+            console.log(modalService, "editado");
+            
+        }else{
+            updatedServices.push(aux)
+            console.log(modalService, "nuevo");
+            
+        }
+
+
         onChange({ servicesId: updatedServicesId, services: updatedServices });
         setShowModal(false)
     };
     
-    const setServiceHandler = (id:string)=>{
+    const setServiceHandler = (id:string)=>{        
         const serviceSelected = availableServices.filter(ser=> ser.id == id)
         setService(...serviceSelected)
     }
-
+    
 
     return (
         <>

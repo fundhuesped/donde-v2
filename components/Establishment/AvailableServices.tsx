@@ -5,7 +5,7 @@ import { Service } from '../../model/services';
 import { Pill } from '../Pill';
 import { Services } from './Services';
 
-export type ServicesModal = {serviceId: string; service: Service; phoneNumber: string | null; details: string | null; openingTimes: ServiceOnEstablishmentOpeningTime[]; }[]
+export type ServicesModal = {id: string; serviceId: string; service: Service; phoneNumber: string | null; details: string | null; openingTimes: ServiceOnEstablishmentOpeningTime[]; }[]
 
 type AvailableServicesProps = {
   onChange: (event: { [key: string]: any }) => void;
@@ -22,15 +22,6 @@ export const AvailableServices = (props: AvailableServicesProps) => {
 
   const isChecked = (serviceId: string) => activeServicesId.has(serviceId);
  
-  const addService = (defaultService: string, selectedService: string | undefined, otherServices: string[]) => {
-    const updatedServices = new Set(activeServicesId);
-    otherServices.forEach((serviceId) => updatedServices.delete(serviceId));
-    updatedServices.add(defaultService);
-    if (selectedService) {
-      updatedServices.add(selectedService);
-    }
-    onChange({ servicesId: updatedServices });
-  };
 
   const editService = (id:string) =>{
     
@@ -49,6 +40,8 @@ export const AvailableServices = (props: AvailableServicesProps) => {
     setShowModal(true)
 
   }
+
+
 
   return (
     <>

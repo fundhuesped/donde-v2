@@ -32,7 +32,7 @@ export type EstablishmentModel = {
   country: string;
   latitude?: number;
   longitude?: number;
-  services: { serviceId: string; service: Service; phoneNumber: string | null; details: string | null; openingTimes: ServiceOnEstablishmentOpeningTime[]; }[]
+  services: { id: string; serviceId: string; service: Service; phoneNumber: string | null; details: string | null; openingTimes: ServiceOnEstablishmentOpeningTime[]; }[]
   servicesId: Set<string>;
   fullAddress: string;
   phone: string;
@@ -165,7 +165,15 @@ const EstablishmentAdmin = (props: {
       ])
       .value();
 
-    return { ...establishmentPayload, services: Array.from(services) };
+    return { ...establishmentPayload, services: Array.from(services.map(
+      ser=> {
+        return {
+          serviceId: ser.id, 
+          phoneNumber: ser.phoneNumber, 
+          details: ser.details,
+          openingTimes: ser.openingTimes
+        }
+      })) };
   };
   const handleFormSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
