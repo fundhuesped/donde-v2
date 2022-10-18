@@ -85,8 +85,8 @@ model Establishment {
 }
 
 model ServiceOnEstablishment {
-  id              String        @id @default(uuid()) @db.Uuid
-  establishment   Establishment @relation(fields: [establishmentId], references: [id])
+  id              String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  establishment   Establishment @relation(fields: [establishmentId], references: [id], onDelete: Cascade)
   establishmentId String        @db.Uuid
   service         Service       @relation(fields: [serviceId], references: [id])
   serviceId       String        @db.Uuid
@@ -108,8 +108,8 @@ enum Day {
 }
 
 model ServiceOnEstablishmentOpeningTime {
-  id                             String                       @id @default(uuid()) @db.Uuid
-  serviceOnEstablishment         ServiceOnEstablishment       @relation(fields: [serviceOnEstablishmentId], references: [id])
+  id                             String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  serviceOnEstablishment         ServiceOnEstablishment       @relation(fields: [serviceOnEstablishmentId], references: [id], onDelete: Cascade)
   serviceOnEstablishmentId       String                       @db.Uuid
   day                            Day
   startTime                      DateTime                     @db.Time()

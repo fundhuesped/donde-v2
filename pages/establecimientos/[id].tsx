@@ -18,6 +18,7 @@ import { Establishment } from '../../model/establishment';
 import { ServiceIcon } from '../../model/services';
 import { getEstablishment } from '../../server/api/establishments';
 import { formatEstablishmentLocation, formatEstablishmentType } from '../../utils/establishments';
+import { transformEstablishmentIntoJSONResponse } from '../api/establishments';
 
 interface WebSiteButtonProps {
   website: string;
@@ -112,7 +113,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async ({ 
 
   return {
     props: {
-      establishment: JSON.parse(JSON.stringify(establishment)),
+      establishment: establishment ? transformEstablishmentIntoJSONResponse(establishment) : undefined,
     },
   };
 };

@@ -3,7 +3,7 @@ import { NextApiHandler } from 'next';
 import { prismaClient } from '../../../server/prisma/client';
 import { editEstablishmentSchema as establishmentSchema } from '../../../model/establishment';
 import { EstablishmentStatus } from '@prisma/client';
-import { mapServicesOnEstablishmentToPrismaObject } from './index';
+import { mapServicesOnEstablishmentToPrismaObject, transformEstablishmentIntoJSONResponse } from './index';
 import * as yup from 'yup';
 
 const handler: NextApiHandler = async (req, res) => {
@@ -40,7 +40,7 @@ const getEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) 
   });
 
   if (establishment) {
-    return res.status(200).json(JSON.parse(JSON.stringify(establishment)));
+    return res.status(200).json(transformEstablishmentIntoJSONResponse(establishment));
   }
   return res.status(404).end();
 };

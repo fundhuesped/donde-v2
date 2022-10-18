@@ -8,6 +8,7 @@ import { Service } from '../../../model/services';
 import { getEstablishment } from '../../../server/api/establishments';
 import { getServices } from '../../../server/api/services';
 import { tryGetGoogleMapsApiKey } from '../../../utils/establishments';
+import { transformEstablishmentIntoJSONResponse } from '../../api/establishments';
 
 type ServerSideProps = {
   googleMapsApiKey: string;
@@ -24,7 +25,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (co
   return {
     props: {
       googleMapsApiKey,
-      establishment: JSON.parse(JSON.stringify(establishment)),
+      establishment: transformEstablishmentIntoJSONResponse(establishment),
       availableServices,
     },
   };

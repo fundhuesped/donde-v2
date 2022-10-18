@@ -52,8 +52,8 @@ export const mapServicesOnEstablishmentOpeningTimesToPrismaObject = (openingTime
   const servicesObjects = openingTimes.map(openingTime => {
     return {
       day: openingTime.day,
-      startTime: openingTime.startTime,
-      endTime: openingTime.endTime,
+      startTime: '1970-01-01T' + openingTime.startTime + ':00.000Z',
+      endTime: '1970-01-01T' + openingTime.endTime + ':00.000Z',
     };
   });
   return {

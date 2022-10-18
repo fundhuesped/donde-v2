@@ -3,6 +3,8 @@ import { prismaClient } from '../../../server/prisma/client';
 import { EstablishmentStatus } from '@prisma/client';
 import { createEstablishmentSchema as establishmentSchema } from '../../../model/establishment';
 import { createServiceOnEstablishmentSchema  } from '../../../model/serviceOnEstablishment';
+import { Establishment as EstablishmentModel} from '../../../model/establishment';
+import { Establishment } from '@prisma/client';
 import { z } from 'zod';
 import * as yup from 'yup';
 
@@ -58,7 +60,7 @@ const getEstablishments = async (req: NextApiRequest, res: NextApiResponse<any>)
       },
   });
   
-  return res.status(200).json(JSON.parse(JSON.stringify(establishments)));
+  return res.status(200).json(establishments.map(establishment => {return transformEstablishmentIntoJSONResponse(establishment)}));
 };
 
 const createEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
@@ -96,5 +98,16 @@ export const mapServicesOnEstablishmentToPrismaObject = (services: yup.Asserts<t
     create: servicesObjects,
   };
 };
+
+export const transformEstablishmentIntoJSONResponse = (establishment: Establishment | EstablishmentModel) : any => {
+  const jsonEstablishment = JSON.parse(JSON.stringify(establishment));
+  for (const service of jsonEstablishment.services) {
+    for (const openingTimes of service.openingTimes) {
+      openingTimes.startTime = openingTimes.startTime.substring(11, 17);
+      openingTimes.endTime = openingTimes.endTime.substring(11, 17);
+    }
+  }
+  return jsonEstablishment;
+}
 
 export default handler;
