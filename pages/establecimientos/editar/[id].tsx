@@ -1,15 +1,13 @@
-import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import EstablishmentAdmin, {
   emptyEstablishmentModel,
-  EstablishmentModel,
+  EstablishmentModel
 } from '../../../components/Establishment/EstablishmentAdmin';
-import { tryGetGoogleMapsApiKey } from '../../../utils/establishments';
-import * as PrismaClient from '@prisma/client';
-import { getServices } from '../../../server/api/services';
-import { getEstablishment } from '../../../server/api/establishments';
 import { Establishment } from '../../../model/establishment';
 import { Service } from '../../../model/services';
+import { getEstablishment } from '../../../server/api/establishments';
+import { getServices } from '../../../server/api/services';
+import { tryGetGoogleMapsApiKey } from '../../../utils/establishments';
 
 type ServerSideProps = {
   googleMapsApiKey: string;
@@ -38,17 +36,31 @@ const mapIntoEstablishmentModel = (establishment: Establishment): EstablishmentM
       (
         service
       ) => {
-        return service.id;
+        
+        return {
+          serviceId: service.serviceId,
+          service: service.service,
+          phoneNumber: service.phoneNumber,
+          details: service.details,
+          openingTimes: service.openingTimes
+        }
       },
     ) || [];
+
+  const servicesId = establishment.services.map(
+      service => service.serviceId  
+  )
 
   return {
     ...emptyEstablishmentModel,
     ...establishment,
-    services: new Set(services),
+    servicesId: new Set(servicesId),
+    services: services,
     fullAddress: establishment.province,
   };
 };
+
+
 const EstablishmentEdit: NextPage<ServerSideProps> = ({ googleMapsApiKey, establishment, availableServices }) => {
   const establishmentModel = mapIntoEstablishmentModel(establishment);
   return (

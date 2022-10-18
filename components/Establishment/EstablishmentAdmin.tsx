@@ -1,3 +1,4 @@
+import { Service, ServiceOnEstablishmentOpeningTime } from '@prisma/client';
 import axios from 'axios';
 import _, { isNull } from 'lodash';
 import isEmpty from 'lodash/isEmpty';
@@ -9,7 +10,6 @@ import MainContainer from '../../components/MainContainer';
 import Select from '../../components/Select';
 import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../../config/thirdParty';
 import { establishmentTypes } from '../../model/establishment';
-import { Service } from '../../model/services';
 import Alert from '../Alert';
 import { Button } from '../Button';
 import { AvailableServices } from './AvailableServices';
@@ -32,7 +32,8 @@ export type EstablishmentModel = {
   country: string;
   latitude?: number;
   longitude?: number;
-  services: Set<string>;
+  services: { serviceId: string; service: Service; phoneNumber: string | null; details: string | null; openingTimes: ServiceOnEstablishmentOpeningTime[]; }[]
+  servicesId: Set<string>;
   fullAddress: string;
   phone: string;
   email: string;
@@ -50,7 +51,8 @@ export const emptyEstablishmentModel = {
   fullAddress: '',
   apartment: '',
   intersection: '',
-  services: new Set<string>(),
+  services: [],
+  servicesId: new Set<string>(),
   website: '',
   phone: '',
   whatsApp: '',
@@ -91,7 +93,7 @@ const EstablishmentAdmin = (props: {
       setIsFormCompleted(
         (fieldsToValidate.every((field) => field || !isEmpty(field)) &&
           updatedForm.tosCheckbox &&
-          updatedForm.services?.size > 0) ||
+          updatedForm.servicesId?.size > 0) ||
           false,
       );
       return updatedForm;
@@ -198,6 +200,7 @@ const EstablishmentAdmin = (props: {
     apartment,
     intersection,
     services,
+    servicesId,
     website,
     phone,
     whatsApp,
@@ -209,6 +212,7 @@ const EstablishmentAdmin = (props: {
     availability,
   } = form;
 
+  
   return (
     <>
       {isNewEstablishment ? (
@@ -264,6 +268,7 @@ const EstablishmentAdmin = (props: {
             {/*<AvailabilityField key={'workingHourTo'} onChange={handleFormUpdate} availability={availability} />*/}
             <AvailableServices
               onChange={handleFormUpdate}
+              activeServicesId={servicesId}
               activeServices={services}
               availableServices={availableServices}
             />
@@ -308,9 +313,16 @@ const EstablishmentAdmin = (props: {
             {isUpdateSuccessful && (
               <Alert title={'Edicion exitosa!'} message={'El establecimiento fue editado correctamente'} success={true} />
             )}
+             {isNewEstablishment ? (
+              <Button className={'w-full my-5'} disabled={!isFormCompleted} type={'primary'} onClick={handleFormSubmit}>
+                Agregar establecimiento
+              </Button>
+            ) : (
             <Button className={'w-full my-5'} disabled={!isFormCompleted} type={'primary'} onClick={handleFormSubmit}>
-              Agregar establecimiento
+              Editar establecimiento
             </Button>
+            )}
+            
           </>
         )}
         

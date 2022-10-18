@@ -31,10 +31,9 @@ export default function About() {
           <strong>Dónde</strong> es una plataforma que te permite encontrar servicios de salud.
         </p>
         <p className={'text-base text-justify mb-6'}>
-          Buscá el lugar más cercano para acceder a preservativos, métodos anticonceptivos, información sobre interrupción
-          voluntaria del embarazo, test de infecciones de transmisión sexual (ITS) y vacunatorios.
+          Buscá el lugar más cercano para acceder a preservativos, métodos anticonceptivos, información sobre interrupción voluntaria del embarazo, test de infecciones de transmisión sexual (ITS) y vacunatorios.
         </p>
-        <p className={'text-base text-justify mb-6'}>Esta es una plataforma de código abierto pensada por Fundación Huésped.</p>
+        <p className={'text-base text-justify mb-6'}>Esta es una plataforma de código abierto pensada por Fundación Huésped y desarrollada por Wingu.</p>
         <p className={'p-2 bg-ultra-light-salmon rounded-2xl text-center'}>
           Si tienes inquietudes, visitá nuestra sección de{' '}
           <Link href="/preguntas-frecuentes">

@@ -43,8 +43,7 @@ const ITEMS = [
       <>
         <p>Seleccioná los servicios que quieras encontrar. Después, escribí una ubicación o compartirla desde tu dispositivo.</p>
         <p>
-          La plataforma te mostrará los resultados más cercanos a la dirección que indicaste. En ese momento, vas a poder
-          modificar tu búsqueda con el botón de &quot;Filtrar&quot;.
+          La plataforma te mostrará los resultados más cercanos a la dirección que indicaste. En ese momento, vas a poder modificar tu búsqueda con el botón de &quot;Filtrar&quot;.
         </p>
       </>
     ),

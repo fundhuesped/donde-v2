@@ -38,7 +38,7 @@ const EstablishmentTab = React.memo<Props>((props) => {
     }
   }
 
-  activeEstablishment.services.map((serviceOnEstablishment) => (console.log(serviceOnEstablishment)))
+  // activeEstablishment.services.map((serviceOnEstablishment) => (console.log(serviceOnEstablishment)))
   
 
 
