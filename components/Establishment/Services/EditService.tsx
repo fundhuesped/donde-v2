@@ -19,12 +19,12 @@ type EditServiceProps = {
 };
 
 export type ServiceOnEstablishmentOpeningTimeFormat = {
-   id: string;
-    serviceOnEstablishmentId: string;
-    day: Day;
-    startTime: string | Date;
-    endTime: string | Date;
-}
+  id: string;
+  serviceOnEstablishmentId: string;
+  day: Day;
+  startTime: string | Date;
+  endTime: string | Date;
+};
 
 const EditService = (props: EditServiceProps) => {
   const { setShowModal, modalService, modalServiceId, availableServices, onChange, activeServicesId, activeServices } = props;
@@ -60,7 +60,7 @@ const EditService = (props: EditServiceProps) => {
 
   const addHour = () => {
     if (checkedDays.length) {
-      const mappedDays= checkedDays.map((day) => {
+      const mappedDays = checkedDays.map((day) => {
         return {
           id: uniqueId(),
           serviceOnEstablishmentId: uniqueId(),
@@ -110,7 +110,7 @@ const EditService = (props: EditServiceProps) => {
     });
 
     const updatedServicesId = new Set(activeServicesId);
-    const updatedServices:{id:string}[] = activeServices;
+    const updatedServices: { id: string }[] = activeServices;
 
     let aux = {
       id: modalService?.length ? modalService[0].id : uniqueId(),

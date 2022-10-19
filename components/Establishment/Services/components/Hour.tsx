@@ -3,13 +3,14 @@ import { useEffect, useState } from 'react';
 import { Day, ServiceOnEstablishmentOpeningTimeFormat } from '../EditService';
 
 type HoursProps = {
-  dayHour: { 
+  dayHour: {
     id: string;
     day: Day;
     startTime: string | Date;
-    endTime: string | Date; };
+    endTime: string | Date;
+  };
   setOpeningTimes: (x: any) => void;
-  getDays: { id: string; day: Day; startTime: string | Date; endTime: string | Date}[];
+  getDays: { id: string; day: Day; startTime: string | Date; endTime: string | Date }[];
   openingTimes: ServiceOnEstablishmentOpeningTimeFormat[];
 };
 
@@ -34,13 +35,13 @@ export const Hour = ({ dayHour, setOpeningTimes, openingTimes, getDays }: HoursP
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [end, start]);
 
-  const formatHour = (hour:Date | string)=>{
-    if (typeof(hour) == 'string') {        
-        return hour;
+  const formatHour = (hour: Date | string) => {
+    if (typeof hour == 'string') {
+      return hour;
     }
     hour = JSON.stringify(hour);
     return hour;
-  }
+  };
 
   return (
     <div className="flex flex-row justify-evenly px-4 mb-2">
