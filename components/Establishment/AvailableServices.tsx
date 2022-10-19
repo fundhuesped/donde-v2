@@ -5,7 +5,14 @@ import { Service } from '../../model/services';
 import { Pill } from '../Pill';
 import { Services } from './Services';
 
-export type ServicesModal = {id: string; serviceId: string; service: Service; phoneNumber: string | null; details: string | null; openingTimes: ServiceOnEstablishmentOpeningTime[]; }[]
+export type ServicesModal = {
+  id: string;
+  serviceId: string;
+  service: Service;
+  phoneNumber: string | null;
+  details: string | null;
+  openingTimes: ServiceOnEstablishmentOpeningTime[];
+}[]
 
 type AvailableServicesProps = {
   onChange: (event: { [key: string]: any }) => void;

@@ -10,19 +10,13 @@ export type Day = "M" | "T" | "W" | "R" | "F" | "S" | "U";
 
 type EditServiceProps = {
     setShowModal: (x: any ) => void;
-    modalService?: {id:string; serviceId: string; service: Service; phoneNumber: string | null; details: string | null; openingTimes: ServiceOnEstablishmentOpeningTime[]; }[];
+    modalService?: ServicesModal;
     availableServices: Service[];
     modalServiceId?: string;
     onChange: (event: { [key: string]: any }) => void;
     activeServicesId: Set<string>;
     activeServices: ServicesModal;
 };
-
-type Service = {
-    id: string;
-    name: string;
-    icon: string;
-}
 
 const EditService = (props:EditServiceProps) => {
     const { setShowModal, modalService, modalServiceId, availableServices, onChange, activeServicesId, activeServices } = props;
@@ -32,8 +26,14 @@ const EditService = (props:EditServiceProps) => {
     const [details, setDetails] = useState<string|null>("")
     const [openingTimes, setOpeningTimes] = useState<ServiceOnEstablishmentOpeningTime[]>([])
     const [error, setError] = useState<string>("")
-    const [service, setService] = useState<Service | null>(null)
+    const [serviceId, setServiceId] = useState<string | null>(null)
     const [checkedDays, setCheckedDays] = useState<string[]>([])
+    
+
+    const setServiceHandler = (id:string)=>{        
+        const serviceSelected = availableServices.filter(ser=> ser.id == id)
+        setServiceId(serviceSelected[0].id)
+    }
     
 
     const handleCheck = (e:React.FormEvent<HTMLInputElement>) => {
@@ -69,7 +69,7 @@ const EditService = (props:EditServiceProps) => {
             
             setError("")
         }else{
-            setError("No olvide ingresar un día")
+            setError("No olvide ingresar un día de la semana")
         }
         
     }
@@ -80,44 +80,39 @@ const EditService = (props:EditServiceProps) => {
 
     useEffect(() => {
         if (modalService?.length) {
-            setService(modalService[0].service)
+            setServiceId(modalService[0].serviceId)
             setPhoneNumber(modalService[0].phoneNumber)
             setDetails(modalService[0].details)
             setOpeningTimes(modalService[0].openingTimes)
         }
     }, [])
     
+    
 
+    const addService = (serviceId:string|null, phoneNumber:string | null, details: string | null, getDays: { id: string; day: Day; startTime: string; endTime: string; }[]) => {
 
-    const removeServices = (service: string) => {
-        const updatedServicesId = new Set(activeServicesId);
-        const updatedServices = activeServices.filter(ser=>ser.serviceId != service)
-        updatedServicesId.delete(service)
-        onChange({ servicesId: updatedServicesId, services: updatedServices });
-        setShowModal(false)
-    };
+        if (modalService?.length) {
+           setServiceId(modalService[0].serviceId)
+           console.log(modalService);
+           
+            console.log(serviceId);
 
-    const addService = (service:Service|null, phoneNumber:string | null, details: string | null, getDays: { id: string; day: Day; startTime: string; endTime: string; }[]) => {
-
-        if (service == null) {
-             setError("No olvide ingresar el servicio")
+        }if(serviceId == null){
+            setError("No olvide ingresar el nombre del servicio")
+            console.log(serviceId);
             return null;
         }
         
 
         const formatGetDays = getDays.map(day=>{ return {day: day.day, startTime: day.startTime, endTime: day.endTime}})
-        console.log(formatGetDays);
    
         const updatedServicesId = new Set(activeServicesId);
-        activeServices.map(ser=> updatedServicesId.add(ser.serviceId))
-
-
         const updatedServices = activeServices;
 
 
         let aux = {      
             id: modalService?.length ? modalService[0].id : uniqueId(),
-            serviceId: service.id, 
+            serviceId: serviceId, 
             phoneNumber: phoneNumber, 
             details: details,
             openingTimes: formatGetDays
@@ -127,24 +122,29 @@ const EditService = (props:EditServiceProps) => {
             aux.id = modalService[0].id
             const indexService = updatedServices.findIndex(ser=>ser.id == modalService[0].id)
             updatedServices[indexService] = aux
-            console.log(modalService, "editado");
+
+            updatedServicesId.delete(modalService[0].serviceId)
+            updatedServicesId.add(serviceId)
+
             
         }else{
             updatedServices.push(aux)
-            console.log(modalService, "nuevo");
-            
+            updatedServicesId.add(serviceId)
         }
-
+        
 
         onChange({ servicesId: updatedServicesId, services: updatedServices });
         setShowModal(false)
     };
     
-    const setServiceHandler = (id:string)=>{        
-        const serviceSelected = availableServices.filter(ser=> ser.id == id)
-        setService(...serviceSelected)
-    }
-    
+    const removeServices = (service: string) => {
+        const updatedServicesId = new Set(activeServicesId);
+        const updatedServices = activeServices.filter(ser=>ser.serviceId != service)
+        updatedServicesId.delete(service)
+        onChange({ servicesId: updatedServicesId, services: updatedServices });
+        setShowModal(false)
+    };
+
 
     return (
         <>
@@ -322,7 +322,7 @@ const EditService = (props:EditServiceProps) => {
                 <div>
                     <Button 
                         className={'w-full my-5'} type={'primary'} 
-                        onClick={()=>addService(service, phoneNumber, details, getDays)}
+                        onClick={()=>addService(serviceId, phoneNumber, details, getDays)}
                     >
                         Guardar
                     </Button>
