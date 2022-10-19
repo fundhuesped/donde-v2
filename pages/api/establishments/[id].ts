@@ -51,7 +51,7 @@ const updateEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
 
   try {
     establishmentSchema.validateSync(req.body, { abortEarly: false });
-  } catch (err) {
+  } catch (err: any) {
     // err is of type ValidationError
     return res.status(400).json(err.inner);
   }
