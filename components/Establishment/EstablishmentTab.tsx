@@ -138,9 +138,14 @@ const EstablishmentTab = React.memo<Props>((props) => {
                       <CardListItem icon={<ClockIcon className={'text-primary'} />}>
                         <div className='flex flex-wrap'>
                             {serviceOnEstablishment.openingTimes?.map((date) => {
-                            return <span className='mr-2'>{getDay(date.day)}{' '}{getTime(date.startTime)} - {getTime(date.endTime)}</span>
-                          }
-                          )}
+                              return( 
+                                <span className='mr-2'>
+                                  <>
+                                    {getDay(date.day)}{' '}{date.startTime} - {date.endTime}
+                                  </>
+                                </span>
+                              )}
+                            )}
                         </div>
                          
                         
