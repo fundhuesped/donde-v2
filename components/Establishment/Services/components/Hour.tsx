@@ -23,7 +23,6 @@ export const newDateHandle = (time:string) => {
    
 } 
 
-
 export const Hour = ({dayHour, setOpeningTimes, openingTimes, getDays, position}:HoursProps)=>{
 
     const [start, setStart] = useState(dayHour.startTime?dayHour.startTime:"")

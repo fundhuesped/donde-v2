@@ -168,7 +168,8 @@ const EstablishmentAdmin = (props: {
     return { ...establishmentPayload, services: Array.from(services.map(
       ser=> {
         return {
-          serviceId: ser.id, 
+          id: ser.id,
+          serviceId: ser.serviceId, 
           phoneNumber: ser.phoneNumber, 
           details: ser.details,
           openingTimes: ser.openingTimes
@@ -178,6 +179,8 @@ const EstablishmentAdmin = (props: {
   const handleFormSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
       const payload = buildEstablishmentPayload(form);
+      console.log(payload);
+      
       if (isNewEstablishment) {
         const { data } = await axios.post('/api/establishments/', payload);
         await router.push({ pathname: `/establecimientos/${data.id}` });

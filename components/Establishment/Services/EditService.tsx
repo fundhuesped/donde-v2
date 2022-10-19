@@ -93,13 +93,8 @@ const EditService = (props:EditServiceProps) => {
 
         if (modalService?.length) {
            setServiceId(modalService[0].serviceId)
-           console.log(modalService);
-           
-            console.log(serviceId);
-
         }if(serviceId == null){
             setError("No olvide ingresar el nombre del servicio")
-            console.log(serviceId);
             return null;
         }
         
@@ -118,6 +113,8 @@ const EditService = (props:EditServiceProps) => {
             openingTimes: formatGetDays
         }
 
+        
+
         if (modalService?.length) {
             aux.id = modalService[0].id
             const indexService = updatedServices.findIndex(ser=>ser.id == modalService[0].id)
@@ -131,6 +128,8 @@ const EditService = (props:EditServiceProps) => {
             updatedServices.push(aux)
             updatedServicesId.add(serviceId)
         }
+        
+        console.log(updatedServices);
         
 
         onChange({ servicesId: updatedServicesId, services: updatedServices });
