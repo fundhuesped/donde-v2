@@ -98,6 +98,7 @@ const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
         {
           id: serviceData.id,
           name: serviceData.name,
+          // @ts-ignore
           icon: SERVICE_ICONS[serviceData.icon],
           selected: false,
         },
