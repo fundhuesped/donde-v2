@@ -85,6 +85,7 @@ const EditService = (props:EditServiceProps) => {
             setDetails(modalService[0].details)
             setOpeningTimes(modalService[0].openingTimes)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     
     

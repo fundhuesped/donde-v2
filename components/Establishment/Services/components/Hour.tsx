@@ -31,7 +31,7 @@ export const Hour = ({dayHour, setOpeningTimes, openingTimes, getDays, position}
     const deleteHandler = () => {
         setOpeningTimes(getDays.filter(day => day.id !== dayHour.id))
     }
-
+    
    useEffect(() => {
         if (start || end) {
             let copyOpeningTimes = [...openingTimes]
@@ -42,6 +42,7 @@ export const Hour = ({dayHour, setOpeningTimes, openingTimes, getDays, position}
 
             setOpeningTimes(copyOpeningTimes)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [end, start])
    
 

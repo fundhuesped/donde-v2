@@ -99,6 +99,7 @@ const EstablishmentTab = React.memo<Props>((props) => {
                     <CardSubHeader>Servicios disponibles</CardSubHeader>
                     {activeEstablishment.services.map((serviceOnEstablishment, idx) => (
                       <a
+                        key={serviceOnEstablishment.id + idx}
                         className={
                           'inherit'
                         }
@@ -137,9 +138,9 @@ const EstablishmentTab = React.memo<Props>((props) => {
                       </CardListItem>
                       <CardListItem icon={<ClockIcon className={'text-primary'} />}>
                         <div className='flex flex-wrap'>
-                            {serviceOnEstablishment.openingTimes?.map((date) => {
+                            {serviceOnEstablishment.openingTimes?.map((date,idx) => {
                               return( 
-                                <span className='mr-2'>
+                                <span key={date.id + idx} className='mr-2'>
                                   <>
                                     {getDay(date.day)}{' '}{date.startTime} - {date.endTime}
                                   </>
