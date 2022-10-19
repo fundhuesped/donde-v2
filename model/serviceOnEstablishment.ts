@@ -23,7 +23,7 @@ export const createServiceOnEstablishmentSchema = yup.object({
 
 export const updateServiceOnEstablishmentSchema = yup.object({
   serviceId: yup.string().uuid(),
-  phoneNumber:  yup.string().matches(phoneRegExp, 'Phone number is not valid'),
+  phoneNumber: yup.string().matches(phoneRegExp, 'Phone number is not valid'),
   details: yup.string(),
   openingTimes: yup.array().of(createServiceOnEstablishmentOpeningTimeSchema).min(1),
 });

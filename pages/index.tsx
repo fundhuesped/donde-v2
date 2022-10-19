@@ -146,7 +146,8 @@ const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
         <title>Dónde</title>
       </Head>
       <p className={'w-full lg:w-3/6 px-content text-xl font-title text-justify py-4 lg:bg-white'}>
-        En esta plataforma vas a poder encontrar servicios de salud sexual y reproductiva y vacunatorios según tu ubicación. Esta herramienta fue creada por Fundación Huésped.
+        En esta plataforma vas a poder encontrar servicios de salud sexual y reproductiva y vacunatorios según tu ubicación. Esta
+        herramienta fue creada por Fundación Huésped.
       </p>
       <MainContainer className={'w-full h-screen lg:h-full lg:w-3/5 lg:mx-4 mt-4 pt-8 lg:flex-grow-0'}>
         <div className="w-full flex flex-col justify-center">

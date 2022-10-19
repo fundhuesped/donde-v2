@@ -11,11 +11,10 @@ import { ServiceIcon } from '../../../model/services';
 import { Card, CardHeader, CardList, CardListItem } from '../../Card';
 import { Pill } from '../../Pill';
 
-
 type Props = React.PropsWithChildren<{
   establishments: Establishment[];
   mapVisibility: string;
-  setActiveEstablishment: (x:Establishment | null)=>void;
+  setActiveEstablishment: (x: Establishment | null) => void;
 }>;
 
 const EstablishmentList = React.memo<Props>((props) => {
@@ -32,14 +31,14 @@ const EstablishmentList = React.memo<Props>((props) => {
       className={`${
         mapVisibility == 'hidden' ? 'block' : 'hidden'
       } lg:block bg-ultra-light-gray lg:bg-inherit w-100 h-full lg:h-4/6 scroll-style overflow-auto relative mt-4`}
-    > 
+    >
       {establishments && establishments.length ? (
         establishments.map((establishment) => {
           return (
             <Card
               key={establishment.id}
               className={'my-2 pb-6 mx-3 lg:mx-0 cursor-pointer'}
-              onClick={()=>handleDetailsClick(establishment.id)}
+              onClick={() => handleDetailsClick(establishment.id)}
             >
               <CardHeader className={'font-title text-lg'}>{establishment.name}</CardHeader>
               <CardList>
@@ -59,7 +58,7 @@ const EstablishmentList = React.memo<Props>((props) => {
                 <Pill className="{text-xs }">Cargado por Fundación Huesped</Pill>
               </footer>
             </Card>
-          ); 
+          );
         })
       ) : (
         <div className="mt-4 p-6 lg:p-0 mx-3 lg:mx-0 text-center lg:text-start">

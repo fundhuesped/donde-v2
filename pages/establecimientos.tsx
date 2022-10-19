@@ -182,7 +182,11 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
                     <EstablishmentToggle setMapVisibility={setMapVisibility} mapVisibility={mapVisibility} />
                   </EstablishmentHeader>
                 </div>
-                <EstablishmentList establishments={establishmentInScreen} mapVisibility={mapVisibility} setActiveEstablishment={setActiveEstablishment} />
+                <EstablishmentList
+                  establishments={establishmentInScreen}
+                  mapVisibility={mapVisibility}
+                  setActiveEstablishment={setActiveEstablishment}
+                />
               </EstablishmentSideBar>
             </div>
 

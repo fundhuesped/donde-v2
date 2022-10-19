@@ -1,7 +1,7 @@
 import { GetServerSideProps, NextPage } from 'next';
 import EstablishmentAdmin, {
   emptyEstablishmentModel,
-  EstablishmentModel
+  EstablishmentModel,
 } from '../../../components/Establishment/EstablishmentAdmin';
 import { Establishment } from '../../../model/establishment';
 import { Service } from '../../../model/services';
@@ -33,25 +33,18 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (co
 
 const mapIntoEstablishmentModel = (establishment: Establishment): EstablishmentModel => {
   const services =
-    establishment.services.map(
-      (
-        service
-      ) => {
-        
-        return {
-          id: service.id,
-          serviceId: service.serviceId,
-          service: service.service,
-          phoneNumber: service.phoneNumber,
-          details: service.details,
-          openingTimes: service.openingTimes
-        }
-      },
-    ) || [];
+    establishment.services.map((service) => {
+      return {
+        id: service.id,
+        serviceId: service.serviceId,
+        service: service.service,
+        phoneNumber: service.phoneNumber,
+        details: service.details,
+        openingTimes: service.openingTimes,
+      };
+    }) || [];
 
-  const servicesId = establishment.services.map(
-      service => service.serviceId  
-  )
+  const servicesId = establishment.services.map((service) => service.serviceId);
 
   return {
     ...emptyEstablishmentModel,
@@ -61,7 +54,6 @@ const mapIntoEstablishmentModel = (establishment: Establishment): EstablishmentM
     fullAddress: establishment.province,
   };
 };
-
 
 const EstablishmentEdit: NextPage<ServerSideProps> = ({ googleMapsApiKey, establishment, availableServices }) => {
   const establishmentModel = mapIntoEstablishmentModel(establishment);

@@ -30,14 +30,14 @@ const createServiceOnEstablishment = async (req: NextApiRequest, res: NextApiRes
   const serviceOnstablishment = await prismaClient.serviceOnEstablishment.create({
     data: {
       establishment: {
-       connect: {
-        id: establishmentId,
-       } 
+        connect: {
+          id: establishmentId,
+        },
       },
       service: {
         connect: {
-          id: req.body.serviceId
-        }
+          id: req.body.serviceId,
+        },
       },
       details: req.body.details,
       phoneNumber: req.body.phoneNumber,
@@ -47,9 +47,11 @@ const createServiceOnEstablishment = async (req: NextApiRequest, res: NextApiRes
   return res.status(201).json(serviceOnstablishment);
 };
 
-export const mapServicesOnEstablishmentOpeningTimesToPrismaObject = (openingTimes: yup.Asserts<typeof createServiceOnEstablishmentOpeningTimeSchema>[])  => {
+export const mapServicesOnEstablishmentOpeningTimesToPrismaObject = (
+  openingTimes: yup.Asserts<typeof createServiceOnEstablishmentOpeningTimeSchema>[],
+) => {
   if (isEmpty(openingTimes)) return { create: [] };
-  const servicesObjects = openingTimes.map(openingTime => {
+  const servicesObjects = openingTimes.map((openingTime) => {
     return {
       day: openingTime.day,
       startTime: '1970-01-01T' + openingTime.startTime + ':00.000Z',

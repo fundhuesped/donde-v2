@@ -43,7 +43,8 @@ const ITEMS = [
       <>
         <p>Seleccioná los servicios que quieras encontrar. Después, escribí una ubicación o compartirla desde tu dispositivo.</p>
         <p>
-          La plataforma te mostrará los resultados más cercanos a la dirección que indicaste. En ese momento, vas a poder modificar tu búsqueda con el botón de &quot;Filtrar&quot;.
+          La plataforma te mostrará los resultados más cercanos a la dirección que indicaste. En ese momento, vas a poder
+          modificar tu búsqueda con el botón de &quot;Filtrar&quot;.
         </p>
       </>
     ),
@@ -52,9 +53,9 @@ const ITEMS = [
     title: '¿Cómo hago para sugerir o corregir la información de un lugar?',
     content: (
       <p>
-        Las organizaciones e instituciones que quieran colaborar para mejorar la cantidad y calidad de datos, pueden sumarse como “Colaboradores” completando este formulario, evaluaremos la solicitud y nos pondremos en contacto. 
-        Si preferís enviarnos la información por mails, escribinos  a:{' '}
-        <FAQLink href="mailto: donde@huesped.org.ar">donde@huesped.org.ar</FAQLink>
+        Las organizaciones e instituciones que quieran colaborar para mejorar la cantidad y calidad de datos, pueden sumarse como
+        “Colaboradores” completando este formulario, evaluaremos la solicitud y nos pondremos en contacto. Si preferís enviarnos
+        la información por mails, escribinos a: <FAQLink href="mailto: donde@huesped.org.ar">donde@huesped.org.ar</FAQLink>
       </p>
     ),
   },

@@ -18,7 +18,7 @@ const EstablishmentTab = React.memo<Props>((props) => {
   const addressNotes = null;
   const address = formatEstablishmentLocation(activeEstablishment);
 
-  const getTime = (date:Date) => {
+  const getTime = (date: Date) => {
     const newDate = new Date(date);
     const hour = newDate.getHours();
     const minutes = (newDate.getMinutes() < 10 ? '0' : '') + newDate.getMinutes();
@@ -26,21 +26,26 @@ const EstablishmentTab = React.memo<Props>((props) => {
     return time;
   };
 
-  const getDay = (day:string) =>{
+  const getDay = (day: string) => {
     switch (day) {
-      case "M": return "Lunes"
-      case "T": return "Martes"
-      case "W": return "Miércoles"
-      case "R": return "Jueves"
-      case "F": return "Viernes"
-      case "S": return "Sábado"
-      case "U": return "Domingo"
+      case 'M':
+        return 'Lunes';
+      case 'T':
+        return 'Martes';
+      case 'W':
+        return 'Miércoles';
+      case 'R':
+        return 'Jueves';
+      case 'F':
+        return 'Viernes';
+      case 'S':
+        return 'Sábado';
+      case 'U':
+        return 'Domingo';
     }
-  }
+  };
 
   // activeEstablishment.services.map((serviceOnEstablishment) => (console.log(serviceOnEstablishment)))
-  
-
 
   return (
     <>
@@ -83,7 +88,6 @@ const EstablishmentTab = React.memo<Props>((props) => {
                   role="tablist"
                 >
                   <Icon size="medium" type="tertiary" icon={SERVICE_ICONS[serviceOnEstablishment.service.icon as ServiceIcon]} />
-                  
                 </a>
               </li>
             ))}
@@ -100,9 +104,7 @@ const EstablishmentTab = React.memo<Props>((props) => {
                     {activeEstablishment.services.map((serviceOnEstablishment, idx) => (
                       <a
                         key={serviceOnEstablishment.id + idx}
-                        className={
-                          'inherit'
-                        }
+                        className={'inherit'}
                         onClick={(e) => {
                           e.preventDefault();
                           setOpenTab(idx);
@@ -111,17 +113,16 @@ const EstablishmentTab = React.memo<Props>((props) => {
                         href={`#id-${serviceOnEstablishment.service.id}`}
                         role="tablist"
                       >
-
-                            <CardListItem
-                              key={serviceOnEstablishment.id}
-                              icon={SERVICE_ICONS[serviceOnEstablishment.service.icon as ServiceIcon]}
-                            >
-                              {serviceOnEstablishment.service.name && (
-                                <>
-                                  <span>{serviceOnEstablishment.service.name}</span>
-                                </>
-                              )}
-                            </CardListItem>
+                        <CardListItem
+                          key={serviceOnEstablishment.id}
+                          icon={SERVICE_ICONS[serviceOnEstablishment.service.icon as ServiceIcon]}
+                        >
+                          {serviceOnEstablishment.service.name && (
+                            <>
+                              <span>{serviceOnEstablishment.service.name}</span>
+                            </>
+                          )}
+                        </CardListItem>
                       </a>
                     ))}
                   </CardList>
@@ -137,20 +138,17 @@ const EstablishmentTab = React.memo<Props>((props) => {
                         {serviceOnEstablishment.phoneNumber}
                       </CardListItem>
                       <CardListItem icon={<ClockIcon className={'text-primary'} />}>
-                        <div className='flex flex-wrap'>
-                            {serviceOnEstablishment.openingTimes?.map((date,idx) => {
-                              return( 
-                                <span key={date.id + idx} className='mr-2'>
-                                  <>
-                                    {getDay(date.day)}{' '}{date.startTime} - {date.endTime}
-                                  </>
-                                </span>
-                              )}
-                            )}
+                        <div className="flex flex-wrap">
+                          {serviceOnEstablishment.openingTimes?.map((date, idx) => {
+                            return (
+                              <span key={date.id + idx} className="mr-2">
+                                <>
+                                  {getDay(date.day)} {date.startTime} - {date.endTime}
+                                </>
+                              </span>
+                            );
+                          })}
                         </div>
-                         
-                        
-                       
                       </CardListItem>
                       <CardSubHeader className={'text-medium-gray text-xs'}>
                         Descripción del servicio - <span>{serviceOnEstablishment.details}</span>

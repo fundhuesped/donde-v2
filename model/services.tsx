@@ -12,7 +12,7 @@ export type Service = {
   id: string;
   name: string;
   icon: string;
-}
+};
 
 export const serviceSchema = yup.object({
   id: yup.string().required(),

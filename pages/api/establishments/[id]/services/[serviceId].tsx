@@ -10,7 +10,7 @@ const handler: NextApiHandler = async (req, res) => {
     case 'PUT':
       return updateServiceOnEstablishment(req, res);
     case 'DELETE':
-      return deleteServiceOnEstablishment(req, res)
+      return deleteServiceOnEstablishment(req, res);
     default:
       return res.status(405).json({ error: 'Method Not Allowed' });
   }
@@ -32,10 +32,10 @@ const updateServiceOnEstablishment = async (req: NextApiRequest, res: NextApiRes
 
   let connectService = undefined;
   if (req.body.serviceId) {
-    connectService =  {
+    connectService = {
       connect: {
-        id: req.body.serviceId
-      }
+        id: req.body.serviceId,
+      },
     };
   }
 
@@ -89,10 +89,10 @@ const deleteServiceOnEstablishment = async (req: NextApiRequest, res: NextApiRes
   await prismaClient.serviceOnEstablishment.delete({
     where: {
       id: serviceOnEstablishmentId,
-    }
+    },
   });
 
   return res.status(200).end();
-}
+};
 
 export default handler;

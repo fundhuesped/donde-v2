@@ -2,8 +2,8 @@ import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { prismaClient } from '../../../server/prisma/client';
 import { EstablishmentStatus } from '@prisma/client';
 import { createEstablishmentSchema as establishmentSchema } from '../../../model/establishment';
-import { createServiceOnEstablishmentSchema  } from '../../../model/serviceOnEstablishment';
-import { Establishment as EstablishmentModel} from '../../../model/establishment';
+import { createServiceOnEstablishmentSchema } from '../../../model/serviceOnEstablishment';
+import { Establishment as EstablishmentModel } from '../../../model/establishment';
 import { Establishment } from '@prisma/client';
 import { z } from 'zod';
 import * as yup from 'yup';
@@ -54,13 +54,17 @@ const getEstablishments = async (req: NextApiRequest, res: NextApiResponse<any>)
       services: {
         include: {
           service: true,
-          openingTimes: true
-          },
+          openingTimes: true,
         },
       },
+    },
   });
-  
-  return res.status(200).json(establishments.map(establishment => {return transformEstablishmentIntoJSONResponse(establishment)}));
+
+  return res.status(200).json(
+    establishments.map((establishment) => {
+      return transformEstablishmentIntoJSONResponse(establishment);
+    }),
+  );
 };
 
 const createEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
@@ -76,13 +80,13 @@ const createEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
       services: services,
     },
   });
-  
+
   return res.status(201).json(establishment);
 };
 
-export const mapServicesOnEstablishmentToPrismaObject = (services: yup.Asserts<typeof createServiceOnEstablishmentSchema>[])  => {
+export const mapServicesOnEstablishmentToPrismaObject = (services: yup.Asserts<typeof createServiceOnEstablishmentSchema>[]) => {
   if (isEmpty(services)) return { create: [] };
-  const servicesObjects = services.map(service => {
+  const servicesObjects = services.map((service) => {
     return {
       service: {
         connect: {
@@ -91,7 +95,7 @@ export const mapServicesOnEstablishmentToPrismaObject = (services: yup.Asserts<t
       },
       phoneNumber: service.phoneNumber,
       details: service.details,
-      openingTimes: mapServicesOnEstablishmentOpeningTimesToPrismaObject(service.openingTimes)
+      openingTimes: mapServicesOnEstablishmentOpeningTimesToPrismaObject(service.openingTimes),
     };
   });
   return {
@@ -99,7 +103,7 @@ export const mapServicesOnEstablishmentToPrismaObject = (services: yup.Asserts<t
   };
 };
 
-export const transformEstablishmentIntoJSONResponse = (establishment: Establishment | EstablishmentModel) : any => {
+export const transformEstablishmentIntoJSONResponse = (establishment: Establishment | EstablishmentModel): any => {
   const jsonEstablishment = JSON.parse(JSON.stringify(establishment));
   for (const service of jsonEstablishment.services) {
     for (const openingTimes of service.openingTimes) {
@@ -108,6 +112,6 @@ export const transformEstablishmentIntoJSONResponse = (establishment: Establishm
     }
   }
   return jsonEstablishment;
-}
+};
 
 export default handler;

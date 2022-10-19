@@ -38,7 +38,6 @@ async function main() {
     },
   });
 
-
   const establishment = await prisma.establishment.create({
     data: {
       name: 'Hospital de Pediatría Garrahan',
@@ -83,9 +82,9 @@ async function main() {
                   day: 'S',
                   startTime: new Date('1970-01-01:09:00Z'),
                   endTime: new Date('1970-01-01:14:00Z'),
-                }
-              ]
-            }
+                },
+              ],
+            },
           },
           {
             service: {
@@ -116,15 +115,14 @@ async function main() {
                   day: 'S',
                   startTime: new Date('1970-01-01:20:00Z'),
                   endTime: new Date('1970-01-01:23:00Z'),
-                }
-              ]
-            }
+                },
+              ],
+            },
           },
-        ]
+        ],
       },
-    }
+    },
   });
-
 }
 
 main()

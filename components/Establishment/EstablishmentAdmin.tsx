@@ -32,7 +32,14 @@ export type EstablishmentModel = {
   country: string;
   latitude?: number;
   longitude?: number;
-  services: { id: string; serviceId: string; service: Service; phoneNumber: string | null; details: string | null; openingTimes: ServiceOnEstablishmentOpeningTime[]; }[]
+  services: {
+    id: string;
+    serviceId: string;
+    service: Service;
+    phoneNumber: string | null;
+    details: string | null;
+    openingTimes: ServiceOnEstablishmentOpeningTime[];
+  }[];
   servicesId: Set<string>;
   fullAddress: string;
   phone: string;
@@ -165,22 +172,26 @@ const EstablishmentAdmin = (props: {
       ])
       .value();
 
-    return { ...establishmentPayload, services: Array.from(services.map(
-      ser=> {
-        return {
-          id: ser.id,
-          serviceId: ser.serviceId, 
-          phoneNumber: ser.phoneNumber, 
-          details: ser.details,
-          openingTimes: ser.openingTimes
-        }
-      })) };
+    return {
+      ...establishmentPayload,
+      services: Array.from(
+        services.map((ser) => {
+          return {
+            id: ser.id,
+            serviceId: ser.serviceId,
+            phoneNumber: ser.phoneNumber,
+            details: ser.details,
+            openingTimes: ser.openingTimes,
+          };
+        }),
+      ),
+    };
   };
   const handleFormSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
       const payload = buildEstablishmentPayload(form);
       console.log(payload);
-      
+
       if (isNewEstablishment) {
         const { data } = await axios.post('/api/establishments/', payload);
         await router.push({ pathname: `/establecimientos/${data.id}` });
@@ -223,7 +234,6 @@ const EstablishmentAdmin = (props: {
     availability,
   } = form;
 
-  
   return (
     <>
       {isNewEstablishment ? (
@@ -283,7 +293,6 @@ const EstablishmentAdmin = (props: {
               activeServices={services}
               availableServices={availableServices}
             />
-           
 
             {/*<ContactInfoField
               key={'email'}
@@ -324,19 +333,17 @@ const EstablishmentAdmin = (props: {
             {isUpdateSuccessful && (
               <Alert title={'Edicion exitosa!'} message={'El establecimiento fue editado correctamente'} success={true} />
             )}
-             {isNewEstablishment ? (
+            {isNewEstablishment ? (
               <Button className={'w-full my-5'} disabled={!isFormCompleted} type={'primary'} onClick={handleFormSubmit}>
                 Agregar establecimiento
               </Button>
             ) : (
-            <Button className={'w-full my-5'} disabled={!isFormCompleted} type={'primary'} onClick={handleFormSubmit}>
-              Editar establecimiento
-            </Button>
+              <Button className={'w-full my-5'} disabled={!isFormCompleted} type={'primary'} onClick={handleFormSubmit}>
+                Editar establecimiento
+              </Button>
             )}
-            
           </>
         )}
-        
       </MainContainer>
     </>
   );

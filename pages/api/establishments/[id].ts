@@ -33,7 +33,7 @@ const getEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) 
       services: {
         include: {
           service: true,
-          openingTimes: true
+          openingTimes: true,
         },
       },
     },
@@ -50,10 +50,10 @@ const updateEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
   const establishmentId = req.query.id;
 
   try {
-    establishmentSchema.validateSync(req.body, { abortEarly: false })
+    establishmentSchema.validateSync(req.body, { abortEarly: false });
   } catch (err) {
     // err is of type ValidationError
-    return res.status(400).json(err.inner)
+    return res.status(400).json(err.inner);
   }
 
   if (!idSchema.isValidSync(establishmentId)) {
@@ -110,10 +110,10 @@ const deleteEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
   await prismaClient.establishment.delete({
     where: {
       id: establishmentId,
-    }
+    },
   });
 
   return res.status(200).end();
-}
+};
 
 export default handler;
