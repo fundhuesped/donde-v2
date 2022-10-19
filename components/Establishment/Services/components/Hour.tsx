@@ -1,26 +1,19 @@
 import { XIcon } from '@heroicons/react/outline';
-import { ServiceOnEstablishmentOpeningTime } from '@prisma/client';
 import { useEffect, useState } from 'react';
-import { Day } from '../EditService';
+import { Day, ServiceOnEstablishmentOpeningTimeFormat } from '../EditService';
 
 type HoursProps = {
-  dayHour: { id: string; day: string; startTime: string; endTime: string };
+  dayHour: { 
+    id: string;
+    day: Day;
+    startTime: string | Date;
+    endTime: string | Date; };
   setOpeningTimes: (x: any) => void;
-  getDays: { id: string; day: Day; startTime: string; endTime: string }[];
-  position: number;
-  openingTimes: ServiceOnEstablishmentOpeningTime[];
+  getDays: { id: string; day: Day; startTime: string | Date; endTime: string | Date}[];
+  openingTimes: ServiceOnEstablishmentOpeningTimeFormat[];
 };
 
-export const newDateHandle = (time: string) => {
-  if (time.length == 5) {
-    var date = new Date('2019-06-11T' + time);
-    var options = { hour: 'numeric', minute: 'numeric' };
-
-    return console.log(new Intl.DateTimeFormat('es', options).format(date));
-  }
-};
-
-export const Hour = ({ dayHour, setOpeningTimes, openingTimes, getDays, position }: HoursProps) => {
+export const Hour = ({ dayHour, setOpeningTimes, openingTimes, getDays }: HoursProps) => {
   const [start, setStart] = useState(dayHour.startTime ? dayHour.startTime : '');
   const [end, setEnd] = useState(dayHour.endTime ? dayHour.endTime : '');
 
@@ -40,6 +33,14 @@ export const Hour = ({ dayHour, setOpeningTimes, openingTimes, getDays, position
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [end, start]);
+
+  const formatHour = (hour:Date | string)=>{
+    if (typeof(hour) == 'string') {        
+        return hour;
+    }
+    hour = JSON.stringify(hour);
+    return hour;
+  }
 
   return (
     <div className="flex flex-row justify-evenly px-4 mb-2">
@@ -76,7 +77,7 @@ export const Hour = ({ dayHour, setOpeningTimes, openingTimes, getDays, position
           maxLength={5}
           placeholder="Apertura"
           className={'rounded-lg mr-2 p-2 border border-gray-300 w-28 focus:border-primary font-light'}
-          value={start}
+          value={formatHour(start)}
           onChange={(e) => setStart(e.target.value)}
         />
       </div>
@@ -86,7 +87,7 @@ export const Hour = ({ dayHour, setOpeningTimes, openingTimes, getDays, position
           maxLength={5}
           placeholder="Cierre"
           className={'rounded-lg mr-2 p-2 border border-gray-300 w-28 focus:border-primary font-light'}
-          value={end}
+          value={formatHour(end)}
           onChange={(e) => setEnd(e.target.value)}
         />
       </div>

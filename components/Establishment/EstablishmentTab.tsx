@@ -44,9 +44,6 @@ const EstablishmentTab = React.memo<Props>((props) => {
         return 'Domingo';
     }
   };
-
-  // activeEstablishment.services.map((serviceOnEstablishment) => (console.log(serviceOnEstablishment)))
-
   return (
     <>
       <div className="flex flex-wrap">

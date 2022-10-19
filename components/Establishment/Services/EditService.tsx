@@ -1,10 +1,10 @@
 import { PlusIcon, TrashIcon, XIcon } from '@heroicons/react/outline';
-import { Service, ServiceOnEstablishmentOpeningTime } from '@prisma/client';
+import { Service } from '@prisma/client';
 import { uniqueId } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Button } from '../../Button';
 import { ServicesModal } from '../AvailableServices';
-import { Hour, newDateHandle } from './components/Hour';
+import { Hour } from './components/Hour';
 
 export type Day = 'M' | 'T' | 'W' | 'R' | 'F' | 'S' | 'U';
 
@@ -18,13 +18,21 @@ type EditServiceProps = {
   activeServices: ServicesModal;
 };
 
+export type ServiceOnEstablishmentOpeningTimeFormat = {
+   id: string;
+    serviceOnEstablishmentId: string;
+    day: Day;
+    startTime: string | Date;
+    endTime: string | Date;
+}
+
 const EditService = (props: EditServiceProps) => {
   const { setShowModal, modalService, modalServiceId, availableServices, onChange, activeServicesId, activeServices } = props;
 
   const [checked, setChecked] = useState<string[]>([]);
   const [phoneNumber, setPhoneNumber] = useState<string | null>('');
   const [details, setDetails] = useState<string | null>('');
-  const [openingTimes, setOpeningTimes] = useState<ServiceOnEstablishmentOpeningTime[]>([]);
+  const [openingTimes, setOpeningTimes] = useState<ServiceOnEstablishmentOpeningTimeFormat[]>([]);
   const [error, setError] = useState<string>('');
   const [serviceId, setServiceId] = useState<string | null>(null);
   const [checkedDays, setCheckedDays] = useState<string[]>([]);
@@ -52,13 +60,13 @@ const EditService = (props: EditServiceProps) => {
 
   const addHour = () => {
     if (checkedDays.length) {
-      const mappedDays = checkedDays.map((day) => {
+      const mappedDays= checkedDays.map((day) => {
         return {
           id: uniqueId(),
           serviceOnEstablishmentId: uniqueId(),
           day: day as Day,
-          startTime: newDateHandle('00:00'),
-          endTime: newDateHandle('00:00'),
+          startTime: '00:00',
+          endTime: '00:00',
         };
       });
       setOpeningTimes([...openingTimes, ...mappedDays]);
@@ -69,7 +77,7 @@ const EditService = (props: EditServiceProps) => {
     }
   };
 
-  var getDays: { id: string; day: Day; startTime: string; endTime: string }[] = openingTimes.map((sch) => {
+  var getDays: { id: string; day: Day; startTime: string | Date; endTime: string | Date }[] = openingTimes.map((sch) => {
     return { id: sch.id, day: sch.day, startTime: sch.startTime, endTime: sch.endTime };
   });
 
@@ -87,7 +95,7 @@ const EditService = (props: EditServiceProps) => {
     serviceId: string | null,
     phoneNumber: string | null,
     details: string | null,
-    getDays: { id: string; day: Day; startTime: string; endTime: string }[],
+    getDays: { id: string; day: Day; startTime: string | Date; endTime: string | Date }[],
   ) => {
     if (modalService?.length) {
       setServiceId(modalService[0].serviceId);
@@ -102,7 +110,7 @@ const EditService = (props: EditServiceProps) => {
     });
 
     const updatedServicesId = new Set(activeServicesId);
-    const updatedServices = activeServices;
+    const updatedServices:{id:string}[] = activeServices;
 
     let aux = {
       id: modalService?.length ? modalService[0].id : uniqueId(),
@@ -123,8 +131,6 @@ const EditService = (props: EditServiceProps) => {
       updatedServices.push(aux);
       updatedServicesId.add(serviceId);
     }
-
-    console.log(updatedServices);
 
     onChange({ servicesId: updatedServicesId, services: updatedServices });
     setShowModal(false);
@@ -313,7 +319,6 @@ const EditService = (props: EditServiceProps) => {
           return (
             <Hour
               dayHour={dayHour}
-              position={idx}
               key={dayHour.id + idx}
               setOpeningTimes={setOpeningTimes}
               openingTimes={openingTimes}

@@ -190,8 +190,6 @@ const EstablishmentAdmin = (props: {
   const handleFormSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
       const payload = buildEstablishmentPayload(form);
-      console.log(payload);
-
       if (isNewEstablishment) {
         const { data } = await axios.post('/api/establishments/', payload);
         await router.push({ pathname: `/establecimientos/${data.id}` });
