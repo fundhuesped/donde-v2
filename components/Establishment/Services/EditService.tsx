@@ -30,7 +30,7 @@ const EditService = (props: EditServiceProps) => {
   const { setShowModal, modalService, modalServiceId, availableServices, onChange, activeServicesId, activeServices } = props;
 
   const [checked, setChecked] = useState<string[]>([]);
-  const [phoneNumber, setPhoneNumber] = useState<string | null>('');
+  const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
   const [details, setDetails] = useState<string | null>('');
   const [openingTimes, setOpeningTimes] = useState<ServiceOnEstablishmentOpeningTimeFormat[]>([]);
   const [error, setError] = useState<string>('');
@@ -115,7 +115,7 @@ const EditService = (props: EditServiceProps) => {
     let aux = {
       id: modalService?.length ? modalService[0].id : uniqueId(),
       serviceId: serviceId,
-      phoneNumber: phoneNumber,
+      phoneNumber: phoneNumber ? phoneNumber : null,
       details: details,
       openingTimes: formatGetDays,
     };
