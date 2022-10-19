@@ -43,3 +43,11 @@ ALTER TABLE "ServiceOnEstablishment" ADD CONSTRAINT "ServiceOnEstablishment_serv
 
 -- AddForeignKey
 ALTER TABLE "ServiceOnEstablishmentOpeningTime" ADD CONSTRAINT "ServiceOnEstablishmentOpeningTime_serviceOnEstablishmentId_fkey" FOREIGN KEY ("serviceOnEstablishmentId") REFERENCES "ServiceOnEstablishment"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Transfer data to new tables
+INSERT INTO "ServiceOnEstablishment" 
+    ("establishmentId", "serviceId", "details")
+SELECT  "SpecialtiesOnEstablishments"."establishmentId", "Specialty"."serviceId", "Specialty"."name"
+FROM    "SpecialtiesOnEstablishments"
+INNER JOIN "Specialty" 
+ON "Specialty"."id" = "SpecialtiesOnEstablishments"."specialtyId";
