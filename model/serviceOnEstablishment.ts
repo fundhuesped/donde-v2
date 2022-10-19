@@ -16,14 +16,14 @@ const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2
 
 export const createServiceOnEstablishmentSchema = yup.object({
   serviceId: yup.string().uuid().required(),
-  phoneNumber: yup.string().matches(phoneRegExp, 'Phone number is not valid'),
-  details: yup.string(),
-  openingTimes: yup.array().of(createServiceOnEstablishmentOpeningTimeSchema).min(1).required(),
+  phoneNumber: yup.string().matches(phoneRegExp, 'Phone number is not valid').nullable(),
+  details: yup.string().nullable(),
+  openingTimes: yup.array().of(createServiceOnEstablishmentOpeningTimeSchema),
 });
 
 export const updateServiceOnEstablishmentSchema = yup.object({
   serviceId: yup.string().uuid(),
-  phoneNumber: yup.string().matches(phoneRegExp, 'Phone number is not valid'),
-  details: yup.string(),
-  openingTimes: yup.array().of(createServiceOnEstablishmentOpeningTimeSchema).min(1),
+  phoneNumber: yup.string().matches(phoneRegExp, 'Phone number is not valid').nullable(),
+  details: yup.string().nullable(),
+  openingTimes: yup.array().of(createServiceOnEstablishmentOpeningTimeSchema),
 });

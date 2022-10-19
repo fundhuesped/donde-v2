@@ -49,19 +49,14 @@ const updateEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
   const idSchema = yup.string().uuid().required();
   const establishmentId = req.query.id;
 
-  try {
-    establishmentSchema.validateSync(req.body, { abortEarly: false });
-  } catch (err: any) {
-    // err is of type ValidationError
-    return res.status(400).json(err.inner);
-  }
-
   if (!idSchema.isValidSync(establishmentId)) {
     return res.status(400).end();
   }
 
-  if (!establishmentSchema.isValidSync(req.body)) {
-    return res.status(400).end();
+  try {
+    establishmentSchema.validateSync(req.body, { abortEarly: false });
+  } catch (err: any) {
+    return res.status(400).json(err.inner);
   }
 
   let disconnectPreviouslyConnectedFeatures = undefined;

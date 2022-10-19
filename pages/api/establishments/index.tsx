@@ -61,7 +61,7 @@ const getEstablishments = async (req: NextApiRequest, res: NextApiResponse<any>)
   });
 
   return res.status(200).json(
-    establishments.map((establishment) => {
+    establishments.map((establishment: Establishment) => {
       return transformEstablishmentIntoJSONResponse(establishment);
     }),
   );
@@ -95,7 +95,7 @@ export const mapServicesOnEstablishmentToPrismaObject = (services: yup.Asserts<t
       },
       phoneNumber: service.phoneNumber,
       details: service.details,
-      openingTimes: mapServicesOnEstablishmentOpeningTimesToPrismaObject(service.openingTimes),
+      openingTimes: service.openingTimes ? mapServicesOnEstablishmentOpeningTimesToPrismaObject(service.openingTimes) : undefined,
     };
   });
   return {
