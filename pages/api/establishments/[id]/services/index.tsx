@@ -39,7 +39,9 @@ const createServiceOnEstablishment = async (req: NextApiRequest, res: NextApiRes
       },
       details: req.body.details,
       phoneNumber: req.body.phoneNumber,
-      openingTimes: req.body.openingTimes ? mapServicesOnEstablishmentOpeningTimesToPrismaObject(req.body.openingTimes) : undefined,
+      openingTimes: req.body.openingTimes
+        ? mapServicesOnEstablishmentOpeningTimesToPrismaObject(req.body.openingTimes)
+        : undefined,
     },
   });
   return res.status(201).json(serviceOnstablishment);
