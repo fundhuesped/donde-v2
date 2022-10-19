@@ -1,23 +1,12 @@
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
-import { EstablishmentType, EstablishmentStatus } from '@prisma/client';
+import { EstablishmentStatus, EstablishmentType, PrismaClient } from '@prisma/client';
 import { ServiceIcon } from '../model/services';
+const prisma = new PrismaClient();
 
 async function main() {
   const preservativos = await prisma.service.create({
     data: {
       name: 'Preservativos',
       icon: ServiceIcon.PRESERVATIVOS,
-    },
-  });
-  const preservativosEspecializacion = await prisma.specialty.create({
-    data: {
-      name: 'preservativos',
-      service: {
-        connect: {
-          id: preservativos.id,
-        },
-      },
     },
   });
 
@@ -27,31 +16,11 @@ async function main() {
       icon: ServiceIcon.ITS,
     },
   });
-  const testEspecializacion = await prisma.specialty.create({
-    data: {
-      name: 'Test de ITS',
-      service: {
-        connect: {
-          id: tests.id,
-        },
-      },
-    },
-  });
 
   const anticonceptivos = await prisma.service.create({
     data: {
       name: 'Métodos anticonceptivos',
       icon: ServiceIcon.MAC,
-    },
-  });
-  const anticonceptivosEspecializacion = await prisma.specialty.create({
-    data: {
-      name: 'Métodos anticonceptivo',
-      service: {
-        connect: {
-          id: anticonceptivos.id,
-        },
-      },
     },
   });
 
@@ -61,16 +30,6 @@ async function main() {
       icon: ServiceIcon.VACUNATORIOS,
     },
   });
-  const vacunatoriosEspecializacion = await prisma.specialty.create({
-    data: {
-      name: 'Vacunatorios',
-      service: {
-        connect: {
-          id: vacunatorios.id,
-        },
-      },
-    },
-  });
 
   const aborto = await prisma.service.create({
     data: {
@@ -78,48 +37,8 @@ async function main() {
       icon: ServiceIcon.ABORTO,
     },
   });
-  const aborto1 = await prisma.specialty.create({
-    data: {
-      name: 'No está confirmado que asesore o realice interrupción legal del embarazo',
-      service: {
-        connect: {
-          id: aborto.id,
-        },
-      },
-    },
-  });
-  const aborto2 = await prisma.specialty.create({
-    data: {
-      name: 'Ofrece asesoramiento sobre interrupción voluntaria del embarazo',
-      service: {
-        connect: {
-          id: aborto.id,
-        },
-      },
-    },
-  });
-  const aborto3 = await prisma.specialty.create({
-    data: {
-      name: 'Ofrece asesoramiento y derivación sobre interrupción voluntaria del embarazo',
-      service: {
-        connect: {
-          id: aborto.id,
-        },
-      },
-    },
-  });
-  const aborto4 = await prisma.specialty.create({
-    data: {
-      name: 'Ofrece asesoramiento y realiza interrupción legal del embarazo',
-      service: {
-        connect: {
-          id: aborto.id,
-        },
-      },
-    },
-  });
 
-  await prisma.establishment.create({
+  const establishment = await prisma.establishment.create({
     data: {
       name: 'Hospital de Pediatría Garrahan',
       type: EstablishmentType.HEALTH_ESTABLISHMENT,
@@ -132,20 +51,72 @@ async function main() {
       status: EstablishmentStatus.PUBLISHED,
       latitude: -34.62994536,
       longitude: -58.39187918,
-      specialties: {
+      services: {
         create: [
           {
-            specialty: {
+            service: {
               connect: {
-                id: preservativosEspecializacion.id,
+                id: preservativos.id,
               },
+            },
+            details: 'Siempre disponible',
+            phoneNumber: '51351433541',
+            openingTimes: {
+              create: [
+                {
+                  day: 'M',
+                  startTime: new Date('1970-01-01:08:00Z'),
+                  endTime: new Date('1970-01-01:11:00Z'),
+                },
+                {
+                  day: 'M',
+                  startTime: new Date('1970-01-01:13:00Z'),
+                  endTime: new Date('1970-01-01:15:00Z'),
+                },
+                {
+                  day: 'R',
+                  startTime: new Date('1970-01-01:08:00Z'),
+                  endTime: new Date('1970-01-01:11:00Z'),
+                },
+                {
+                  day: 'S',
+                  startTime: new Date('1970-01-01:09:00Z'),
+                  endTime: new Date('1970-01-01:14:00Z'),
+                },
+              ],
             },
           },
           {
-            specialty: {
+            service: {
               connect: {
-                id: aborto1.id,
+                id: aborto.id,
               },
+            },
+            details: 'Ofrece asesoramiento y realiza interrupción legal del embarazo',
+            phoneNumber: '51351433541',
+            openingTimes: {
+              create: [
+                {
+                  day: 'T',
+                  startTime: new Date('1970-01-01:09:00Z'),
+                  endTime: new Date('1970-01-01:10:00Z'),
+                },
+                {
+                  day: 'W',
+                  startTime: new Date('1970-01-01:14:00Z'),
+                  endTime: new Date('1970-01-01:19:00Z'),
+                },
+                {
+                  day: 'R',
+                  startTime: new Date('1970-01-01:12:00Z'),
+                  endTime: new Date('1970-01-01:19:00Z'),
+                },
+                {
+                  day: 'S',
+                  startTime: new Date('1970-01-01:20:00Z'),
+                  endTime: new Date('1970-01-01:23:00Z'),
+                },
+              ],
             },
           },
         ],

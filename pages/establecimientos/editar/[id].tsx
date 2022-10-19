@@ -1,63 +1,67 @@
-import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import EstablishmentAdmin, {
   emptyEstablishmentModel,
   EstablishmentModel,
 } from '../../../components/Establishment/EstablishmentAdmin';
-import { tryGetGoogleMapsApiKey } from '../../../utils/establishments';
-import * as PrismaClient from '@prisma/client';
-import { getSpecialtiesWithServices } from '../../../server/api/specialties';
-import { getEstablishment } from '../../../server/api/establishments';
 import { Establishment } from '../../../model/establishment';
-import { SpecialtyWithService } from '../../../model/specialty';
+import { Service } from '../../../model/services';
+import { getEstablishment } from '../../../server/api/establishments';
+import { getServices } from '../../../server/api/services';
+import { tryGetGoogleMapsApiKey } from '../../../utils/establishments';
+import { transformEstablishmentIntoJSONResponse } from '../../api/establishments';
 
 type ServerSideProps = {
   googleMapsApiKey: string;
   establishment: Establishment;
-  availableSpecialties: SpecialtyWithService[];
+  availableServices: Service[];
 };
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (context) => {
   const { id } = context.query;
   const establishment = await getEstablishment(id);
   const googleMapsApiKey = tryGetGoogleMapsApiKey();
-  const availableSpecialties = await getSpecialtiesWithServices();
+  const availableServices = await getServices();
 
   return {
     props: {
       googleMapsApiKey,
-      establishment,
-      availableSpecialties,
+      establishment: transformEstablishmentIntoJSONResponse(establishment),
+      availableServices,
     },
   };
 };
 
 const mapIntoEstablishmentModel = (establishment: Establishment): EstablishmentModel => {
-  const specialties =
-    establishment.specialties.map(
-      (
-        specialty: PrismaClient.SpecialtiesOnEstablishments & {
-          specialty: PrismaClient.Specialty & { service: PrismaClient.Service };
-        },
-      ) => {
-        return specialty.specialty.id;
-      },
-    ) || [];
+  const services =
+    establishment.services.map((service) => {
+      return {
+        id: service.id,
+        serviceId: service.serviceId,
+        service: service.service,
+        phoneNumber: service.phoneNumber,
+        details: service.details,
+        openingTimes: service.openingTimes,
+      };
+    }) || [];
+
+  const servicesId = establishment.services.map((service) => service.serviceId);
 
   return {
     ...emptyEstablishmentModel,
     ...establishment,
-    specialties: new Set(specialties),
+    servicesId: new Set(servicesId),
+    services: services,
     fullAddress: establishment.province,
   };
 };
-const EstablishmentEdit: NextPage<ServerSideProps> = ({ googleMapsApiKey, establishment, availableSpecialties }) => {
+
+const EstablishmentEdit: NextPage<ServerSideProps> = ({ googleMapsApiKey, establishment, availableServices }) => {
   const establishmentModel = mapIntoEstablishmentModel(establishment);
   return (
     <EstablishmentAdmin
       googleMapsApiKey={googleMapsApiKey}
       establishment={establishmentModel}
-      availableSpecialties={availableSpecialties}
+      availableServices={availableServices}
     />
   );
 };

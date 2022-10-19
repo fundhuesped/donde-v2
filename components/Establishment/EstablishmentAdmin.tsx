@@ -1,21 +1,20 @@
-import React, { RefObject, useState } from 'react';
-import { useRouter } from 'next/router';
+import { Service, ServiceOnEstablishmentOpeningTime } from '@prisma/client';
 import axios from 'axios';
-import pick from 'lodash/pick';
+import _, { isNull } from 'lodash';
 import isEmpty from 'lodash/isEmpty';
+import isNil from 'lodash/isNil';
+import { useRouter } from 'next/router';
+import React, { RefObject, useState } from 'react';
 import { usePlacesWidget } from 'react-google-autocomplete';
 import MainContainer from '../../components/MainContainer';
-import { Button } from '../Button';
 import Select from '../../components/Select';
-import Alert from '../Alert';
-import { EstablishmentSearchStep } from './EstablishmentSearchStep';
-import { AvailableServices } from './AvailableServices';
-import { LocationField } from './LocationField';
-import isNil from 'lodash/isNil';
-import { establishmentTypes } from '../../model/establishment';
-import { SpecialtyWithService } from '../../model/specialty';
-import _, { isNull, omit, omitBy } from 'lodash';
 import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../../config/thirdParty';
+import { establishmentTypes } from '../../model/establishment';
+import Alert from '../Alert';
+import { Button } from '../Button';
+import { AvailableServices } from './AvailableServices';
+import { EstablishmentSearchStep } from './EstablishmentSearchStep';
+import { LocationField } from './LocationField';
 
 export type EstablishmentModel = {
   id?: string;
@@ -33,7 +32,15 @@ export type EstablishmentModel = {
   country: string;
   latitude?: number;
   longitude?: number;
-  specialties: Set<string>;
+  services: {
+    id: string;
+    serviceId: string;
+    service: Service;
+    phoneNumber: string | null;
+    details: string | null;
+    openingTimes: ServiceOnEstablishmentOpeningTime[];
+  }[];
+  servicesId: Set<string>;
   fullAddress: string;
   phone: string;
   email: string;
@@ -51,7 +58,8 @@ export const emptyEstablishmentModel = {
   fullAddress: '',
   apartment: '',
   intersection: '',
-  specialties: new Set<string>(),
+  services: [],
+  servicesId: new Set<string>(),
   website: '',
   phone: '',
   whatsApp: '',
@@ -68,9 +76,9 @@ export const emptyEstablishmentModel = {
 const EstablishmentAdmin = (props: {
   googleMapsApiKey: string;
   establishment?: EstablishmentModel;
-  availableSpecialties: SpecialtyWithService[];
+  availableServices: Service[];
 }) => {
-  const { googleMapsApiKey, establishment, availableSpecialties } = props;
+  const { googleMapsApiKey, establishment, availableServices } = props;
   const router = useRouter();
   const [isError, setIsError] = useState(false);
   const [isUpdateSuccessful, setIsUpdateSuccessful] = useState(false);
@@ -78,6 +86,7 @@ const EstablishmentAdmin = (props: {
   const isNewEstablishment = isNil(establishment?.id);
   const [form, setForm] = useState<EstablishmentModel>(establishment || emptyEstablishmentModel);
   const [isFormCompleted, setIsFormCompleted] = useState(false);
+
   const handleFormUpdate = (fieldsToUpdate: Partial<EstablishmentModel>) => {
     setForm((prevState) => {
       const updatedForm = { ...prevState, ...fieldsToUpdate };
@@ -91,7 +100,7 @@ const EstablishmentAdmin = (props: {
       setIsFormCompleted(
         (fieldsToValidate.every((field) => field || !isEmpty(field)) &&
           updatedForm.tosCheckbox &&
-          updatedForm.specialties?.size > 0) ||
+          updatedForm.servicesId?.size > 0) ||
           false,
       );
       return updatedForm;
@@ -163,7 +172,20 @@ const EstablishmentAdmin = (props: {
       ])
       .value();
 
-    return { ...establishmentPayload, specialties: Array.from(specialties) };
+    return {
+      ...establishmentPayload,
+      services: Array.from(
+        services.map((ser) => {
+          return {
+            id: ser.id,
+            serviceId: ser.serviceId,
+            phoneNumber: ser.phoneNumber,
+            details: ser.details,
+            openingTimes: ser.openingTimes,
+          };
+        }),
+      ),
+    };
   };
   const handleFormSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
@@ -197,7 +219,8 @@ const EstablishmentAdmin = (props: {
     streetNumber,
     apartment,
     intersection,
-    specialties,
+    services,
+    servicesId,
     website,
     phone,
     whatsApp,
@@ -208,9 +231,14 @@ const EstablishmentAdmin = (props: {
     details,
     availability,
   } = form;
+
   return (
     <>
-      <h1 className={'px-content text-justify font-bold text-black'}>Nuevo establecimiento</h1>
+      {isNewEstablishment ? (
+        <h1 className={'px-content pt-2 text-justify font-bold text-black'}>Nuevo establecimiento</h1>
+      ) : (
+        <h1 className={'px-content pt-2 text-justify font-bold text-black'}>Editar</h1>
+      )}
       <MainContainer className={'mt-4 pt-8'}>
         <p>Por favor, completá los datos del lugar</p>
         {isNewEstablishment && !isSearchStepCompleted && (
@@ -259,9 +287,11 @@ const EstablishmentAdmin = (props: {
             {/*<AvailabilityField key={'workingHourTo'} onChange={handleFormUpdate} availability={availability} />*/}
             <AvailableServices
               onChange={handleFormUpdate}
-              activeSpecialties={specialties}
-              availableSpecialties={availableSpecialties}
+              activeServicesId={servicesId}
+              activeServices={services}
+              availableServices={availableServices}
             />
+
             {/*<ContactInfoField
               key={'email'}
               onChange={handleFieldChange}
@@ -301,9 +331,15 @@ const EstablishmentAdmin = (props: {
             {isUpdateSuccessful && (
               <Alert title={'Edicion exitosa!'} message={'El establecimiento fue editado correctamente'} success={true} />
             )}
-            <Button className={'w-full my-5'} disabled={!isFormCompleted} type={'primary'} onClick={handleFormSubmit}>
-              Agregar establecimiento
-            </Button>
+            {isNewEstablishment ? (
+              <Button className={'w-full my-5'} disabled={!isFormCompleted} type={'primary'} onClick={handleFormSubmit}>
+                Agregar establecimiento
+              </Button>
+            ) : (
+              <Button className={'w-full my-5'} disabled={!isFormCompleted} type={'primary'} onClick={handleFormSubmit}>
+                Editar establecimiento
+              </Button>
+            )}
           </>
         )}
       </MainContainer>

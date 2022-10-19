@@ -7,17 +7,17 @@ import {
   MenuIcon,
   PlusCircleIcon,
 } from '@heroicons/react/outline';
+import { UserRole } from '@prisma/client';
+import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import DondeLogo from '../assets/images/DondeLogo.svg';
+import { useAuthenticatedUser } from '../hooks/useAuthenticatedUser';
 import { useClickOutsideHandler } from '../hooks/useClickOutsideHandler';
 import { BackButton } from './BackButton';
 import { Button } from './Button';
 import MainContainer from './MainContainer';
-import { useAuthenticatedUser } from '../hooks/useAuthenticatedUser';
-import { signOut } from 'next-auth/react';
-import { UserRole } from '@prisma/client';
 
 export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: () => void }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,6 +28,7 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
     handleMenuOpening();
   };
   const isHome = router.pathname === '/';
+  const isEstablishment = router.pathname.includes('establecimientos');
   const innerRef = useClickOutsideHandler<HTMLDivElement>(() => setIsMenuOpen(false));
 
   const SobreDondeButton = () => {
@@ -132,7 +133,7 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
     );
   };
 
-  return (
+  return !isEstablishment ? (
     <header className={'flex items-center py-5 px-content'}>
       {!isHome && <BackButton />}
 
@@ -148,7 +149,7 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
       </button>
 
       {isMenuOpen && (
-        <div className={'absolute min-h-full w-full left-0 top-10 flex lg:max-w-[18%] lg:left-auto lg:right-0'}>
+        <div className={'absolute min-h-full w-full left-0 top-10 flex lg:max-w-[20%] lg:left-auto lg:right-0'}>
           <MainContainer ref={innerRef} className={'z-50 mt-6 pt-6'}>
             {user && (
               <h3 className={'text-lg text-primary font-bold ml-4 mb-4'}>
@@ -158,11 +159,12 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
             <SobreDondeButton />
             <PreguntasFrecuentesButton />
             {user ? <LogoutButton /> : <LoginButton />}
-            {user && <NewEstablishmentLink />}
             {user?.role === UserRole.ADMIN && <AdminLink />}
           </MainContainer>
         </div>
       )}
     </header>
+  ) : (
+    <></>
   );
 }

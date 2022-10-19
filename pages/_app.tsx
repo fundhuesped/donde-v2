@@ -22,7 +22,7 @@ export default function MyApp({ Component, pageProps: { session, ...pageProps } 
   return (
     <SessionProvider session={session}>
       <div className={`min-h-screen flex flex-col ${showScroll}`}>
-         {/* <!-- Global site tag (gtag.js) - Google Analytics --> */}
+        {/* <!-- Global site tag (gtag.js) - Google Analytics --> */}
         <Script
           strategy="lazyOnload"
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}

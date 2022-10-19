@@ -1,21 +1,24 @@
 import { GlobeAltIcon, LocationMarkerIcon } from '@heroicons/react/outline';
 import { PhoneIcon, ShareIcon } from '@heroicons/react/solid';
+import { UserRole } from '@prisma/client';
+import _, { partition } from 'lodash';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import React from 'react';
 import WhatsAppLogo from '../../assets/images/WhatsAppLogo.svg';
+import { BackButton } from '../../components/BackButton';
 import { Card, CardHeader, CardList, CardListItem, CardParagraph, CardSubHeader } from '../../components/Card';
 import { Icon } from '../../components/Icon';
 import MainContainer from '../../components/MainContainer';
 import { Pill } from '../../components/Pill';
-import { ServiceIcon } from '../../model/services';
-import { formatEstablishmentLocation, formatEstablishmentType } from '../../utils/establishments';
-import { getEstablishment } from '../../server/api/establishments';
 import { SERVICE_ICONS } from '../../config/services';
-import Link from 'next/link';
 import { useAuthenticatedUser } from '../../hooks/useAuthenticatedUser';
 import { Establishment } from '../../model/establishment';
-import _, { partition } from 'lodash';
+import { ServiceIcon } from '../../model/services';
+import { getEstablishment } from '../../server/api/establishments';
+import { formatEstablishmentLocation, formatEstablishmentType } from '../../utils/establishments';
+import { transformEstablishmentIntoJSONResponse } from '../api/establishments';
 
 interface WebSiteButtonProps {
   website: string;
@@ -107,9 +110,10 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async ({ 
   } catch {
     establishment = undefined;
   }
+
   return {
     props: {
-      establishment,
+      establishment: establishment ? transformEstablishmentIntoJSONResponse(establishment) : undefined,
     },
   };
 };
@@ -135,12 +139,15 @@ export const EstablishmentPage: NextPage<ServerSideProps> = React.memo(({ establ
         <title>Dónde - {name}</title>
       </Head>
 
+      <div className="w-full p-5">
+        <BackButton className="ml-2 lg:absolute lg:left-4" />
+      </div>
       <MainContainer className={'lg:w-desktop lg:mx-auto relative'}>
         <header className={'mt-10 ml-4'}>
           <CardHeader className={'font-title text-lg'}>{name}</CardHeader>
           <CardParagraph>{establishmentType}</CardParagraph>
         </header>
-        {user && (
+        {user?.role === UserRole.ADMIN && (
           <Link href={`/establecimientos/editar/${establishment.id}`}>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a className={'color-primary font-bold absolute top-8 right-8'}>Editar</a>
@@ -155,23 +162,23 @@ export const EstablishmentPage: NextPage<ServerSideProps> = React.memo(({ establ
 
           <CardSubHeader>Servicios disponibles</CardSubHeader>
           <CardList>
-            {_(establishment.specialties)
-              .groupBy(({ specialty }) => specialty.service.id)
+            {_(establishment.services)
+              .groupBy(({ service }) => service.id)
               .values()
-              .sortBy((specialties) => specialties[0]!.specialty.service.name)
-              .map((specialties) => {
-                const [[defaultSpecialty], [subSpecialty]] = partition(specialties, ({ specialty }) => specialty.name === null);
-                const specialty = subSpecialty ?? defaultSpecialty;
-                if (!specialty) {
+              .sortBy((services) => services[0]!.service.name)
+              .map((services) => {
+                const [[defaultService], [subService]] = partition(services, ({ service }) => service.name === null);
+                const serviceOnEstablishment = subService ?? defaultService;
+                if (!serviceOnEstablishment) {
                   return null;
                 }
-                const service = specialty.specialty.service;
+                const service = serviceOnEstablishment.service;
                 return (
                   <CardListItem key={service.id} icon={SERVICE_ICONS[service.icon as ServiceIcon]}>
-                    {specialty.specialty.name ? (
+                    {service.name ? (
                       <>
                         <span>{service.name}</span>
-                        <span className={'text-medium-gray text-xs'}> - {specialty.specialty.name}</span>
+                        <span className={'text-medium-gray text-xs'}> - {service.name}</span>
                       </>
                     ) : (
                       service.name

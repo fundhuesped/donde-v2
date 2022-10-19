@@ -1,10 +1,10 @@
+import { EstablishmentStatus } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { NextApiHandler } from 'next';
-import { prismaClient } from '../../../server/prisma/client';
-import { editEstablishmentSchema as establishmentSchema } from '../../../model/establishment';
-import { EstablishmentStatus } from '@prisma/client';
-import { mapSpecialtiesToPrismaObject } from './index';
 import * as yup from 'yup';
+import { editEstablishmentSchema as establishmentSchema } from '../../../model/establishment';
+import { prismaClient } from '../../../server/prisma/client';
+import { mapServicesOnEstablishmentToPrismaObject, transformEstablishmentIntoJSONResponse } from './index';
 
 const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
@@ -12,6 +12,8 @@ const handler: NextApiHandler = async (req, res) => {
       return getEstablishment(req, res);
     case 'PUT':
       return updateEstablishment(req, res);
+    case 'DELETE':
+      return deleteEstablishment(req, res);
     default:
       return res.status(405).json({ error: 'Method Not Allowed' });
   }
@@ -28,50 +30,84 @@ const getEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) 
       id: id,
     },
     include: {
-      specialties: {
+      services: {
         include: {
-          specialty: {
-            include: {
-              service: true,
-            },
-          },
+          service: true,
+          openingTimes: true,
         },
       },
     },
   });
+
   if (establishment) {
-    return res.status(200).json(establishment);
+    return res.status(200).json(transformEstablishmentIntoJSONResponse(establishment));
   }
   return res.status(404).end();
 };
 
 const updateEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
-  req.body.id = req.query.id;
-  if (!establishmentSchema.isValidSync(req.body)) {
+  const idSchema = yup.string().uuid().required();
+  const establishmentId = req.query.id;
+
+  if (!idSchema.isValidSync(establishmentId)) {
     return res.status(400).end();
   }
-  const disconnectPreviouslyConnectedFeatures = prismaClient.establishment.update({
-    where: {
-      id: req.body.id,
-    },
-    data: {
-      specialties: {
-        deleteMany: {},
+
+  try {
+    establishmentSchema.validateSync(req.body, { abortEarly: false });
+  } catch (err: any) {
+    return res.status(400).json(err.inner);
+  }
+
+  let disconnectPreviouslyConnectedFeatures = undefined;
+  if (req.body.services) {
+    disconnectPreviouslyConnectedFeatures = prismaClient.establishment.update({
+      where: {
+        id: establishmentId,
       },
-    },
-  });
-  const specialties = mapSpecialtiesToPrismaObject(req.body.specialties!);
-  const createNewEstablishment = prismaClient.establishment.update({
+      data: {
+        services: {
+          deleteMany: {},
+        },
+      },
+    });
+  }
+
+  const services = mapServicesOnEstablishmentToPrismaObject(req.body.services!);
+  const updateEstablishment = prismaClient.establishment.update({
     where: {
-      id: req.body.id,
+      id: establishmentId,
     },
     data: {
       ...req.body,
       status: EstablishmentStatus.PUBLISHED,
-      specialties,
+      services,
     },
   });
-  await prismaClient.$transaction([disconnectPreviouslyConnectedFeatures, createNewEstablishment]);
+
+  if (disconnectPreviouslyConnectedFeatures) {
+    await prismaClient.$transaction([disconnectPreviouslyConnectedFeatures, updateEstablishment]);
+  } else {
+    await prismaClient.$transaction([updateEstablishment]);
+  }
+
+  return res.status(200).end();
+};
+
+const deleteEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
+  const idSchema = yup.string().uuid().required();
+  const establishmentId = req.query.id;
+
+  if (!idSchema.isValidSync(establishmentId)) {
+    return res.status(400).end();
+  }
+
+  await prismaClient.establishment.delete({
+    where: {
+      id: establishmentId,
+    },
+  });
+
   return res.status(200).end();
 };
 

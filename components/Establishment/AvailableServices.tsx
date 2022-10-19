@@ -1,89 +1,87 @@
-import React from 'react';
-import { SpecialtyWithService } from '../../model/specialty';
-import { groupBy, partition } from 'lodash';
+import { PencilIcon, PlusIcon } from '@heroicons/react/outline';
+import { ServiceOnEstablishmentOpeningTime } from '@prisma/client';
+import { useState } from 'react';
+import { Service } from '../../model/services';
+import { Pill } from '../Pill';
+import { Services } from './Services';
+
+export type ServicesModal = {
+  id: string;
+  serviceId: string;
+  service: Service;
+  phoneNumber: string | null;
+  details: string | null;
+  openingTimes: ServiceOnEstablishmentOpeningTime[];
+}[];
 
 type AvailableServicesProps = {
   onChange: (event: { [key: string]: any }) => void;
-  availableSpecialties: SpecialtyWithService[];
-  activeSpecialties: Set<string>;
+  availableServices: Service[];
+  activeServicesId: Set<string>;
+  activeServices: ServicesModal;
 };
 
 export const AvailableServices = (props: AvailableServicesProps) => {
-  const { activeSpecialties, availableSpecialties, onChange } = props;
-  const isChecked = (specialtyId: string) => activeSpecialties.has(specialtyId);
-  const removeSpecialties = (specialties: string[]) => {
-    const updatedSpecialties = new Set(activeSpecialties);
-    specialties.forEach((specialtyId) => updatedSpecialties.delete(specialtyId));
-    onChange({ specialties: updatedSpecialties });
-  };
-  const addSpecialty = (defaultSpecialty: string, selectedSpecialty: string | undefined, otherSpecialties: string[]) => {
-    const updatedSpecialties = new Set(activeSpecialties);
-    otherSpecialties.forEach((specialtyId) => updatedSpecialties.delete(specialtyId));
-    updatedSpecialties.add(defaultSpecialty);
-    if (selectedSpecialty) {
-      updatedSpecialties.add(selectedSpecialty);
+  const { activeServicesId, activeServices, availableServices, onChange } = props;
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [modalServiceId, setModalServiceId] = useState<string>('');
+  const [modalService, setModalService] = useState<ServicesModal>();
+
+  const isChecked = (serviceId: string) => activeServicesId.has(serviceId);
+
+  const editService = (id: string) => {
+    if (activeServicesId.has(id)) {
+      const serviceFilter = activeServices.filter((services) => services.serviceId == id);
+      setModalServiceId(id);
+      setModalService(serviceFilter);
+      setShowModal(true);
     }
-    onChange({ specialties: updatedSpecialties });
+  };
+
+  const newService = () => {
+    setModalServiceId('');
+    setModalService([]);
+    setShowModal(true);
   };
 
   return (
     <>
       <h1 className={'my-6 text-justify font-bold text-black'}>¿Qué servicios brinda el lugar?</h1>
-      <ul className={'flex flex-col'}>
-        {Object.values(groupBy(availableSpecialties, (specialty) => specialty.service.id)).map((specialties) => {
-          const [[defaultSpecialty], otherSpecialties] = partition(specialties, (specialty) => specialty.name === null);
-          if (!defaultSpecialty) {
-            return null;
+      <button onClick={() => newService()} className={'flex color-primary font-bold p-2 btn-inherit'}>
+        <span className="mr-1 mt-1">
+          <PlusIcon className=" w-4 mx-1 text-primary" />
+        </span>
+        Agregar servicio
+      </button>
+      <div className="flex flex-wrap h-auto w-full lg:w-3/4">
+        {availableServices.map((service) => {
+          const checked = isChecked(service.id);
+          if (checked) {
+            return (
+              <button key={service.id} onClick={() => editService(service.id)} className="inherit">
+                <Pill type={'primary'} className={'py-1 mr-2 mb-2 h-fit flex align-middle border border-gray-600 cursor-pointer'}>
+                  <span className="mt-1 mr-2">{service.name}</span>
+                  <PencilIcon className="text-primary w-6 h-6 p-1" />
+                </Pill>
+              </button>
+            );
           }
-          const checked = isChecked(defaultSpecialty.id);
-          const selectedSpecialty = otherSpecialties.find((specialty) => activeSpecialties.has(specialty.id));
-          return (
-            <li key={defaultSpecialty.id}>
-              <label className={'cursor-pointer'} htmlFor={`checkbox-${defaultSpecialty.id}`}>
-                <input
-                  id={`checkbox-${defaultSpecialty.id}`}
-                  name={defaultSpecialty.id}
-                  className={'cursor-pointer mr-2'}
-                  type={'checkbox'}
-                  checked={checked}
-                  onChange={(event) => {
-                    const checked = event.target.checked;
-                    if (checked) {
-                      addSpecialty(
-                        defaultSpecialty.id,
-                        selectedSpecialty?.id ?? otherSpecialties[0]?.id,
-                        otherSpecialties.map(({ id }) => id),
-                      );
-                    } else {
-                      removeSpecialties(specialties.map(({ id }) => id));
-                    }
-                  }}
-                />
-                {defaultSpecialty.service.name}
-              </label>
-              {otherSpecialties.length > 0 && (
-                <select
-                  className={'bg-white border border-light-gray rounded ml-2'}
-                  defaultValue={selectedSpecialty?.id}
-                  onChange={(event) =>
-                    addSpecialty(
-                      defaultSpecialty.id,
-                      event.target.value,
-                      otherSpecialties.map(({ id }) => id),
-                    )
-                  }
-                >
-                  {otherSpecialties.map((specialty) => (
-                    <option key={specialty.id} value={specialty.id}>
-                      {specialty.name}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </li>
-          );
         })}
-      </ul>
+      </div>
+      {showModal ? (
+        <Services
+          showModal={showModal}
+          setShowModal={setShowModal}
+          onChange={onChange}
+          activeServicesId={activeServicesId}
+          activeServices={activeServices}
+          availableServices={availableServices}
+          modalServiceId={modalServiceId}
+          modalService={modalService}
+        />
+      ) : (
+        ''
+      )}
     </>
   );
 };

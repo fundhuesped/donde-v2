@@ -8,7 +8,12 @@ export enum ServiceIcon {
   PRESERVATIVOS = 'PRESERVATIVOS',
 }
 
-export type Service = yup.InferType<typeof serviceSchema>;
+export type Service = {
+  id: string;
+  name: string;
+  icon: string;
+};
+
 export const serviceSchema = yup.object({
   id: yup.string().required(),
   name: yup.string().required(),

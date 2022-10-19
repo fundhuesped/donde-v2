@@ -1,7 +1,18 @@
+import classNames from 'classnames';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { HTMLProps } from 'react';
 import { Button } from '../components/Button';
+
+const FAQLink = (props: HTMLProps<HTMLAnchorElement>) => {
+  const { className, children, ...rest } = props;
+  return (
+    <a className={classNames('text-primary', className)} {...rest}>
+      {children}
+    </a>
+  );
+};
 
 function ComenzarBusquedaButton() {
   const router = useRouter();
@@ -34,9 +45,16 @@ export default function About() {
           Buscá el lugar más cercano para acceder a preservativos, métodos anticonceptivos, información sobre interrupción
           voluntaria del embarazo, test de infecciones de transmisión sexual (ITS) y vacunatorios.
         </p>
-        <p className={'text-base text-justify mb-6'}>Esta es una plataforma de código abierto pensada por Fundación Huésped.</p>
+        <p className={'text-base text-justify mb-6'}>
+          Fue creada por Fundación Huésped en 2013 desarrollada en varias etapas gracias al trabajo de muchas personas. El sitio
+          actual fue hecho por Wingu.
+        </p>
+        <p>
+          Es una plataforma de código abierto, disponible en:{' '}
+          <FAQLink href=" https://github.com/fundhuesped/donde-huesped">Github</FAQLink>
+        </p>
         <p className={'p-2 bg-ultra-light-salmon rounded-2xl text-center'}>
-          Si tienes inquietudes, visitá nuestra sección de{' '}
+          Si tenés inquietudes, visitá nuestra sección de{' '}
           <Link href="/preguntas-frecuentes">
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a>

@@ -50,20 +50,12 @@ const ITEMS = [
     ),
   },
   {
-    title: '¿Cómo hago para sugerir un lugar?',
+    title: '¿Cómo hago para sugerir o corregir la información de un lugar?',
     content: (
       <p>
-        Si conocés algún lugar que no está en la plataforma y que brinda alguno de estos servicios contactanos a:{' '}
-        <FAQLink href="mailto: donde@huesped.org.ar">donde@huesped.org.ar</FAQLink>
-      </p>
-    ),
-  },
-  {
-    title: '¿Qué hago si encuentro un error?',
-    content: (
-      <p>
-        Si encontrás algún error en los datos publicados escribinos a:{' '}
-        <FAQLink href="mailto: donde@huesped.org.ar">donde@huesped.org.ar</FAQLink>
+        Las organizaciones e instituciones que quieran colaborar para mejorar la cantidad y calidad de datos, pueden sumarse como
+        “Colaboradores” completando este formulario, evaluaremos la solicitud y nos pondremos en contacto. Si preferís enviarnos
+        la información por mails, escribinos a: <FAQLink href="mailto: donde@huesped.org.ar">donde@huesped.org.ar</FAQLink>
       </p>
     ),
   },
@@ -91,7 +83,7 @@ const ITEMS = [
           Si querés contactarte con nosotros podés escribirnos por{' '}
           <FAQLink href="https://twitter.com/FundHuesped">Twitter</FAQLink>,{' '}
           <FAQLink href="https://www.instagram.com/fundhuesped/">Instagram</FAQLink>,{' '}
-          <FAQLink href="https://www.facebook.com/FundHuesped">Facebook</FAQLink> o escribiéndonos un correo a{' '}
+          <FAQLink href="https://www.facebook.com/FundHuesped">Facebook</FAQLink> o por mail a{' '}
           <FAQLink href="mailto:info@huesped.org.ar">info@huesped.org.ar</FAQLink>
         </p>
       </>

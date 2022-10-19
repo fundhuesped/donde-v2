@@ -7,9 +7,9 @@ import { usePlacesWidget } from 'react-google-autocomplete';
 import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
 import { Pill } from '../components/Pill';
+import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../config/thirdParty';
 import { Coordinates } from '../model/map';
 import { prismaClient } from '../server/prisma/client';
-import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../config/thirdParty';
 
 type AvailableService = {
   id: string;

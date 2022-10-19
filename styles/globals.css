@@ -33,6 +33,27 @@
   .modal-style {
     @apply flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-white bg-opacity-50;
   }
+
+  .scrollbar-scroll::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+    background-color: #ffffff;
+  }
+
+  .scrollbar-track::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: #ffffff;
+  }
+
+  .scrollbar-thumb::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #e0e0e0;
+  }
+
+  .scroll-style {
+    @apply scrollbar-scroll scrollbar-track scrollbar-thumb;
+  }
 }
 
 @layer utilities {
