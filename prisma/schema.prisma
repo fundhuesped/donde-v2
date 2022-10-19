@@ -60,7 +60,6 @@ model Service {
   name        String      @unique @db.VarChar(100)
   icon        String      @db.VarChar(100)
   establishments ServiceOnEstablishment[]
-  specialties Specialty[]
 }
 
 model Establishment {
@@ -83,7 +82,6 @@ model Establishment {
   status       EstablishmentStatus
   latitude     Float
   longitude    Float
-  specialties  SpecialtiesOnEstablishments[]
 }
 
 model ServiceOnEstablishment {
@@ -117,22 +115,4 @@ model ServiceOnEstablishmentOpeningTime {
   startTime                      DateTime                     @db.Time()
   endTime                        DateTime                     @db.Time()
   @@index([serviceOnEstablishmentId])
-}
-
-model SpecialtiesOnEstablishments {
-  establishment   Establishment @relation(fields: [establishmentId], references: [id])
-  establishmentId String        @db.Uuid
-  specialty       Specialty     @relation(fields: [specialtyId], references: [id])
-  specialtyId     String        @db.Uuid
-  @@id([establishmentId, specialtyId])
-  @@index([establishmentId, specialtyId])
-}
-
-model Specialty {
-  id             String                        @id @default(uuid()) @db.Uuid
-  name           String?                       @unique @db.VarChar(100)
-  service        Service                       @relation(fields: [serviceId], references: [id])
-  serviceId      String                        @db.Uuid
-  establishments SpecialtiesOnEstablishments[]
-  @@index([serviceId])
 }
