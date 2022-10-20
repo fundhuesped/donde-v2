@@ -37,13 +37,13 @@ const EstablishmentHeader = React.memo<Props>((props) => {
               </Pill>
             ))}
           </div>
-          {user?.role === UserRole.ADMIN && (
-            <div className="lg:hidden flex justify-end">
+          {(user?.role === UserRole.ADMIN  || user?.role === UserRole.COLLABORATOR) && (
+            <div className="lg:hidden flex justify-end w-screen px-3">
               <button
                 onClick={async () => {
                   await router.push({ pathname: '/establecimientos/nuevo' });
                 }}
-                className="flex bg-inherent text-primary border-none text-sm font-bold mt-1.5 mr-3"
+                className="flex bg-inherent text-primary border-none text-sm font-bold mt-1.5"
               >
                 <span className="mr-1 mt-0.5">
                   <PlusIcon className=" w-4 mx-1 text-primary" />

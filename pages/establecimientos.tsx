@@ -184,6 +184,7 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
                 </div>
                 <EstablishmentList
                   establishments={establishmentInScreen}
+                  setMapVisibility={setMapVisibility}
                   mapVisibility={mapVisibility}
                   setActiveEstablishment={setActiveEstablishment}
                 />

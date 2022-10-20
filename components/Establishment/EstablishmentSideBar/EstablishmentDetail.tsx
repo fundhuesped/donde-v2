@@ -123,15 +123,16 @@ export const EstablishmentDetail = React.memo<Props>((props) => {
   const handleDetailsClick = (id: string) => {
     router.push(`/establecimientos/${id}`);
   };
+  
 
   return (
-    <Card key={id} className={`${className} fixed lg:block top-16 lg:top-8 right-4 left-4 lg:left-1/3 lg:w-1/3`}>
+    <Card key={id} className={`${className} fixed lg:block top-16 lg:top-8 right-4 left-4 lg:left-1/3 lg:w-1/3 z-50`}>
       <header className={'flex flex-row justify-between items-center mb-2'}>
         <CardHeader className="pt-2">
           {name}
           <CardParagraph className="font-light">{establishmentType}</CardParagraph>
         </CardHeader>
-        {user?.role === UserRole.ADMIN && (
+        {(user?.role === UserRole.ADMIN  || user?.role === UserRole.COLLABORATOR) &&  (
           <Link href={`/establecimientos/editar/${activeEstablishment.id}`}>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a className={'color-primary font-bold absolute top-8 right-12'}>Editar</a>

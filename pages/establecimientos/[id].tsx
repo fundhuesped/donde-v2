@@ -147,7 +147,7 @@ export const EstablishmentPage: NextPage<ServerSideProps> = React.memo(({ establ
           <CardHeader className={'font-title text-lg'}>{name}</CardHeader>
           <CardParagraph>{establishmentType}</CardParagraph>
         </header>
-        {user?.role === UserRole.ADMIN && (
+        {user?.role === UserRole.ADMIN || user?.role === UserRole.COLLABORATOR && (
           <Link href={`/establecimientos/editar/${establishment.id}`}>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a className={'color-primary font-bold absolute top-8 right-8'}>Editar</a>

@@ -14,15 +14,17 @@ import { Pill } from '../../Pill';
 type Props = React.PropsWithChildren<{
   establishments: Establishment[];
   mapVisibility: string;
+   setMapVisibility: (x: string) => void;
   setActiveEstablishment: (x: Establishment | null) => void;
 }>;
 
 const EstablishmentList = React.memo<Props>((props) => {
-  const { establishments, mapVisibility, setActiveEstablishment } = props;
+  const { establishments, mapVisibility, setActiveEstablishment, setMapVisibility } = props;
   const router = useRouter();
   const user = useAuthenticatedUser();
 
   const handleDetailsClick = (establishmentId: string) => {
+    setMapVisibility('block');
     setActiveEstablishment(establishments.find((establishment) => establishment.id === establishmentId) ?? null);
   };
 
@@ -69,7 +71,7 @@ const EstablishmentList = React.memo<Props>((props) => {
           </p>
         </div>
       )}
-      {user?.role === UserRole.ADMIN && (
+      {(user?.role === UserRole.ADMIN  || user?.role === UserRole.COLLABORATOR) && (
         <div className="hidden lg:block mt-4">
           <button
             onClick={async () => {
