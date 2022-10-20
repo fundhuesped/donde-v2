@@ -14,7 +14,7 @@ import { Pill } from '../../Pill';
 type Props = React.PropsWithChildren<{
   establishments: Establishment[];
   mapVisibility: string;
-   setMapVisibility: (x: string) => void;
+  setMapVisibility: (x: string) => void;
   setActiveEstablishment: (x: Establishment | null) => void;
 }>;
 
@@ -71,7 +71,7 @@ const EstablishmentList = React.memo<Props>((props) => {
           </p>
         </div>
       )}
-      {(user?.role === UserRole.ADMIN  || user?.role === UserRole.COLLABORATOR) && (
+      {(user?.role === UserRole.ADMIN || user?.role === UserRole.COLLABORATOR) && (
         <div className="hidden lg:block mt-4">
           <button
             onClick={async () => {

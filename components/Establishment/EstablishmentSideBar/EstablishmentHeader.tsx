@@ -37,7 +37,7 @@ const EstablishmentHeader = React.memo<Props>((props) => {
               </Pill>
             ))}
           </div>
-          {(user?.role === UserRole.ADMIN  || user?.role === UserRole.COLLABORATOR) && (
+          {(user?.role === UserRole.ADMIN || user?.role === UserRole.COLLABORATOR) && (
             <div className="lg:hidden flex justify-end w-screen px-3">
               <button
                 onClick={async () => {
