@@ -65,7 +65,7 @@ export type Establishment = {
   longitude: number;
   services: (PrismaClient.ServiceOnEstablishment & {
     service: PrismaClient.Service;
-    subservice: PrismaClient.Subservice;
+    subservice: PrismaClient.Subservice | null;
     openingTimes: PrismaClient.ServiceOnEstablishmentOpeningTime[];
   })[];
 };
