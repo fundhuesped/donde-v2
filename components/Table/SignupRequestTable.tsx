@@ -33,15 +33,12 @@ const Table = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
     const sortFieldKey = sortField as keyof SignupRequest;
     if (sortField) {
       const sorted = [...filteredSolicitudes].sort((a, b) => {
-        if (a[sortFieldKey] === null) return 1;
-        if (b[sortFieldKey] === null) return -1;
-        if (a[sortFieldKey] === null && b[sortFieldKey] === null) return 0;
         const aField = a[sortFieldKey];
-        if (aField === undefined) {
+        if (aField === undefined || aField === null) {
           return 1;
         }
         const bField = b[sortFieldKey];
-        if (bField === undefined) {
+        if (bField === undefined || bField === null) {
           return -1;
         }
         return (

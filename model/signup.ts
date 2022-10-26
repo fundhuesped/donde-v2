@@ -11,7 +11,7 @@ export const signupRequestSchema = yup.object({
   organizationCountry: yup.string().required(),
   organizationRole: yup.string().required(),
   organizationType: yup.string().required(),
-  organizationWebsite: yup.string(),
+  organizationWebsite: yup.string().nullable(),
   createdAt: yup.date().required(),
 });
 
