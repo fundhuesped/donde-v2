@@ -138,7 +138,7 @@ async function main() {
             },
             subservice: {
               connect: {
-                id: abortoSubservice4.id
+                id: abortoSubservice4.id,
               },
             },
             details: 'Pedir cita primero',

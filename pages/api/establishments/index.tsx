@@ -75,13 +75,13 @@ const createEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
     return res.status(400).json(err.inner);
   }
 
-  let services = undefined
+  let services = undefined;
   try {
     services = await mapServicesOnEstablishmentToPrismaObject(req.body.services);
-  } catch (err:any) {
+  } catch (err: any) {
     return res.status(400).json(err.message);
   }
-  
+
   const establishment = await prismaClient.establishment.create({
     data: {
       ...req.body,
@@ -93,40 +93,47 @@ const createEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
   return res.status(201).json(establishment);
 };
 
-export const mapServicesOnEstablishmentToPrismaObject = async (services: yup.Asserts<typeof createServiceOnEstablishmentSchema>[]) => {
+export const mapServicesOnEstablishmentToPrismaObject = async (
+  services: yup.Asserts<typeof createServiceOnEstablishmentSchema>[],
+) => {
   if (isEmpty(services)) return { create: [] };
 
-  const servicesObjects = await Promise.all(services.map(async (service) => {
-    let connectSubservice = undefined;
-    if (service.subserviceId) {
-      const subservice = await prismaClient.subservice.findUnique({
-        where: {
-          id: service.subserviceId
-      }});
-      if (subservice?.serviceId != service.serviceId) {
-        throw new Error('subservice does not belong to service');
-      } else {
-        connectSubservice = {
-          connect: {
+  const servicesObjects = await Promise.all(
+    services.map(async (service) => {
+      let connectSubservice = undefined;
+      if (service.subserviceId) {
+        const subservice = await prismaClient.subservice.findUnique({
+          where: {
             id: service.subserviceId,
           },
-        };
+        });
+        if (subservice?.serviceId != service.serviceId) {
+          throw new Error('subservice does not belong to service');
+        } else {
+          connectSubservice = {
+            connect: {
+              id: service.subserviceId,
+            },
+          };
+        }
       }
-    }
 
-    return {
-      service: {
-        connect: {
-          id: service.serviceId,
+      return {
+        service: {
+          connect: {
+            id: service.serviceId,
+          },
         },
-      },
-      subservice: connectSubservice,
-      phoneNumber: service.phoneNumber,
-      details: service.details,
-      email: service.email,
-      openingTimes: service.openingTimes ? mapServicesOnEstablishmentOpeningTimesToPrismaObject(service.openingTimes) : undefined,
-    };
-  }));
+        subservice: connectSubservice,
+        phoneNumber: service.phoneNumber,
+        details: service.details,
+        email: service.email,
+        openingTimes: service.openingTimes
+          ? mapServicesOnEstablishmentOpeningTimesToPrismaObject(service.openingTimes)
+          : undefined,
+      };
+    }),
+  );
   return {
     create: servicesObjects,
   };
