@@ -42,7 +42,11 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () 
   if (!googleMapsApiKey) {
     throw new Error('Environment variable not set: GOOGLE_MAPS_API_KEY');
   }
-  const services = await prismaClient.service.findMany();
+  const services = await prismaClient.service.findMany({
+    include: {
+      subservices: true,
+    },
+  });
   return {
     props: {
       googleMapsApiKey,

@@ -38,6 +38,50 @@ async function main() {
     },
   });
 
+  const abortoSubservice1 = await prisma.subservice.create({
+    data: {
+      service: {
+        connect: {
+          id: aborto.id,
+        },
+      },
+      name: 'No está confirmado que asesore o realice interrupción legal del embarazo',
+    },
+  });
+
+  const abortoSubservice2 = await prisma.subservice.create({
+    data: {
+      service: {
+        connect: {
+          id: aborto.id,
+        },
+      },
+      name: 'Ofrece asesoramiento sobre interrupción voluntaria del embarazo',
+    },
+  });
+
+  const abortoSubservice3 = await prisma.subservice.create({
+    data: {
+      service: {
+        connect: {
+          id: aborto.id,
+        },
+      },
+      name: 'Ofrece asesoramiento y derivación sobre interrupción voluntaria del embarazo',
+    },
+  });
+
+  const abortoSubservice4 = await prisma.subservice.create({
+    data: {
+      service: {
+        connect: {
+          id: aborto.id,
+        },
+      },
+      name: 'Ofrece asesoramiento y realiza interrupción legal del embarazo',
+    },
+  });
+
   const establishment = await prisma.establishment.create({
     data: {
       name: 'Hospital de Pediatría Garrahan',
@@ -59,7 +103,7 @@ async function main() {
                 id: preservativos.id,
               },
             },
-            details: 'Siempre disponible',
+            details: 'No hace falta agendar una cita',
             phoneNumber: '51351433541',
             openingTimes: {
               create: [
@@ -92,7 +136,12 @@ async function main() {
                 id: aborto.id,
               },
             },
-            details: 'Ofrece asesoramiento y realiza interrupción legal del embarazo',
+            subservice: {
+              connect: {
+                id: abortoSubservice4.id,
+              },
+            },
+            details: 'Pedir cita primero',
             phoneNumber: '51351433541',
             openingTimes: {
               create: [

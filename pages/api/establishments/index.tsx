@@ -9,7 +9,7 @@ import { z } from 'zod';
 import * as yup from 'yup';
 
 import isEmpty from 'lodash/isEmpty';
-import { mapServicesOnEstablishmentOpeningTimesToPrismaObject } from './[id]/services';
+import { createServiceOnEstablishmentOpeningTimeSchema } from '../../../model/openingTime';
 
 const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
@@ -54,6 +54,7 @@ const getEstablishments = async (req: NextApiRequest, res: NextApiResponse<any>)
       services: {
         include: {
           service: true,
+          subservice: true,
           openingTimes: true,
         },
       },
@@ -68,11 +69,19 @@ const getEstablishments = async (req: NextApiRequest, res: NextApiResponse<any>)
 };
 
 const createEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
-  if (!establishmentSchema.isValidSync(req.body)) {
-    return res.status(400).end();
+  try {
+    establishmentSchema.validateSync(req.body, { abortEarly: false });
+  } catch (err: any) {
+    return res.status(400).json(err.inner);
   }
 
-  const services = mapServicesOnEstablishmentToPrismaObject(req.body.services);
+  let services = undefined;
+  try {
+    services = await mapServicesOnEstablishmentToPrismaObject(req.body.services);
+  } catch (err: any) {
+    return res.status(400).json(err.message);
+  }
+
   const establishment = await prismaClient.establishment.create({
     data: {
       ...req.body,
@@ -84,20 +93,47 @@ const createEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
   return res.status(201).json(establishment);
 };
 
-export const mapServicesOnEstablishmentToPrismaObject = (services: yup.Asserts<typeof createServiceOnEstablishmentSchema>[]) => {
+export const mapServicesOnEstablishmentToPrismaObject = async (
+  services: yup.Asserts<typeof createServiceOnEstablishmentSchema>[],
+) => {
   if (isEmpty(services)) return { create: [] };
-  const servicesObjects = services.map((service) => {
-    return {
-      service: {
-        connect: {
-          id: service.serviceId,
+
+  const servicesObjects = await Promise.all(
+    services.map(async (service) => {
+      let connectSubservice = undefined;
+      if (service.subserviceId) {
+        const subservice = await prismaClient.subservice.findUnique({
+          where: {
+            id: service.subserviceId,
+          },
+        });
+        if (subservice?.serviceId != service.serviceId) {
+          throw new Error('subservice does not belong to service');
+        } else {
+          connectSubservice = {
+            connect: {
+              id: service.subserviceId,
+            },
+          };
+        }
+      }
+
+      return {
+        service: {
+          connect: {
+            id: service.serviceId,
+          },
         },
-      },
-      phoneNumber: service.phoneNumber,
-      details: service.details,
-      openingTimes: service.openingTimes ? mapServicesOnEstablishmentOpeningTimesToPrismaObject(service.openingTimes) : undefined,
-    };
-  });
+        subservice: connectSubservice,
+        phoneNumber: service.phoneNumber,
+        details: service.details,
+        email: service.email,
+        openingTimes: service.openingTimes
+          ? mapServicesOnEstablishmentOpeningTimesToPrismaObject(service.openingTimes)
+          : undefined,
+      };
+    }),
+  );
   return {
     create: servicesObjects,
   };
@@ -112,6 +148,22 @@ export const transformEstablishmentIntoJSONResponse = (establishment: Establishm
     }
   }
   return jsonEstablishment;
+};
+
+const mapServicesOnEstablishmentOpeningTimesToPrismaObject = (
+  openingTimes: yup.Asserts<typeof createServiceOnEstablishmentOpeningTimeSchema>[],
+) => {
+  if (isEmpty(openingTimes)) return { create: [] };
+  const servicesObjects = openingTimes.map((openingTime) => {
+    return {
+      day: openingTime.day,
+      startTime: '1970-01-01T' + openingTime.startTime + ':00.000Z',
+      endTime: '1970-01-01T' + openingTime.endTime + ':00.000Z',
+    };
+  });
+  return {
+    create: servicesObjects,
+  };
 };
 
 export default handler;

@@ -1,3 +1,4 @@
+import { Subservice } from '@prisma/client';
 import * as yup from 'yup';
 
 export enum ServiceIcon {
