@@ -1,12 +1,10 @@
+import { Establishment, EstablishmentStatus } from '@prisma/client';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { prismaClient } from '../../../server/prisma/client';
-import { EstablishmentStatus } from '@prisma/client';
-import { createEstablishmentSchema as establishmentSchema } from '../../../model/establishment';
-import { createServiceOnEstablishmentSchema } from '../../../model/serviceOnEstablishment';
-import { Establishment as EstablishmentModel } from '../../../model/establishment';
-import { Establishment } from '@prisma/client';
-import { z } from 'zod';
 import * as yup from 'yup';
+import { z } from 'zod';
+import { createEstablishmentSchema as establishmentSchema, Establishment as EstablishmentModel } from '../../../model/establishment';
+import { createServiceOnEstablishmentSchema } from '../../../model/serviceOnEstablishment';
+import { prismaClient } from '../../../server/prisma/client';
 
 import isEmpty from 'lodash/isEmpty';
 import { mapServicesOnEstablishmentOpeningTimesToPrismaObject } from './[id]/services';
@@ -68,6 +66,13 @@ const getEstablishments = async (req: NextApiRequest, res: NextApiResponse<any>)
 };
 
 const createEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
+  
+   try {
+    establishmentSchema.validateSync(req.body, { abortEarly: false });
+  } catch (err: any) {
+    return res.status(400).json(err.inner);
+  }
+
   if (!establishmentSchema.isValidSync(req.body)) {
     return res.status(400).end();
   }

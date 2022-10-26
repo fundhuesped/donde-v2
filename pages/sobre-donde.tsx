@@ -53,7 +53,7 @@ export default function About() {
           Es una plataforma de código abierto, disponible en:{' '}
           <FAQLink href=" https://github.com/fundhuesped/donde-huesped">Github</FAQLink>
         </p>
-        <p className={'p-2 bg-ultra-light-salmon rounded-2xl text-center'}>
+        <p className={'my-4 p-2 bg-ultra-light-salmon rounded-2xl text-center'}>
           Si tenés inquietudes, visitá nuestra sección de{' '}
           <Link href="/preguntas-frecuentes">
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}

@@ -233,117 +233,121 @@ const EstablishmentAdmin = (props: {
   } = form;
 
   return (
-    <>
-      {isNewEstablishment ? (
-        <h1 className={'px-content pt-2 text-justify font-bold text-black'}>Nuevo establecimiento</h1>
-      ) : (
-        <h1 className={'px-content pt-2 text-justify font-bold text-black'}>Editar</h1>
-      )}
-      <MainContainer className={'mt-4 pt-8'}>
-        <p>Por favor, completá los datos del lugar</p>
-        {isNewEstablishment && !isSearchStepCompleted && (
-          <EstablishmentSearchStep
-            key={'name'}
-            onChange={handleFieldChange}
-            name={name}
-            ref={autocompleteInputRef}
-            address={address}
-            latitude={latitude}
-            longitude={longitude}
-            onClick={handleContinueButtonClicked}
-          />
-        )}
-        {(isSearchStepCompleted || !isNewEstablishment) && (
-          <>
-            <input
+    <div className='w-full flex justify-center'>
+      <MainContainer className={'full h-fit lg:h-full lg:w-3/5 lg:mx-4 mt-4 pt-8 lg:py-8 lg:px-8 lg:flex-grow-0'}>
+        <div className={'text-center lg:py-4'}>
+          {isNewEstablishment ? (
+            <h2 className={'px-content text-2xl font-bold text-black'}>Nuevo establecimiento</h2>
+          ) : (
+            <h2 className={'px-content text-2xl font-bold text-black'}>Editar establecimiento</h2>
+          )}
+          <p className='font-normal text-base text-black'>Por favor, completá los datos del lugar</p>
+        </div>
+        <div className='mx-o lg:mx-12'>
+          {isNewEstablishment && !isSearchStepCompleted && (
+            <EstablishmentSearchStep
               key={'name'}
-              name={'name'}
-              className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 mt-6'}
-              placeholder={'Nombre del establecimiento'}
               onChange={handleFieldChange}
-              value={name}
-            />
-            <Select
-              name={'type'}
-              placeholder={'Tipo de establecimiento'}
-              onSelect={handleFieldChange}
-              value={type}
-              items={establishmentTypes}
-            />
-            <LocationField
-              key={'surroundingStreets'}
-              onChange={handleFieldChange}
-              fullAddress={fullAddress}
-              street={street}
-              streetNumber={streetNumber}
-              apartment={apartment}
-              intersection={intersection}
-              apiKey={googleMapsApiKey}
-              onChildMouseMove={handleChildMouseMove}
+              name={name}
+              ref={autocompleteInputRef}
+              address={address}
               latitude={latitude}
               longitude={longitude}
+              onClick={handleContinueButtonClicked}
             />
-
-            {/*<AvailabilityField key={'workingHourTo'} onChange={handleFormUpdate} availability={availability} />*/}
-            <AvailableServices
-              onChange={handleFormUpdate}
-              activeServicesId={servicesId}
-              activeServices={services}
-              availableServices={availableServices}
-            />
-
-            {/*<ContactInfoField
-              key={'email'}
-              onChange={handleFieldChange}
-              website={website}
-              phone={phone}
-              whatsApp={whatsApp}
-              email={email}
-            />*/}
-
-            <h1 className={'mt-6 mb-2 font-bold text-black'}>¿Algo más que quieras agregar sobre el lugar?</h1>
-            <p className={'text-xs mb-2'}>
-              Por ejemplo referencias de acceso, o cualquier otro dato relevante sobre el establecimiento
-            </p>
-            <textarea
-              name={'details'}
-              value={details || undefined}
-              onChange={handleFieldChange}
-              className={'w-full p-4 mt-2 rounded-lg'}
-              rows={4}
-              placeholder={'Escribí tus comentarios aca'}
-            ></textarea>
-            <label className={'cursor-pointer flex mt-10 mb-8'} htmlFor="terms-checkbox">
+          )}
+          {(isSearchStepCompleted || !isNewEstablishment) && (
+            <>
               <input
-                id="terms-checkbox"
-                key={'tosCheckbox'}
-                name={'tosCheckbox'}
-                className={'mr-2 cursor-pointer'}
-                type={'checkbox'}
-                onChange={handleCheckboxChange}
-                checked={tosCheckbox}
+                key={'name'}
+                name={'name'}
+                className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 mt-6'}
+                placeholder={'Nombre del establecimiento'}
+                onChange={handleFieldChange}
+                value={name}
               />
-              <p className={'text-xs'}>Acepto los términos y condiciones y la publicación de los datos en el sitio</p>
-            </label>
-            {isError && (
-              <Alert title={'Error durante la creacion de establecimiento'} message={'Hubo un problema en el servidor'} />
-            )}
-            {isUpdateSuccessful && (
-              <Alert title={'Edicion exitosa!'} message={'El establecimiento fue editado correctamente'} success={true} />
-            )}
-            {isNewEstablishment ? (
-              <Button className={'w-full my-5'} disabled={!isFormCompleted} type={'primary'} onClick={handleFormSubmit}>
-                Agregar establecimiento
-              </Button>
-            ) : (
-              <Button className={'w-full my-5'} disabled={!isFormCompleted} type={'primary'} onClick={handleFormSubmit}>
-                Editar establecimiento
-              </Button>
-            )}
-          </>
-        )}
+              <Select
+                name={'type'}
+                placeholder={'Tipo de establecimiento'}
+                onSelect={handleFieldChange}
+                value={type}
+                items={establishmentTypes}
+              />
+              <LocationField
+                key={'surroundingStreets'}
+                onChange={handleFieldChange}
+                fullAddress={fullAddress}
+                street={street}
+                streetNumber={streetNumber}
+                apartment={apartment}
+                intersection={intersection}
+                apiKey={googleMapsApiKey}
+                onChildMouseMove={handleChildMouseMove}
+                latitude={latitude}
+                longitude={longitude}
+              />
+
+              {/*<AvailabilityField key={'workingHourTo'} onChange={handleFormUpdate} availability={availability} />*/}
+              <AvailableServices
+                onChange={handleFormUpdate}
+                activeServicesId={servicesId}
+                activeServices={services}
+                availableServices={availableServices}
+              />
+
+              {/*<ContactInfoField
+                key={'email'}
+                onChange={handleFieldChange}
+                website={website}
+                phone={phone}
+                whatsApp={whatsApp}
+                email={email}
+              />*/}
+
+              <h1 className={'mt-6 mb-2 font-bold text-black'}>¿Algo más que quieras agregar sobre el lugar?</h1>
+              <p className={'text-xs mb-2'}>
+                Por ejemplo referencias de acceso, o cualquier otro dato relevante sobre el establecimiento
+              </p>
+              <textarea
+                name={'details'}
+                value={details || undefined}
+                onChange={handleFieldChange}
+                className={'w-full p-4 mt-2 rounded-lg'}
+                rows={4}
+                placeholder={'Escribí tus comentarios aca'}
+              ></textarea>
+              <label className={'cursor-pointer flex mt-10 mb-8'} htmlFor="terms-checkbox">
+                <input
+                  id="terms-checkbox"
+                  key={'tosCheckbox'}
+                  name={'tosCheckbox'}
+                  className={'mr-2 cursor-pointer'}
+                  type={'checkbox'}
+                  onChange={handleCheckboxChange}
+                  checked={tosCheckbox}
+                />
+                <p className={'text-xs'}>Acepto los términos y condiciones y la publicación de los datos en el sitio</p>
+              </label>
+              {isError && (
+                <Alert title={'Error durante la creacion de establecimiento'} message={'Hubo un problema en el servidor'} />
+              )}
+              {isUpdateSuccessful && (
+                <Alert title={'Edicion exitosa!'} message={'El establecimiento fue editado correctamente'} success={true} />
+              )}
+              {isNewEstablishment ? (
+                <Button className={'w-full my-5'} disabled={!isFormCompleted} type={'primary'} onClick={handleFormSubmit}>
+                  Agregar establecimiento
+                </Button>
+              ) : (
+                <Button className={'w-full my-5'} disabled={!isFormCompleted} type={'primary'} onClick={handleFormSubmit}>
+                  Editar establecimiento
+                </Button>
+              )}
+            </>
+          )}
+        </div>
       </MainContainer>
-    </>
+    </div>
   );
 };
 

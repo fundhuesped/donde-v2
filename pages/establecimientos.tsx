@@ -167,32 +167,32 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
     );
 
   return (
-    <>
+    <div className='overflow-hidden lg:overflow-visible'>
       <Head>
         <title>Dónde - Establecimientos</title>
       </Head>
 
-      <MainContainer className={'relative px-0 h-screen'}>
+      <MainContainer className={'relative px-0 lg:map-desktop-height map-mobile-height'}>
         {mapPosition && (
           <div className={'flex'}>
             <div className={'absolute lg:relative w-full lg:w-1/3'}>
               <EstablishmentSideBar>
-                <div className="h-fit">
+                <div className='h-[calc(100vh_-_64px)] lg:h-[calc(100vh_-_124px)] scroll-style overflow-auto lg:overflow-hidden'>
                   <EstablishmentHeader services={services}>
-                    <EstablishmentToggle setMapVisibility={setMapVisibility} mapVisibility={mapVisibility} />
                   </EstablishmentHeader>
+                  <EstablishmentToggle setMapVisibility={setMapVisibility} mapVisibility={mapVisibility} />
+                  <EstablishmentList
+                    establishments={establishmentInScreen}
+                    setMapVisibility={setMapVisibility}
+                    mapVisibility={mapVisibility}
+                    setActiveEstablishment={setActiveEstablishment}
+                  />
                 </div>
-                <EstablishmentList
-                  establishments={establishmentInScreen}
-                  setMapVisibility={setMapVisibility}
-                  mapVisibility={mapVisibility}
-                  setActiveEstablishment={setActiveEstablishment}
-                />
               </EstablishmentSideBar>
             </div>
 
             {/* <div className={classNames(`${mapVisibility} lg:block lg:w-2/3 lg:mx-auto h-4/6 lg:h-screen`)}> */}
-            <div className={classNames(`${mapVisibility} lg:block w-full h-screen lg:mx-auto`)}>
+            <div className={classNames(`${mapVisibility} lg:block w-full lg:map-desktop-height map-mobile-height lg:mx-auto`)}>
               <GoogleMapReact
                 bootstrapURLKeys={{
                   key: googleMapsApiKey,
@@ -248,7 +248,7 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
           </div>
         )}
       </MainContainer>
-    </>
+    </div>
   );
 };
 

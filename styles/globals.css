@@ -54,6 +54,13 @@
   .scroll-style {
     @apply scrollbar-scroll scrollbar-track scrollbar-thumb;
   }
+
+  .map-mobile-height {
+      height: calc(100vh - 64px) !important;
+  }
+  .map-desktop-height {
+      height: calc(100vh - 100px) !important;
+  }
 }
 
 @layer utilities {

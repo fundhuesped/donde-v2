@@ -18,9 +18,9 @@ const EstablishmentToggle = React.memo<Props>((props) => {
 
   return (
     <div
-      className={
-        'flex justify-center lg:hidden transition duration-200 ease-in w-full rounded-t-3xl lg:rounded-none pt-4 h-12 bg-ultra-light-gray '
-      }
+      className={mapVisibility == 'block' ? 
+        'flex justify-center lg:hidden transition duration-200 ease-in w-full rounded-t-3xl lg:rounded-none h-12 bg-ultra-light-gray' 
+        : 'flex justify-center sticky top-2 z-40 lg:hidden transition duration-200 ease-in w-full rounded-t-3xl lg:rounded-none h-12 bg-transparent'}
     >
       <div className={mapVisibility == 'block' ? 'absolute top-2' : ''}>
         <label className="inline-flex relative items-center cursor-pointer z-30">

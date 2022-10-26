@@ -1,6 +1,6 @@
+import isNil from 'lodash/isNil';
 import React, { useEffect, useState } from 'react';
 import { Button } from '../Button';
-import isNil from 'lodash/isNil';
 type EstablishmentSearchStepProps = {
   onChange: (event: { currentTarget: { value: string; name: string } }) => void;
   name: string;

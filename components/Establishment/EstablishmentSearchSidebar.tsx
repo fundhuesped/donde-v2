@@ -10,7 +10,7 @@ const EstablishmentSearchSidebar = React.memo<Props>((props) => {
   return (
     <>
       <div className=" px-5 flex flex-wrap justify-start ml-20 mt-4">
-        <div className={'mt-2 mb-6'}>
+        <div className={'mt-4 mb-6'}>
           <p className="text-black text-sm mb-2">Estás buscando</p>
           <div className="flex">
             {services.map((service) => (
