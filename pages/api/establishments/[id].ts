@@ -33,6 +33,7 @@ const getEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) 
       services: {
         include: {
           service: true,
+          subservice: true,
           openingTimes: true,
         },
       },
@@ -52,7 +53,7 @@ const updateEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
   if (!idSchema.isValidSync(establishmentId)) {
     return res.status(400).end();
   }
-
+  
   try {
     establishmentSchema.validateSync(req.body, { abortEarly: false });
   } catch (err: any) {
@@ -73,7 +74,12 @@ const updateEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
     });
   }
 
-  const services = mapServicesOnEstablishmentToPrismaObject(req.body.services!);
+  let services = undefined
+  try {
+    services = mapServicesOnEstablishmentToPrismaObject(req.body.services!);
+  } catch (err:any) {
+    return res.status(400).json(err.message);
+  }
   const updateEstablishment = prismaClient.establishment.update({
     where: {
       id: establishmentId,

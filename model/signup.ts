@@ -3,7 +3,7 @@ import * as yup from 'yup';
 export type SignupRequest = yup.InferType<typeof signupRequestSchema>;
 export const signupRequestSchema = yup.object({
   userId: yup.string().required(),
-  email: yup.string().required(),
+  email: yup.string().email().required(),
   firstName: yup.string().required(),
   lastName: yup.string().required(),
   status: yup.string().required(),
@@ -11,7 +11,7 @@ export const signupRequestSchema = yup.object({
   organizationCountry: yup.string().required(),
   organizationRole: yup.string().required(),
   organizationType: yup.string().required(),
-  organizationWebsite: yup.string().required(),
+  organizationWebsite: yup.string(),
   createdAt: yup.date().required(),
 });
 

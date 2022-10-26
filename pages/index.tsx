@@ -37,7 +37,11 @@ type ServerSideProps = {
 };
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
-  const services = await prismaClient.service.findMany();
+  const services = await prismaClient.service.findMany({
+    include: {
+      subservices: true,
+    },
+  });
   return {
     props: {
       availableServices: services.map((service) => serviceSchema.validateSync(service)),
