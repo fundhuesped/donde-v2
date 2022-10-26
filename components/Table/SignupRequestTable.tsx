@@ -36,8 +36,16 @@ const Table = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
         if (a[sortFieldKey] === null) return 1;
         if (b[sortFieldKey] === null) return -1;
         if (a[sortFieldKey] === null && b[sortFieldKey] === null) return 0;
+        const aField = a[sortFieldKey]
+        if (aField === undefined) {
+          return 1;
+        }
+        const bField = b[sortFieldKey];
+        if (bField === undefined) {
+          return -1;
+        }
         return (
-          a[sortFieldKey].toString().localeCompare(b[sortFieldKey].toString(), 'es', {
+          aField.toString().localeCompare(bField.toString(), 'es', {
             numeric: true,
           }) * (sortOrder === 'asc' ? 1 : -1)
         );
