@@ -13,7 +13,6 @@ export type Service = {
   id: string;
   name: string;
   icon: string;
-  subservices: Subservice[];
 };
 
 export const serviceSchema = yup.object({
