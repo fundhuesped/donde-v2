@@ -1,4 +1,4 @@
-import { Service, ServiceOnEstablishmentOpeningTime } from '@prisma/client';
+import { Service, ServiceOnEstablishmentOpeningTime, Subservice } from '@prisma/client';
 import axios from 'axios';
 import _, { isNull } from 'lodash';
 import isEmpty from 'lodash/isEmpty';
@@ -36,6 +36,9 @@ export type EstablishmentModel = {
     id: string;
     serviceId: string;
     service: Service;
+    subserviceId: string | null;
+    subservice: Subservice | null;
+    email: string | null;
     phoneNumber: string | null;
     details: string | null;
     openingTimes: ServiceOnEstablishmentOpeningTime[];

@@ -15,6 +15,7 @@ export const getEstablishment = async (id: any): Promise<Establishment> => {
       services: {
         include: {
           service: true,
+          subservice: true,
           openingTimes: true,
         },
       },

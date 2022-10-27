@@ -38,7 +38,10 @@ const mapIntoEstablishmentModel = (establishment: Establishment): EstablishmentM
         id: service.id,
         serviceId: service.serviceId,
         service: service.service,
+        subserviceId: service.subserviceId,
+        subservice: service.subservice,
         phoneNumber: service.phoneNumber,
+        email: service.email,
         details: service.details,
         openingTimes: service.openingTimes,
       };

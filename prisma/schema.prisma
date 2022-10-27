@@ -19,7 +19,7 @@ model User {
   organization_name    String           @db.VarChar(100)
   organization_role    String           @db.VarChar(100)
   organization_country String           @db.VarChar(100)
-  organization_website String           @db.VarChar(100)
+  organization_website String?          @db.VarChar(100)
   created_at           DateTime         @default(now())
 }
 
@@ -56,10 +56,21 @@ enum EstablishmentStatus {
 }
 
 model Service {
-  id          String      @id @default(uuid()) @db.Uuid
-  name        String      @unique @db.VarChar(100)
-  icon        String      @db.VarChar(100)
-  establishments ServiceOnEstablishment[]
+  id             String      @id @default(uuid()) @db.Uuid
+  name           String      @unique @db.VarChar(100)
+  icon           String      @db.VarChar(100)
+  servicesOnEstablishments ServiceOnEstablishment[]
+  subservices    Subservice[]
+}
+
+model Subservice {
+  id                String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  serviceId         String        @db.Uuid
+  service           Service       @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  name              String        @db.VarChar(100)
+  servicesOnEstablishments        ServiceOnEstablishment[]
+  @@unique([serviceId, name])
+  @@index([serviceId])
 }
 
 model Establishment {
@@ -90,8 +101,11 @@ model ServiceOnEstablishment {
   establishmentId String        @db.Uuid
   service         Service       @relation(fields: [serviceId], references: [id])
   serviceId       String        @db.Uuid
+  email           String?       @db.VarChar(254)
   phoneNumber     String?       @db.VarChar(100)
   details         String?       @db.Text
+  subservice      Subservice?   @relation(fields: [subserviceId], references: [id])
+  subserviceId    String?       @db.Uuid
   openingTimes    ServiceOnEstablishmentOpeningTime[]
   @@index([establishmentId])
   @@index([serviceId])

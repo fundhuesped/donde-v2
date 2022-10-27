@@ -1,5 +1,5 @@
 import { PencilIcon, PlusIcon } from '@heroicons/react/outline';
-import { ServiceOnEstablishmentOpeningTime } from '@prisma/client';
+import { ServiceOnEstablishmentOpeningTime, Subservice } from '@prisma/client';
 import { useState } from 'react';
 import { Service } from '../../model/services';
 import { Pill } from '../Pill';
@@ -8,9 +8,12 @@ import { Services } from './Services';
 export type ServicesModal = {
   id: string;
   serviceId: string;
+  subserviceId: string | null;
   service: Service;
+  subservice: Subservice | null;
   phoneNumber: string | null;
   details: string | null;
+  email: string | null;
   openingTimes: ServiceOnEstablishmentOpeningTime[];
 }[];
 
