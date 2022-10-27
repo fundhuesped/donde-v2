@@ -1,3 +1,4 @@
+import { XIcon } from '@heroicons/react/outline';
 import { Service, ServiceOnEstablishmentOpeningTime, Subservice } from '@prisma/client';
 import axios from 'axios';
 import _, { isNull } from 'lodash';
@@ -12,6 +13,7 @@ import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../../config/thirdParty';
 import { establishmentTypes } from '../../model/establishment';
 import Alert from '../Alert';
 import { Button } from '../Button';
+import { Modal } from '../Modal';
 import { AvailableServices } from './AvailableServices';
 import { EstablishmentSearchStep } from './EstablishmentSearchStep';
 import { LocationField } from './LocationField';
@@ -84,6 +86,7 @@ const EstablishmentAdmin = (props: {
   const { googleMapsApiKey, establishment, availableServices } = props;
   const router = useRouter();
   const [isError, setIsError] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [isUpdateSuccessful, setIsUpdateSuccessful] = useState(false);
   const [isSearchStepCompleted, setIsSearchStepCompleted] = useState(false);
   const isNewEstablishment = isNil(establishment?.id);
@@ -335,7 +338,23 @@ const EstablishmentAdmin = (props: {
                 <Alert title={'Error durante la creacion de establecimiento'} message={'Hubo un problema en el servidor'} />
               )}
               {isUpdateSuccessful && (
-                <Alert title={'Edicion exitosa!'} message={'El establecimiento fue editado correctamente'} success={true} />
+                <Modal showModal={showModal}>
+                  <button onClick={() => setShowModal(false)}>
+                    <XIcon className="mr-4 mt-4 text-primary w-4.5"></XIcon>
+                  </button>
+                  <Alert title={'Edicion exitosa!'} message={'El establecimiento fue editado correctamente'} success={true} />
+                   <button
+                      className="btn-secondary my-5"
+                      type="button"
+                      onClick={() => {
+                        setShowModal(false)
+                        router.push('/');
+                      }}
+                    >
+                      Volver al inicio.
+                    </button>
+                </Modal>
+                
               )}
               {isNewEstablishment ? (
                 <Button className={'w-full my-5'} disabled={!isFormCompleted} type={'primary'} onClick={handleFormSubmit}>

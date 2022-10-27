@@ -1,13 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { OrganizationType } from '@prisma/client';
 import { NextPage } from 'next';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import MainContainer from '../components/MainContainer';
 import { Modal } from '../components/Modal';
-import Head from 'next/head';
 
 type FormValues = {
   firstName: string;
@@ -42,13 +42,6 @@ const schema = yup
     organizationType: yup.string().required('El tipo de organización es requerido'),
     organizationRole: yup.string().required('Por favor escriba su rol'),
     organizationCountry: yup.string().required('Por favor escriba el pais de la organización'),
-    organizationWebsite: yup
-      .string()
-      .matches(
-        /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
-        'Por favor escriba un link correcto',
-      )
-      .required('Por favor escriba el sitio web de su organización'),
   })
   .required();
 
@@ -288,19 +281,12 @@ const SignUp: NextPage = () => {
           </div>
           <div className="flex flex-wrap -mx-3 my-6">
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-              {!dirtyFields.organizationWebsite ? (
-                <p style={{ color: '#E6334C', margin: '.2em .5em .5em 15em', position: 'absolute', width: '1.2em' }}>*</p>
-              ) : (
-                ''
-              )}
               <input
-                {...register('organizationWebsite')}
                 className="input-style"
                 placeholder="Sitio web o RRSS de la organización"
                 id="organizationWebsite"
                 name="organizationWebsite"
               ></input>
-              <p className="color-primary text-sm">{errors.organizationWebsite?.message}</p>
             </div>
           </div>
           <div className="m-3">
