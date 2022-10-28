@@ -172,17 +172,15 @@ const EstablishmentTab = React.memo<Props>((props) => {
                         Descripción del servicio - <span>{serviceOnEstablishment.details}</span>
                       </CardSubHeader>
                       <CardListItem icon={SERVICE_ICONS[serviceOnEstablishment.service.icon as ServiceIcon]}>
-                        {serviceOnEstablishment.service.name && serviceOnEstablishment.subservice ? (
-                          <>
-                            <p>Servicio: {serviceOnEstablishment.service.name}</p>
-                            <span>Sub Servicio: {serviceOnEstablishment.subservice.name}</span>
-                          </>
-                        ) : (
-                          <>
-                            <p>Servicio: {serviceOnEstablishment.service.name}</p>
-                          </>
-                        )}
+                        <p>{serviceOnEstablishment.service.name}</p>
                       </CardListItem>
+                      <div className='text-center'>
+                        {serviceOnEstablishment.service.name && serviceOnEstablishment.subservice ? (
+                            <p className='text-primary font-light text-xs'>{serviceOnEstablishment.subservice.name}</p>
+                        ) : ("")}
+                      </div>
+                        
+                        
                     </CardList>
                   </div>
                 ))}
