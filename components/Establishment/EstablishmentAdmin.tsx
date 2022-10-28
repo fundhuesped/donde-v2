@@ -331,14 +331,14 @@ const EstablishmentAdmin = (props: {
                 />
                 <p className={'text-xs'}>
                   Acepto los{' '}
-                  <a
+                  <button
                     className={'text-xs hover:text-primary'}
                     onClick={async () => {
                       await router.push({ pathname: '/terminos-condiciones' });
                     }}
                   >
                     términos y condiciones y la publicación de los datos en el sitio
-                  </a>
+                  </button>
                 </p>
               </label>
               {isError && (
