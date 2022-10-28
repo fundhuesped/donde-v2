@@ -101,6 +101,7 @@ const EditService = (props: EditServiceProps) => {
       setSubserviceId(modalService[0].subserviceId);
       setEmail(modalService[0].email);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -112,6 +113,7 @@ const EditService = (props: EditServiceProps) => {
       setSubserviceDisabled(true);
       setSubserviceId(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subserviceId, serviceId]);
 
   const addService = (
