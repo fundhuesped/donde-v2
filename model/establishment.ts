@@ -2,6 +2,8 @@ import * as PrismaClient from '@prisma/client';
 import * as yup from 'yup';
 import { createServiceOnEstablishmentSchema } from './serviceOnEstablishment';
 
+export const urlRegex = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/gm;
+
 export const createEstablishmentSchema = yup.object({
   officialId: yup.string(),
   name: yup.string().required(),
@@ -11,7 +13,7 @@ export const createEstablishmentSchema = yup.object({
   apartment: yup.string(),
   intersection: yup.string(),
   details: yup.string(),
-  website: yup.string().url(),
+  website: yup.string().matches(urlRegex, 'Website is not valid'),
   city: yup.string().required(),
   department: yup.string().required(),
   province: yup.string().required(),
@@ -30,7 +32,7 @@ export const editEstablishmentSchema = yup.object({
   apartment: yup.string(),
   intersection: yup.string(),
   details: yup.string(),
-  website: yup.string().url(),
+  website: yup.string().matches(urlRegex, 'Website is not valid'),
   city: yup.string(),
   department: yup.string(),
   province: yup.string(),

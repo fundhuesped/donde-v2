@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { urlRegex } from './establishment';
 
 export type SignupRequest = yup.InferType<typeof signupRequestSchema>;
 export const signupRequestSchema = yup.object({
@@ -11,7 +12,7 @@ export const signupRequestSchema = yup.object({
   organizationCountry: yup.string().required(),
   organizationRole: yup.string().required(),
   organizationType: yup.string().required(),
-  organizationWebsite: yup.string().nullable(),
+  organizationWebsite: yup.string().matches(urlRegex, 'Website is not valid').nullable(),
   createdAt: yup.date().required(),
 });
 
