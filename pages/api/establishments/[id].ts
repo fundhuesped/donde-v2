@@ -77,10 +77,11 @@ const updateEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
 
   let services = undefined;
   try {
-    services = mapServicesOnEstablishmentToPrismaObject(req.body.services!);
+    services = await mapServicesOnEstablishmentToPrismaObject(req.body.services);
   } catch (err: any) {
     return res.status(400).json(err.message);
   }
+
   const updateEstablishment = prismaClient.establishment.update({
     where: {
       id: establishmentId,
