@@ -1,11 +1,10 @@
 import { PlusIcon, TrashIcon, XIcon } from '@heroicons/react/outline';
-import { Service } from '@prisma/client';
 import { uniqueId } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Button } from '../../Button';
 import { ServicesModal } from '../AvailableServices';
 import { Hour } from './components/Hour';
-import { Day, ServiceOnEstablishmentOpeningTimeFormat, SubService } from './types';
+import { Day, ServiceOnEstablishmentOpeningTimeFormat, SubService, Service } from './types';
 
 type EditServiceProps = {
   setShowModal: (x: any) => void;
@@ -36,10 +35,11 @@ const EditService = (props: EditServiceProps) => {
 
   const setServiceHandler = (id: string) => {
     const serviceSelected = availableServices.filter((ser) => ser.id == id);
-
-    if (modalService && serviceSelected[0].id != modalService[0].serviceId) {
-      var serviceAlreadyActivated = activeServices.find((service) => service.serviceId == serviceSelected[0].id);
+    if (modalService) {
+      var serviceAlreadyActivated = activeServices.find((service) => service.serviceId == serviceSelected[0].id)
+                                      || (modalService[0] && serviceSelected[0].id != modalService[0].serviceId);
       if (serviceAlreadyActivated) {
+        setServiceId(null);
         setError('El servicio seleccionado ya está activo, seleccione uno que no este activo');
       } else {
         setServiceId(serviceSelected[0].id);

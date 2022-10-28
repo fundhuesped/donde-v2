@@ -1,4 +1,4 @@
-import { Service } from '@prisma/client';
+import { Service } from './types';
 import { ServicesModal } from '../AvailableServices';
 import { ModalService } from './components/ModalService';
 import EditService from './EditService';

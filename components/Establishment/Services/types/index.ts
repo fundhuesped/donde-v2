@@ -4,6 +4,13 @@ export type SubService = {
   serviceId: string;
 };
 
+export type Service = {
+  id: string;
+  name: string;
+  icon: string;
+  subservices: SubService[];
+}
+
 export type Day = 'M' | 'T' | 'W' | 'R' | 'F' | 'S' | 'U';
 
 export type ServiceOnEstablishmentOpeningTimeFormat = {

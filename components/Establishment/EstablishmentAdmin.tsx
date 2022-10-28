@@ -1,5 +1,6 @@
 import { XIcon } from '@heroicons/react/outline';
-import { Service, ServiceOnEstablishmentOpeningTime, Subservice } from '@prisma/client';
+import { ServiceOnEstablishmentOpeningTime, Subservice } from '@prisma/client';
+import { Service } from './Services/types';
 import axios from 'axios';
 import _, { isNull } from 'lodash';
 import isEmpty from 'lodash/isEmpty';
