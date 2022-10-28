@@ -7,7 +7,6 @@ import { ServicesModal } from '../AvailableServices';
 import { Hour } from './components/Hour';
 import { Day, ServiceOnEstablishmentOpeningTimeFormat, SubService } from './types';
 
-
 type EditServiceProps = {
   setShowModal: (x: any) => void;
   modalService?: ServicesModal;
@@ -19,8 +18,6 @@ type EditServiceProps = {
 };
 
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-
-
 
 const EditService = (props: EditServiceProps) => {
   const { setShowModal, modalService, modalServiceId, availableServices, onChange, activeServicesId, activeServices } = props;
@@ -39,19 +36,18 @@ const EditService = (props: EditServiceProps) => {
 
   const setServiceHandler = (id: string) => {
     const serviceSelected = availableServices.filter((ser) => ser.id == id);
-    
-    if (modalService && (serviceSelected[0].id != modalService[0].serviceId)) {
-      var serviceAlreadyActivated = activeServices.find(service=> service.serviceId == serviceSelected[0].id)
+
+    if (modalService && serviceSelected[0].id != modalService[0].serviceId) {
+      var serviceAlreadyActivated = activeServices.find((service) => service.serviceId == serviceSelected[0].id);
       if (serviceAlreadyActivated) {
         setError('El servicio seleccionado ya está activo, seleccione uno que no este activo');
-      }else{
+      } else {
         setServiceId(serviceSelected[0].id);
         setError('');
       }
-    }else{
+    } else {
       setServiceId(serviceSelected[0].id);
     }
-    
   };
   const setSubserviceIdHandler = (id: string) => {
     setSubserviceId(id);
@@ -103,30 +99,27 @@ const EditService = (props: EditServiceProps) => {
       setDetails(modalService[0].details);
       setOpeningTimes(modalService[0].openingTimes);
       setSubserviceId(modalService[0].subserviceId);
-      setEmail(modalService[0].email);     
+      setEmail(modalService[0].email);
     }
   }, []);
 
-
- useEffect(() => {
-   var filteredService = availableServices.filter(service=> service.subservices.length)
-    setSubserviceOnService(filteredService)
+  useEffect(() => {
+    var filteredService = availableServices.filter((service) => service.subservices.length);
+    setSubserviceOnService(filteredService);
     if (filteredService[0].id == serviceId) {
-      setSubserviceDisabled(false)
-    }else{
-      setSubserviceDisabled(true)
-      setSubserviceId(null)
+      setSubserviceDisabled(false);
+    } else {
+      setSubserviceDisabled(true);
+      setSubserviceId(null);
     }
- }, [subserviceId, serviceId])
- 
- 
+  }, [subserviceId, serviceId]);
 
   const addService = (
     serviceId: string | null,
     phoneNumber: string | null,
     details: string | null,
     subserviceId: string | null,
-    email: string  | null,
+    email: string | null,
     getDays: { id: string; day: Day; startTime: string | Date; endTime: string | Date }[],
   ) => {
     if (modalService?.length) {
@@ -177,8 +170,6 @@ const EditService = (props: EditServiceProps) => {
     setShowModal(false);
   };
 
-  
-
   return (
     <>
       <div className="w-full flex justify-end ">
@@ -220,7 +211,7 @@ const EditService = (props: EditServiceProps) => {
                 </option>
               ),
             )}
-          </select> 
+          </select>
           <select
             className={` text-gray-600 bg-white rounded-lg border border-gray-300 w-full focus:ring-primary mb-4 p-2 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none`}
             disabled={subserviceDisabled}
@@ -231,38 +222,39 @@ const EditService = (props: EditServiceProps) => {
                 Seleccioná sub servicio
               </option>
             )}
-            {subserviceOnService && (serviceId == subserviceOnService[0].id) ? (
-              subserviceOnService[0].subservices.map((subservice:SubService)=>{
-                if(subserviceId == subservice.id) {
+            {subserviceOnService && serviceId == subserviceOnService[0].id ? (
+              subserviceOnService[0].subservices.map((subservice: SubService) => {
+                if (subserviceId == subservice.id) {
                   return (
-                  <option value={subservice.id} key={subservice.id} selected>
-                    {subservice.name}
-                  </option>)
-                }else{
+                    <option value={subservice.id} key={subservice.id} selected>
+                      {subservice.name}
+                    </option>
+                  );
+                } else {
                   return (
-                  <option value={subservice.id} key={subservice.id}>
-                    {subservice.name}
-                  </option>)
+                    <option value={subservice.id} key={subservice.id}>
+                      {subservice.name}
+                    </option>
+                  );
                 }
-                
               })
             ) : (
               <option value="" selected hidden>
                 Seleccioná sub servicio
               </option>
             )}
-            
-            
           </select>
           <input
             type="text"
             placeholder="Teléfono de atención del servicio"
-            className={'rounded-lg border border-gray-300 w-full dark:focus:border-primary focus:ring-primary p-2 mb-4 font-light'}
+            className={
+              'rounded-lg border border-gray-300 w-full dark:focus:border-primary focus:ring-primary p-2 mb-4 font-light'
+            }
             value={phoneNumber ? phoneNumber : ''}
             onChange={(e) => setPhoneNumber(e.target.value)}
           />
           <input
-            type='email'
+            type="email"
             placeholder="Correo electrónico de atención del servicio"
             className={'rounded-lg border border-gray-300 w-full dark:focus:border-primary focus:ring-primary p-2 font-light'}
             value={email ? email : ''}
@@ -416,7 +408,11 @@ const EditService = (props: EditServiceProps) => {
         <p className="text-orange-600 font-light mt-3">{error}</p>
 
         <div>
-          <Button className={'w-full my-5'} type={'primary'} onClick={() => addService(serviceId, phoneNumber, details, subserviceId, email, getDays)}>
+          <Button
+            className={'w-full my-5'}
+            type={'primary'}
+            onClick={() => addService(serviceId, phoneNumber, details, subserviceId, email, getDays)}
+          >
             Guardar
           </Button>
           <Button className={'w-full my-5'} type={'secondary'} onClick={() => setShowModal(false)}>

@@ -100,7 +100,7 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
   };
 
   return (
-    <div className='flex flex-wrap flex-grow content-start justify-center lg:bg-modal-image lg:bg-white '>
+    <div className="flex flex-wrap flex-grow content-start justify-center lg:bg-modal-image lg:bg-white ">
       <Head>
         <title>Dónde - Buscar Servicios</title>
       </Head>
@@ -115,7 +115,9 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
           ))}
         </div>
       </div>
-      <MainContainer className={'w-full h-[calc(100vh_-_100px)] lg:h-full lg:w-3/5 lg:mx-4 mt-4 pt-8 lg:py-8 lg:px-8 lg:flex-grow-0'}>
+      <MainContainer
+        className={'w-full h-[calc(100vh_-_100px)] lg:h-full lg:w-3/5 lg:mx-4 mt-4 pt-8 lg:py-8 lg:px-8 lg:flex-grow-0'}
+      >
         <h2 className={'text-xl text-black font-title font-bold'}>¿En qué lugar estas buscando?</h2>
         <p className={'text-xs text-black mt-2 mb-4'}>
           Podés buscar por ciudad, departamento o barrio. También podés buscar por el nombre o la dirección de un centro que ya

@@ -5,7 +5,7 @@ import {
   LoginIcon,
   LogoutIcon,
   MenuIcon,
-  PlusCircleIcon
+  PlusCircleIcon,
 } from '@heroicons/react/outline';
 import { UserRole } from '@prisma/client';
 import { signOut } from 'next-auth/react';
@@ -134,18 +134,16 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
   };
 
   return (
-    <header >
-      <div className='relative w-full'>
+    <header>
+      <div className="relative w-full">
         <div className={'lg:flex hidden justify-end bg-primary h-9 w-full px-content'}>
-            <SobreDondeButton />
-            <PreguntasFrecuentesButton />
-            {user?.role === UserRole.ADMIN && <AdminLink />}
-            {user ? <LogoutButton /> : <LoginButton />}
+          <SobreDondeButton />
+          <PreguntasFrecuentesButton />
+          {user?.role === UserRole.ADMIN && <AdminLink />}
+          {user ? <LogoutButton /> : <LoginButton />}
         </div>
         <div className={'flex items-center py-3 px-content shadow-md shadow-slate-100'}>
-          <div className={'mx-content'}>
-            {!isHome && <BackButton />}
-          </div>
+          <div className={'mx-content'}>{!isHome && <BackButton />}</div>
           <Link href="/">
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a>
@@ -173,8 +171,7 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
             </div>
           )}
         </div>
-      </div>   
-
+      </div>
     </header>
   );
 }

@@ -56,10 +56,10 @@
   }
 
   .map-mobile-height {
-      height: calc(100vh - 64px) !important;
+    height: calc(100vh - 64px) !important;
   }
   .map-desktop-height {
-      height: calc(100vh - 100px) !important;
+    height: calc(100vh - 100px) !important;
   }
 }
 

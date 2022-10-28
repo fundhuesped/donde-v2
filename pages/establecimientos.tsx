@@ -170,10 +170,8 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
         ),
     );
 
-    
-
   return (
-    <div className='overflow-hidden lg:overflow-visible'>
+    <div className="overflow-hidden lg:overflow-visible">
       <Head>
         <title>Dónde - Establecimientos</title>
       </Head>
@@ -183,9 +181,8 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
           <div className={'flex'}>
             <div className={'absolute lg:relative w-full lg:w-1/3'}>
               <EstablishmentSideBar>
-                <div className='h-[calc(100vh_-_64px)] lg:h-[calc(100vh_-_124px)] scroll-style overflow-auto lg:overflow-hidden'>
-                  <EstablishmentHeader services={services}>
-                  </EstablishmentHeader>
+                <div className="h-[calc(100vh_-_64px)] lg:h-[calc(100vh_-_124px)] scroll-style overflow-auto lg:overflow-hidden">
+                  <EstablishmentHeader services={services}></EstablishmentHeader>
                   <EstablishmentToggle setMapVisibility={setMapVisibility} mapVisibility={mapVisibility} />
                   <EstablishmentList
                     establishments={establishmentInScreen}

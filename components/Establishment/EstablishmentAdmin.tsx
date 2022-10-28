@@ -202,18 +202,15 @@ const EstablishmentAdmin = (props: {
       if (isNewEstablishment) {
         const { data } = await axios.post('/api/establishments/', payload);
         setIsUpdateSuccessful(true);
-      setShowModal(true)
-
+        setShowModal(true);
       } else {
         await axios.put(`/api/establishments/${establishment?.id}`, payload);
         setIsUpdateSuccessful(true);
-      setShowModal(true)
-
+        setShowModal(true);
       }
     } catch (e: any) {
       setIsError(true);
-      setShowModal(true)
-
+      setShowModal(true);
     }
   };
   const handleContinueButtonClicked = () => {
@@ -246,7 +243,7 @@ const EstablishmentAdmin = (props: {
   } = form;
 
   return (
-    <div className='w-full flex justify-center'>
+    <div className="w-full flex justify-center">
       <MainContainer className={'full h-fit lg:h-full lg:w-3/5 lg:mx-4 mt-4 pt-8 lg:py-8 lg:px-8 lg:flex-grow-0'}>
         <div className={'text-center lg:py-4'}>
           {isNewEstablishment ? (
@@ -254,9 +251,9 @@ const EstablishmentAdmin = (props: {
           ) : (
             <h2 className={'px-content text-2xl font-bold text-black'}>Editar establecimiento</h2>
           )}
-          <p className='font-normal text-base text-black'>Por favor, completá los datos del lugar</p>
+          <p className="font-normal text-base text-black">Por favor, completá los datos del lugar</p>
         </div>
-        <div className='mx-o lg:mx-12'>
+        <div className="mx-o lg:mx-12">
           {isNewEstablishment && !isSearchStepCompleted && (
             <EstablishmentSearchStep
               key={'name'}
@@ -301,19 +298,14 @@ const EstablishmentAdmin = (props: {
               />
 
               {/*<AvailabilityField key={'workingHourTo'} onChange={handleFormUpdate} availability={availability} />*/}
-              <ContactInfoField
-                key={'email'}
-                onChange={handleFieldChange}
-                website={website}
-              />
-              
+              <ContactInfoField key={'email'} onChange={handleFieldChange} website={website} />
+
               <AvailableServices
                 onChange={handleFormUpdate}
                 activeServicesId={servicesId}
                 activeServices={services}
                 availableServices={availableServices}
               />
-
 
               <h2 className={'mt-6 mb-2 font-bold text-black'}>¿Algo más que quieras agregar sobre el lugar?</h2>
               <p className={'text-xs mb-2'}>
@@ -337,39 +329,55 @@ const EstablishmentAdmin = (props: {
                   onChange={handleCheckboxChange}
                   checked={tosCheckbox}
                 />
-                <p className={'text-xs'}>Acepto los términos y condiciones y la publicación de los datos en el sitio</p>
+                <p className={'text-xs'}>
+                  Acepto los{' '}
+                  <a
+                    className={'text-xs hover:text-primary'}
+                    onClick={async () => {
+                      await router.push({ pathname: '/terminos-condiciones' });
+                    }}
+                  >
+                    términos y condiciones y la publicación de los datos en el sitio
+                  </a>
+                </p>
               </label>
               {isError && (
                 <Alert title={'Error durante la creacion de establecimiento'} message={'Hubo un problema en el servidor'} />
               )}
               {isUpdateSuccessful && (
                 <Modal showModal={showModal}>
-                  <div className='flex justify-end pb-4'>
+                  <div className="flex justify-end pb-4">
                     <button onClick={() => setShowModal(false)}>
                       <XIcon className="mr-4 mt-4 text-primary w-4.5"></XIcon>
                     </button>
                   </div>
-                  <div className='p-4'>
+                  <div className="p-4">
                     {isNewEstablishment ? (
-                      <Alert title={'¡Creado con éxito!'} message={'El establecimiento fue creado correctamente'} success={true} />
-                      ):(
-                      <Alert title={'¡Edición exitosa!'} message={'El establecimiento fue editado correctamente'} success={true} />
-                    )
-                  }
+                      <Alert
+                        title={'¡Creado con éxito!'}
+                        message={'El establecimiento fue creado correctamente'}
+                        success={true}
+                      />
+                    ) : (
+                      <Alert
+                        title={'¡Edición exitosa!'}
+                        message={'El establecimiento fue editado correctamente'}
+                        success={true}
+                      />
+                    )}
                   </div>
-                  
-                   <button
-                      className="btn-secondary mb-5 mt-2"
-                      type="button"
-                      onClick={() => {
-                        setShowModal(false)
-                        router.push('/');
-                      }}
-                    >
-                      Volver al inicio.
-                    </button>
+
+                  <button
+                    className="btn-secondary mb-5 mt-2"
+                    type="button"
+                    onClick={() => {
+                      setShowModal(false);
+                      router.push('/');
+                    }}
+                  >
+                    Volver al inicio.
+                  </button>
                 </Modal>
-                
               )}
               {isNewEstablishment ? (
                 <Button className={'w-full my-5'} disabled={!isFormCompleted} type={'primary'} onClick={handleFormSubmit}>

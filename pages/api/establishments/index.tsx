@@ -2,7 +2,10 @@ import { Establishment, EstablishmentStatus } from '@prisma/client';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import * as yup from 'yup';
 import { z } from 'zod';
-import { createEstablishmentSchema as establishmentSchema, Establishment as EstablishmentModel } from '../../../model/establishment';
+import {
+  createEstablishmentSchema as establishmentSchema,
+  Establishment as EstablishmentModel,
+} from '../../../model/establishment';
 import { createServiceOnEstablishmentSchema } from '../../../model/serviceOnEstablishment';
 import { prismaClient } from '../../../server/prisma/client';
 

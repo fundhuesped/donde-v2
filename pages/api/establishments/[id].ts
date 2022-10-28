@@ -50,7 +50,6 @@ const updateEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
   const idSchema = yup.string().uuid().required();
   const establishmentId = req.query.id;
 
-
   if (!idSchema.isValidSync(establishmentId)) {
     return res.status(400).end();
   }

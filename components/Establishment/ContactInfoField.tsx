@@ -1,4 +1,3 @@
-
 type ContactInfoFieldProps = {
   onChange: (event: { currentTarget: { value: string; name: string } }) => void;
   website: string | null;
