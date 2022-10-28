@@ -49,7 +49,7 @@ export const AvailableServices = (props: AvailableServicesProps) => {
 
   return (
     <>
-      <h1 className={'my-6 text-justify font-bold text-black'}>¿Qué servicios brinda el lugar?</h1>
+      <h2 className={'my-2 text-justify font-bold text-black'}>¿Qué servicios brinda el lugar?</h2>
       <button onClick={() => newService()} className={'flex color-primary font-bold p-2 btn-inherit'}>
         <span className="mr-1 mt-1">
           <PlusIcon className=" w-4 mx-1 text-primary" />

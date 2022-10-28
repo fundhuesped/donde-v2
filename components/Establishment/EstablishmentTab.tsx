@@ -1,4 +1,4 @@
-import { ClockIcon, LocationMarkerIcon, PhoneIcon } from '@heroicons/react/outline';
+import { AtSymbolIcon, ClockIcon, GlobeAltIcon, LocationMarkerIcon, PhoneIcon } from '@heroicons/react/outline';
 import React from 'react';
 import { SERVICE_ICONS } from '../../config/services';
 import { Establishment } from '../../model/establishment';
@@ -44,6 +44,9 @@ const EstablishmentTab = React.memo<Props>((props) => {
         return 'Domingo';
     }
   };
+
+  console.log(activeEstablishment);
+  
   return (
     <>
       <div className="flex flex-wrap">
@@ -97,6 +100,13 @@ const EstablishmentTab = React.memo<Props>((props) => {
                     <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
                       {address} {addressNotes && <span className={'text-xs text-medium-gray'}>- {addressNotes}</span>}
                     </CardListItem>
+                    {activeEstablishment.website && ( 
+                        <CardListItem icon={<GlobeAltIcon className={'text-primary'} />}>
+                          {activeEstablishment.website}
+                        </CardListItem>
+                      )
+                    }
+                    {}
                     <CardSubHeader>Servicios disponibles</CardSubHeader>
                     {activeEstablishment.services.map((serviceOnEstablishment, idx) => (
                       <a
@@ -131,31 +141,47 @@ const EstablishmentTab = React.memo<Props>((props) => {
                     id={`id-${serviceOnEstablishment.service.id}`}
                   >
                     <CardList id={`tabs-${serviceOnEstablishment.service.id}`}>
-                      <CardListItem icon={<PhoneIcon className={'text-primary'} />}>
-                        {serviceOnEstablishment.phoneNumber}
-                      </CardListItem>
+                      {serviceOnEstablishment.phoneNumber && ( 
+                        <CardListItem icon={<PhoneIcon className={'text-primary'} />}>
+                          {serviceOnEstablishment.phoneNumber}
+                        </CardListItem>
+                      )}
+                      {serviceOnEstablishment.email && ( 
+                        <CardListItem icon={<AtSymbolIcon className={'text-primary'} />}>
+                          {serviceOnEstablishment.email}
+                        </CardListItem>
+                      )}
+                      {serviceOnEstablishment.openingTimes.length ? ( 
                       <CardListItem icon={<ClockIcon className={'text-primary'} />}>
-                        <div className="flex flex-wrap">
-                          {serviceOnEstablishment.openingTimes?.map((date, idx) => {
-                            return (
-                              <span key={date.id + idx} className="mr-2">
-                                <>
-                                  {getDay(date.day)} {date.startTime} - {date.endTime}
-                                </>
-                              </span>
-                            );
-                          })}
-                        </div>
-                      </CardListItem>
+                          <div className="flex flex-wrap">
+                            {serviceOnEstablishment.openingTimes.map((date, idx) => {
+                              return (
+                                <span key={date.id + idx} className="mr-2">
+                                  <>
+                                    {getDay(date.day)} {date.startTime} - {date.endTime}
+                                  </>
+                                </span>
+                              );
+                            })}
+                          </div>
+                        </CardListItem>) : ""
+                      }
+                      
                       <CardSubHeader className={'text-medium-gray text-xs'}>
                         Descripción del servicio - <span>{serviceOnEstablishment.details}</span>
                       </CardSubHeader>
                       <CardListItem icon={SERVICE_ICONS[serviceOnEstablishment.service.icon as ServiceIcon]}>
-                        {serviceOnEstablishment.service.name && (
+                        {(serviceOnEstablishment.service.name && serviceOnEstablishment.subservice) ? (
                           <>
-                            <p>{serviceOnEstablishment.service.name}</p>
+                             <p>Servicio: {serviceOnEstablishment.service.name}</p>
+                            <span>Sub Servicio: {serviceOnEstablishment.subservice.name}</span>
                           </>
-                        )}
+                        ): (
+                         <>
+                            <p>Servicio: {serviceOnEstablishment.service.name}</p>
+                          </>
+                        )
+                        }
                       </CardListItem>
                     </CardList>
                   </div>

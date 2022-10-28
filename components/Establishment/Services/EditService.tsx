@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import { Button } from '../../Button';
 import { ServicesModal } from '../AvailableServices';
 import { Hour } from './components/Hour';
+import { Day, ServiceOnEstablishmentOpeningTimeFormat, SubService } from './types';
 
-export type Day = 'M' | 'T' | 'W' | 'R' | 'F' | 'S' | 'U';
 
 type EditServiceProps = {
   setShowModal: (x: any) => void;
@@ -18,28 +18,43 @@ type EditServiceProps = {
   activeServices: ServicesModal;
 };
 
-export type ServiceOnEstablishmentOpeningTimeFormat = {
-  id: string;
-  serviceOnEstablishmentId: string;
-  day: Day;
-  startTime: string | Date;
-  endTime: string | Date;
-};
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+
+
 
 const EditService = (props: EditServiceProps) => {
   const { setShowModal, modalService, modalServiceId, availableServices, onChange, activeServicesId, activeServices } = props;
 
   const [checked, setChecked] = useState<string[]>([]);
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
   const [details, setDetails] = useState<string | null>('');
   const [openingTimes, setOpeningTimes] = useState<ServiceOnEstablishmentOpeningTimeFormat[]>([]);
   const [error, setError] = useState<string>('');
   const [serviceId, setServiceId] = useState<string | null>(null);
   const [checkedDays, setCheckedDays] = useState<string[]>([]);
+  const [subserviceDisabled, setSubserviceDisabled] = useState<boolean>(true);
+  const [subserviceId, setSubserviceId] = useState<string | null>(null);
+  const [subserviceOnService, setSubserviceOnService] = useState<Service[] | null>(null);
 
   const setServiceHandler = (id: string) => {
     const serviceSelected = availableServices.filter((ser) => ser.id == id);
-    setServiceId(serviceSelected[0].id);
+    
+    if (modalService && (serviceSelected[0].id != modalService[0].serviceId)) {
+      var serviceAlreadyActivated = activeServices.find(service=> service.serviceId == serviceSelected[0].id)
+      if (serviceAlreadyActivated) {
+        setError('El servicio seleccionado ya está activo, seleccione uno que no este activo');
+      }else{
+        setServiceId(serviceSelected[0].id);
+        setError('');
+      }
+    }else{
+      setServiceId(serviceSelected[0].id);
+    }
+    
+  };
+  const setSubserviceIdHandler = (id: string) => {
+    setSubserviceId(id);
   };
 
   const handleCheck = (e: React.FormEvent<HTMLInputElement>) => {
@@ -87,14 +102,31 @@ const EditService = (props: EditServiceProps) => {
       setPhoneNumber(modalService[0].phoneNumber);
       setDetails(modalService[0].details);
       setOpeningTimes(modalService[0].openingTimes);
+      setSubserviceId(modalService[0].subserviceId);
+      setEmail(modalService[0].email);     
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+
+ useEffect(() => {
+   var filteredService = availableServices.filter(service=> service.subservices.length)
+    setSubserviceOnService(filteredService)
+    if (filteredService[0].id == serviceId) {
+      setSubserviceDisabled(false)
+    }else{
+      setSubserviceDisabled(true)
+      setSubserviceId(null)
+    }
+ }, [subserviceId, serviceId])
+ 
+ 
 
   const addService = (
     serviceId: string | null,
     phoneNumber: string | null,
     details: string | null,
+    subserviceId: string | null,
+    email: string  | null,
     getDays: { id: string; day: Day; startTime: string | Date; endTime: string | Date }[],
   ) => {
     if (modalService?.length) {
@@ -115,6 +147,8 @@ const EditService = (props: EditServiceProps) => {
     let aux = {
       id: modalService?.length ? modalService[0].id : uniqueId(),
       serviceId: serviceId,
+      subserviceId: subserviceId,
+      email: email,
       phoneNumber: phoneNumber ? phoneNumber : null,
       details: details,
       openingTimes: formatGetDays,
@@ -131,7 +165,6 @@ const EditService = (props: EditServiceProps) => {
       updatedServices.push(aux);
       updatedServicesId.add(serviceId);
     }
-
     onChange({ servicesId: updatedServicesId, services: updatedServices });
     setShowModal(false);
   };
@@ -143,6 +176,8 @@ const EditService = (props: EditServiceProps) => {
     onChange({ servicesId: updatedServicesId, services: updatedServices });
     setShowModal(false);
   };
+
+  
 
   return (
     <>
@@ -185,13 +220,53 @@ const EditService = (props: EditServiceProps) => {
                 </option>
               ),
             )}
+          </select> 
+          <select
+            className={` text-gray-600 bg-white rounded-lg border border-gray-300 w-full focus:ring-primary mb-4 p-2 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none`}
+            disabled={subserviceDisabled}
+            onChange={(e) => setSubserviceIdHandler(e.target.value)}
+          >
+            {(!modalServiceId || !subserviceId) && (
+              <option value="" selected hidden>
+                Seleccioná sub servicio
+              </option>
+            )}
+            {subserviceOnService && (serviceId == subserviceOnService[0].id) ? (
+              subserviceOnService[0].subservices.map((subservice:SubService)=>{
+                if(subserviceId == subservice.id) {
+                  return (
+                  <option value={subservice.id} key={subservice.id} selected>
+                    {subservice.name}
+                  </option>)
+                }else{
+                  return (
+                  <option value={subservice.id} key={subservice.id}>
+                    {subservice.name}
+                  </option>)
+                }
+                
+              })
+            ) : (
+              <option value="" selected hidden>
+                Seleccioná sub servicio
+              </option>
+            )}
+            
+            
           </select>
           <input
             type="text"
             placeholder="Teléfono de atención del servicio"
-            className={'rounded-lg border border-gray-300 w-full dark:focus:border-primary focus:ring-primary p-2 font-light'}
+            className={'rounded-lg border border-gray-300 w-full dark:focus:border-primary focus:ring-primary p-2 mb-4 font-light'}
             value={phoneNumber ? phoneNumber : ''}
             onChange={(e) => setPhoneNumber(e.target.value)}
+          />
+          <input
+            type='email'
+            placeholder="Correo electrónico de atención del servicio"
+            className={'rounded-lg border border-gray-300 w-full dark:focus:border-primary focus:ring-primary p-2 font-light'}
+            value={email ? email : ''}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           <ul className="flex flex-row justify-center p-4">
@@ -287,7 +362,6 @@ const EditService = (props: EditServiceProps) => {
               </label>
             </li>
           </ul>
-          <p className="text-neutral-800 font-semibold text-center ">{error}</p>
           {/* <div className='flex flex-row justify-evenly p-4'>
                         <div className='mr-4'>
                             <label htmlFor="" className='text-sm font-normal'>
@@ -339,8 +413,10 @@ const EditService = (props: EditServiceProps) => {
           value={details ? details : ''}
           onChange={(e) => setDetails(e.target.value)}
         />
+        <p className="text-orange-600 font-light mt-3">{error}</p>
+
         <div>
-          <Button className={'w-full my-5'} type={'primary'} onClick={() => addService(serviceId, phoneNumber, details, getDays)}>
+          <Button className={'w-full my-5'} type={'primary'} onClick={() => addService(serviceId, phoneNumber, details, subserviceId, email, getDays)}>
             Guardar
           </Button>
           <Button className={'w-full my-5'} type={'secondary'} onClick={() => setShowModal(false)}>

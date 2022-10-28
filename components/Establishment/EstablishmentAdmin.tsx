@@ -15,6 +15,7 @@ import Alert from '../Alert';
 import { Button } from '../Button';
 import { Modal } from '../Modal';
 import { AvailableServices } from './AvailableServices';
+import { ContactInfoField } from './ContactInfoField';
 import { EstablishmentSearchStep } from './EstablishmentSearchStep';
 import { LocationField } from './LocationField';
 
@@ -185,8 +186,10 @@ const EstablishmentAdmin = (props: {
           return {
             id: ser.id,
             serviceId: ser.serviceId,
+            subserviceId: ser.subserviceId,
             phoneNumber: ser.phoneNumber,
             details: ser.details,
+            email: ser.email,
             openingTimes: ser.openingTimes,
           };
         }),
@@ -198,15 +201,19 @@ const EstablishmentAdmin = (props: {
       const payload = buildEstablishmentPayload(form);
       if (isNewEstablishment) {
         const { data } = await axios.post('/api/establishments/', payload);
-        await router.push({ pathname: `/establecimientos/${data.id}` });
+        setIsUpdateSuccessful(true);
+      setShowModal(true)
+
       } else {
         await axios.put(`/api/establishments/${establishment?.id}`, payload);
         setIsUpdateSuccessful(true);
-        await router.push({ pathname: `/establecimientos/${establishment?.id}` });
+      setShowModal(true)
+
       }
     } catch (e: any) {
-      console.log(e.message);
       setIsError(true);
+      setShowModal(true)
+
     }
   };
   const handleContinueButtonClicked = () => {
@@ -294,6 +301,12 @@ const EstablishmentAdmin = (props: {
               />
 
               {/*<AvailabilityField key={'workingHourTo'} onChange={handleFormUpdate} availability={availability} />*/}
+              <ContactInfoField
+                key={'email'}
+                onChange={handleFieldChange}
+                website={website}
+              />
+              
               <AvailableServices
                 onChange={handleFormUpdate}
                 activeServicesId={servicesId}
@@ -301,16 +314,8 @@ const EstablishmentAdmin = (props: {
                 availableServices={availableServices}
               />
 
-              {/*<ContactInfoField
-                key={'email'}
-                onChange={handleFieldChange}
-                website={website}
-                phone={phone}
-                whatsApp={whatsApp}
-                email={email}
-              />*/}
 
-              <h1 className={'mt-6 mb-2 font-bold text-black'}>¿Algo más que quieras agregar sobre el lugar?</h1>
+              <h2 className={'mt-6 mb-2 font-bold text-black'}>¿Algo más que quieras agregar sobre el lugar?</h2>
               <p className={'text-xs mb-2'}>
                 Por ejemplo referencias de acceso, o cualquier otro dato relevante sobre el establecimiento
               </p>
@@ -339,12 +344,22 @@ const EstablishmentAdmin = (props: {
               )}
               {isUpdateSuccessful && (
                 <Modal showModal={showModal}>
-                  <button onClick={() => setShowModal(false)}>
-                    <XIcon className="mr-4 mt-4 text-primary w-4.5"></XIcon>
-                  </button>
-                  <Alert title={'Edicion exitosa!'} message={'El establecimiento fue editado correctamente'} success={true} />
+                  <div className='flex justify-end pb-4'>
+                    <button onClick={() => setShowModal(false)}>
+                      <XIcon className="mr-4 mt-4 text-primary w-4.5"></XIcon>
+                    </button>
+                  </div>
+                  <div className='p-4'>
+                    {isNewEstablishment ? (
+                      <Alert title={'¡Creado con éxito!'} message={'El establecimiento fue creado correctamente'} success={true} />
+                      ):(
+                      <Alert title={'¡Edición exitosa!'} message={'El establecimiento fue editado correctamente'} success={true} />
+                    )
+                  }
+                  </div>
+                  
                    <button
-                      className="btn-secondary my-5"
+                      className="btn-secondary mb-5 mt-2"
                       type="button"
                       onClick={() => {
                         setShowModal(false)

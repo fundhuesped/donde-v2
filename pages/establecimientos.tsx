@@ -170,6 +170,8 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
         ),
     );
 
+    
+
   return (
     <div className='overflow-hidden lg:overflow-visible'>
       <Head>
