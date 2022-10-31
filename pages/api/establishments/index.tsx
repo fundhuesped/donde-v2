@@ -1,12 +1,13 @@
+import { Establishment, EstablishmentStatus } from '@prisma/client';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { prismaClient } from '../../../server/prisma/client';
-import { EstablishmentStatus } from '@prisma/client';
-import { createEstablishmentSchema as establishmentSchema } from '../../../model/establishment';
-import { createServiceOnEstablishmentSchema } from '../../../model/serviceOnEstablishment';
-import { Establishment as EstablishmentModel } from '../../../model/establishment';
-import { Establishment } from '@prisma/client';
-import { z } from 'zod';
 import * as yup from 'yup';
+import { z } from 'zod';
+import {
+  createEstablishmentSchema as establishmentSchema,
+  Establishment as EstablishmentModel,
+} from '../../../model/establishment';
+import { createServiceOnEstablishmentSchema } from '../../../model/serviceOnEstablishment';
+import { prismaClient } from '../../../server/prisma/client';
 
 import isEmpty from 'lodash/isEmpty';
 import { createServiceOnEstablishmentOpeningTimeSchema } from '../../../model/openingTime';

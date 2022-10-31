@@ -32,7 +32,7 @@ const EstablishmentList = React.memo<Props>((props) => {
     <div
       className={`${
         mapVisibility == 'hidden' ? 'block' : 'hidden'
-      } lg:block bg-ultra-light-gray lg:bg-inherit w-100 h-full lg:h-4/6 scroll-style overflow-auto relative mt-4`}
+      } lg:block bg-ultra-light-gray lg:bg-inherit w-100 lg:h-[calc(100vh_-_295px)] lg:scroll-style lg:overflow-auto relative mt-2`}
     >
       {establishments && establishments.length ? (
         establishments.map((establishment) => {
@@ -63,7 +63,7 @@ const EstablishmentList = React.memo<Props>((props) => {
           );
         })
       ) : (
-        <div className="mt-4 p-6 lg:p-0 mx-3 lg:mx-0 text-center lg:text-start">
+        <div className="mt-4 p-6 lg:p-0 mx-3 lg:mx-0 lg:ml-2 text-center lg:text-start">
           <p className="font-title text-md">
             <span className="font-bold text-lg">No hay coincidencias con establecimientos </span>
             <br />
@@ -72,7 +72,7 @@ const EstablishmentList = React.memo<Props>((props) => {
         </div>
       )}
       {(user?.role === UserRole.ADMIN || user?.role === UserRole.COLLABORATOR) && (
-        <div className="hidden lg:block mt-4">
+        <div className="hidden lg:block mt-4 lg:ml-2">
           <button
             onClick={async () => {
               await router.push({ pathname: '/establecimientos/nuevo' });

@@ -125,16 +125,16 @@ export const EstablishmentDetail = React.memo<Props>((props) => {
   };
 
   return (
-    <Card key={id} className={`${className} fixed lg:block top-16 lg:top-8 right-4 left-4 lg:left-1/3 lg:w-1/3 z-50`}>
+    <Card key={id} className={`${className} fixed lg:block top-32 lg:top-28 right-4 left-4 lg:left-1/3 lg:w-1/3 z-50`}>
       <header className={'flex flex-row justify-between items-center mb-2'}>
-        <CardHeader className="pt-2">
+        <CardHeader className="pt-2 w-3/4">
           {name}
           <CardParagraph className="font-light">{establishmentType}</CardParagraph>
         </CardHeader>
         {(user?.role === UserRole.ADMIN || user?.role === UserRole.COLLABORATOR) && (
           <Link href={`/establecimientos/editar/${activeEstablishment.id}`}>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-            <a className={'color-primary font-bold absolute top-8 right-12'}>Editar</a>
+            <a className={'color-primary font-bold absolute top-8 right-16'}>Editar</a>
           </Link>
         )}
         <button className={'w-5 text-dark-gray mr-1 pb-4'} onClick={handleClose}>

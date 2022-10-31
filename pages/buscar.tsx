@@ -9,17 +9,12 @@ import MainContainer from '../components/MainContainer';
 import { Pill } from '../components/Pill';
 import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../config/thirdParty';
 import { Coordinates } from '../model/map';
+import { Service } from '../model/services';
 import { prismaClient } from '../server/prisma/client';
-
-type AvailableService = {
-  id: string;
-  name: string;
-  icon: string;
-};
 
 type ServerSideProps = {
   googleMapsApiKey: string;
-  availableServices: AvailableService[];
+  availableServices: Service[];
 };
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () => {
@@ -100,14 +95,14 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
   };
 
   return (
-    <>
+    <div className="flex flex-wrap flex-grow content-start justify-center lg:bg-modal-image lg:bg-white ">
       <Head>
         <title>Dónde - Buscar Servicios</title>
       </Head>
 
-      <div className={'mt-2'}>
+      <div className={'p-0 lg:p-3.5'}>
         <div className={'px-content'}>
-          <p className="text-black text-xs mb-2">Estás buscando</p>
+          <p className="text-black text-xs mb-2 mt-4">Estás buscando</p>
           {services.map((service) => (
             <Pill key={service.id} className={'mb-1 mr-1 inline-block'}>
               {service.name}
@@ -115,7 +110,9 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
           ))}
         </div>
       </div>
-      <MainContainer className={'mt-8 pt-8 lg:mx-auto lg:grow-0 lg:p-8 lg:min-w-desktop'}>
+      <MainContainer
+        className={'w-full h-[calc(100vh_-_100px)] lg:h-full lg:w-3/5 lg:mx-4 mt-4 pt-8 lg:py-8 lg:px-8 lg:flex-grow-0'}
+      >
         <h2 className={'text-xl text-black font-title font-bold'}>¿En qué lugar estas buscando?</h2>
         <p className={'text-xs text-black mt-2 mb-4'}>
           Podés buscar por ciudad, departamento o barrio. También podés buscar por el nombre o la dirección de un centro que ya
@@ -128,9 +125,9 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
           value={searchLocation}
           onChange={handleSearchLocationChange}
         />
-        <div className={'mt-8'}>
+        <div className={'mt-8 lg:flex lg:justify-evenly'}>
           <Button
-            className={'bg-white w-full lg:mx-auto lg:max-w-[24rem]'}
+            className={'bg-white w-full lg:max-w-[24rem]'}
             disabled={isMissingSearchInfo}
             type={'primary'}
             onClick={handleSearchButtonClicked}
@@ -138,7 +135,7 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
             Buscar
           </Button>
           <Button
-            className={'w-full mt-4 lg:max-w-[24rem] lg:mx-auto'}
+            className={'w-full lg:max-w-[24rem] mt-4 lg:mt-0'}
             type={'secondary'}
             onClick={handleSearchButtonByLocationClicked}
           >
@@ -146,7 +143,7 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
           </Button>
         </div>
       </MainContainer>
-    </>
+    </div>
   );
 };
 

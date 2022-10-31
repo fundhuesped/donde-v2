@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import Head from 'next/head';
 import { HTMLProps, ReactNode, useState } from 'react';
 
-const FAQLink = (props: HTMLProps<HTMLAnchorElement>) => {
+export const FAQLink = (props: HTMLProps<HTMLAnchorElement>) => {
   const { className, children, ...rest } = props;
   return (
     <a className={classNames('text-primary', className)} {...rest}>

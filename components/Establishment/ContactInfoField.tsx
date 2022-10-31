@@ -1,25 +1,23 @@
-import React from 'react';
-
 type ContactInfoFieldProps = {
   onChange: (event: { currentTarget: { value: string; name: string } }) => void;
-  website: string;
-  phone: string;
-  whatsApp: string;
-  email: string;
+  website: string | null;
+  phone?: string;
+  whatsApp?: string;
+  email?: string;
 };
 export const ContactInfoField = (props: ContactInfoFieldProps) => {
   const { onChange, website, phone, whatsApp, email } = props;
   return (
     <>
-      <h1 className={'my-6 text-justify font-bold text-black'}>Datos de contacto</h1>
+      <h2 className={'my-2 text-justify font-bold text-black'}>Datos de contacto del establecimiento</h2>
       <input
         name={'website'}
         className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0'}
         placeholder={'Sitio web'}
         onChange={onChange}
-        value={website}
+        value={website ? website : ''}
       />
-      <input
+      {/* <input
         name={'phone'}
         className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 mt-6'}
         placeholder={'Teléfono'}
@@ -39,7 +37,7 @@ export const ContactInfoField = (props: ContactInfoFieldProps) => {
         placeholder={'Email'}
         onChange={onChange}
         value={email}
-      />
+      /> */}
     </>
   );
 };

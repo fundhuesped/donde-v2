@@ -1,6 +1,6 @@
 import { XIcon } from '@heroicons/react/outline';
 import { useEffect, useState } from 'react';
-import { Day, ServiceOnEstablishmentOpeningTimeFormat } from '../EditService';
+import { Day, ServiceOnEstablishmentOpeningTimeFormat } from '../types';
 
 type HoursProps = {
   dayHour: {
