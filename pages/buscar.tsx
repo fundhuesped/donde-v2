@@ -12,7 +12,6 @@ import { Coordinates } from '../model/map';
 import { Service } from '../model/services';
 import { prismaClient } from '../server/prisma/client';
 
-
 type ServerSideProps = {
   googleMapsApiKey: string;
   availableServices: Service[];
