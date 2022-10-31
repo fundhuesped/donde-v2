@@ -14,19 +14,14 @@ import EstablishmentToggle from '../components/Establishment/EstablishmentSideBa
 import MainContainer from '../components/MainContainer';
 import { Marker, UserMarker } from '../components/Marker';
 import { Establishment } from '../model/establishment';
+import { Service } from '../model/services';
 import { prismaClient } from '../server/prisma/client';
 
 const USER_MARKER_ID = 'USER_MARKER_ID';
 
-type AvailableService = {
-  id: string;
-  name: string;
-  icon: string;
-};
-
 type ServerSideProps = {
   googleMapsApiKey: string;
-  availableServices: AvailableService[];
+  availableServices: Service[];
 };
 
 export const establishmentWithinBoundaries = (marker: Coordinates, bounds: Bounds) => {

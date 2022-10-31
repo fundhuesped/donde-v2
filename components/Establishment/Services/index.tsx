@@ -1,4 +1,4 @@
-import { Service } from './types';
+import { Service } from '../../../model/services';
 import { ServicesModal } from '../AvailableServices';
 import { ModalService } from './components/ModalService';
 import EditService from './EditService';

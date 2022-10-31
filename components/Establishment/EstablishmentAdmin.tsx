@@ -1,6 +1,5 @@
 import { XIcon } from '@heroicons/react/outline';
 import { ServiceOnEstablishmentOpeningTime, Subservice } from '@prisma/client';
-import { Service } from './Services/types';
 import axios from 'axios';
 import _, { isNull } from 'lodash';
 import isEmpty from 'lodash/isEmpty';
@@ -12,6 +11,7 @@ import MainContainer from '../../components/MainContainer';
 import Select from '../../components/Select';
 import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../../config/thirdParty';
 import { establishmentTypes } from '../../model/establishment';
+import { Service } from '../../model/services';
 import Alert from '../Alert';
 import { Button } from '../Button';
 import { Modal } from '../Modal';

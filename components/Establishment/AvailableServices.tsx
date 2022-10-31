@@ -1,7 +1,7 @@
 import { PencilIcon, PlusIcon } from '@heroicons/react/outline';
 import { ServiceOnEstablishmentOpeningTime, Subservice } from '@prisma/client';
 import { useState } from 'react';
-import { Service } from './Services/types';
+import { Service } from '../../model/services';
 import { Pill } from '../Pill';
 import { Services } from './Services';
 

@@ -1,10 +1,11 @@
 import { PlusIcon, TrashIcon, XIcon } from '@heroicons/react/outline';
 import { uniqueId } from 'lodash';
 import { useEffect, useState } from 'react';
+import { Service } from '../../../model/services';
 import { Button } from '../../Button';
 import { ServicesModal } from '../AvailableServices';
 import { Hour } from './components/Hour';
-import { Day, ServiceOnEstablishmentOpeningTimeFormat, SubService, Service } from './types';
+import { Day, ServiceOnEstablishmentOpeningTimeFormat, SubService } from './types';
 
 type EditServiceProps = {
   setShowModal: (x: any) => void;
@@ -106,7 +107,7 @@ const EditService = (props: EditServiceProps) => {
   }, []);
 
   useEffect(() => {
-    var filteredService = availableServices.filter((service) => service.subservices.length);
+    var filteredService = availableServices.filter((service) => service.subservices?.length);
     setSubserviceOnService(filteredService);
     if (filteredService[0].id == serviceId) {
       setSubserviceDisabled(false);
@@ -226,7 +227,7 @@ const EditService = (props: EditServiceProps) => {
               </option>
             )}
             {subserviceOnService && serviceId == subserviceOnService[0].id ? (
-              subserviceOnService[0].subservices.map((subservice: SubService) => {
+              subserviceOnService[0].subservices?.map((subservice: SubService) => {
                 if (subserviceId == subservice.id) {
                   return (
                     <option value={subservice.id} key={subservice.id} selected>
