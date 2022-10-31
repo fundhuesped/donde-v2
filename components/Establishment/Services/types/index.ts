@@ -9,7 +9,7 @@ export type Service = {
   name: string;
   icon: string;
   subservices: SubService[];
-}
+};
 
 export type Day = 'M' | 'T' | 'W' | 'R' | 'F' | 'S' | 'U';
 
