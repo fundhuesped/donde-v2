@@ -24,19 +24,19 @@ ALTER TABLE "ServiceOnEstablishment" ADD CONSTRAINT "ServiceOnEstablishment_subs
 
 -- Create Subservices if abortion service exists
 INSERT INTO "Subservice"("serviceId", "name") 
-    SELECT (SELECT "id" from "Service" WHERE name='Interrupción voluntaria del embarazo'), 'No está confirmado que asesore o realice interrupción legal del embarazo'
+    SELECT (SELECT "id" from "Service" WHERE name='Interrupción voluntaria del embarazo'), 'No está confirmado que asesore o realice interrupción voluntaria del embarazo.'
     WHERE EXISTS (SELECT "id" from "Service" WHERE name='Interrupción voluntaria del embarazo');
 
 INSERT INTO "Subservice"("serviceId", "name") 
-    SELECT (SELECT "id" from "Service" WHERE name='Interrupción voluntaria del embarazo'), 'Ofrece asesoramiento sobre interrupción voluntaria del embarazo'
+    SELECT (SELECT "id" from "Service" WHERE name='Interrupción voluntaria del embarazo'), 'Ofrece asesoramiento sobre interrupción voluntaria del embarazo.'
     WHERE EXISTS (SELECT "id" from "Service" WHERE name='Interrupción voluntaria del embarazo');
 
 INSERT INTO "Subservice"("serviceId", "name") 
-    SELECT (SELECT "id" from "Service" WHERE name='Interrupción voluntaria del embarazo'), 'Ofrece asesoramiento y derivación sobre interrupción voluntaria del embarazo'
+    SELECT (SELECT "id" from "Service" WHERE name='Interrupción voluntaria del embarazo'), 'Ofrece asesoramiento y realiza interrupción voluntaria del embarazo.'
     WHERE EXISTS (SELECT "id" from "Service" WHERE name='Interrupción voluntaria del embarazo');
 
 INSERT INTO "Subservice"("serviceId", "name") 
-    SELECT (SELECT "id" from "Service" WHERE name='Interrupción voluntaria del embarazo'), 'Ofrece asesoramiento y realiza interrupción legal del embarazo'
+    SELECT (SELECT "id" from "Service" WHERE name='Interrupción voluntaria del embarazo'), 'Ofrece asesoramiento sobre interrupción voluntaria del embarazo y derivación.'
     WHERE EXISTS (SELECT "id" from "Service" WHERE name='Interrupción voluntaria del embarazo');
 
 -- Link Subservices to each ServiceOnEstablishment
