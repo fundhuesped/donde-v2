@@ -108,7 +108,6 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
     axios.get(url, { params: { services: searchedServiceIds } }).then((res) => res.data),
   );
 
-  
   useEffect(() => {
     if (!router.isReady) {
       return;
@@ -154,9 +153,9 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
           bounds,
         ),
     );
-    
+
   const searchLocationParam = router.query.searchLocation;
-  
+
   return (
     <div className="overflow-hidden lg:overflow-visible">
       <Head>

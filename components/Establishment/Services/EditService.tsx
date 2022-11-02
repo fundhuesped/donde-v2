@@ -33,12 +33,11 @@ const EditService = (props: EditServiceProps) => {
   const [subserviceOnService, setSubserviceOnService] = useState<Service[] | null>(null);
 
   const setServiceHandler = (id: string) => {
-    
     const serviceSelected = availableServices.filter((ser) => ser.id == id);
 
     if (modalService) {
-      var serviceAlreadyActivated = activeServices.find((service) => service.serviceId == serviceSelected[0].id)
-      
+      var serviceAlreadyActivated = activeServices.find((service) => service.serviceId == serviceSelected[0].id);
+
       console.log(serviceSelected, serviceAlreadyActivated);
       if (serviceAlreadyActivated || serviceSelected[0].id == modalService[0]?.serviceId) {
         setServiceId(null);
@@ -52,7 +51,6 @@ const EditService = (props: EditServiceProps) => {
     }
   };
 
-  
   const setSubserviceIdHandler = (id: string) => {
     setSubserviceId(id);
   };
@@ -107,7 +105,6 @@ const EditService = (props: EditServiceProps) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
 
   useEffect(() => {
     if (modalService?.length) {
@@ -267,7 +264,9 @@ const EditService = (props: EditServiceProps) => {
           <input
             type="email"
             placeholder="Correo electrónico de atención del servicio"
-            className={'rounded-lg border border-gray-300 w-full dark:focus:border-primary focus:ring-primary p-2 font-light invalid:bg-red-400 invalid:font-semibold'}
+            className={
+              'rounded-lg border border-gray-300 w-full dark:focus:border-primary focus:ring-primary p-2 font-light invalid:bg-red-400 invalid:font-semibold'
+            }
             value={email ? email : ''}
             onChange={(e) => setEmail(e.target.value)}
           />

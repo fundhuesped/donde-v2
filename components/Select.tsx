@@ -23,20 +23,22 @@ const Select: React.FC<Props> = (props) => {
       });
   };
 
-  
-
   return (
     <select
       name={name}
       className={classNames(className, 'rounded-lg p-3 w-full border border-light-gray focus:outline-0 mt-6')}
       onChange={handleChange}
     >
-      <option hidden selected value="">{placeholder}</option>
+      <option hidden selected value="">
+        {placeholder}
+      </option>
       {keys(items).map((key) => {
-        return <option key={key} value={items[key]} selected={key == selectedValue}>
-          {items[key]}
-        </option>
-})}
+        return (
+          <option key={key} value={items[key]} selected={key == selectedValue}>
+            {items[key]}
+          </option>
+        );
+      })}
     </select>
   );
 };

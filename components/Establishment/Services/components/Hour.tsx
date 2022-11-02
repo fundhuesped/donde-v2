@@ -78,7 +78,9 @@ export const Hour = ({ dayHour, setOpeningTimes, openingTimes, getDays }: HoursP
           maxLength={5}
           minLength={5}
           placeholder="Apertura"
-          className={'invalid:bg-red-400 invalid:font-semibold rounded-lg mr-2 p-2 border border-gray-300 w-28 focus:border-primary font-light'}
+          className={
+            'invalid:bg-red-400 invalid:font-semibold rounded-lg mr-2 p-2 border border-gray-300 w-28 focus:border-primary font-light'
+          }
           value={formatHour(start)}
           onChange={(e) => setStart(e.target.value)}
         />
@@ -89,7 +91,9 @@ export const Hour = ({ dayHour, setOpeningTimes, openingTimes, getDays }: HoursP
           maxLength={5}
           minLength={5}
           placeholder="Cierre"
-          className={'invalid:bg-red-400 invalid:font-semibold rounded-lg mr-2 p-2 border border-gray-300 w-28 focus:border-primary font-light'}
+          className={
+            'invalid:bg-red-400 invalid:font-semibold rounded-lg mr-2 p-2 border border-gray-300 w-28 focus:border-primary font-light'
+          }
           value={formatHour(end)}
           onChange={(e) => setEnd(e.target.value)}
         />

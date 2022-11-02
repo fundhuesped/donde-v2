@@ -81,7 +81,7 @@ export const emptyEstablishmentModel = {
 };
 
 const EstablishmentAdmin = (props: {
-  searchLocationParam?:string | string[];
+  searchLocationParam?: string | string[];
   googleMapsApiKey: string;
   establishment?: EstablishmentModel;
   availableServices: Service[];
@@ -243,7 +243,6 @@ const EstablishmentAdmin = (props: {
     details,
     availability,
   } = form;
-  
 
   return (
     <div className="w-full flex justify-center">

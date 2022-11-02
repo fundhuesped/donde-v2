@@ -17,14 +17,14 @@ type Props = React.PropsWithChildren<{
   mapVisibility: string;
   setMapVisibility: (x: string) => void;
   setActiveEstablishment: (x: Establishment | null) => void;
-  searchLocationParam?:string | string[]
+  searchLocationParam?: string | string[];
 }>;
 
 const EstablishmentList = React.memo<Props>((props) => {
   const { establishments, mapVisibility, setActiveEstablishment, setMapVisibility, searchLocationParam } = props;
   const router = useRouter();
   const user = useAuthenticatedUser();
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   const handleDetailsClick = (establishmentId: string) => {
     setMapVisibility('block');
@@ -49,7 +49,7 @@ const EstablishmentList = React.memo<Props>((props) => {
         <div className="hidden lg:block mb-4 lg:ml-2">
           <button
             onClick={async () => {
-              await router.push({ 
+              await router.push({
                 pathname: '/establecimientos/nuevo',
                 query: {
                   searchLocation: searchLocationParam,
@@ -65,14 +65,13 @@ const EstablishmentList = React.memo<Props>((props) => {
           </button>
         </div>
       )}
-      { loading && 
-        <div className='flex justify-center p-4'>
-          <Loading/>
+      {loading && (
+        <div className="flex justify-center p-4">
+          <Loading />
         </div>
-      }
-      {establishments && establishments.length ?
-        (
-          establishments.map((establishment) => {
+      )}
+      {establishments && establishments.length
+        ? establishments.map((establishment) => {
             return (
               <Card
                 key={establishment.id}
@@ -99,9 +98,8 @@ const EstablishmentList = React.memo<Props>((props) => {
               </Card>
             );
           })
-        ) : ""
-      }
-      { !loading && establishments && !establishments.length ? (
+        : ''}
+      {!loading && establishments && !establishments.length ? (
         <div className="mt-4 p-6 lg:p-0 mx-3 lg:mx-0 lg:ml-2 text-center lg:text-start">
           <p className="font-title text-md">
             <span className="font-bold text-lg">No hay coincidencias con establecimientos </span>
@@ -109,8 +107,9 @@ const EstablishmentList = React.memo<Props>((props) => {
             Probá cambiar o eliminar algunos filtros o ajustar la zona de búsqueda.
           </p>
         </div>
-      ): ""}
-      
+      ) : (
+        ''
+      )}
     </div>
   );
 });

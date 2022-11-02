@@ -125,7 +125,10 @@ export const EstablishmentDetail = React.memo<Props>((props) => {
   };
 
   return (
-    <Card key={id} className={`${className} fixed lg:block top-32 lg:top-28 right-4 left-4 lg:left-1/3 lg:w-1/3 z-50 max-h-[calc(100vh_-_185px)] h-fit lg:max-h-[calc(100vh_-_125px)] lg:h-fit overflow-y-auto scroll-style`}>
+    <Card
+      key={id}
+      className={`${className} fixed lg:block top-32 lg:top-28 right-4 left-4 lg:left-1/3 lg:w-1/3 z-50 max-h-[calc(100vh_-_185px)] h-fit lg:max-h-[calc(100vh_-_125px)] lg:h-fit overflow-y-auto scroll-style`}
+    >
       <header className={'flex flex-row justify-between items-center mb-2'}>
         <CardHeader className="pt-2 w-3/4">
           {name}

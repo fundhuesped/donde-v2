@@ -22,9 +22,14 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () 
 const EstablishmentNew: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices }) => {
   const router = useRouter();
   const searchLocationParam = router.query.searchLocation;
-  
 
-  return <EstablishmentAdmin searchLocationParam={searchLocationParam}  googleMapsApiKey={googleMapsApiKey} availableServices={availableServices} />;
+  return (
+    <EstablishmentAdmin
+      searchLocationParam={searchLocationParam}
+      googleMapsApiKey={googleMapsApiKey}
+      availableServices={availableServices}
+    />
+  );
 };
 
 export default EstablishmentNew;

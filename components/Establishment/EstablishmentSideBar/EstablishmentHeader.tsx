@@ -6,9 +6,9 @@ import Filter from '../../../assets/images/Filter.svg';
 import { useAuthenticatedUser } from '../../../hooks/useAuthenticatedUser';
 import { Pill } from '../../Pill';
 
-type Props = React.PropsWithChildren<{ 
+type Props = React.PropsWithChildren<{
   services: { id: string; name: string }[];
-  searchLocationParam?:string | string[]
+  searchLocationParam?: string | string[];
 }>;
 
 const EstablishmentHeader = React.memo<Props>((props) => {
@@ -43,11 +43,11 @@ const EstablishmentHeader = React.memo<Props>((props) => {
             <div className="lg:hidden flex justify-end w-screen px-3">
               <button
                 onClick={async () => {
-                  await router.push({  
+                  await router.push({
                     pathname: '/establecimientos/nuevo',
                     query: {
                       searchLocation: searchLocationParam,
-                    }, 
+                    },
                   });
                 }}
                 className="flex bg-inherent text-primary border-none text-sm font-bold mt-1.5"

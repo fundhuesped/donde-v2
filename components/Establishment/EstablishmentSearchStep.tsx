@@ -13,22 +13,21 @@ type EstablishmentSearchStepProps = {
 
 export const EstablishmentSearchStep = React.forwardRef<HTMLInputElement, EstablishmentSearchStepProps>(
   (props: EstablishmentSearchStepProps, ref) => {
-    const { onChange, onClick, name, address, latitude, longitude, searchLocationParam} = props;
+    const { onChange, onClick, name, address, latitude, longitude, searchLocationParam } = props;
     const [isValid, setIsValid] = useState(false);
 
     useEffect(() => {
-      
       const validationFields = [name, address, latitude, longitude];
       setIsValid(validationFields.every((field) => !isNil(field)));
-      
     }, [name, address, latitude, longitude]);
-    
+
     useEffect(() => {
       if (searchLocationParam) {
-        onChange({ currentTarget: { value: (searchLocationParam as string), name: 'address' } });
+        onChange({ currentTarget: { value: searchLocationParam as string, name: 'address' } });
       }
-    }, [])
-    
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
       <>
         <input
