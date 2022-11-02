@@ -45,7 +45,6 @@ const EstablishmentTab = React.memo<Props>((props) => {
     }
   };
 
-  console.log(activeEstablishment);
 
   return (
     <>

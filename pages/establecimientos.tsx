@@ -4,7 +4,7 @@ import GoogleMapReact, { Bounds } from 'google-map-react';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import EstablishmentSideBar from '../components/Establishment/EstablishmentSideBar';
 import { EstablishmentDetail } from '../components/Establishment/EstablishmentSideBar/EstablishmentDetail';
@@ -108,6 +108,7 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
     axios.get(url, { params: { services: searchedServiceIds } }).then((res) => res.data),
   );
 
+  
   useEffect(() => {
     if (!router.isReady) {
       return;
@@ -128,17 +129,6 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
   const [activeEstablishment, setActiveEstablishment] = useState<Establishment | null>(null);
   const handleMarkerClick = (establishmentId: string) => {
     setActiveEstablishment(establishments.find((establishment: Establishment) => establishment.id === establishmentId) ?? null);
-  };
-
-  const handleClose = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    setActiveEstablishment(null);
-  };
-
-  const handleDetailsClick = () => {
-    if (activeEstablishment) {
-      router.push(`/establecimientos/${activeEstablishment.id}`);
-    }
   };
 
   useEffect(() => {
@@ -164,7 +154,9 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
           bounds,
         ),
     );
-
+    
+  const searchLocationParam = router.query.searchLocation;
+  
   return (
     <div className="overflow-hidden lg:overflow-visible">
       <Head>
@@ -177,9 +169,10 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
             <div className={'absolute lg:relative w-full lg:w-1/3'}>
               <EstablishmentSideBar>
                 <div className="h-[calc(100vh_-_64px)] lg:h-[calc(100vh_-_124px)] scroll-style overflow-auto lg:overflow-hidden">
-                  <EstablishmentHeader services={services}></EstablishmentHeader>
+                  <EstablishmentHeader searchLocationParam={searchLocationParam} services={services}></EstablishmentHeader>
                   <EstablishmentToggle setMapVisibility={setMapVisibility} mapVisibility={mapVisibility} />
                   <EstablishmentList
+                    searchLocationParam={searchLocationParam}
                     establishments={establishmentInScreen}
                     setMapVisibility={setMapVisibility}
                     mapVisibility={mapVisibility}

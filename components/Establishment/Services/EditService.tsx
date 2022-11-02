@@ -17,8 +17,6 @@ type EditServiceProps = {
   activeServices: ServicesModal;
 };
 
-const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-
 const EditService = (props: EditServiceProps) => {
   const { setShowModal, modalService, modalServiceId, availableServices, onChange, activeServicesId, activeServices } = props;
 
@@ -35,12 +33,14 @@ const EditService = (props: EditServiceProps) => {
   const [subserviceOnService, setSubserviceOnService] = useState<Service[] | null>(null);
 
   const setServiceHandler = (id: string) => {
+    
     const serviceSelected = availableServices.filter((ser) => ser.id == id);
+
     if (modalService) {
-      var serviceAlreadyActivated =
-        activeServices.find((service) => service.serviceId == serviceSelected[0].id) ||
-        (modalService[0] && serviceSelected[0].id != modalService[0].serviceId);
-      if (serviceAlreadyActivated) {
+      var serviceAlreadyActivated = activeServices.find((service) => service.serviceId == serviceSelected[0].id)
+      
+      console.log(serviceSelected, serviceAlreadyActivated);
+      if (serviceAlreadyActivated || serviceSelected[0].id == modalService[0]?.serviceId) {
         setServiceId(null);
         setError('El servicio seleccionado ya está activo, seleccione uno que no este activo');
       } else {
@@ -51,6 +51,8 @@ const EditService = (props: EditServiceProps) => {
       setServiceId(serviceSelected[0].id);
     }
   };
+
+  
   const setSubserviceIdHandler = (id: string) => {
     setSubserviceId(id);
   };
@@ -100,13 +102,17 @@ const EditService = (props: EditServiceProps) => {
       setPhoneNumber(modalService[0].phoneNumber);
       setDetails(modalService[0].details);
       setOpeningTimes(modalService[0].openingTimes);
-      setSubserviceId(modalService[0].subserviceId);
       setEmail(modalService[0].email);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+
   useEffect(() => {
+    if (modalService?.length) {
+      setSubserviceId(modalService[0].subserviceId);
+    }
     var filteredService = availableServices.filter((service) => service.subservices?.length);
     setSubserviceOnService(filteredService);
     if (filteredService[0].id == serviceId) {
@@ -116,7 +122,7 @@ const EditService = (props: EditServiceProps) => {
       setSubserviceId(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subserviceId, serviceId]);
+  }, [serviceId]);
 
   const addService = (
     serviceId: string | null,
@@ -201,7 +207,7 @@ const EditService = (props: EditServiceProps) => {
           >
             {!modalServiceId && (
               <option value="" selected hidden>
-                Seleccioná tipo de servicio
+                Seleccioná el servicio
               </option>
             )}
             {availableServices.map((services) =>
@@ -223,7 +229,7 @@ const EditService = (props: EditServiceProps) => {
           >
             {(!modalServiceId || !subserviceId) && (
               <option value="" selected hidden>
-                Seleccioná sub servicio
+                Seleccioná el tipo
               </option>
             )}
             {subserviceOnService && serviceId == subserviceOnService[0].id ? (
@@ -244,7 +250,7 @@ const EditService = (props: EditServiceProps) => {
               })
             ) : (
               <option value="" selected hidden>
-                Seleccioná sub servicio
+                Seleccioná el tipo
               </option>
             )}
           </select>
@@ -252,15 +258,16 @@ const EditService = (props: EditServiceProps) => {
             type="text"
             placeholder="Teléfono de atención del servicio"
             className={
-              'rounded-lg border border-gray-300 w-full dark:focus:border-primary focus:ring-primary p-2 mb-4 font-light'
+              'rounded-lg border border-gray-300 w-full dark:focus:border-primary focus:ring-primary p-2 mb-4 font-light invalid:bg-red-400 invalid:font-semibold'
             }
+            minLength={8}
             value={phoneNumber ? phoneNumber : ''}
             onChange={(e) => setPhoneNumber(e.target.value)}
           />
           <input
             type="email"
             placeholder="Correo electrónico de atención del servicio"
-            className={'rounded-lg border border-gray-300 w-full dark:focus:border-primary focus:ring-primary p-2 font-light'}
+            className={'rounded-lg border border-gray-300 w-full dark:focus:border-primary focus:ring-primary p-2 font-light invalid:bg-red-400 invalid:font-semibold'}
             value={email ? email : ''}
             onChange={(e) => setEmail(e.target.value)}
           />
