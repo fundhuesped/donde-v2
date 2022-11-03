@@ -9,13 +9,13 @@ export const Pill = React.memo<Props>((props) => {
   return (
     <span
       className={classNames(
-        className,
         'border border-light-gray rounded-full',
         'py-1 px-4',
-        'text-dark-gray text-xs',
+        'text-xs',
         'w-fit',
         { 'bg-ultra-light-gray': type === 'primary' },
         { 'bg-white': type === 'secondary' },
+        className
       )}
     >
       {children}

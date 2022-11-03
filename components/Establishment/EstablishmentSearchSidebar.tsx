@@ -14,7 +14,7 @@ const EstablishmentSearchSidebar = React.memo<Props>((props) => {
           <p className="text-black text-sm mb-2">Estás buscando</p>
           <div className="flex">
             {services.map((service) => (
-              <Pill type={'secondary'} className={'py-1 mr-2 h-fit'} key={service.id}>
+              <Pill type={'secondary'} className={'text-dark-gray py-1 mr-2 h-fit'} key={service.id}>
                 {service.name}
               </Pill>
             ))}

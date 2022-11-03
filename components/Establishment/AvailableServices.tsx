@@ -62,7 +62,7 @@ export const AvailableServices = (props: AvailableServicesProps) => {
           if (checked) {
             return (
               <button key={service.id} onClick={() => editService(service.id)} className="inherit">
-                <Pill type={'primary'} className={'py-1 mr-2 mb-2 h-fit flex align-middle border border-gray-600 cursor-pointer'}>
+                <Pill type={'primary'} className={'text-dark-gray py-1 mr-2 mb-2 h-fit flex align-middle border border-gray-600 cursor-pointer'}>
                   <span className="mt-1 mr-2">{service.name}</span>
                   <PencilIcon className="text-primary w-6 h-6 p-1" />
                 </Pill>

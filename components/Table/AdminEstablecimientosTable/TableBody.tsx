@@ -1,3 +1,4 @@
+import { PencilIcon, TrashIcon } from '@heroicons/react/outline';
 import { OrganizationType } from '@prisma/client';
 import classNames from 'classnames';
 import React, { ReactNode } from 'react';
@@ -27,7 +28,7 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
   return (
     <>
       <tbody className="text-sm text-black">
-        {establishments.map((establishment, index) => {
+        {establishments && establishments.map((establishment, index) => {
           return (
             <tr key={establishment.id} className="border-b border-gray-200 hover:bg-gray-100">
               <Cell>{establishment.name}</Cell>
@@ -40,25 +41,21 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
                 </div>
               </Cell>
               <Cell> {establishment.country} </Cell>
-              {/* <Cell className="py-3 text-right flex">
+              <Cell className="py-3 text-right flex">
                   <>
+                  <button className="btn-secondary w-fit p-1 flex aling-center justify-center text-sm mr-2 rounded-xl" type="button">
+                        <PencilIcon className="text-primary w-6 h-6 p-1 mr-1" />
+                        <span className="mr-2 mt-0.5">Editar</span>
+                   </button>
                     <button
-                      className="btn-primary w-1/3 p-1 flex aling-center justify-center text-sm mr-2 rounded-xl pr-2"
+                      className="inherit w-1/3 flex aling-center justify-center text-sm"
                       type="button"
                       onClick={() => ""}
                     >
-                      <CheckIcon className="mx-1 mt-0.5 text-inherit w-4"></CheckIcon>
-                      Editar
-                    </button>
-                    <button
-                      className="btn-secondary w-1/3 p-1 flex aling-center justify-center text-sm mr-2 rounded-xl pr-2"
-                      type="button"
-                      onClick={() => ""}
-                    >
-                      <TrashIcon className="mx-1 mt-0.5 text-inherit w-4"></TrashIcon>
+                      <TrashIcon className="mx-1 text-primary w-5 mt-1.5"></TrashIcon>
                     </button>
                   </>
-              </Cell> */}
+              </Cell>
             </tr>
           );
         })}

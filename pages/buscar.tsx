@@ -105,7 +105,7 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
         <div className={'px-content'}>
           <p className="text-black text-xs mb-2 mt-4">Estás buscando</p>
           {services.map((service) => (
-            <Pill key={service.id} className={'mb-1 mr-1 inline-block'}>
+            <Pill key={service.id} className={'text-dark-gray mb-1 mr-1 inline-block'}>
               {service.name}
             </Pill>
           ))}

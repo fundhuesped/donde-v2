@@ -194,7 +194,7 @@ export const EstablishmentPage: NextPage<ServerSideProps> = React.memo(({ establ
           )}
 
           <footer className={'mt-4'}>
-            <Pill>Cargado por Fundación Huesped</Pill>
+            <Pill className='text-dark-gray'>Cargado por Fundación Huesped</Pill>
           </footer>
         </Card>
 
