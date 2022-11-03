@@ -2,7 +2,7 @@ import { PlusIcon, TrashIcon, XIcon } from '@heroicons/react/outline';
 import { uniqueId } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Service } from '../../../model/services';
-import { Button } from '../../Button';
+import { Button } from '../../Buttons/Button';
 import { ServicesModal } from '../AvailableServices';
 import { Hour } from './components/Hour';
 import { Day, ServiceOnEstablishmentOpeningTimeFormat, SubService } from './types';

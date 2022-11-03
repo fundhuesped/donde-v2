@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { RefObject, useEffect, useState } from 'react';
 import { usePlacesWidget } from 'react-google-autocomplete';
-import { Button } from '../components/Button';
+import { Button } from '../components/Buttons/Button';
 import MainContainer from '../components/MainContainer';
 import { Pill } from '../components/Pill';
 import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../config/thirdParty';

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Search } from '../Search';
-import { TableBody } from './SignupRequestsTableBody';
-import TableHead from './TableHead';
-import { SignupRequest, SignupRequests, signupRequestsSchema } from '../../model/signup';
+
 import axios from 'axios';
 import useSWR from 'swr';
+import { SignupRequest, SignupRequests, signupRequestsSchema } from '../../../model/signup';
+import { Search } from '../../Search';
+import { TableBody } from './SignupRequestsTableBody';
+import TableHead from './TableHead';
 
 type Props = React.PropsWithChildren<{
   className?: string;
@@ -72,7 +73,16 @@ const Table = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
     <div ref={ref} className="md:w-9/12 mx-auto py-12">
       <div className="flex flex-row justify-between">
         <h2 className={'text-2xl text-black font-bold mb-8 '}>{title}</h2>
-        <Search placeholder={placeholder} name="search" onChange={(e) => setQuery(e.target.value)} />
+        <div className='relative'>
+
+          <Search 
+            className= {'input-style w-72 lg:w-96 rounded-base h-10 text-sm text-gray-500'}
+            iconClassName= {'absolute -translate-y-2/4 right-2 lg:rigth-full lg:ml-28 top-1/3 w-5 text-light-gray'} 
+            placeholder={placeholder} 
+            name="search" 
+            onChange={(e) => setQuery(e.target.value)} />
+        </div>
+       
       </div>
       <div className="table w-full">
         <table className="w-full text-sm text-left text-gray-500">
