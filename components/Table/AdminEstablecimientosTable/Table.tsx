@@ -1,21 +1,18 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
+import { Establishment } from '../../../model/establishment';
 import { SignupRequest, SignupRequests, signupRequestsSchema } from '../../../model/signup';
-import { AddEstablishmentButton } from '../../Buttons/AddEstablishmentButton';
-import { ImportEstablishmentButton } from '../../Buttons/ImportEstablishmentButton';
-import { Search } from '../../Search';
-import Select from '../../Select';
-import { TableBody } from './SignupRequestsTableBody';
+import { TableBody } from './TableBody';
 import TableHead from './TableHead';
 
 type Props = React.PropsWithChildren<{
   className?: string;
-  title?: string;
+  establishments: Establishment[];
 }>;
 
 const Table = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
-  const { title } = props;
+  const { establishments } = props;
   const [query, setQuery] = useState('');
   const [sortField, setSortField] = useState('');
   const [order, setOrder] = useState('asc');
@@ -72,57 +69,12 @@ const Table = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
 
 
   return (
-    <div ref={ref} className="md:w-9/12 mx-auto py-12">
-      <div className="flex flex-row justify-between">
-        <h2 className={'text-2xl text-black font-bold mb-8 '}>{title}</h2>
-        <div className="flex w-fit">
-          <ImportEstablishmentButton/>
-          <AddEstablishmentButton/>
-        </div>
-      </div>
-      <div className='relative flex justify-end'>
-        <Search 
-          placeholder={'Buscar por nombre o dirección'} 
-          name="search" 
-          onChange={(e) => setQuery(e.target.value)} 
-          className= {'input-style w-full ml-20 rounded-base h-12 rigth-0 text-sm text-gray-500 right-1'}
-          iconClassName= {'absolute -translate-y-2/4 right-2 lg:rigth-full lg:ml-28 top-2/4 w-5 text-light-gray'}
-        />
-      </div>
-      <div className='w-full flex'>
-        <h4 className={'text-sm text-black mt-10 mr-2'}>Filtros:</h4>
-        <Select
-          className= {'input-style w-full mr-4   rounded-base h-12 rigth-0 text-sm text-gray-500 right-1'}
-          name={'type'}
-          placeholder={'Tipo de establecimiento'}
-          onSelect={()=>""}
-          value={""}
-          items={{ one: ""}}
-        />
-        <Select
-          className= {'input-style w-full mr-4 rounded-base h-12 rigth-0 text-sm text-gray-500 right-1'}
-          name={'type'}
-          placeholder={'Servicio'}
-          onSelect={()=>""}
-          value={""}
-          items={{ one: ""}}
-        />
-        <Select
-          className= {'input-style w-full mr-4 rounded-base h-12 rigth-0 text-sm text-gray-500 right-1'}
-          name={'type'}
-          placeholder={'País'}
-          onSelect={()=>""}
-          value={""}
-          items={{ one: ""}}
-        />
-      </div>
       <div className="table w-full">
         <table className="w-full text-sm text-left text-gray-500">
           <TableHead onColumnSort={onColumnSort} />
-          <TableBody filteredSolicitudes={filteredSolicitudes} onUpdateData={() => mutate()} />
+          <TableBody establishments={establishments} />
         </table>
       </div>
-    </div>
   );
 });
 export default Table;
