@@ -10,35 +10,23 @@ type Props = React.PropsWithChildren<{
   setFilters: (x: any) => void;
 }>;
 
-const Filtros = (props:Props) => {
-  const { filters, setFilters, services} = props;
+const Filtros = (props: Props) => {
+  const { filters, setFilters, services } = props;
 
   return (
-    <div className='w-full flex'>
-        <h4 className={'text-sm font-medium text-black mt-10 mx-4'}>Filtros:</h4>
-          <MultipleSelect 
-            className={'mr-2'} 
-            items={establishmentTypes}
-            placeholder={'Tipo de establecimiento'}
-            filters={filters}
-            setFilters={setFilters}
-          />
-          <MultipleSelect 
-            className={'mr-2'} 
-            items={services}
-            placeholder={'Servicio'}
-            filters={filters}
-            setFilters={setFilters}
-          />
-          <MultipleSelect 
-            className={''} 
-            items={countries}
-            placeholder={'País'}
-            filters={filters}
-            setFilters={setFilters}
-          />
+    <div className="w-full flex">
+      <h4 className={'text-sm font-medium text-black mt-10 mx-4'}>Filtros:</h4>
+      <MultipleSelect
+        className={'mr-2'}
+        items={establishmentTypes}
+        placeholder={'Tipo de establecimiento'}
+        filters={filters}
+        setFilters={setFilters}
+      />
+      <MultipleSelect className={'mr-2'} items={services} placeholder={'Servicio'} filters={filters} setFilters={setFilters} />
+      <MultipleSelect className={''} items={countries} placeholder={'País'} filters={filters} setFilters={setFilters} />
     </div>
-  )
-}
+  );
+};
 
-export default Filtros
+export default Filtros;

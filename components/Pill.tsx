@@ -2,10 +2,10 @@ import classNames from 'classnames';
 import React from 'react';
 
 type Props = {
-  children: string|JSX.Element|JSX.Element[];
+  children: string | JSX.Element | JSX.Element[];
   type?: string;
-  className: string
-}
+  className: string;
+};
 
 export const Pill = React.memo<Props>((props) => {
   const { children, type, className } = props;
@@ -19,7 +19,7 @@ export const Pill = React.memo<Props>((props) => {
         'w-fit',
         { 'bg-ultra-light-gray': type === 'primary' },
         { 'bg-white': type === 'secondary' },
-        className
+        className,
       )}
     >
       {children}
