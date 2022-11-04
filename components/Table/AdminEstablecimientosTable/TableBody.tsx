@@ -40,7 +40,7 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
                   <div className="flex">
                     {establishment.services.map((service) => {
                       return (
-                        <div className="relative flex flex-col items-center group">
+                        <div key={service.id} className="relative flex flex-col items-center group">
                           <Icon size="medium" type="tertiary" icon={SERVICE_ICONS[service.service.icon as ServiceIcon]} />
                           <div className="absolute bottom-0 flex-col items-center hidden mb-6 group-hover:flex">
                             <span className="relative z-10 p-2 text-xs leading-none text-white whitespace-no-wrap bg-black shadow-lg">
