@@ -22,9 +22,9 @@ const Table = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   const [signupRequests, setSignupRequests] = useState<SignupRequests>([]);
   useEffect(() => {
-      if (data) {
-        setSignupRequests(data);
-      }
+    if (data) {
+      setSignupRequests(data);
+    }
   }, [data]);
 
   const [filteredSolicitudes, setFilteredSolicitudes] = useState<SignupRequests>([]);
