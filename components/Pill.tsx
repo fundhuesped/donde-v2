@@ -5,6 +5,7 @@ type Props = {
   children: string | JSX.Element | JSX.Element[];
   type?: string;
   className: string;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
 };
 
 export const Pill = React.memo<Props>((props) => {
