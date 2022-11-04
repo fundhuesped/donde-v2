@@ -12,7 +12,7 @@ type Props = React.PropsWithChildren<{
 }>;
 
 const Table = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
-  const { establishments } = props;
+  const { establishments} = props;
   const [query, setQuery] = useState('');
   const [sortField, setSortField] = useState('');
   const [order, setOrder] = useState('asc');

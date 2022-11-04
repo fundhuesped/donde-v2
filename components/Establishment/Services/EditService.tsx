@@ -38,7 +38,6 @@ const EditService = (props: EditServiceProps) => {
     if (modalService) {
       var serviceAlreadyActivated = activeServices.find((service) => service.serviceId == serviceSelected[0].id);
 
-      console.log(serviceSelected, serviceAlreadyActivated);
       if (serviceAlreadyActivated || serviceSelected[0].id == modalService[0]?.serviceId) {
         setServiceId(null);
         setError('El servicio seleccionado ya está activo, seleccione uno que no este activo');
