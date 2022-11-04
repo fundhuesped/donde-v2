@@ -45,8 +45,6 @@ const EstablishmentTab = React.memo<Props>((props) => {
     }
   };
 
-  console.log(activeEstablishment);
-
   return (
     <>
       <div className="flex flex-wrap">

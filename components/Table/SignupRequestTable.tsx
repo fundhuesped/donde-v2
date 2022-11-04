@@ -22,7 +22,7 @@ const Table = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   const [signupRequests, setSignupRequests] = useState<SignupRequests>([]);
   useEffect(() => {
-    if (signupRequestsSchema.isValidSync(data)) {
+    if (data) {
       setSignupRequests(data);
     }
   }, [data]);

@@ -81,11 +81,12 @@ export const emptyEstablishmentModel = {
 };
 
 const EstablishmentAdmin = (props: {
+  searchLocationParam?: string | string[];
   googleMapsApiKey: string;
   establishment?: EstablishmentModel;
   availableServices: Service[];
 }) => {
-  const { googleMapsApiKey, establishment, availableServices } = props;
+  const { googleMapsApiKey, establishment, availableServices, searchLocationParam } = props;
   const router = useRouter();
   const [isError, setIsError] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -262,6 +263,7 @@ const EstablishmentAdmin = (props: {
               name={name}
               ref={autocompleteInputRef}
               address={address}
+              searchLocationParam={searchLocationParam}
               latitude={latitude}
               longitude={longitude}
               onClick={handleContinueButtonClicked}

@@ -1,6 +1,6 @@
-import React, { ReactNode, useState } from 'react';
 import classNames from 'classnames';
 import { keys } from 'lodash';
+import React, { useState } from 'react';
 type Props = {
   placeholder?: string;
   className?: string;
@@ -26,15 +26,19 @@ const Select: React.FC<Props> = (props) => {
   return (
     <select
       name={name}
-      className={classNames(className, 'rounded-lg p-3 w-full border border-light-gray focus:outline-0 mt-6 p-3')}
+      className={classNames(className, 'rounded-lg p-3 w-full border border-light-gray focus:outline-0 mt-6')}
       onChange={handleChange}
-      value={selectedValue}
     >
-      {keys(items).map((key) => (
-        <option key={key} value={items[key]}>
-          {items[key]}
-        </option>
-      ))}
+      <option hidden selected value="">
+        {placeholder}
+      </option>
+      {keys(items).map((key) => {
+        return (
+          <option key={key} value={items[key]} selected={key == selectedValue}>
+            {items[key]}
+          </option>
+        );
+      })}
     </select>
   );
 };

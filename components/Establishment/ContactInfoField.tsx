@@ -5,6 +5,7 @@ type ContactInfoFieldProps = {
   whatsApp?: string;
   email?: string;
 };
+
 export const ContactInfoField = (props: ContactInfoFieldProps) => {
   const { onChange, website, phone, whatsApp, email } = props;
   return (
@@ -12,8 +13,9 @@ export const ContactInfoField = (props: ContactInfoFieldProps) => {
       <h2 className={'my-2 text-justify font-bold text-black'}>Datos de contacto del establecimiento</h2>
       <input
         name={'website'}
-        className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0'}
-        placeholder={'Sitio web'}
+        pattern="[Hh][Tt][Tt][Pp][Ss]?:\/\/(?:(?:[a-zA-Z\u00a1-\uffff0-9]+-?)*[a-zA-Z\u00a1-\uffff0-9]+)(?:\.(?:[a-zA-Z\u00a1-\uffff0-9]+-?)*[a-zA-Z\u00a1-\uffff0-9]+)*(?:\.(?:[a-zA-Z\u00a1-\uffff]{2,}))(?::\d{2,5})?(?:\/[^\s]*)?"
+        className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0  invalid:bg-red-400 invalid:font-semibold'}
+        placeholder={'Sitio web: https://ejemplo.org'}
         onChange={onChange}
         value={website ? website : ''}
       />

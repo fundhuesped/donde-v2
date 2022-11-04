@@ -78,6 +78,7 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
       router.push({
         pathname: '/establecimientos',
         query: {
+          searchLocation: searchLocation,
           coords: encodeURIComponent(JSON.stringify(coords)),
           services: searchedServiceIds,
         },
