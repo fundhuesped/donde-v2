@@ -6,35 +6,26 @@ type Props = React.PropsWithChildren<{
     className?:  string;
     items?: {name: string, id:string}[];
     placeholder?: string;
-    setQueryFilter:  (x:any)=>void;
-    queryFilter: [];
+    filters: Set<string>
+    setFilters: (x: any) => void
 }>;
 
 const MultipleSelect = (props:Props) => {
-    const {setQueryFilter, queryFilter, className, items, placeholder} = props;
+    const {filters, setFilters, className, items, placeholder} = props;
     const [show, setShow] = useState(false);
-    const [filters, setFilters] = useState<string[]>([])
-    const setFilter = new Set<string>();
 
     const handleChange = (filter:string) =>{
-        const update = setFilter.has(filter)
+        const update = filters.has(filter)
         if (update) {
-            setFilter.delete(filter);
+          setFilters((prev: any) => {
+            const next = new Set(prev);
+            next.delete(filter);
+            return next;
+          })
         }else{
-            setFilter.add(filter);
+          setFilters((prev: any) => new Set(prev).add(filter));
         }
-        let arrayFilters = Array.from( setFilter );
-        return arrayFilters;
-        
-    }
-    console.log(filters);
-
-    useEffect(() => {
-      setFilter.clear() 
-      setQueryFilter([]) 
-    }, [])
-    
-    
+    }    
 
     return (
         <>
@@ -57,7 +48,7 @@ const MultipleSelect = (props:Props) => {
                                     type="checkbox" 
                                     value="" 
                                     className="form-check-input appearance-none w-4 h-4 text-black bg-gray-200 rounded border-gray-300 focus:ring-1 checked:bg-primary checked:border-primary"
-                                    onChange={()=>setQueryFilter(handleChange(item.name))}
+                                    onChange={()=> handleChange(item.name)}
                                 />
                                 <label htmlFor={`${item.name}-checkbox`} className="ml-2 text-sm font-normal text-gray-700">
                                     {item.name}
