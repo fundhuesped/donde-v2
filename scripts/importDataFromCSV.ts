@@ -156,7 +156,7 @@ const LegacyDataRecordSchema = z.object({
 type ServicesPossibleNames = 'preservativos' | 'its' | 'vacunatorio' | 'mac' | 'aborto';
 type ServicesData = Record<ServicesPossibleNames, Service>;
 
-async function findServicesFromDB() : Promise<ServicesData> {
+async function findServicesFromDB(): Promise<ServicesData> {
   const preservativos = await prismaClient.service.findUniqueOrThrow({
     where: {
       name: 'Preservativos'
@@ -202,14 +202,18 @@ type AbortoSubservicesData = Record<
 
 function getAbortoSubservices(abortoSubservices: Subservice[]): AbortoSubservicesData {
   const noConfirmado = abortoSubservices.find((subservice) => {
-    return subservice.name == LegacyDataAbortoSubservice.NO_CONFIRMADO});
+    return subservice.name == LegacyDataAbortoSubservice.NO_CONFIRMADO
+  });
   const soloAsesoramiento = abortoSubservices.find((subservice) => {
-    return subservice.name == LegacyDataAbortoSubservice.SOLO_ASESORAMIENTO});
+    return subservice.name == LegacyDataAbortoSubservice.SOLO_ASESORAMIENTO
+  });
   const asesoramientoYDerivacion = abortoSubservices.find((subservice) => {
-    return subservice.name == LegacyDataAbortoSubservice.ASESORAMIENTO_Y_DERIVACION});
+    return subservice.name == LegacyDataAbortoSubservice.ASESORAMIENTO_Y_DERIVACION
+  });
   const asesoramientoEInterrupcion = abortoSubservices.find((subservice) => {
-    return subservice.name == LegacyDataAbortoSubservice.ASESORAMIENTO_E_INTERRUPCION});
-  
+    return subservice.name == LegacyDataAbortoSubservice.ASESORAMIENTO_E_INTERRUPCION
+  });
+
   if (!noConfirmado) {
     throw new NotFoundError('Aborto subservice "no confirmado" not found');
   }
@@ -247,7 +251,7 @@ function parseLegacyData(path: string): LegacyDataRecord[] {
     try {
       return LegacyDataRecordSchema.parse(record);
     } catch (e) {
-      console.dir(record, {depth: null});
+      console.dir(record, { depth: null });
       throw e;
     }
   });
@@ -297,8 +301,8 @@ function mapLegacyString(legacyValue: string | undefined): string | null {
   return legacyValue ? legacyValue : null;
 }
 
-function transformSpanishDayToEnglishDay(day: string): Day | null  {
-  switch(day) {
+function transformSpanishDayToEnglishDay(day: string): Day | null {
+  switch (day) {
     case 'L': return Day['M'];
     case 'M': return Day['T'];
     case 'X': return Day['W'];
@@ -310,22 +314,22 @@ function transformSpanishDayToEnglishDay(day: string): Day | null  {
   }
 }
 
-function getOpeningTimesFromRecordValue(rawValue: string) : Prisma.ServiceOnEstablishmentOpeningTimeCreateNestedManyWithoutServiceOnEstablishmentInput{
+function getOpeningTimesFromRecordValue(rawValue: string): Prisma.ServiceOnEstablishmentOpeningTimeCreateNestedManyWithoutServiceOnEstablishmentInput {
   const rawOpeningTimes = rawValue?.split(';').map((value) => value.trim());
   let openingTimes = undefined;
   if (rawOpeningTimes) {
-      openingTimes = rawOpeningTimes.map((rawOpeningTime) => {
-        const deconstrutedOpeningTime = rawOpeningTime.split('-');
-        const day = transformSpanishDayToEnglishDay(deconstrutedOpeningTime[0]);
-        if (!day) {
-          throw new Error('Day is not set correctly.');
-        }
-        return {
-          day: day,
-          startTime: '1970-01-01T' + deconstrutedOpeningTime[1] + ':00.000Z',
-          endTime: '1970-01-01T' + deconstrutedOpeningTime[2] + ':00.000Z',
-        };
-      });
+    openingTimes = rawOpeningTimes.map((rawOpeningTime) => {
+      const deconstrutedOpeningTime = rawOpeningTime.split('-');
+      const day = transformSpanishDayToEnglishDay(deconstrutedOpeningTime[0]);
+      if (!day) {
+        throw new Error('Day is not set correctly.');
+      }
+      return {
+        day: day,
+        startTime: '1970-01-01T' + deconstrutedOpeningTime[1] + ':00.000Z',
+        endTime: '1970-01-01T' + deconstrutedOpeningTime[2] + ':00.000Z',
+      };
+    });
   }
   if (!openingTimes) {
     return {
@@ -339,17 +343,12 @@ function getOpeningTimesFromRecordValue(rawValue: string) : Prisma.ServiceOnEsta
   }
 }
 
-function getServiceWithSubserviceIdsForLegacyDataRecord(record: LegacyDataRecord, establishment: Establishment, services: Services, abortoSubservices: AbortoSubservicesData): Prisma.ServiceOnEstablishmentCreateInput[] {
-  const servicesOnEstablishment: Prisma.ServiceOnEstablishmentCreateInput[] = [];
+function getSubservicesOnEstablishmentCreate(record: LegacyDataRecord, services: Services, abortoSubservices: AbortoSubservicesData): Prisma.ServiceOnEstablishmentCreateNestedManyWithoutEstablishmentInput {
+  const servicesOnEstablishment: Prisma.ServiceOnEstablishmentCreateWithoutEstablishmentInput[] = [];
   if (mapLegacyBoolean(record[LegacyDataField.SERVICE_PRESERVATIVOS])) {
     const rawOpeningTimes = record[LegacyDataField.OPENING_TIMES_PRESERVATIVOS];
     const openingTimes = rawOpeningTimes ? getOpeningTimesFromRecordValue(rawOpeningTimes) : undefined;
     servicesOnEstablishment.push({
-      establishment: {
-        connect: {
-          id: establishment.id,
-        }
-      },
       service: {
         connect: {
           id: services.preservativos.id,
@@ -365,11 +364,6 @@ function getServiceWithSubserviceIdsForLegacyDataRecord(record: LegacyDataRecord
     const rawOpeningTimes = record[LegacyDataField.OPENING_TIMES_ITS];
     const openingTimes = rawOpeningTimes ? getOpeningTimesFromRecordValue(rawOpeningTimes) : undefined;
     servicesOnEstablishment.push({
-      establishment: {
-        connect: {
-          id: establishment.id,
-        }
-      },
       service: {
         connect: {
           id: services.its.id
@@ -385,11 +379,6 @@ function getServiceWithSubserviceIdsForLegacyDataRecord(record: LegacyDataRecord
     const rawOpeningTimes = record[LegacyDataField.OPENING_TIMES_MAC];
     const openingTimes = rawOpeningTimes ? getOpeningTimesFromRecordValue(rawOpeningTimes) : undefined;
     servicesOnEstablishment.push({
-      establishment: {
-        connect: {
-          id: establishment.id,
-        }
-      },
       service: {
         connect: {
           id: services.mac.id
@@ -405,11 +394,6 @@ function getServiceWithSubserviceIdsForLegacyDataRecord(record: LegacyDataRecord
     const rawOpeningTimes = record[LegacyDataField.OPENING_TIMES_VACUNATORIO];
     const openingTimes = rawOpeningTimes ? getOpeningTimesFromRecordValue(rawOpeningTimes) : undefined;
     servicesOnEstablishment.push({
-      establishment: {
-        connect: {
-          id: establishment.id,
-        }
-      },
       service: {
         connect: {
           id: services.vacunatorio.id
@@ -442,11 +426,6 @@ function getServiceWithSubserviceIdsForLegacyDataRecord(record: LegacyDataRecord
         abortoSubserviceId = abortoSubservices.noConfirmado.id;
     }
     servicesOnEstablishment.push({
-      establishment: {
-        connect: {
-          id: establishment.id,
-        }
-      },
       service: {
         connect: {
           id: services.aborto.id
@@ -463,7 +442,7 @@ function getServiceWithSubserviceIdsForLegacyDataRecord(record: LegacyDataRecord
       openingTimes: openingTimes,
     });
   }
-  return servicesOnEstablishment;
+  return { create: servicesOnEstablishment };
 }
 
 export async function importCSV(path: string) {
@@ -488,7 +467,7 @@ export async function importCSV(path: string) {
 
   let successCount = 0;
   const failedRecords: { record: LegacyDataRecord; error: unknown }[] = [];
-  let transactions = undefined;
+  let transactions = [];
   console.info('---');
   console.info('Upserting establishments...');
   for (const record of legacyData) {
@@ -509,31 +488,20 @@ export async function importCSV(path: string) {
       details: record[LegacyDataField.DETAILS],
       officialId: record[LegacyDataField.OFFICIAL_ID],
       legacyId,
+      services: getSubservicesOnEstablishmentCreate(record, services, abortoSubservices),
     };
     const dataUpdate = JSON.parse(JSON.stringify(dataCreate)) as Prisma.EstablishmentUpdateInput;
-    dataUpdate.services = {deleteMany: {}};
-    try {
-      const establishment = await prismaClient.establishment.upsert({
+    if (dataUpdate.services) {
+      dataUpdate.services.deleteMany = {};
+    }
+    transactions.push(prismaClient.establishment.upsert({
         where: { legacyId },
         create: dataCreate,
         update: dataUpdate,
-      });
-      const servicesOnEstablishments = getServiceWithSubserviceIdsForLegacyDataRecord(record, establishment, services, abortoSubservices);
-      for (const serviceOnEstablishment of servicesOnEstablishments) {
-        await prismaClient.serviceOnEstablishment.create({
-          data: serviceOnEstablishment,
-        });
-      }
-
-      successCount += 1;
-    } catch (error) {
-      failedRecords.push({ record, error });
-    }
+    }));
   }
 
-  const processedCount = successCount + failedRecords.length;
-  const totalCount = legacyData.length;
+  await prismaClient.$transaction(transactions);
+
   console.info(`Done upserting establishments.`);
-  console.info(`Processed ${processedCount}/${totalCount} - ${successCount} succeeded, ${failedRecords.length} failed`);
-  console.error(failedRecords);
 }
