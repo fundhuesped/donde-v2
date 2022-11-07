@@ -12,7 +12,7 @@ type Props = React.PropsWithChildren<{
 }>;
 
 export const Search = React.forwardRef<HTMLDivElement, Props>((props) => {
-  const { placeholder, name, value, defaultValue, onChange, className, iconClassName} = props;
+  const { placeholder, name, value, defaultValue, onChange, className, iconClassName } = props;
 
   return (
     <>
