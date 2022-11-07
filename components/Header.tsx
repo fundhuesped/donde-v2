@@ -1,10 +1,12 @@
 import {
-  AnnotationIcon, ChatAltIcon,
-  InformationCircleIcon, LocationMarkerIcon,
+  AnnotationIcon,
+  ChatAltIcon,
+  InformationCircleIcon,
+  LocationMarkerIcon,
   LoginIcon,
   LogoutIcon,
   MenuIcon,
-  PlusCircleIcon
+  PlusCircleIcon,
 } from '@heroicons/react/outline';
 import { UserRole } from '@prisma/client';
 import { signOut } from 'next-auth/react';

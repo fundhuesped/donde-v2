@@ -120,8 +120,6 @@ const SignUp: NextPage = () => {
     }
   }, [setResponse, response]);
 
-
-
   return (
     <>
       <Head>
