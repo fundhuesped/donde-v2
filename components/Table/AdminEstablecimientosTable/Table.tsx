@@ -1,14 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { Establishment } from '../../../model/establishment';
 import { SignupRequest, SignupRequests, signupRequestsSchema } from '../../../model/signup';
+import { EstablishmentModel } from '../../Establishment/EstablishmentAdmin';
 import { TableBody } from './TableBody';
 import TableHead from './TableHead';
 
 type Props = React.PropsWithChildren<{
   className?: string;
-  establishments: Establishment[];
+  establishments: EstablishmentModel[];
 }>;
 
 const Table = React.forwardRef<HTMLDivElement, Props>((props, ref) => {

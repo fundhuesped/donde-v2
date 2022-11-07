@@ -1,15 +1,15 @@
 import { PencilIcon, TrashIcon } from '@heroicons/react/outline';
-import { OrganizationType } from '@prisma/client';
 import classNames from 'classnames';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { SERVICE_ICONS } from '../../../config/services';
-import { Establishment } from '../../../model/establishment';
 import { ServiceIcon } from '../../../model/services';
+import { EstablishmentModel } from '../../Establishment/EstablishmentAdmin';
 import { Icon } from '../../Icon';
+import EditModal from '../../Modal/EditModal';
 
 type Props = React.PropsWithChildren<{
   className?: string;
-  establishments: Establishment[];
+  establishments: EstablishmentModel[];
 }>;
 
 type CellProps = {
@@ -23,6 +23,8 @@ const Cell = React.memo<CellProps>((props) => {
 
 export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
   const { establishments } = props;
+  const [showModal, setShowModal] = useState<boolean>(false);
+
   
 
   return (
@@ -50,7 +52,11 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
               <Cell> {establishment.country} </Cell>
               <Cell className="py-3 text-right flex">
                   <>
-                  <button className="btn-secondary w-fit p-1 flex aling-center justify-center text-sm mr-2 rounded-xl" type="button">
+                  <button 
+                    className="btn-secondary w-fit p-1 flex aling-center justify-center text-sm mr-2 rounded-xl" 
+                    type="button"
+                    onClick={()=>setShowModal(true)}
+                  >
                         <PencilIcon className="text-primary w-6 h-6 p-1 mr-1" />
                         <span className="mr-2 mt-0.5">Editar</span>
                    </button>
@@ -63,23 +69,12 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
                     </button>
                   </>
               </Cell>
+              {showModal ? (<EditModal establishment={establishment} showModal={showModal} setShowModal={setShowModal}/> ): ""}
             </tr>
           );
         })}
       </tbody>
+
     </>
   );
 });
-
-function formatOrganizationType(type: string) {
-  switch (type) {
-    case OrganizationType.SOCIAL_ORGANIZATION:
-      return 'Organización social';
-    case OrganizationType.PRIVATE_INSTITUTION:
-      return 'Institución privada';
-    case OrganizationType.PUBLIC_INSTITUTION:
-      return 'Institución pública';
-    default:
-      return 'Otro';
-  }
-}

@@ -13,10 +13,12 @@ type Props = React.PropsWithChildren<{
 const MultipleSelect = (props:Props) => {
     const {setQueryFilter, queryFilter, className, items, placeholder} = props;
     const [show, setShow] = useState(false);
-    const [filters, setFilters] = useState<string[]>([])
-    const setFilter = new Set<string>();
+    const [filtersSelected, setFiltersSelected] = useState<string[]>([])
+
 
     const handleChange = (filter:string) =>{
+        const setFilter = new Set([...filtersSelected]);
+
         const update = setFilter.has(filter)
         if (update) {
             setFilter.delete(filter);
@@ -24,14 +26,20 @@ const MultipleSelect = (props:Props) => {
             setFilter.add(filter);
         }
         let arrayFilters = Array.from( setFilter );
-        return arrayFilters;
+        setFiltersSelected([...arrayFilters])
+        
+        return filtersSelected;
         
     }
-    console.log(filters);
 
     useEffect(() => {
-      setFilter.clear() 
-      setQueryFilter([]) 
+        setQueryFilter([...filtersSelected])
+    }, [filtersSelected])
+    
+
+    useEffect(() => {
+    //   setFilter.clear() 
+    //   setFiltersSelected([]) 
     }, [])
     
     
@@ -57,7 +65,7 @@ const MultipleSelect = (props:Props) => {
                                     type="checkbox" 
                                     value="" 
                                     className="form-check-input appearance-none w-4 h-4 text-black bg-gray-200 rounded border-gray-300 focus:ring-1 checked:bg-primary checked:border-primary"
-                                    onChange={()=>setQueryFilter(handleChange(item.name))}
+                                    onChange={()=>handleChange(item.name)}
                                 />
                                 <label htmlFor={`${item.name}-checkbox`} className="ml-2 text-sm font-normal text-gray-700">
                                     {item.name}

@@ -8,6 +8,9 @@ import useSWR from 'swr';
 import { AddEstablishmentButton } from '../../components/Buttons/AddEstablishmentButton';
 import DownloadButton from '../../components/Buttons/DownloadButton';
 import { ImportEstablishmentButton } from '../../components/Buttons/ImportEstablishmentButton';
+import { EstablishmentModel } from '../../components/Establishment/EstablishmentAdmin';
+import DescargarModal from '../../components/Modal/DescargarModal';
+import ImportModal from '../../components/Modal/ImportModal';
 import { Pill } from '../../components/Pill';
 import { Search } from '../../components/Search';
 import Filtros from '../../components/Table/AdminEstablecimientosTable/Filter/Filtros';
@@ -35,9 +38,11 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () 
 
 const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices }) => {
   const router = useRouter();
-  const [filteredEstablishments, setFilteredEstablishments] = useState<Establishment[]>([]);
+  const [filteredEstablishments, setFilteredEstablishments] = useState<EstablishmentModel[]>([]);
   const [querySearch, setQuerySearch] = useState<string>('');
   const [queryFilter, setQueryFilter] = useState<[]>([]);
+  const [importModal, setImportModal] = useState<boolean>(false);
+  const [descargarModal, setDescargarModal] = useState<boolean>(false);
   const { data: establishments } = useSWR(router.isReady ? '/api/establishments' : null, (url) =>
     axios.get(url).then((res) => res.data),
   );
@@ -61,7 +66,7 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
     //       establishment.services.map(service=>service.id.includes(queryFilter)),
     //   ),
     // );
-    console.log(queryFilter);
+    // console.log(queryFilter);
 
     
   }, [establishments, setQueryFilter, queryFilter]);
@@ -77,7 +82,7 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
           <div className="flex flex-row justify-between">
             <h2 className={'text-2xl text-black font-bold mb-8 '}>Establecimientos</h2>
             <div className="flex w-fit">
-              <ImportEstablishmentButton/>
+              <ImportEstablishmentButton onClick={()=>setImportModal(true)}/>
               <AddEstablishmentButton/>
             </div>
           </div>
@@ -103,10 +108,12 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
               
             </div>
             <div className=''>
-              <DownloadButton/>
+              <DownloadButton  onClick={()=>setDescargarModal(true)}/>
             </div>
           </div>
           <Table establishments={filteredEstablishments} />
+           {importModal ? (<ImportModal showModal={importModal} setShowModal={setImportModal}/> ): ""}
+           {descargarModal ? (<DescargarModal showModal={descargarModal} setShowModal={setDescargarModal}/> ): ""}
         </div>
       </main>
     </>

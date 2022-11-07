@@ -1,8 +1,12 @@
-import { CloudDownloadIcon } from '@heroicons/react/outline'
-const DownloadButton = () => {
+import { CloudDownloadIcon } from '@heroicons/react/outline';
+type Props = React.PropsWithChildren<{
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+}>;
+const DownloadButton = (props:Props) => {
+  const {onClick}=props;
   return (
      <button
-            onClick={()=>""}
+            onClick={onClick}
             className="flex bg-inherent text-primary border-none text-sm mt-1.5"
             >
             <span className="mr-1 mt-0.5">
