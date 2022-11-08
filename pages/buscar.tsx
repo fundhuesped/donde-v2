@@ -23,7 +23,6 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () 
     throw new Error('Environment variable not set: GOOGLE_MAPS_API_KEY');
   }
 
-
   const services = await prismaClient.service.findMany({
     include: {
       subservices: true,
@@ -33,22 +32,21 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () 
     props: {
       availableServices: services,
       googleMapsApiKey,
-
     },
   };
 };
 
 const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices }) => {
-  const [country, setCountry] = useState<string | undefined>('')
+  const [country, setCountry] = useState<string | undefined>('');
 
   useEffect(() => {
     const getCountryByUserIp = async () => {
-      const response = await fetch ("https://api.country.is")
-      const country_location = await response.json()
-      setCountry(country_location.country)
-    }
-    getCountryByUserIp()
-  }, [])
+      const response = await fetch('https://api.country.is');
+      const country_location = await response.json();
+      setCountry(country_location.country);
+    };
+    getCountryByUserIp();
+  }, []);
 
   console.log(country, 'country');
   //  {country: 'AR', ip: '186.122.181.188'}
@@ -112,7 +110,7 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
     });
   };
 
-  const asd = GET_DYNAMIC_GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS(country)
+  const asd = GET_DYNAMIC_GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS(country);
   console.log(asd, 'asd');
 
   return (
