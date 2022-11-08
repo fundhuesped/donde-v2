@@ -7,7 +7,7 @@ import { usePlacesWidget } from 'react-google-autocomplete';
 import { Button } from '../components/Button';
 import MainContainer from '../components/MainContainer';
 import { Pill } from '../components/Pill';
-import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../config/thirdParty';
+import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS, GET_DYNAMIC_GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../config/thirdParty';
 import { Coordinates } from '../model/map';
 import { Service } from '../model/services';
 import { prismaClient } from '../server/prisma/client';
@@ -22,6 +22,8 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () 
   if (!googleMapsApiKey) {
     throw new Error('Environment variable not set: GOOGLE_MAPS_API_KEY');
   }
+
+
   const services = await prismaClient.service.findMany({
     include: {
       subservices: true,
@@ -31,11 +33,26 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () 
     props: {
       availableServices: services,
       googleMapsApiKey,
+
     },
   };
 };
 
 const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices }) => {
+  const [country, setCountry] = useState<string | undefined>('')
+
+  useEffect(() => {
+    const getCountryByUserIp = async () => {
+      const response = await fetch ("https://api.country.is")
+      const country_location = await response.json()
+      setCountry(country_location.country)
+    }
+    getCountryByUserIp()
+  }, [])
+
+  console.log(country, 'country');
+  //  {country: 'AR', ip: '186.122.181.188'}
+
   const router = useRouter();
 
   const { ref: autocompleteInputRef }: { ref: RefObject<HTMLInputElement> } = usePlacesWidget({
@@ -45,7 +62,7 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
       setLocation(place.formatted_address);
       setCoords({ lat: place.geometry.location.lat(), lng: place.geometry.location.lng() });
     },
-    options: GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS,
+    options: GET_DYNAMIC_GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS(country),
   });
 
   const servicesQueryParam = router.query.services;
@@ -94,6 +111,9 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
       },
     });
   };
+
+  const asd = GET_DYNAMIC_GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS(country)
+  console.log(asd, 'asd');
 
   return (
     <div className="flex flex-wrap flex-grow content-start justify-center lg:bg-modal-image lg:bg-white ">
