@@ -1,5 +1,5 @@
 import { NextApiHandler, NextApiRequest } from 'next';
-import formidable, { File } from 'formidable';
+import formidable from 'formidable';
 import mime from 'mime';
 import { importDataFromCSV } from '../../../scripts/importDataFromCSV';
 import * as fs from 'fs/promises'
@@ -21,6 +21,7 @@ const handler: NextApiHandler = async (req, res) => {
   try {
     const { files } = await parseForm(req); 
     if (files.file instanceof formidable.File) {
+      // @ts-ignore
       filePath = files.file.filepath;
     } else {
       return res.status(500).json({
