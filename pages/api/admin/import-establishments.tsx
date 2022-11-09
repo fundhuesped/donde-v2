@@ -2,12 +2,12 @@ import { NextApiHandler, NextApiRequest } from 'next';
 import formidable from 'formidable';
 import mime from 'mime';
 import { importDataFromCSV } from '../../../scripts/importDataFromCSV';
-import * as fs from 'fs/promises'
+import * as fs from 'fs/promises';
 
 export const config = {
   api: {
     bodyParser: false,
-    sizeLimit: process.env.IMPORT_MAX_FILE_SIZE + 'mb',
+    sizeLimit: process.env.IMPORT_MAX_FILE_SIZE_MB + 'mb',
   },
 };
 
@@ -19,18 +19,18 @@ const handler: NextApiHandler = async (req, res) => {
   let filePath = undefined;
 
   try {
-    const { files } = await parseForm(req); 
+    const { files } = await parseForm(req);
     if (files.file instanceof formidable.File) {
       // @ts-ignore
       filePath = files.file.filepath;
     } else {
       return res.status(500).json({
-        error: 'La extensión del archivo no es la adecuada o el tamaño es mayor al permitido.'
+        error: 'La extensión del archivo no es la adecuada o el tamaño es mayor al permitido.',
       });
     }
   } catch (e) {
     return res.status(500).json({
-      error: 'Hubo un fallo al recibir el archivo.'
+      error: 'Hubo un fallo al recibir el archivo.',
     });
   }
 
@@ -38,10 +38,10 @@ const handler: NextApiHandler = async (req, res) => {
     if (filePath) {
       await importDataFromCSV(filePath);
       await fs.unlink(filePath);
-      return res.status(200).end();
+      return res.status(201).end();
     } else {
       return res.status(500).json({
-        error: 'Hubo un fallo al recibir el archivo.'
+        error: 'Hubo un fallo al recibir el archivo.',
       });
     }
   } catch (e) {
@@ -53,14 +53,13 @@ const handler: NextApiHandler = async (req, res) => {
   }
 };
 
-const parseForm = async (req: NextApiRequest)
-    : Promise<{ fields: formidable.Fields; files: formidable.Files }> => {
+const parseForm = async (req: NextApiRequest): Promise<{ fields: formidable.Fields; files: formidable.Files }> => {
   return await new Promise(async (resolve, reject) => {
     let maxFileSize = 10;
-    if (process.env.IMPORT_MAX_FILE_SIZE) {
-      maxFileSize = +process.env.IMPORT_MAX_FILE_SIZE;
+    if (process.env.IMPORT_MAX_FILE_SIZE_MB) {
+      maxFileSize = +process.env.IMPORT_MAX_FILE_SIZE_MB;
     }
-     
+
     let filename = '';
     const form = formidable({
       maxFiles: 1,
@@ -68,9 +67,7 @@ const parseForm = async (req: NextApiRequest)
       uploadDir: process.env.IMPORT_TMP_FILES_DIR,
       filename: (_name, _ext, part) => {
         const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-        filename = `${part.name || 'unknown'}-${uniqueSuffix}.${
-          mime.getExtension(part.mimetype || '') || 'unknown'
-        }`;
+        filename = `${part.name || 'unknown'}-${uniqueSuffix}.${mime.getExtension(part.mimetype || '') || 'unknown'}`;
         return filename;
       },
       filter: (part) => {
@@ -81,8 +78,7 @@ const parseForm = async (req: NextApiRequest)
     form.parse(req, function (err, fields, files) {
       if (err) {
         reject(err);
-      }
-      else {
+      } else {
         resolve({ fields, files });
       }
     });

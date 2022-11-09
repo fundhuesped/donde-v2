@@ -83,18 +83,30 @@ enum LegacyDataAbortoSubservice {
   ASESORAMIENTO_E_INTERRUPCION = 'Ofrece asesoramiento y realiza interrupción voluntaria del embarazo.',
 }
 
-const LegacyDataAbortoSubserviceSchema = z.preprocess((val) => val ? val : null, z.enum([
-  LegacyDataAbortoSubservice.NO_CONFIRMADO,
-  LegacyDataAbortoSubservice.ASESORAMIENTO_Y_DERIVACION,
-  LegacyDataAbortoSubservice.SOLO_ASESORAMIENTO,
-  LegacyDataAbortoSubservice.ASESORAMIENTO_E_INTERRUPCION,
-]).nullable()).optional();
+const LegacyDataAbortoSubserviceSchema = z
+  .preprocess(
+    (val) => (val ? val : null),
+    z
+      .enum([
+        LegacyDataAbortoSubservice.NO_CONFIRMADO,
+        LegacyDataAbortoSubservice.ASESORAMIENTO_Y_DERIVACION,
+        LegacyDataAbortoSubservice.SOLO_ASESORAMIENTO,
+        LegacyDataAbortoSubservice.ASESORAMIENTO_E_INTERRUPCION,
+      ])
+      .nullable(),
+  )
+  .optional();
 
-const OpeningTimesRegex = /(\s*[L, M, X, J, V, S, D]-(([0-2][0-3]|[0-1][0-9]):[0-5][0-9])-(([0-2][0-3]|[0-1][0-9]):[0-5][0-9])\s*;?$)+/
+const OpeningTimesRegex =
+  /(\s*[L, M, X, J, V, S, D]-(([0-2][0-3]|[0-1][0-9]):[0-5][0-9])-(([0-2][0-3]|[0-1][0-9]):[0-5][0-9])\s*;?$)+/;
 
-const ServiceOnEstablishmentPhoneNumberSchema = z.preprocess((val) => val ? val : null, z.string().max(100).nullable()).optional();
-const ServiceOnEstablishmentEmailSchema = z.preprocess((val) => val ? val : null, z.string().email().max(254).nullable()).optional();
-const ServiceOnEstablishmentDetailsSchema = z.preprocess((val) => val ? val : null, z.string().nullable()).optional();
+const ServiceOnEstablishmentPhoneNumberSchema = z
+  .preprocess((val) => (val ? val : null), z.string().max(100).nullable())
+  .optional();
+const ServiceOnEstablishmentEmailSchema = z
+  .preprocess((val) => (val ? val : null), z.string().email().max(254).nullable())
+  .optional();
+const ServiceOnEstablishmentDetailsSchema = z.preprocess((val) => (val ? val : null), z.string().nullable()).optional();
 const ServiceOnEstablishmentOpeningTimes = z.string().regex(OpeningTimesRegex).or(literal('')).optional();
 
 enum LegacyPublishedStatus {
@@ -107,7 +119,7 @@ const LegacyPublishedStatusSchema = z.union([z.literal(1), z.literal(-1)]);
 type LegacyDataRecord = z.infer<typeof LegacyDataRecordSchema>;
 const LegacyDataRecordSchema = z.object({
   [LegacyDataField.OFFICIAL_ID]: z.string().optional(),
-  [LegacyDataField.LEGACY_ID]: z.preprocess((val) => val ? val : null, z.number().nullable()).optional(),
+  [LegacyDataField.LEGACY_ID]: z.preprocess((val) => (val ? val : null), z.number().nullable()).optional(),
   [LegacyDataField.NAME]: z.string(),
   [LegacyDataField.TYPE]: LegacyDataEstablishmentTypeScheme,
   [LegacyDataField.STREET]: z.union([z.string().min(1).max(200), z.number()]),
@@ -157,31 +169,31 @@ type ServicesData = Record<ServicesPossibleNames, Service>;
 async function findServicesFromDB(): Promise<ServicesData> {
   const preservativos = await prismaClient.service.findUniqueOrThrow({
     where: {
-      name: 'Preservativos'
-    }
+      name: 'Preservativos',
+    },
   });
   const its = await prismaClient.service.findUniqueOrThrow({
     where: {
-      name: 'Test de ITS'
-    }
+      name: 'Test de ITS',
+    },
   });
   const vacunatorio = await prismaClient.service.findUniqueOrThrow({
     where: {
-      name: 'Vacunatorios'
-    }
+      name: 'Vacunatorios',
+    },
   });
   const mac = await prismaClient.service.findUniqueOrThrow({
     where: {
-      name: 'Métodos anticonceptivos'
-    }
+      name: 'Métodos anticonceptivos',
+    },
   });
   const aborto = await prismaClient.service.findUniqueOrThrow({
     where: {
-      name: 'Interrupción voluntaria del embarazo'
+      name: 'Interrupción voluntaria del embarazo',
     },
     include: {
       subservices: true,
-    }
+    },
   });
 
   return {
@@ -200,29 +212,37 @@ type AbortoSubservicesData = Record<
 
 function getAbortoSubservices(abortoSubservices: Subservice[]): AbortoSubservicesData {
   const noConfirmado = abortoSubservices.find((subservice) => {
-    return subservice.name == LegacyDataAbortoSubservice.NO_CONFIRMADO
+    return subservice.name == LegacyDataAbortoSubservice.NO_CONFIRMADO;
   });
   const soloAsesoramiento = abortoSubservices.find((subservice) => {
-    return subservice.name == LegacyDataAbortoSubservice.SOLO_ASESORAMIENTO
+    return subservice.name == LegacyDataAbortoSubservice.SOLO_ASESORAMIENTO;
   });
   const asesoramientoYDerivacion = abortoSubservices.find((subservice) => {
-    return subservice.name == LegacyDataAbortoSubservice.ASESORAMIENTO_Y_DERIVACION
+    return subservice.name == LegacyDataAbortoSubservice.ASESORAMIENTO_Y_DERIVACION;
   });
   const asesoramientoEInterrupcion = abortoSubservices.find((subservice) => {
-    return subservice.name == LegacyDataAbortoSubservice.ASESORAMIENTO_E_INTERRUPCION
+    return subservice.name == LegacyDataAbortoSubservice.ASESORAMIENTO_E_INTERRUPCION;
   });
 
   if (!noConfirmado) {
-    throw new Error(`No se encontró el siguiente tipo de aborto en la base de datos: \"${LegacyDataAbortoSubservice.NO_CONFIRMADO}\"`);
+    throw new Error(
+      `No se encontró el siguiente tipo de aborto en la base de datos: \"${LegacyDataAbortoSubservice.NO_CONFIRMADO}\"`,
+    );
   }
   if (!soloAsesoramiento) {
-    throw new Error(`No se encontró el siguiente tipo de aborto en la base de datos: \"${LegacyDataAbortoSubservice.SOLO_ASESORAMIENTO}\"`);
+    throw new Error(
+      `No se encontró el siguiente tipo de aborto en la base de datos: \"${LegacyDataAbortoSubservice.SOLO_ASESORAMIENTO}\"`,
+    );
   }
   if (!asesoramientoYDerivacion) {
-    throw new Error(`No se encontró el siguiente tipo de aborto en la base de datos: \"${LegacyDataAbortoSubservice.ASESORAMIENTO_Y_DERIVACION}\"`);
+    throw new Error(
+      `No se encontró el siguiente tipo de aborto en la base de datos: \"${LegacyDataAbortoSubservice.ASESORAMIENTO_Y_DERIVACION}\"`,
+    );
   }
   if (!asesoramientoEInterrupcion) {
-    throw new Error(`No se encontró el siguiente tipo de aborto en la base de datos: \"${LegacyDataAbortoSubservice.ASESORAMIENTO_E_INTERRUPCION}\"`);
+    throw new Error(
+      `No se encontró el siguiente tipo de aborto en la base de datos: \"${LegacyDataAbortoSubservice.ASESORAMIENTO_E_INTERRUPCION}\"`,
+    );
   }
 
   return {
@@ -230,7 +250,7 @@ function getAbortoSubservices(abortoSubservices: Subservice[]): AbortoSubservice
     soloAsesoramiento,
     asesoramientoYDerivacion,
     asesoramientoEInterrupcion,
-  }
+  };
 }
 
 function parseLegacyData(path: string): LegacyDataRecord[] {
@@ -244,7 +264,9 @@ function parseLegacyData(path: string): LegacyDataRecord[] {
       cast: true,
     });
   } catch (e) {
-    throw new Error('Hubo un fallo al leer el archivo en la fase inicial de la importación. Si el error persiste contacte al equipo de desarrollo.');
+    throw new Error(
+      'Hubo un fallo al leer el archivo en la fase inicial de la importación. Si el error persiste contacte al equipo de desarrollo.',
+    );
   }
 
   let row = 1;
@@ -255,7 +277,15 @@ function parseLegacyData(path: string): LegacyDataRecord[] {
       return LegacyDataRecordSchema.parse(record);
     } catch (error) {
       const zodError = error as ZodError;
-      validationErrors.push(`La fila ${row} tiene valores incorrectos en los campos: ` + zodError.issues.map((value) => { return value.path[0] }).join(', ') + '.');
+      validationErrors.push(
+        `La fila ${row} tiene valores incorrectos en los campos: ` +
+          zodError.issues
+            .map((value) => {
+              return value.path[0];
+            })
+            .join(', ') +
+          '.',
+      );
     }
   });
 
@@ -309,18 +339,28 @@ function mapLegacyString(legacyValue: string | undefined): string | null {
 
 function transformSpanishDayToEnglishDay(day: string): Day | null {
   switch (day) {
-    case 'L': return Day['M'];
-    case 'M': return Day['T'];
-    case 'X': return Day['W'];
-    case 'J': return Day['R'];
-    case 'V': return Day['F'];
-    case 'S': return Day['S'];
-    case 'D': return Day['U'];
-    default: return null;
+    case 'L':
+      return Day['M'];
+    case 'M':
+      return Day['T'];
+    case 'X':
+      return Day['W'];
+    case 'J':
+      return Day['R'];
+    case 'V':
+      return Day['F'];
+    case 'S':
+      return Day['S'];
+    case 'D':
+      return Day['U'];
+    default:
+      return null;
   }
 }
 
-function getOpeningTimesFromRecordValue(rawValue: string): Prisma.ServiceOnEstablishmentOpeningTimeCreateNestedManyWithoutServiceOnEstablishmentInput {
+function getOpeningTimesFromRecordValue(
+  rawValue: string,
+): Prisma.ServiceOnEstablishmentOpeningTimeCreateNestedManyWithoutServiceOnEstablishmentInput {
   const rawOpeningTimes = rawValue?.split(';').map((value) => value.trim());
   let openingTimes = undefined;
   if (rawOpeningTimes) {
@@ -328,7 +368,9 @@ function getOpeningTimesFromRecordValue(rawValue: string): Prisma.ServiceOnEstab
       const deconstrutedOpeningTime = rawOpeningTime.split('-');
       const day = transformSpanishDayToEnglishDay(deconstrutedOpeningTime[0]);
       if (!day) {
-        throw new Error('Un horario pasó la fase de validación a pesar de tener un error. Es necesario contactar al equipo de desarrollo.');
+        throw new Error(
+          'Un horario pasó la fase de validación a pesar de tener un error. Es necesario contactar al equipo de desarrollo.',
+        );
       }
       return {
         day: day,
@@ -339,17 +381,20 @@ function getOpeningTimesFromRecordValue(rawValue: string): Prisma.ServiceOnEstab
   }
   if (!openingTimes) {
     return {
-      create: []
-    }
-  }
-  else {
+      create: [],
+    };
+  } else {
     return {
       create: openingTimes,
-    }
+    };
   }
 }
 
-function getSubservicesOnEstablishmentCreate(record: LegacyDataRecord, services: Services, abortoSubservices: AbortoSubservicesData): Prisma.ServiceOnEstablishmentCreateNestedManyWithoutEstablishmentInput {
+function getSubservicesOnEstablishmentCreate(
+  record: LegacyDataRecord,
+  services: Services,
+  abortoSubservices: AbortoSubservicesData,
+): Prisma.ServiceOnEstablishmentCreateNestedManyWithoutEstablishmentInput {
   const servicesOnEstablishment: Prisma.ServiceOnEstablishmentCreateWithoutEstablishmentInput[] = [];
   if (mapLegacyBoolean(record[LegacyDataField.SERVICE_PRESERVATIVOS])) {
     const rawOpeningTimes = record[LegacyDataField.OPENING_TIMES_PRESERVATIVOS];
@@ -358,7 +403,7 @@ function getSubservicesOnEstablishmentCreate(record: LegacyDataRecord, services:
       service: {
         connect: {
           id: services.preservativos.id,
-        }
+        },
       },
       phoneNumber: record[LegacyDataField.PHONE_NUMBER_PRESERVATIVOS],
       email: record[LegacyDataField.EMAIL_PRESERVATIVOS],
@@ -372,8 +417,8 @@ function getSubservicesOnEstablishmentCreate(record: LegacyDataRecord, services:
     servicesOnEstablishment.push({
       service: {
         connect: {
-          id: services.its.id
-        }
+          id: services.its.id,
+        },
       },
       phoneNumber: record[LegacyDataField.PHONE_NUMBER_ITS],
       email: record[LegacyDataField.EMAIL_ITS],
@@ -387,8 +432,8 @@ function getSubservicesOnEstablishmentCreate(record: LegacyDataRecord, services:
     servicesOnEstablishment.push({
       service: {
         connect: {
-          id: services.mac.id
-        }
+          id: services.mac.id,
+        },
       },
       phoneNumber: record[LegacyDataField.PHONE_NUMBER_MAC],
       email: record[LegacyDataField.EMAIL_MAC],
@@ -402,8 +447,8 @@ function getSubservicesOnEstablishmentCreate(record: LegacyDataRecord, services:
     servicesOnEstablishment.push({
       service: {
         connect: {
-          id: services.vacunatorio.id
-        }
+          id: services.vacunatorio.id,
+        },
       },
       phoneNumber: record[LegacyDataField.PHONE_NUMBER_VACUNATORIO],
       email: record[LegacyDataField.EMAIL_VACUNATORIO],
@@ -420,29 +465,29 @@ function getSubservicesOnEstablishmentCreate(record: LegacyDataRecord, services:
         abortoSubserviceConnect = {
           connect: {
             id: abortoSubservices.noConfirmado.id,
-          }
-        }
+          },
+        };
         break;
       case LegacyDataAbortoSubservice.SOLO_ASESORAMIENTO:
         abortoSubserviceConnect = {
           connect: {
             id: abortoSubservices.soloAsesoramiento.id,
-          }
-        }
+          },
+        };
         break;
       case LegacyDataAbortoSubservice.ASESORAMIENTO_Y_DERIVACION:
         abortoSubserviceConnect = {
           connect: {
             id: abortoSubservices.asesoramientoYDerivacion.id,
-          }
-        }
+          },
+        };
         break;
       case LegacyDataAbortoSubservice.ASESORAMIENTO_E_INTERRUPCION:
         abortoSubserviceConnect = {
           connect: {
             id: abortoSubservices.asesoramientoEInterrupcion.id,
-          }
-        }
+          },
+        };
         break;
       default:
         abortoSubserviceConnect = undefined;
@@ -450,8 +495,8 @@ function getSubservicesOnEstablishmentCreate(record: LegacyDataRecord, services:
     servicesOnEstablishment.push({
       service: {
         connect: {
-          id: services.aborto.id
-        }
+          id: services.aborto.id,
+        },
       },
       subservice: abortoSubserviceConnect,
       phoneNumber: record[LegacyDataField.PHONE_NUMBER_PRESERVATIVOS],
@@ -470,11 +515,15 @@ export async function importDataFromCSV(path: string) {
   try {
     services = await findServicesFromDB();
   } catch (e) {
-    throw new Error('La lista de servicios no fue encontrada en la base de dato. Es necesario contactar al equipo de desarrollo.')
+    throw new Error(
+      'La lista de servicios no fue encontrada en la base de dato. Es necesario contactar al equipo de desarrollo.',
+    );
   }
 
   if (!services.aborto.subservices) {
-    throw new Error('La lista de subtipos de aborto no fueron encontrados en la base de datos. Es necesario contactar al equipo de desarrollo.');
+    throw new Error(
+      'La lista de subtipos de aborto no fueron encontrados en la base de datos. Es necesario contactar al equipo de desarrollo.',
+    );
   }
 
   const abortoSubservices = getAbortoSubservices(services.aborto.subservices);
@@ -505,21 +554,27 @@ export async function importDataFromCSV(path: string) {
       dataUpdate.services.deleteMany = {};
     }
     if (legacyId) {
-      transactions.push(prismaClient.establishment.upsert({
-        where: { legacyId },
-        create: dataCreate,
-        update: dataUpdate,
-      }));
+      transactions.push(
+        prismaClient.establishment.upsert({
+          where: { legacyId },
+          create: dataCreate,
+          update: dataUpdate,
+        }),
+      );
     } else {
-      transactions.push(prismaClient.establishment.create({
-        data: dataCreate,
-      }));
+      transactions.push(
+        prismaClient.establishment.create({
+          data: dataCreate,
+        }),
+      );
     }
   }
 
   try {
     await prismaClient.$transaction(transactions);
   } catch (e) {
-    throw new Error('Hubo un fallo al tratar de realizar los cambios en la base de datos. Ninguna modificación o creación de establecimientos fue realizada.');
+    throw new Error(
+      'Hubo un fallo al tratar de realizar los cambios en la base de datos. Ninguna modificación o creación de establecimientos fue realizada.',
+    );
   }
 }
