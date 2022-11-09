@@ -412,24 +412,40 @@ function getSubservicesOnEstablishmentCreate(record: LegacyDataRecord, services:
     });
   }
   if (mapLegacyBoolean(record[LegacyDataField.SERVICE_ABORTO])) {
-    let abortoSubserviceId: string | null = null;
+    let abortoSubserviceConnect = undefined;
     const rawOpeningTimes = record[LegacyDataField.OPENING_TIMES_ABORTO];
     const openingTimes = rawOpeningTimes ? getOpeningTimesFromRecordValue(rawOpeningTimes) : undefined;
     switch (record[LegacyDataField.SERVICE_ABORTO_SUBSERVICE]) {
       case LegacyDataAbortoSubservice.NO_CONFIRMADO:
-        abortoSubserviceId = abortoSubservices.noConfirmado.id;
+        abortoSubserviceConnect = {
+          connect: {
+            id: abortoSubservices.noConfirmado.id,
+          }
+        }
         break;
       case LegacyDataAbortoSubservice.SOLO_ASESORAMIENTO:
-        abortoSubserviceId = abortoSubservices.soloAsesoramiento.id;
+        abortoSubserviceConnect = {
+          connect: {
+            id: abortoSubservices.soloAsesoramiento.id,
+          }
+        }
         break;
       case LegacyDataAbortoSubservice.ASESORAMIENTO_Y_DERIVACION:
-        abortoSubserviceId = abortoSubservices.asesoramientoYDerivacion.id;
+        abortoSubserviceConnect = {
+          connect: {
+            id: abortoSubservices.asesoramientoYDerivacion.id,
+          }
+        }
         break;
       case LegacyDataAbortoSubservice.ASESORAMIENTO_E_INTERRUPCION:
-        abortoSubserviceId = abortoSubservices.asesoramientoEInterrupcion.id;
+        abortoSubserviceConnect = {
+          connect: {
+            id: abortoSubservices.asesoramientoEInterrupcion.id,
+          }
+        }
         break;
       default:
-        abortoSubserviceId = abortoSubservices.noConfirmado.id;
+        abortoSubserviceConnect = undefined;
     }
     servicesOnEstablishment.push({
       service: {
@@ -437,11 +453,7 @@ function getSubservicesOnEstablishmentCreate(record: LegacyDataRecord, services:
           id: services.aborto.id
         }
       },
-      subservice: {
-        connect: {
-          id: abortoSubserviceId,
-        }
-      },
+      subservice: abortoSubserviceConnect,
       phoneNumber: record[LegacyDataField.PHONE_NUMBER_PRESERVATIVOS],
       email: record[LegacyDataField.EMAIL_PRESERVATIVOS],
       details: record[LegacyDataField.DETAILS_PRESERVATIVOS],
