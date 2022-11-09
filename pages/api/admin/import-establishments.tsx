@@ -1,7 +1,8 @@
 import { NextApiHandler, NextApiRequest } from 'next';
 import formidable, { File } from 'formidable';
 import mime from 'mime';
-import { importCSV } from '../../../scripts/importDataFromCSV';
+import { importDataFromCSV } from '../../../scripts/importDataFromCSV';
+import * as fs from 'fs/promises'
 
 export const config = {
   api: {
@@ -11,36 +12,47 @@ export const config = {
 };
 
 const handler: NextApiHandler = async (req, res) => {
-  console.log('Start request');
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'This endpoint only supports POST requests' });
   }
-  
-  try {
-    const {fields, files} = await parseForm(req);
-    console.log(fields, files)
 
+  let filePath = undefined;
+
+  try {
+    const { files } = await parseForm(req); 
     if (files.file instanceof formidable.File) {
-      console.log('Correct file')
-      await importCSV(files.file.filepath);
+      filePath = files.file.filepath;
     } else {
-      console.log('Incorrect file')
+      return res.status(500).json({
+        error: 'La extensión del archivo no es la adecuada o el tamaño es mayor al permitido.'
+      });
     }
-    
-    return res.status(200).json({
-      data: {
-        fields,
-        files,
-      },
-      error: null,
-    });
   } catch (e) {
-    console.log(e);
-    return res.status(500);
+    return res.status(500).json({
+      error: 'Hubo un fallo al recibir el archivo.'
+    });
+  }
+
+  try {
+    if (filePath) {
+      await importDataFromCSV(filePath);
+      await fs.unlink(filePath);
+      return res.status(200).end();
+    } else {
+      return res.status(500).json({
+        error: 'Hubo un fallo al recibir el archivo.'
+      });
+    }
+  } catch (e) {
+    const error = e as Error;
+    await fs.unlink(filePath);
+    return res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
-export const parseForm = async (req: NextApiRequest)
+const parseForm = async (req: NextApiRequest)
     : Promise<{ fields: formidable.Fields; files: formidable.Files }> => {
   return await new Promise(async (resolve, reject) => {
     let maxFileSize = 10;
@@ -48,7 +60,7 @@ export const parseForm = async (req: NextApiRequest)
       maxFileSize = +process.env.IMPORT_MAX_FILE_SIZE;
     }
      
-    let filename = "";
+    let filename = '';
     const form = formidable({
       maxFiles: 1,
       maxFileSize: maxFileSize * 1024 * 1024,

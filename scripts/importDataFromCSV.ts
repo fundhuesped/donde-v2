@@ -1,10 +1,9 @@
 import fs from 'fs';
 import { parse } from 'csv-parse/sync';
-import { literal, z } from 'zod';
-import { Day, Establishment, EstablishmentStatus, EstablishmentType, Prisma, Subservice } from '@prisma/client';
+import { literal, z, ZodError } from 'zod';
+import { Day, EstablishmentStatus, EstablishmentType, Prisma, Subservice } from '@prisma/client';
 import { prismaClient } from '../server/prisma/client';
 import { Service } from '../model/services';
-import { NotFoundError } from '@prisma/client/runtime';
 
 enum LegacyDataField {
   OFFICIAL_ID = 'ID Oficial',
@@ -38,10 +37,10 @@ enum LegacyDataField {
   EMAIL_ITS = 'mail_its',
   DETAILS_ITS = 'comentarios_its',
   OPENING_TIMES_ITS = 'horario_its',
-  PHONE_NUMBER_VACUNATORIO = 'tel_vacunatorio',
-  EMAIL_VACUNATORIO = 'mail_vacunatorio',
-  DETAILS_VACUNATORIO = 'comentarios_vacunatorio',
-  OPENING_TIMES_VACUNATORIO = 'horario_vacunatorio',
+  PHONE_NUMBER_VACUNATORIO = 'tel_vac',
+  EMAIL_VACUNATORIO = 'mail_vac',
+  DETAILS_VACUNATORIO = 'comentarios_vac',
+  OPENING_TIMES_VACUNATORIO = 'horario_vac',
   PHONE_NUMBER_MAC = 'tel_mac',
   EMAIL_MAC = 'mail_mac',
   DETAILS_MAC = 'comentarios_mac',
@@ -91,10 +90,10 @@ const LegacyDataAbortoSubserviceSchema = z.preprocess((val) => val ? val : null,
   LegacyDataAbortoSubservice.ASESORAMIENTO_E_INTERRUPCION,
 ]).nullable()).optional();
 
-const OpeningTimesRegex = /([L, M, X, J, V, S, D]-(([0-2][0-3]|[0-1][0-9]):[0-5][0-9])-(([0-2][0-3]|[0-1][0-9]):[0-5][0-9])(?:\s*;\s*|\s*$))+/
+const OpeningTimesRegex = /(\s*[L, M, X, J, V, S, D]-(([0-2][0-3]|[0-1][0-9]):[0-5][0-9])-(([0-2][0-3]|[0-1][0-9]):[0-5][0-9])\s*;?$)+/
 
 const ServiceOnEstablishmentPhoneNumberSchema = z.preprocess((val) => val ? val : null, z.string().max(100).nullable()).optional();
-const ServiceOnEstablishmentEmailSchema = z.preprocess((val) => val ? val : null, z.string().max(254).nullable()).optional();
+const ServiceOnEstablishmentEmailSchema = z.preprocess((val) => val ? val : null, z.string().email().max(254).nullable()).optional();
 const ServiceOnEstablishmentDetailsSchema = z.preprocess((val) => val ? val : null, z.string().nullable()).optional();
 const ServiceOnEstablishmentOpeningTimes = z.string().regex(OpeningTimesRegex).or(literal('')).optional();
 
@@ -103,13 +102,12 @@ enum LegacyPublishedStatus {
   FALSE = -1,
 }
 
-const emptyStringToNull = z.literal('').transform(() => null)
 const LegacyPublishedStatusSchema = z.union([z.literal(1), z.literal(-1)]);
 
 type LegacyDataRecord = z.infer<typeof LegacyDataRecordSchema>;
 const LegacyDataRecordSchema = z.object({
   [LegacyDataField.OFFICIAL_ID]: z.string().optional(),
-  [LegacyDataField.LEGACY_ID]: z.number(),
+  [LegacyDataField.LEGACY_ID]: z.preprocess((val) => val ? val : null, z.number().nullable()).optional(),
   [LegacyDataField.NAME]: z.string(),
   [LegacyDataField.TYPE]: LegacyDataEstablishmentTypeScheme,
   [LegacyDataField.STREET]: z.union([z.string().min(1).max(200), z.number()]),
@@ -215,16 +213,16 @@ function getAbortoSubservices(abortoSubservices: Subservice[]): AbortoSubservice
   });
 
   if (!noConfirmado) {
-    throw new NotFoundError('Aborto subservice "no confirmado" not found');
+    throw new Error(`No se encontró el siguiente tipo de aborto en la base de datos: \"${LegacyDataAbortoSubservice.NO_CONFIRMADO}\"`);
   }
   if (!soloAsesoramiento) {
-    throw new NotFoundError('Aborto subservice "no confirmado" not found');
+    throw new Error(`No se encontró el siguiente tipo de aborto en la base de datos: \"${LegacyDataAbortoSubservice.SOLO_ASESORAMIENTO}\"`);
   }
   if (!asesoramientoYDerivacion) {
-    throw new NotFoundError('Aborto subservice "asesoramiento y derivación" not found');
+    throw new Error(`No se encontró el siguiente tipo de aborto en la base de datos: \"${LegacyDataAbortoSubservice.ASESORAMIENTO_Y_DERIVACION}\"`);
   }
   if (!asesoramientoEInterrupcion) {
-    throw new NotFoundError('Aborto subservice "asesoramiento e interrupción" not found');
+    throw new Error(`No se encontró el siguiente tipo de aborto en la base de datos: \"${LegacyDataAbortoSubservice.ASESORAMIENTO_E_INTERRUPCION}\"`);
   }
 
   return {
@@ -236,27 +234,35 @@ function getAbortoSubservices(abortoSubservices: Subservice[]): AbortoSubservice
 }
 
 function parseLegacyData(path: string): LegacyDataRecord[] {
-  console.info('Parsing legacy data...');
-  const buffer = fs.readFileSync(path);
-  const records = parse(buffer, {
-    columns: true,
-    skip_empty_lines: true,
-    trim: true,
-    cast: true,
-  });
+  let records = undefined;
+  try {
+    const buffer = fs.readFileSync(path);
+    records = parse(buffer, {
+      columns: true,
+      skip_empty_lines: true,
+      trim: true,
+      cast: true,
+    });
+  } catch (e) {
+    throw new Error('Hubo un fallo al leer el archivo en la fase inicial de la importación. Si el error persiste contacte al equipo de desarrollo.');
+  }
 
-  console.log('dfsdf')
-
+  let row = 1;
+  let validationErrors: string[] = [];
   const data = records.map((record: unknown) => {
     try {
+      row++;
       return LegacyDataRecordSchema.parse(record);
-    } catch (e) {
-      console.dir(record, { depth: null });
-      throw e;
+    } catch (error) {
+      const zodError = error as ZodError;
+      validationErrors.push(`La fila ${row} tiene valores incorrectos en los campos: ` + zodError.issues.map((value) => { return value.path[0] }).join(', ') + '.');
     }
   });
 
-  console.info('Done parsing legacy data...');
+  if (validationErrors.length > 0) {
+    throw new Error(validationErrors.join('\n'));
+  }
+
   return data;
 }
 
@@ -322,7 +328,7 @@ function getOpeningTimesFromRecordValue(rawValue: string): Prisma.ServiceOnEstab
       const deconstrutedOpeningTime = rawOpeningTime.split('-');
       const day = transformSpanishDayToEnglishDay(deconstrutedOpeningTime[0]);
       if (!day) {
-        throw new Error('Day is not set correctly.');
+        throw new Error('Un horario pasó la fase de validación a pesar de tener un error. Es necesario contactar al equipo de desarrollo.');
       }
       return {
         day: day,
@@ -445,31 +451,23 @@ function getSubservicesOnEstablishmentCreate(record: LegacyDataRecord, services:
   return { create: servicesOnEstablishment };
 }
 
-export async function importCSV(path: string) {
-  let legacyData;
+export async function importDataFromCSV(path: string) {
+  const legacyData = parseLegacyData(path);
+
+  let services = undefined;
   try {
-    legacyData = parseLegacyData(path);
-  } catch (error) {
-    console.error(error);
+    services = await findServicesFromDB();
+  } catch (e) {
+    throw new Error('La lista de servicios no fue encontrada en la base de dato. Es necesario contactar al equipo de desarrollo.')
   }
-
-  if (!legacyData) {
-    throw new Error('Parsing was not done correctly');
-  }
-
-  const services = await findServicesFromDB();
 
   if (!services.aborto.subservices) {
-    throw new Error('Aborto subservices not found');
+    throw new Error('La lista de subtipos de aborto no fueron encontrados en la base de datos. Es necesario contactar al equipo de desarrollo.');
   }
 
   const abortoSubservices = getAbortoSubservices(services.aborto.subservices);
 
-  let successCount = 0;
-  const failedRecords: { record: LegacyDataRecord; error: unknown }[] = [];
   let transactions = [];
-  console.info('---');
-  console.info('Upserting establishments...');
   for (const record of legacyData) {
     const legacyId = record[LegacyDataField.LEGACY_ID];
     const dataCreate: Prisma.EstablishmentCreateInput = {
@@ -487,21 +485,29 @@ export async function importCSV(path: string) {
       longitude: record[LegacyDataField.LONGITUDE],
       details: record[LegacyDataField.DETAILS],
       officialId: record[LegacyDataField.OFFICIAL_ID],
-      legacyId,
+      legacyId: legacyId ? legacyId : undefined,
       services: getSubservicesOnEstablishmentCreate(record, services, abortoSubservices),
     };
     const dataUpdate = JSON.parse(JSON.stringify(dataCreate)) as Prisma.EstablishmentUpdateInput;
     if (dataUpdate.services) {
       dataUpdate.services.deleteMany = {};
     }
-    transactions.push(prismaClient.establishment.upsert({
+    if (legacyId) {
+      transactions.push(prismaClient.establishment.upsert({
         where: { legacyId },
         create: dataCreate,
         update: dataUpdate,
-    }));
+      }));
+    } else {
+      transactions.push(prismaClient.establishment.create({
+        data: dataCreate,
+      }));
+    }
   }
 
-  await prismaClient.$transaction(transactions);
-
-  console.info(`Done upserting establishments.`);
+  try {
+    await prismaClient.$transaction(transactions);
+  } catch (e) {
+    throw new Error('Hubo un fallo al tratar de realizar los cambios en la base de datos. Ninguna modificación o creación de establecimientos fue realizada.');
+  }
 }
