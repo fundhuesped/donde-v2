@@ -61,8 +61,6 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
   useEffect(() => {
     setFilteredEstablishments(
       establishments?.filter((establishment: Establishment) => {
-        console.log(queryFilter);
-
         if (queryFilter.length > 0) {
           return (
             queryFilter.includes(establishment.country) ||

@@ -5,9 +5,6 @@ const usePaginator = (arr = [], size = 10) => {
 
   const arrCopy = [...arr];
   const pages = Math.ceil(arrCopy.length / size);
-  console.log(arrCopy.length);
-  console.log(pages);
-
   var startPage: number, endPage: number;
 
   if (pages <= 10) {
