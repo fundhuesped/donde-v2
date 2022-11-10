@@ -1,51 +1,48 @@
-import { ChevronLeftIcon } from '@heroicons/react/outline';
-import { ChevronRightIcon } from '@heroicons/react/solid';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline';
 
 type Props = React.PropsWithChildren<{
-  onChange?: (e: any) => void;
+  setPageNumber: (e: any) => void;
+  pagesList: number[];
+  pageNumber: number;
+  pages: number;
 }>;
 
 const Pagination = (props: Props) => {
-  const { onChange } = props;
+  const { pages, setPageNumber, pagesList, pageNumber } = props;
+
+  const selectedClassName = 'border-red-300 bg-secondary text-primary';
+
   return (
     <div className="w-full flex justify-center mt-6">
       <ul className="inline-flex items-center -space-x-px">
         <li>
-          <button className="py-2 px-3 leading-tight rounded-l-lg  text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+          <button
+            className="py-2 px-3 leading-tight rounded-l-lg  text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+            onClick={() => setPageNumber(pageNumber != 1 ? pageNumber - 1 : pageNumber)}
+          >
             <span className="sr-only">Previous</span>
             <ChevronLeftIcon className="w-5 text-primary"></ChevronLeftIcon>
           </button>
         </li>
-        <li>
-          <button className="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
-            1
-          </button>
-        </li>
-        <li>
-          <button className="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
-            2
-          </button>
-        </li>
+        {pagesList.map((pagesNumber) => {
+          return (
+            <li key={`page-${pagesNumber}`}>
+              <button
+                className={`py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-primary ${
+                  pagesNumber == pageNumber && selectedClassName
+                }`}
+                onClick={() => setPageNumber(pagesNumber)}
+              >
+                {pagesNumber}
+              </button>
+            </li>
+          );
+        })}
         <li>
           <button
-            aria-current="page"
-            className="z-10 py-2 px-3 leading-tight text-primary bg-secondary border border-red-300 hover:bg-secondary hover:text-primary dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+            className="block py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+            onClick={() => setPageNumber(pageNumber != pagesList.length ? pageNumber + 1 : pageNumber)}
           >
-            3
-          </button>
-        </li>
-        <li>
-          <button className="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
-            4
-          </button>
-        </li>
-        <li>
-          <button className="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
-            5
-          </button>
-        </li>
-        <li>
-          <button className="block py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
             <span className="sr-only">Next</span>
             <ChevronRightIcon className="w-5 text-primary"></ChevronRightIcon>
           </button>

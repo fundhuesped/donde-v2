@@ -76,7 +76,7 @@ model Subservice {
 model Establishment {
   id           String                        @id @default(uuid()) @db.Uuid
   officialId   String?                       @db.VarChar(100)
-  legacyId     Int?                          @unique
+  legacyId     Int                           @default(autoincrement()) @unique
   name         String                        @db.VarChar(100)
   services     ServiceOnEstablishment[]
   type         EstablishmentType

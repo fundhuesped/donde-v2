@@ -1,4 +1,5 @@
-import { DocumentTextIcon, PaperClipIcon, XIcon } from '@heroicons/react/outline';
+import { CheckIcon, DocumentTextIcon, InformationCircleIcon, PaperClipIcon, XIcon } from '@heroicons/react/outline';
+import axios from 'axios';
 import React, { useState } from 'react';
 import Loading from '../Loading';
 import { Modal } from '../Modal';
@@ -9,9 +10,12 @@ type Props = React.PropsWithChildren<{
 }>;
 const ImportModal = (props: Props) => {
   const { showModal, setShowModal } = props;
+  // @ts-ignore
   const [file, setFile] = useState<{ data }>();
   const [name, setName] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [response, setResponse] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const onFileChange = (e: React.FormEvent<HTMLInputElement>) => {
     const eventTarget = e.target as HTMLInputElement;
@@ -27,16 +31,31 @@ const ImportModal = (props: Props) => {
 
   const save = async () => {
     const formData = new FormData();
+
     if (file) {
-      formData.append('file_path', file.data, file.data.name);
+      formData.append('file', file.data);
+    } else {
+      setError('Seleccione un archivo');
+      return null;
     }
 
     setLoading(true);
-    // const resp = await axios.post(`file/import`, formData, 'POST');
-    // setShowModal(false);
-  };
 
-  console.log(name, file);
+    try {
+      await axios.post(`/api/admin/import-establishments`, formData).then((resp) => {
+        setError(null);
+        setResponse('Import exitoso!');
+        setLoading(false);
+      });
+    } catch (e: any) {
+      if (e.response.data.error) {
+        setError(e.response.data.error);
+      } else {
+        setError('Error del servidor, vuelva a intentarlo');
+      }
+      setLoading(false);
+    }
+  };
 
   return (
     <Modal bg={'bg-white'} width={'w-[32rem]'} rounded={'rounded-md'} showModal={showModal} className={'bg-neutral-600/50 '}>
@@ -45,11 +64,12 @@ const ImportModal = (props: Props) => {
           <XIcon className="mr-4 mt-4 text-primary w-4.5"></XIcon>
         </button>
       </div>
-      {loading ? (
+      {loading && (
         <div className="w-full flex justify-center p-8 mb-6">
           <Loading />
         </div>
-      ) : (
+      )}
+      {!response && !loading && (
         <div className="flex items-left justify-center flex-col px-12 py-1 pb-8 rounded-b ">
           <div className="w-full">
             <h2 className="text-2xl font-semibold py-3 text-black">Importar base de establecimientos</h2>
@@ -81,11 +101,6 @@ const ImportModal = (props: Props) => {
                 </button>
               </div>
             )}
-
-            {/* <p className={'flex justify-between my-4 p-2 bg-ultra-light-salmon rounded-2xl '}>
-                    <InformationCircleIcon className='w-6 text-primary mx-3'/> 
-                    <span className='font-light text-sm'>Si no aplicó ningún filtro, se descargará la base de establacimientos completa.</span> 
-                </p> */}
           </div>
           <div className="w-full flex justify-center py-3">
             <button
@@ -105,6 +120,22 @@ const ImportModal = (props: Props) => {
               Importar
             </button>
           </div>
+        </div>
+      )}
+      {response && (
+        <div className="w-full h-30 flex justify-center mb-6">
+          <p className={'flex justify-between my-4 p-2 bg-green-100 rounded-2xl mx-6'}>
+            <CheckIcon className="w-6 text-green-400 mx-3" />
+            <span className="font-light text-sm mr-2">{response}</span>
+          </p>
+        </div>
+      )}
+      {error && (
+        <div className="w-full h-30 flex justify-center mb-6 ">
+          <p className={'flex justify-between my-4 p-2 bg-ultra-light-salmon rounded-2xl mx-6'}>
+            <InformationCircleIcon className="w-6 text-primary mx-3" />
+            <span className="font-light text-sm mr-2">{error}</span>
+          </p>
         </div>
       )}
     </Modal>

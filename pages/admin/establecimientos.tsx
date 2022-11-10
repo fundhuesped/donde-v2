@@ -4,22 +4,21 @@ import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import Pagination from 'react-js-pagination';
 import useSWR from 'swr';
 import { AddEstablishmentButton } from '../../components/Buttons/AddEstablishmentButton';
-import DownloadButton from '../../components/Buttons/DownloadButton';
 import { ImportEstablishmentButton } from '../../components/Buttons/ImportEstablishmentButton';
-import { EstablishmentModel } from '../../components/Establishment/EstablishmentAdmin';
 import Loading from '../../components/Loading';
 import ImportModal from '../../components/Modal/ImportModal';
+import Pagination from '../../components/Pagination';
 import { Pill } from '../../components/Pill';
 import { Search } from '../../components/Search';
 import Filtros from '../../components/Table/AdminEstablecimientosTable/Filter/Filtros';
+import { establishmentTypes } from '../../components/Table/AdminEstablecimientosTable/Filter/types';
 import Table from '../../components/Table/AdminEstablecimientosTable/Table';
+import { usePaginator } from '../../hooks/usePaginator';
 import { Establishment } from '../../model/establishment';
 import { Service, serviceSchema } from '../../model/services';
 import { prismaClient } from '../../server/prisma/client';
-import styles from '../../styles/app.module.css';
 type ServerSideProps = {
   availableServices: Service[];
 };
@@ -40,30 +39,24 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () 
 const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices }) => {
   const router = useRouter();
   const [importModal, setImportModal] = useState<boolean>(false);
-  const [descargarModal, setDescargarModal] = useState<boolean>(false);
+  // const [descargarModal, setDescargarModal] = useState<boolean>(false);
   const [querySearch, setQuerySearch] = useState<string>('');
   const [filters, setFilters] = useState<any>(() => new Set<string>());
-  const [isLoading, setIsLoading] = useState(false);
-  const [pageParam, setPageParam] = useState('per_page=4&page=1');
+  const [isLoading, setIsLoading] = useState(true);
 
   const queryFilter = Array.from(filters);
   const [filteredEstablishments, setFilteredEstablishments] = useState<any>([]);
 
-  const onEstablishmentChage = (data: EstablishmentModel[]) => {
-    if (data?.length > 0) {
-      setPageParam(`id=${data[0].id}&per_page=4&page=1`);
-    } else {
-      setPageParam(`per_page=4&page=1`);
-    }
-  };
-
-  const onPaginateChange = (pageNumber: number) => {
-    setPageParam(`per_page=4&page=${pageNumber}`);
-  };
-
   const { data: establishments } = useSWR(router.isReady ? '/api/establishments' : null, (url) =>
-    axios.get(url, { params: pageParam }).then((res) => res.data),
+    axios.get(url).then((res) => res.data),
   );
+
+  const { items, pages, pagesList, setPageNumber, pageNumber } = usePaginator(filteredEstablishments, 10);
+
+  const setType = (type: string) => {
+    const filtered = establishmentTypes.find((types) => types.id == type && types.name);
+    return filtered?.name;
+  };
 
   useEffect(() => {
     setFilteredEstablishments(
@@ -71,8 +64,8 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
         if (queryFilter.length > 0) {
           return (
             queryFilter.includes(establishment.country) ||
-            queryFilter.includes(establishment.type) ||
-            establishment.services.filter((service) => queryFilter.includes(service.service.name)).length !== 0
+            queryFilter.includes(setType(establishment.type)) ||
+            establishment.services.filter((service) => queryFilter.includes(service.service.id)).length !== 0
           );
         }
         if (querySearch) {
@@ -81,10 +74,10 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
             establishment.street.toLowerCase().includes(querySearch.toLowerCase())
           );
         }
+        setIsLoading(false);
         return establishment;
       }),
     );
-    onEstablishmentChage(establishments);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [establishments, setFilters, filters, querySearch]);
 
@@ -95,7 +88,6 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
       return next;
     });
   };
-  console.log(pageParam);
 
   return (
     <>
@@ -135,19 +127,13 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
                   </>
                 ))}
             </div>
-            <div className="">
+            {/* <div className="">
               <DownloadButton onClick={() => setDescargarModal(true)} />
-            </div>
+            </div> */}
           </div>
+          <Table establishments={items} setFilteredEstablishments={setFilteredEstablishments} />
           <div className="w-full flex justify-center mb-4">{isLoading && <Loading />}</div>
-          <Table establishments={filteredEstablishments} setFilteredEstablishments={setFilteredEstablishments} />
-          <Pagination
-            onChange={onPaginateChange}
-            activePage={1}
-            itemsCountPerPage={10}
-            totalItemsCount={40}
-            innerClass={styles.paginateTable}
-          />
+          <Pagination pages={pages} pagesList={pagesList} setPageNumber={setPageNumber} pageNumber={pageNumber}></Pagination>
           {importModal ? <ImportModal showModal={importModal} setShowModal={setImportModal} /> : ''}
           {/* {descargarModal ? <DescargarModal showModal={descargarModal} setShowModal={setDescargarModal} /> : ''} */}
         </div>

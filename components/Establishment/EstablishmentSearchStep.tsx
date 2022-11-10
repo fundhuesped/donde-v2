@@ -21,13 +21,6 @@ export const EstablishmentSearchStep = React.forwardRef<HTMLInputElement, Establ
       setIsValid(validationFields.every((field) => !isNil(field)));
     }, [name, address, latitude, longitude]);
 
-    useEffect(() => {
-      if (searchLocationParam) {
-        onChange({ currentTarget: { value: searchLocationParam as string, name: 'address' } });
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     return (
       <>
         <input

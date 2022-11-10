@@ -1,8 +1,7 @@
 import React from 'react';
 import { Service } from '../../../../model/services';
-import { countries } from './countries';
-import { establishmentTypes } from './establishmentTypes';
 import MultipleSelect from './MultipleSelect';
+import { countries, establishmentTypes } from './types';
 
 type Props = React.PropsWithChildren<{
   services: Service[];
