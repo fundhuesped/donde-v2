@@ -103,9 +103,7 @@ const OpeningTimesRegex =
 const ServiceOnEstablishmentPhoneNumberSchema = z
   .preprocess((val) => (val ? val : null), z.string().max(100).nullable())
   .optional();
-const ServiceOnEstablishmentEmailSchema = z
-  .preprocess((val) => (val ? val : null), z.string().max(254).nullable())
-  .optional();
+const ServiceOnEstablishmentEmailSchema = z.preprocess((val) => (val ? val : null), z.string().max(254).nullable()).optional();
 const ServiceOnEstablishmentDetailsSchema = z.preprocess((val) => (val ? val : null), z.string().nullable()).optional();
 const ServiceOnEstablishmentOpeningTimes = z.string().regex(OpeningTimesRegex).or(literal('')).optional();
 
