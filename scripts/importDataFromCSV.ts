@@ -104,7 +104,7 @@ const ServiceOnEstablishmentPhoneNumberSchema = z
   .preprocess((val) => (val ? val : null), z.string().max(100).nullable())
   .optional();
 const ServiceOnEstablishmentEmailSchema = z
-  .preprocess((val) => (val ? val : null), z.string().email().max(254).nullable())
+  .preprocess((val) => (val ? val : null), z.string().max(254).nullable())
   .optional();
 const ServiceOnEstablishmentDetailsSchema = z.preprocess((val) => (val ? val : null), z.string().nullable()).optional();
 const ServiceOnEstablishmentOpeningTimes = z.string().regex(OpeningTimesRegex).or(literal('')).optional();
@@ -118,9 +118,9 @@ const LegacyPublishedStatusSchema = z.union([z.literal(1), z.literal(-1)]);
 
 type LegacyDataRecord = z.infer<typeof LegacyDataRecordSchema>;
 const LegacyDataRecordSchema = z.object({
-  [LegacyDataField.OFFICIAL_ID]: z.string().optional(),
+  [LegacyDataField.OFFICIAL_ID]: z.string().max(100).optional(),
   [LegacyDataField.LEGACY_ID]: z.preprocess((val) => (val ? val : null), z.number().nullable()).optional(),
-  [LegacyDataField.NAME]: z.string(),
+  [LegacyDataField.NAME]: z.string().min(1).max(100),
   [LegacyDataField.TYPE]: LegacyDataEstablishmentTypeScheme,
   [LegacyDataField.STREET]: z.union([z.string().min(1).max(200), z.number()]),
   [LegacyDataField.STREET_NUMBER]: z.union([z.string().max(100), z.number()]).optional(),
@@ -274,6 +274,7 @@ function parseLegacyData(path: string): LegacyDataRecord[] {
   const data = records.map((record: unknown) => {
     try {
       row++;
+      console.log(record);
       return LegacyDataRecordSchema.parse(record);
     } catch (error) {
       const zodError = error as ZodError;
