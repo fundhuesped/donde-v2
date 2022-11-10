@@ -61,11 +61,13 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
   useEffect(() => {
     setFilteredEstablishments(
       establishments?.filter((establishment: Establishment) => {
+        console.log(queryFilter);
+
         if (queryFilter.length > 0) {
           return (
             queryFilter.includes(establishment.country) ||
             queryFilter.includes(setType(establishment.type)) ||
-            establishment.services.filter((service) => queryFilter.includes(service.service.id)).length !== 0
+            establishment.services.filter((service) => queryFilter.includes(service.service.name)).length !== 0
           );
         }
         if (querySearch) {
