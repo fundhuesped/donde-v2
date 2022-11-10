@@ -9,7 +9,7 @@ const DownloadButton = (props: Props) => {
       <span className="mr-1 mt-0.5">
         <CloudDownloadIcon className=" w-4 mx-1 text-primary" />
       </span>
-      Descargar búsqueda
+      Descargar búsqueda (.csv)
     </button>
   );
 };

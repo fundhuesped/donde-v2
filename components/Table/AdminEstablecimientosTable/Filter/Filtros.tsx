@@ -14,7 +14,7 @@ const Filtros = (props: Props) => {
   const { filters, setFilters, services } = props;
 
   return (
-    <div className="w-full flex">
+    <div className="w-full flex flex-col lg:flex-row">
       <h4 className={'text-sm font-medium text-black mt-10 mx-4'}>Filtros:</h4>
       <MultipleSelect
         className={'mr-2'}

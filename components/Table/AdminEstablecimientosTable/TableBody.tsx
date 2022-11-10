@@ -1,5 +1,8 @@
 import { PencilIcon, TrashIcon } from '@heroicons/react/outline';
+import axios from 'axios';
 import classNames from 'classnames';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { ReactNode, useState } from 'react';
 import { SERVICE_ICONS } from '../../../config/services';
 import { ServiceIcon } from '../../../model/services';
@@ -23,11 +26,26 @@ const Cell = React.memo<CellProps>((props) => {
 
 export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
   const { establishments } = props;
+  const router = useRouter();
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [error, setError] = useState(false);
+
+  const deleteEstablishment = async (establishmentId?: string) => {
+    if (establishmentId) {
+      try {
+        await axios.delete(`/api/establishments/${establishmentId}`).then((resp) => {
+          router.reload();
+        });
+      } catch (e: any) {
+        setError(true);
+      }
+    }
+  };
 
   return (
     <>
       <tbody className="text-sm text-black">
+        {error && <p className="text-primary font-semibold text-sm">Hubo error en el servidor</p>}
         {establishments &&
           establishments.map((establishment, index) => {
             return (
@@ -37,6 +55,7 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
                   {establishment.street} {establishment.streetNumber}
                 </Cell>
                 <Cell>{establishment.city}</Cell>
+                <Cell>{establishment.department}</Cell>
                 <Cell>
                   <div className="flex">
                     {establishment.services.map((service) => {
@@ -57,22 +76,18 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
                 <Cell> {establishment.country} </Cell>
                 <Cell className="py-3 text-right flex">
                   <>
+                    <Link href={`/establecimientos/editar/${establishment.id}`}>
+                      {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                      <div className="w-fit p-1 flex aling-center justify-center text-sm mr-2 rounded-xl cursor-pointer border border-primary">
+                        <PencilIcon className="text-primary w-6 h-6 p-1 mr-1" />
+                        <span className="mr-2 mt-0.5 text-primary">Editar</span>
+                      </div>
+                    </Link>
                     <button
-                      className="btn-secondary w-fit p-1 flex aling-center justify-center text-sm mr-2 rounded-xl"
+                      className="inherit w-1/3 flex aling-center justify-center text-sm"
                       type="button"
-                      onClick={() => setShowModal(true)}
+                      onClick={() => deleteEstablishment(establishment.id)}
                     >
-                      <PencilIcon className="text-primary w-6 h-6 p-1 mr-1" />
-                      <span className="mr-2 mt-0.5">Editar</span>
-                    </button>
-                    <button
-                      className="btn-secondary w-fit p-1 flex aling-center justify-center text-sm mr-2 rounded-xl"
-                      type="button"
-                    >
-                      <PencilIcon className="text-primary w-6 h-6 p-1 mr-1" />
-                      <span className="mr-2 mt-0.5">Editar</span>
-                    </button>
-                    <button className="inherit w-1/3 flex aling-center justify-center text-sm" type="button" onClick={() => ''}>
                       <TrashIcon className="mx-1 text-primary w-5 mt-1.5"></TrashIcon>
                     </button>
                   </>

@@ -17,7 +17,7 @@ export const ContactInfoField = (props: ContactInfoFieldProps) => {
         className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0  invalid:bg-red-400 invalid:font-semibold'}
         placeholder={'Sitio web: https://ejemplo.org'}
         onChange={onChange}
-        value={website ? website : ''}
+        value={website ? website : undefined}
       />
       {/* <input
         name={'phone'}

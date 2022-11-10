@@ -38,7 +38,8 @@ const TableHead = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
         <tr className="text-sm text-black font-light">
           <ColumnHeader>Nombre</ColumnHeader>
           <ColumnHeader>Dirección</ColumnHeader>
-          <ColumnHeader onColumnSort={() => onColumnSort('createdAt')}>Zona</ColumnHeader>
+          <ColumnHeader onColumnSort={() => onColumnSort('city')}>Ciudad</ColumnHeader>
+          <ColumnHeader onColumnSort={() => onColumnSort('department')}>Provincia</ColumnHeader>
           <ColumnHeader>Servicios</ColumnHeader>
           <ColumnHeader>País</ColumnHeader>
           <ColumnHeader className={'text-center'}>Acciones</ColumnHeader>

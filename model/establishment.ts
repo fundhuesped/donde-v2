@@ -14,7 +14,7 @@ export const createEstablishmentSchema = yup.object({
   apartment: yup.string(),
   intersection: yup.string(),
   details: yup.string(),
-  website: yup.string().matches(urlRegex, 'Website is not valid'),
+  website: yup.string().matches(urlRegex, 'Website is not valid').nullable(),
   city: yup.string().required(),
   department: yup.string().required(),
   province: yup.string().required(),
@@ -33,7 +33,7 @@ export const editEstablishmentSchema = yup.object({
   apartment: yup.string(),
   intersection: yup.string(),
   details: yup.string(),
-  website: yup.string().matches(urlRegex, 'Website is not valid'),
+  website: yup.string().matches(urlRegex, 'Website is not valid').nullable(),
   city: yup.string(),
   department: yup.string(),
   province: yup.string(),
@@ -48,12 +48,12 @@ export type Establishment = {
   officialId: string | null;
   name: string;
   type:
-    | 'HEALTH_ESTABLISHMENT'
-    | 'SOCIAL_ORGANIZATION'
-    | 'PUBLIC_INSTITUTION'
-    | 'PRIVATE_INSTITUTION'
-    | 'EDUCATIONAL_INSTITUTION'
-    | 'OTHER';
+  | 'HEALTH_ESTABLISHMENT'
+  | 'SOCIAL_ORGANIZATION'
+  | 'PUBLIC_INSTITUTION'
+  | 'PRIVATE_INSTITUTION'
+  | 'EDUCATIONAL_INSTITUTION'
+  | 'OTHER';
   street: string;
   streetNumber: string | null;
   apartment: string | null;

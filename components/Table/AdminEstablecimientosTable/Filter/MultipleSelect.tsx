@@ -26,6 +26,10 @@ const MultipleSelect = (props: Props) => {
     }
   };
 
+  const handleChecked = (filter: string) => {
+    const check = filters.has(filter);
+    return check;
+  };
   return (
     <>
       <div className={`relative inline-block text-left w-full ${className}`}>
@@ -60,6 +64,7 @@ const MultipleSelect = (props: Props) => {
                       id={`${item.name}-checkbox`}
                       type="checkbox"
                       value=""
+                      checked={handleChecked(item.name)}
                       className="form-check-input appearance-none w-4 h-4 text-black bg-gray-200 rounded border-gray-300 focus:ring-1 checked:bg-primary checked:border-primary"
                       onChange={() => handleChange(item.name)}
                     />

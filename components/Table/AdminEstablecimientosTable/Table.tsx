@@ -1,37 +1,25 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import useSWR from 'swr';
-import { SignupRequest, SignupRequests, signupRequestsSchema } from '../../../model/signup';
+import React, { useState } from 'react';
 import { EstablishmentModel } from '../../Establishment/EstablishmentAdmin';
+import Loading from '../../Loading';
 import { TableBody } from './TableBody';
 import TableHead from './TableHead';
 
 type Props = React.PropsWithChildren<{
   className?: string;
   establishments: EstablishmentModel[];
+  setFilteredEstablishments: (x: any) => void;
 }>;
 
-const Table = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
-  const { establishments } = props;
-  const [query, setQuery] = useState('');
+const Table = React.forwardRef<HTMLDivElement, Props>((props) => {
+  const { establishments, setFilteredEstablishments } = props;
   const [sortField, setSortField] = useState('');
   const [order, setOrder] = useState('asc');
 
-  const { data, mutate } = useSWR('/api/admin/registros', (url) => axios.get(url).then((res) => res.data));
-
-  const [signupRequests, setSignupRequests] = useState<SignupRequests>([]);
-  useEffect(() => {
-    if (signupRequestsSchema.isValidSync(data)) {
-      setSignupRequests(data);
-    }
-  }, [data]);
-
-  const [filteredSolicitudes, setFilteredSolicitudes] = useState<SignupRequests>([]);
-
   const handleSorting = (sortField: string, sortOrder: string) => {
-    const sortFieldKey = sortField as keyof SignupRequest;
+    const sortFieldKey = sortField as keyof EstablishmentModel;
+
     if (sortField) {
-      const sorted = [...filteredSolicitudes].sort((a, b) => {
+      const sorted = [...establishments].sort((a, b) => {
         const aField = a[sortFieldKey];
         if (aField === undefined || aField === null) {
           return 1;
@@ -46,7 +34,7 @@ const Table = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
           }) * (sortOrder === 'asc' ? 1 : -1)
         );
       });
-      setFilteredSolicitudes(sorted);
+      setFilteredEstablishments(sorted);
     }
   };
 
@@ -57,23 +45,18 @@ const Table = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
     handleSorting(accessor, sortOrder);
   };
 
-  useEffect(() => {
-    setFilteredSolicitudes(
-      signupRequests.filter(
-        (solicitudes) =>
-          solicitudes.firstName.toLowerCase().includes(query.toLowerCase()) ||
-          solicitudes.lastName.toLowerCase().includes(query.toLowerCase()),
-      ),
-    );
-  }, [signupRequests, setQuery, query]);
-
-  return (
-    <div className="table w-full">
+  return establishments != null ? (
+    <div className="table-auto w-full mb-12 lg:mb-0 lg:max-h-[calc(100vh_-_310px)] overflow-x-auto lg:overflow-x-hidden overflow-y-auto scroll-style">
       <table className="w-full text-sm text-left text-gray-500">
         <TableHead onColumnSort={onColumnSort} />
         <TableBody establishments={establishments} />
       </table>
     </div>
+  ) : (
+    <div className="flex justify-center p-6">
+      <Loading></Loading>
+    </div>
   );
 });
+
 export default Table;
