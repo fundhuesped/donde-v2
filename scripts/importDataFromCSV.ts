@@ -277,12 +277,12 @@ function parseLegacyData(path: string): LegacyDataRecord[] {
       const zodError = error as ZodError;
       validationErrors.push(
         `La fila ${row} tiene valores incorrectos en los campos: ` +
-        zodError.issues
-          .map((value) => {
-            return value.path[0];
-          })
-          .join(', ') +
-        '.',
+          zodError.issues
+            .map((value) => {
+              return value.path[0];
+            })
+            .join(', ') +
+          '.',
       );
     }
   });
@@ -571,7 +571,6 @@ export async function importDataFromCSV(path: string) {
   try {
     await prismaClient.$transaction(transactions);
   } catch (e) {
-
     throw new Error(
       'Hubo un fallo al tratar de realizar los cambios en la base de datos. Ninguna modificación o creación de establecimientos fue realizada.',
     );

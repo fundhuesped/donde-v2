@@ -1,62 +1,56 @@
-import { useState } from 'react'
+import { useState } from 'react';
 
 const usePaginator = (arr = [], size = 10) => {
-    const [pageNumber, setPageNumber] = useState(1)
+  const [pageNumber, setPageNumber] = useState(1);
 
+  const arrCopy = [...arr];
+  const pages = Math.ceil(arrCopy.length / size);
+  console.log(arrCopy.length);
+  console.log(pages);
 
-    const arrCopy = [...arr]
-    const pages = Math.ceil(arrCopy.length / size)
-    console.log(arrCopy.length);
-    console.log(pages);
+  var startPage: number, endPage: number;
 
-    var startPage: number, endPage: number;
+  if (pages <= 10) {
+    // less than 10 total pages so show all
 
-    if (pages <= 10) {
+    startPage = 1;
 
-        // less than 10 total pages so show all
+    endPage = pages;
+  } else {
+    // more than 10 total pages so calculate start and end pages
 
-        startPage = 1;
+    if (pageNumber <= 6) {
+      startPage = 1;
+      endPage = 10;
+    } else if (pageNumber + 4 >= pages) {
+      startPage = pages - 9;
 
-        endPage = pages;
-
+      endPage = pages;
     } else {
+      startPage = pageNumber - 5;
 
-        // more than 10 total pages so calculate start and end pages
-
-        if (pageNumber <= 6) { startPage = 1; endPage = 10; } else if (pageNumber + 4 >= pages) {
-
-            startPage = pages - 9;
-
-            endPage = pages;
-
-        } else {
-
-            startPage = pageNumber - 5;
-
-            endPage = pageNumber + 4;
-
-        }
-
+      endPage = pageNumber + 4;
     }
+  }
 
-    // calculate start and end item indexes
+  // calculate start and end item indexes
 
-    var startIndex = (pageNumber - 1) * size;
+  var startIndex = (pageNumber - 1) * size;
 
-    var endIndex = Math.min(startIndex + size - 1, arrCopy.length - 1);
+  var endIndex = Math.min(startIndex + size - 1, arrCopy.length - 1);
 
-    return {
-        items: arrCopy.slice((pageNumber - 1) * size, pageNumber * size),
-        pages,
-        pageNumber,
-        // pagesList: [...Array(pages)].map((_, i) => i + 1),
-        pagesList: [...Array.from(Array((endPage + 1) - startPage).keys())].map(i => startPage + i),
-        setPageNumber,
-        startPage: startPage,
-        endPage: endPage,
-        startIndex: startIndex,
-        endIndex: endIndex,
-    }
-}
+  return {
+    items: arrCopy.slice((pageNumber - 1) * size, pageNumber * size),
+    pages,
+    pageNumber,
+    // pagesList: [...Array(pages)].map((_, i) => i + 1),
+    pagesList: [...Array.from(Array(endPage + 1 - startPage).keys())].map((i) => startPage + i),
+    setPageNumber,
+    startPage: startPage,
+    endPage: endPage,
+    startIndex: startIndex,
+    endIndex: endIndex,
+  };
+};
 
-export { usePaginator }
+export { usePaginator };
