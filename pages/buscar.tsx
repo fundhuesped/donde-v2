@@ -1,3 +1,4 @@
+import { GlobeAltIcon } from '@heroicons/react/outline';
 import isEmpty from 'lodash/isEmpty';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
@@ -7,10 +8,11 @@ import { usePlacesWidget } from 'react-google-autocomplete';
 import { Button } from '../components/Buttons/Button';
 import MainContainer from '../components/MainContainer';
 import { Pill } from '../components/Pill';
-import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS, GET_DYNAMIC_GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../config/thirdParty';
+import { GET_DYNAMIC_GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../config/thirdParty';
 import { Coordinates } from '../model/map';
 import { Service } from '../model/services';
 import { prismaClient } from '../server/prisma/client';
+import { countries } from '../utils/countries';
 
 type ServerSideProps = {
   googleMapsApiKey: string;
@@ -129,6 +131,7 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
           ))}
         </div>
       </div>
+
       <MainContainer
         className={'w-full h-[calc(100vh_-_100px)] lg:h-full lg:w-3/5 lg:mx-4 mt-4 pt-8 lg:py-8 lg:px-8 lg:flex-grow-0'}
       >
@@ -137,6 +140,21 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
           Podés buscar por ciudad, departamento o barrio. También podés buscar por el nombre o la dirección de un centro que ya
           conozcas.
         </p>
+        <div className="flex w-full justify-end">
+          <GlobeAltIcon className="w-4 text-gray-600 mt-1.5 mr-1" />
+          <p className="text-gray-600 text-xs mb-2 mt-4">Estas buscando en: </p>
+          <select
+            onChange={(e) => setCountry(e.target.value)}
+            defaultValue={country}
+            className="select-style border-none p-0 bg-inherit text-gray-800 text-xs mb-2 mt-4 w-fit ml-2"
+          >
+            {countries.map((countryData) => (
+              <option key={countryData.code} value={countryData.code} selected={countryData.code == country ? true : false}>
+                {countryData.name}
+              </option>
+            ))}
+          </select>
+        </div>
         <input
           ref={autocompleteInputRef}
           className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 mt-4'}
