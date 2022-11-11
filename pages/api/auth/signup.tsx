@@ -3,6 +3,9 @@ import { UserRole, UserStatus } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { BCRYPT_COST } from '../../../config/server';
 import { prismaClient } from '../../../server/prisma/client';
+import { sendMail } from '../../../server/mail/mailer';
+import signupRequestMail from '../../../server/mail/templates/singupRequestMail';
+import signupRequestHTMLMail from '../../../server/mail/templates/singupRequestHTMLMail';
 
 const handler: NextApiHandler = async (req, res) => {
   if (req.method !== 'POST') {
@@ -22,7 +25,7 @@ const handler: NextApiHandler = async (req, res) => {
   } = req.body;
   const hashedPassword = await bcrypt.hash(password, BCRYPT_COST);
 
-  await prismaClient.user.create({
+  const user = await prismaClient.user.create({
     data: {
       email,
       password: hashedPassword,
@@ -38,6 +41,20 @@ const handler: NextApiHandler = async (req, res) => {
     },
   });
 
+  const admins = await prismaClient.user.findMany({
+    where: {
+      role: UserRole.ADMIN
+    }
+  });
+
+  for (const admin of admins) {
+    await sendMail({
+      to: admin.email, 
+      subject: 'Dónde',
+      text: signupRequestMail(user.first_name, user.last_name, user.organization_name, user.organization_country),
+      html: signupRequestHTMLMail(user.first_name, user.last_name, user.organization_name, user.organization_country)});
+  }
+  
   return res.status(200).end();
 };
 

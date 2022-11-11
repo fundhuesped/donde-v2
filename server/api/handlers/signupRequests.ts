@@ -3,6 +3,9 @@ import { NextApiHandler } from 'next';
 import { prismaClient } from '../../prisma/client';
 import { UserStatus } from '@prisma/client';
 import { isRecordNotFoundError } from '../../prisma/errors';
+import { sendMail } from '../../mail/mailer';
+import signupAcceptanceMail from '../../mail/templates/signupAcceptanceMail';
+import signupAcceptanceHTMLMail from '../../mail/templates/signupAcceptanceHTMLMail';
 
 const signUpRequestStatusUpdateQueryParamsSchema = yup.object({
   userId: yup.string().uuid().required(),
@@ -22,10 +25,19 @@ export const getHandlerForSignupRequestStatusUpdateTo =
     const { userId } = query;
 
     try {
-      await prismaClient.user.update({
+      const user = await prismaClient.user.update({
         data: { status: status },
         where: { id: userId },
       });
+
+      if (status == UserStatus.ACTIVE) {
+        await sendMail({
+          to: user.email, 
+          subject: 'Dónde',
+          text: signupAcceptanceMail(),
+          html: signupAcceptanceHTMLMail()});
+      }
+      
       res.status(200);
     } catch (e) {
       if (isRecordNotFoundError(e)) {
