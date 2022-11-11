@@ -122,7 +122,7 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
     handleSorting(accessor, sortOrder);
   };
 
-  var totalEstablishment = JSON.stringify(filteredEstablishments.length);
+  var totalEstablishment = JSON.stringify(filteredEstablishments?.length);
 
   return (
     <>
