@@ -1,4 +1,4 @@
-import { GlobeAltIcon } from '@heroicons/react/outline';
+import { ChevronDownIcon, GlobeAltIcon } from '@heroicons/react/outline';
 import isEmpty from 'lodash/isEmpty';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
@@ -79,6 +79,7 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
 
   const [searchLocation, setSearchLocation] = useState('');
   const [location, setLocation] = useState('');
+  const [show, setShow] = useState(false);
   const [coords, setCoords] = useState<Coordinates>({} as Coordinates);
   const [isMissingSearchInfo, setIsMissingSearchInfo] = useState(true);
 
@@ -143,17 +144,37 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
         <div className="flex w-full justify-end">
           <GlobeAltIcon className="w-4 text-gray-600 mt-1.5 mr-1" />
           <p className="text-gray-600 text-xs mb-2 mt-4">Estas buscando en: </p>
-          <select
-            onChange={(e) => setCountry(e.target.value)}
-            defaultValue={country}
-            className="select-style border-none p-0 bg-inherit text-gray-800 text-xs mb-2 mt-4 w-fit ml-2"
-          >
-            {countries.map((countryData) => (
-              <option key={countryData.code} value={countryData.code} selected={countryData.code == country ? true : false}>
-                {countryData.name}
-              </option>
-            ))}
-          </select>
+          <button onClick={() => setShow(!show)} className={'bg-inherit text-gray-800 text-xs ml-2 mb-2 mt-4'}>
+            <div className="mx-1 flex justify-between w-full">
+              {countries.map((countryData) => {
+                if (countryData.code == country) {
+                  return <span key={countryData.code}>{countryData.name}</span>;
+                } else {
+                  ('');
+                }
+              })}
+              <ChevronDownIcon className={'w-3 mt-.5 mr-1.5'} />
+            </div>
+          </button>
+          {show && (
+            <select
+              onChange={(e) => (setCountry(e.target.value), setShow(!show))}
+              defaultValue={country}
+              className="absolute mt-8 select-style border-none p-0 scroll-style text-gray-800 text-xs mb-2 w-fit ml-2"
+              size={8}
+            >
+              {countries.map((countryData) => (
+                <option
+                  className="p-1.5"
+                  key={countryData.code}
+                  value={countryData.code}
+                  selected={countryData.code == country ? true : false}
+                >
+                  {countryData.name}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
         <input
           ref={autocompleteInputRef}
