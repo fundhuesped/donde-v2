@@ -183,7 +183,7 @@ async function findServicesFromDB(): Promise<ServicesData> {
   });
   const its = await prismaClient.service.findUniqueOrThrow({
     where: {
-      name: 'Test de ITS',
+      name: 'Test VIH y otras ITS',
     },
   });
   const vacunatorio = await prismaClient.service.findUniqueOrThrow({
