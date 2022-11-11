@@ -122,6 +122,8 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
     handleSorting(accessor, sortOrder);
   };
 
+  var totalEstablishment = JSON.stringify(filteredEstablishments.length);
+
   return (
     <>
       <Head>
@@ -164,6 +166,9 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
               <DownloadButton onClick={() => setDescargarModal(true)} />
             </div> */}
           </div>
+          <p className="text-gray-600 text-xs mb-2 ">
+            Total de establecimientos: <span className="text-gray-800">{totalEstablishment}</span>
+          </p>
           <Table establishments={items} onColumnSort={onColumnSort} />
           <div className="w-full flex justify-center mb-4">{isLoading && <Loading />}</div>
           <Pagination pages={pages} pagesList={pagesList} setPageNumber={setPageNumber} pageNumber={pageNumber}></Pagination>
