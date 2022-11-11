@@ -118,8 +118,17 @@ const LegacyPublishedStatusSchema = z.union([z.literal(1), z.literal(-1)]);
 type LegacyDataRecord = z.infer<typeof LegacyDataRecordSchema>;
 const LegacyDataRecordSchema = z.object({
   [LegacyDataField.OFFICIAL_ID]: z.string().max(100).optional(),
-  [LegacyDataField.LEGACY_ID]: z.preprocess((val) => (val ? val : null), z.number().refine(
-    async (val) => {return val ? await establishmentWithLegacyIdExists(val) : true; }).nullable()).optional(),
+  [LegacyDataField.LEGACY_ID]: z
+    .preprocess(
+      (val) => (val ? val : null),
+      z
+        .number()
+        .refine(async (val) => {
+          return val ? await establishmentWithLegacyIdExists(val) : true;
+        })
+        .nullable(),
+    )
+    .optional(),
   [LegacyDataField.NAME]: z.string().min(1).max(100),
   [LegacyDataField.TYPE]: LegacyDataEstablishmentTypeScheme,
   [LegacyDataField.STREET]: z.union([z.string().min(1).max(200), z.number()]),
@@ -272,23 +281,25 @@ async function parseLegacyData(path: string): Promise<LegacyDataRecord[]> {
 
   let validationErrors: string[] = [];
 
-  const data = await Promise.all(records.map(async (record: unknown, index: number) => {
-    try {
-      return await LegacyDataRecordSchema.parseAsync(record);
-    } catch (error) {
-      const zodError = error as ZodError;
-      const row = index + 2;
-      validationErrors.push(
-        `La fila ${row} tiene valores incorrectos en los campos: ` +
-          zodError.issues
-            .map((value) => {
-              return value.path[0];
-            })
-            .join(', ') +
-          '.',
-      );
-    }
-  }));
+  const data = await Promise.all(
+    records.map(async (record: unknown, index: number) => {
+      try {
+        return await LegacyDataRecordSchema.parseAsync(record);
+      } catch (error) {
+        const zodError = error as ZodError;
+        const row = index + 2;
+        validationErrors.push(
+          `La fila ${row} tiene valores incorrectos en los campos: ` +
+            zodError.issues
+              .map((value) => {
+                return value.path[0];
+              })
+              .join(', ') +
+            '.',
+        );
+      }
+    }),
+  );
 
   if (validationErrors.length > 0) {
     throw new Error(validationErrors.join('\n'));

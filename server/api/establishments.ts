@@ -27,7 +27,7 @@ export const establishmentWithLegacyIdExists = async (legacyId: number): Promise
   const establishment = await prismaClient.establishment.findUnique({
     where: {
       legacyId: legacyId,
-    }
+    },
   });
   return establishment ? true : false;
-}
+};
