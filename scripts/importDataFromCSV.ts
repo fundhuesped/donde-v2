@@ -1,9 +1,9 @@
-import fs from 'fs';
-import { parse } from 'csv-parse/sync';
-import { literal, z, ZodError } from 'zod';
 import { Day, EstablishmentStatus, EstablishmentType, Prisma, Subservice } from '@prisma/client';
-import { prismaClient } from '../server/prisma/client';
+import { parse } from 'csv-parse/sync';
+import fs from 'fs';
+import { literal, z, ZodError } from 'zod';
 import { Service } from '../model/services';
+import { prismaClient } from '../server/prisma/client';
 
 enum LegacyDataField {
   OFFICIAL_ID = 'ID Oficial',
@@ -272,7 +272,6 @@ function parseLegacyData(path: string): LegacyDataRecord[] {
   const data = records.map((record: unknown) => {
     try {
       row++;
-      console.log(record);
       return LegacyDataRecordSchema.parse(record);
     } catch (error) {
       const zodError = error as ZodError;

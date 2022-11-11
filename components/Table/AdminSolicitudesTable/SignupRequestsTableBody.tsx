@@ -3,9 +3,9 @@ import { OrganizationType } from '@prisma/client';
 import axios from 'axios';
 import classNames from 'classnames';
 import React, { ReactNode, useState } from 'react';
-import { SignupRequest, SignupRequests } from '../../model/signup';
-import { formatDate } from '../../utils/dates';
-import { Modal } from '../Modal';
+import { SignupRequest, SignupRequests } from '../../../model/signup';
+import { formatDate } from '../../../utils/dates';
+import { Modal } from '../../Modal';
 
 type Props = React.PropsWithChildren<{
   className?: string;

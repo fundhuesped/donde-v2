@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
-import Table from '../../components/Table/SignupRequestTable';
 import Head from 'next/head';
+import Table from '../../components/Table/AdminSolicitudesTable/SignupRequestTable';
 
 const Solicitudes: NextPage = () => {
   return (

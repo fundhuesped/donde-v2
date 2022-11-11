@@ -1,6 +1,6 @@
 import isNil from 'lodash/isNil';
 import React, { useEffect, useState } from 'react';
-import { Button } from '../Button';
+import { Button } from '../Buttons/Button';
 type EstablishmentSearchStepProps = {
   onChange: (event: { currentTarget: { value: string; name: string } }) => void;
   name: string;
@@ -20,13 +20,6 @@ export const EstablishmentSearchStep = React.forwardRef<HTMLInputElement, Establ
       const validationFields = [name, address, latitude, longitude];
       setIsValid(validationFields.every((field) => !isNil(field)));
     }, [name, address, latitude, longitude]);
-
-    useEffect(() => {
-      if (searchLocationParam) {
-        onChange({ currentTarget: { value: searchLocationParam as string, name: 'address' } });
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     return (
       <>

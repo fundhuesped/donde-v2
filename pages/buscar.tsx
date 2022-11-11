@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { RefObject, useEffect, useState } from 'react';
 import { usePlacesWidget } from 'react-google-autocomplete';
-import { Button } from '../components/Button';
+import { Button } from '../components/Buttons/Button';
 import MainContainer from '../components/MainContainer';
 import { Pill } from '../components/Pill';
 import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS, GET_DYNAMIC_GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../config/thirdParty';
@@ -123,7 +123,7 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
         <div className={'px-content'}>
           <p className="text-black text-xs mb-2 mt-4">Estás buscando</p>
           {services.map((service) => (
-            <Pill key={service.id} className={'mb-1 mr-1 inline-block'}>
+            <Pill key={service.id} className={'text-dark-gray mb-1 mr-1 inline-block'}>
               {service.name}
             </Pill>
           ))}

@@ -34,7 +34,11 @@ const EstablishmentHeader = React.memo<Props>((props) => {
         <div className="mt-4 w-full flex flex-col lg:flex-row justify-around">
           <div className="px-2 lg:px-0 flex flex-wrap w-screen lg:w-96 h-auto ml-0 relative">
             {services.map((service) => (
-              <Pill type={'secondary'} className={'py-2 mr-1 mb-1 lg:py-1 w-fit h-max-12 flex-none flex'} key={service.id}>
+              <Pill
+                type={'secondary'}
+                className={'text-dark-gray py-2 mr-1 mb-1 lg:py-1 w-fit h-max-12 flex-none flex'}
+                key={service.id}
+              >
                 {service.name}
               </Pill>
             ))}

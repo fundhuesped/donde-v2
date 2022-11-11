@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { HTMLProps } from 'react';
-import { Button } from '../components/Button';
+import { Button } from '../components/Buttons/Button';
 
 const FAQLink = (props: HTMLProps<HTMLAnchorElement>) => {
   const { className, children, ...rest } = props;

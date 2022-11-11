@@ -13,7 +13,7 @@ import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../../config/thirdParty';
 import { establishmentTypes } from '../../model/establishment';
 import { Service } from '../../model/services';
 import Alert from '../Alert';
-import { Button } from '../Button';
+import { Button } from '../Buttons/Button';
 import { Modal } from '../Modal';
 import { AvailableServices } from './AvailableServices';
 import { ContactInfoField } from './ContactInfoField';

@@ -1,7 +1,8 @@
 import {
+  AnnotationIcon,
   ChatAltIcon,
   InformationCircleIcon,
-  LockClosedIcon,
+  LocationMarkerIcon,
   LoginIcon,
   LogoutIcon,
   MenuIcon,
@@ -15,8 +16,8 @@ import { useState } from 'react';
 import DondeLogo from '../assets/images/DondeLogo.svg';
 import { useAuthenticatedUser } from '../hooks/useAuthenticatedUser';
 import { useClickOutsideHandler } from '../hooks/useClickOutsideHandler';
-import { BackButton } from './BackButton';
-import { Button } from './Button';
+import { BackButton } from './Buttons/BackButton';
+import { Button } from './Buttons/Button';
 import MainContainer from './MainContainer';
 
 export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: () => void }) {
@@ -118,18 +119,32 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
 
   const AdminLink = () => {
     return (
-      <Button
-        onClick={async () => {
-          await router.push({ pathname: '/admin/solicitudes' });
-          setIsMenuOpen(false);
-        }}
-        className={'border-ultra-light-gray lg:border-none text-primary lg:text-white '}
-        type={'tertiary'}
-        alignment={'left'}
-        icon={<LockClosedIcon className={'h-6 w-5'} />}
-      >
-        Solicitudes
-      </Button>
+      <>
+        <Button
+          onClick={async () => {
+            await router.push({ pathname: '/admin/solicitudes' });
+            setIsMenuOpen(false);
+          }}
+          className={'border-ultra-light-gray lg:border-none text-primary lg:text-white '}
+          type={'tertiary'}
+          alignment={'left'}
+          icon={<AnnotationIcon className={'h-6 w-5'} />}
+        >
+          Solicitudes
+        </Button>
+        <Button
+          onClick={async () => {
+            await router.push({ pathname: '/admin/establecimientos' });
+            setIsMenuOpen(false);
+          }}
+          className={'border-ultra-light-gray lg:border-none text-primary lg:text-white '}
+          type={'tertiary'}
+          alignment={'left'}
+          icon={<LocationMarkerIcon className={'h-6 w-5'} />}
+        >
+          Establecimientos
+        </Button>
+      </>
     );
   };
 

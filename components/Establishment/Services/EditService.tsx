@@ -2,7 +2,7 @@ import { PlusIcon, TrashIcon, XIcon } from '@heroicons/react/outline';
 import { uniqueId } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Service } from '../../../model/services';
-import { Button } from '../../Button';
+import { Button } from '../../Buttons/Button';
 import { ServicesModal } from '../AvailableServices';
 import { Hour } from './components/Hour';
 import { Day, ServiceOnEstablishmentOpeningTimeFormat, SubService } from './types';
@@ -38,7 +38,6 @@ const EditService = (props: EditServiceProps) => {
     if (modalService) {
       var serviceAlreadyActivated = activeServices.find((service) => service.serviceId == serviceSelected[0].id);
 
-      console.log(serviceSelected, serviceAlreadyActivated);
       if (serviceAlreadyActivated || serviceSelected[0].id == modalService[0]?.serviceId) {
         setServiceId(null);
         setError('El servicio seleccionado ya está activo, seleccione uno que no este activo');
