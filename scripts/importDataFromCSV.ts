@@ -1,5 +1,5 @@
 import { Day, EstablishmentStatus, EstablishmentType, Prisma, Subservice } from '@prisma/client';
-import { parse } from 'csv-parse/lib/sync';
+import { parse } from 'csv-parse/sync';
 import fs from 'fs';
 import { literal, z, ZodError } from 'zod';
 import { Service } from '../model/services';
