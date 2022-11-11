@@ -43,18 +43,19 @@ const handler: NextApiHandler = async (req, res) => {
 
   const admins = await prismaClient.user.findMany({
     where: {
-      role: UserRole.ADMIN
-    }
+      role: UserRole.ADMIN,
+    },
   });
 
   for (const admin of admins) {
     await sendMail({
-      to: admin.email, 
+      to: admin.email,
       subject: 'Dónde',
       text: signupRequestMail(user.first_name, user.last_name, user.organization_name, user.organization_country),
-      html: signupRequestHTMLMail(user.first_name, user.last_name, user.organization_name, user.organization_country)});
+      html: signupRequestHTMLMail(user.first_name, user.last_name, user.organization_name, user.organization_country),
+    });
   }
-  
+
   return res.status(200).end();
 };
 

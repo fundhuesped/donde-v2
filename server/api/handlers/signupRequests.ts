@@ -32,12 +32,13 @@ export const getHandlerForSignupRequestStatusUpdateTo =
 
       if (status == UserStatus.ACTIVE) {
         await sendMail({
-          to: user.email, 
+          to: user.email,
           subject: 'Dónde',
           text: signupAcceptanceMail(),
-          html: signupAcceptanceHTMLMail()});
+          html: signupAcceptanceHTMLMail(),
+        });
       }
-      
+
       res.status(200);
     } catch (e) {
       if (isRecordNotFoundError(e)) {

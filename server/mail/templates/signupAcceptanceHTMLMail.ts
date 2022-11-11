@@ -1,5 +1,5 @@
 const signupAcceptanceHTMLMail = () =>
-`
+  `
 <div>
 Hola!<br>
 Nos alegra que quieras colaborar con el sitio Dónde de Fundación Huésped.<br>
@@ -8,6 +8,6 @@ Tu participación es muy valiosa para que tengamos datos cada vez más completos
 Si necesitás ponerte en contacto con nuestro equipo, por favor escribí a donde@huesped.org.ar<br>
 Saludos!!<br>
 </div>
-`
+`;
 
 export default signupAcceptanceHTMLMail;

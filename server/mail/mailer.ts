@@ -1,5 +1,4 @@
-import { createTransport } from 'nodemailer'
-
+import { createTransport } from 'nodemailer';
 
 export type SendMailProperties = {
   to: string;
@@ -31,4 +30,4 @@ export const sendMail = async ({ to, subject, text, html }: SendMailProperties) 
   } catch (error) {
     return error;
   }
-}
+};
