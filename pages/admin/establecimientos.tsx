@@ -89,6 +89,39 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
     });
   };
 
+  const [sortField, setSortField] = useState('');
+  const [order, setOrder] = useState('asc');
+
+  const handleSorting = (sortField: string, sortOrder: string) => {
+    const sortFieldKey = sortField as keyof Establishment;
+
+    if (sortField) {
+      const sorted = [...establishments].sort((a, b) => {
+        const aField = a[sortFieldKey];
+        if (aField === undefined || aField === null) {
+          return 1;
+        }
+        const bField = b[sortFieldKey];
+        if (bField === undefined || bField === null) {
+          return -1;
+        }
+        return (
+          aField.toString().localeCompare(bField.toString(), 'es', {
+            numeric: true,
+          }) * (sortOrder === 'asc' ? 1 : -1)
+        );
+      });
+      setFilteredEstablishments(sorted);
+    }
+  };
+
+  const onColumnSort = (accessor: string) => {
+    const sortOrder = accessor === sortField && order === 'asc' ? 'desc' : 'asc';
+    setSortField(accessor);
+    setOrder(sortOrder);
+    handleSorting(accessor, sortOrder);
+  };
+
   return (
     <>
       <Head>
@@ -131,7 +164,7 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
               <DownloadButton onClick={() => setDescargarModal(true)} />
             </div> */}
           </div>
-          <Table establishments={items} setFilteredEstablishments={setFilteredEstablishments} />
+          <Table establishments={items} onColumnSort={onColumnSort} />
           <div className="w-full flex justify-center mb-4">{isLoading && <Loading />}</div>
           <Pagination pages={pages} pagesList={pagesList} setPageNumber={setPageNumber} pageNumber={pageNumber}></Pagination>
           {importModal ? <ImportModal showModal={importModal} setShowModal={setImportModal} /> : ''}
