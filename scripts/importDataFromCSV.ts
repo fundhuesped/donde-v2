@@ -3,6 +3,7 @@ import { parse } from 'csv-parse/sync';
 import fs from 'fs';
 import { literal, z, ZodError } from 'zod';
 import { Service } from '../model/services';
+import { establishmentWithLegacyIdExists } from '../server/api/establishments';
 import { prismaClient } from '../server/prisma/client';
 
 enum LegacyDataField {
@@ -117,7 +118,8 @@ const LegacyPublishedStatusSchema = z.union([z.literal(1), z.literal(-1)]);
 type LegacyDataRecord = z.infer<typeof LegacyDataRecordSchema>;
 const LegacyDataRecordSchema = z.object({
   [LegacyDataField.OFFICIAL_ID]: z.string().max(100).optional(),
-  [LegacyDataField.LEGACY_ID]: z.preprocess((val) => (val ? val : null), z.number().nullable()).optional(),
+  [LegacyDataField.LEGACY_ID]: z.preprocess((val) => (val ? val : null), z.number().refine(
+    async (val) => {return val ? await establishmentWithLegacyIdExists(val) : true; }).nullable()).optional(),
   [LegacyDataField.NAME]: z.string().min(1).max(100),
   [LegacyDataField.TYPE]: LegacyDataEstablishmentTypeScheme,
   [LegacyDataField.STREET]: z.union([z.string().min(1).max(200), z.number()]),
@@ -251,8 +253,9 @@ function getAbortoSubservices(abortoSubservices: Subservice[]): AbortoSubservice
   };
 }
 
-function parseLegacyData(path: string): LegacyDataRecord[] {
+async function parseLegacyData(path: string): Promise<LegacyDataRecord[]> {
   let records = undefined;
+
   try {
     const buffer = fs.readFileSync(path);
     records = parse(buffer, {
@@ -267,14 +270,14 @@ function parseLegacyData(path: string): LegacyDataRecord[] {
     );
   }
 
-  let row = 1;
   let validationErrors: string[] = [];
-  const data = records.map((record: unknown) => {
+
+  const data = await Promise.all(records.map(async (record: unknown, index: number) => {
     try {
-      row++;
-      return LegacyDataRecordSchema.parse(record);
+      return await LegacyDataRecordSchema.parseAsync(record);
     } catch (error) {
       const zodError = error as ZodError;
+      const row = index + 2;
       validationErrors.push(
         `La fila ${row} tiene valores incorrectos en los campos: ` +
           zodError.issues
@@ -285,7 +288,7 @@ function parseLegacyData(path: string): LegacyDataRecord[] {
           '.',
       );
     }
-  });
+  }));
 
   if (validationErrors.length > 0) {
     throw new Error(validationErrors.join('\n'));
@@ -507,7 +510,7 @@ function getSubservicesOnEstablishmentCreate(
 }
 
 export async function importDataFromCSV(path: string) {
-  const legacyData = parseLegacyData(path);
+  const legacyData = await parseLegacyData(path);
 
   let services = undefined;
   try {
