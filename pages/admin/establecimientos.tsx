@@ -11,14 +11,15 @@ import Loading from '../../components/Loading';
 import ImportModal from '../../components/Modal/ImportModal';
 import Pagination from '../../components/Pagination';
 import { Pill } from '../../components/Pill';
-import { Search } from '../../components/Search';
 import Filtros from '../../components/Table/AdminEstablecimientosTable/Filter/Filtros';
+import MultipleSearch from '../../components/Table/AdminEstablecimientosTable/Filter/MultipleSearch';
 import { establishmentTypes } from '../../components/Table/AdminEstablecimientosTable/Filter/types';
 import Table from '../../components/Table/AdminEstablecimientosTable/Table';
 import { usePaginator } from '../../hooks/usePaginator';
 import { Establishment } from '../../model/establishment';
 import { Service, serviceSchema } from '../../model/services';
 import { prismaClient } from '../../server/prisma/client';
+
 type ServerSideProps = {
   availableServices: Service[];
 };
@@ -58,22 +59,41 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
     return filtered?.name;
   };
 
+  const handleChange = (filter: string) => {
+    const update = filters.has(filter);
+    if (update) {
+      setFilters((prev: any) => {
+        const next = new Set(prev);
+        next.delete(filter);
+        return next;
+      });
+    } else {
+      setFilters((prev: any) => new Set(prev).add(filter));
+    }
+  };
+
   useEffect(() => {
     setFilteredEstablishments(
       establishments?.filter((establishment: Establishment) => {
         if (queryFilter.length > 0) {
           return (
-            queryFilter.includes(establishment.country) ||
             queryFilter.includes(setType(establishment.type)) ||
-            establishment.services.filter((service) => queryFilter.includes(service.service.name)).length !== 0
+            establishment.services.filter((service) => queryFilter.includes(service.service.name)).length !== 0 ||
+            queryFilter.includes(establishment.name.toLowerCase()) ||
+            queryFilter.includes(establishment.street.toLowerCase()) ||
+            queryFilter.includes(establishment.city.toLowerCase()) ||
+            queryFilter.includes(establishment.province.toLowerCase()) ||
+            queryFilter.includes(establishment.country)
           );
         }
-        if (querySearch) {
-          return (
-            establishment.name.toLowerCase().includes(querySearch.toLowerCase()) ||
-            establishment.street.toLowerCase().includes(querySearch.toLowerCase())
-          );
-        }
+        // if (querySearch) {
+        //   return (
+        //     establishment.name.toLowerCase().includes(querySearch.toLowerCase()) ||
+        //     establishment.street.toLowerCase().includes(querySearch.toLowerCase()) ||
+        //     establishment.city.toLowerCase().includes(querySearch.toLowerCase()) ||
+        //     establishment.province.toLowerCase().includes(querySearch.toLowerCase())
+        //   );
+        // }
         setIsLoading(false);
         return establishment;
       }),
@@ -138,15 +158,7 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
               <AddEstablishmentButton />
             </div>
           </div>
-          <div className="relative flex mt-6 lg:mt-0 lg:justify-end">
-            <Search
-              placeholder="Buscar por nombre o dirección"
-              name="search"
-              onChange={(e) => setQuerySearch(e.target.value)}
-              className={'input-style w-full ml-0 lg:ml-20 rounded-base h-12 rigth-0 text-sm text-gray-500 right-1'}
-              iconClassName={'absolute -translate-y-2/4 right-2 lg:rigth-full lg:ml-28 top-2/4 w-5 text-light-gray'}
-            />
-          </div>
+          <MultipleSearch handleChange={handleChange} />
           <Filtros services={availableServices} setFilters={setFilters} filters={filters} />
           <div className="w-full py-4 flex justify-between ">
             <div className="ml-20 flex flex-wrap w-fit">

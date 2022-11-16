@@ -12,7 +12,7 @@ import { GET_DYNAMIC_GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../config/thirdPar
 import { Coordinates } from '../model/map';
 import { Service } from '../model/services';
 import { prismaClient } from '../server/prisma/client';
-import { countries } from '../utils/countries';
+import countries from '../utils/countries';
 
 type ServerSideProps = {
   googleMapsApiKey: string;
@@ -50,7 +50,6 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
     getCountryByUserIp();
   }, []);
 
-  console.log(country, 'country');
   //  {country: 'AR', ip: '186.122.181.188'}
 
   const router = useRouter();
@@ -114,7 +113,6 @@ const Search: NextPage<ServerSideProps> = ({ googleMapsApiKey, availableServices
   };
 
   const asd = GET_DYNAMIC_GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS(country);
-  console.log(asd, 'asd');
 
   return (
     <div className="flex flex-wrap flex-grow content-start justify-center lg:bg-modal-image lg:bg-white ">

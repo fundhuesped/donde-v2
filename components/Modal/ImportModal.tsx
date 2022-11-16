@@ -89,7 +89,7 @@ const ImportModal = (props: Props) => {
                   <PaperClipIcon className="mr-1 mt-0.5 text-inherit w-4" /> Adjuntar archivo
                 </label>
               </form>
-              <p className="w-fit italic text-sm font-light font-sans mt-2">Formatos permitidos: CSV / XML</p>
+              <p className="w-fit italic text-sm font-light font-sans mt-2">Formatos permitidos: CSV</p>
             </div>
             {name && (
               <div className="flex justify-between my-8">

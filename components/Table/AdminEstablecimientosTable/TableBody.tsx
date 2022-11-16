@@ -55,7 +55,7 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
                   {establishment.street} {establishment.streetNumber}
                 </Cell>
                 <Cell>{establishment.city}</Cell>
-                <Cell>{establishment.department}</Cell>
+                <Cell>{establishment.province}</Cell>
                 <Cell>
                   <div className="flex">
                     {establishment.services.map((service) => {

@@ -9,7 +9,7 @@ import React, { RefObject, useState } from 'react';
 import { usePlacesWidget } from 'react-google-autocomplete';
 import MainContainer from '../../components/MainContainer';
 import Select from '../../components/Select';
-import { GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../../config/thirdParty';
+import { GET_DYNAMIC_GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../../config/thirdParty';
 import { establishmentTypes } from '../../model/establishment';
 import { Service } from '../../model/services';
 import Alert from '../Alert';
@@ -95,6 +95,7 @@ const EstablishmentAdmin = (props: {
   const isNewEstablishment = isNil(establishment?.id);
   const [form, setForm] = useState<EstablishmentModel>(establishment || emptyEstablishmentModel);
   const [isFormCompleted, setIsFormCompleted] = useState(false);
+  const [countryApi, setCountryApi] = useState<string | undefined>('');
 
   const handleFormUpdate = (fieldsToUpdate: Partial<EstablishmentModel>) => {
     setForm((prevState) => {
@@ -149,7 +150,7 @@ const EstablishmentAdmin = (props: {
         department,
       });
     },
-    options: GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS,
+    options: GET_DYNAMIC_GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS(countryApi),
   });
 
   const handleFieldChange = (event: { currentTarget: { value: string; name: string } }) => {
@@ -242,7 +243,12 @@ const EstablishmentAdmin = (props: {
     longitude,
     details,
     availability,
+    country,
+    city,
+    province,
   } = form;
+
+  console.log(fullAddress, province);
 
   return (
     <div className="w-full flex justify-center">
@@ -266,6 +272,8 @@ const EstablishmentAdmin = (props: {
               searchLocationParam={searchLocationParam}
               latitude={latitude}
               longitude={longitude}
+              setCountryApi={setCountryApi}
+              countryApi={countryApi}
               onClick={handleContinueButtonClicked}
             />
           )}
@@ -289,7 +297,7 @@ const EstablishmentAdmin = (props: {
               <LocationField
                 key={'surroundingStreets'}
                 onChange={handleFieldChange}
-                fullAddress={fullAddress}
+                province={province}
                 street={street}
                 streetNumber={streetNumber}
                 apartment={apartment}
@@ -298,6 +306,8 @@ const EstablishmentAdmin = (props: {
                 onChildMouseMove={handleChildMouseMove}
                 latitude={latitude}
                 longitude={longitude}
+                country={country}
+                city={city}
               />
 
               {/*<AvailabilityField key={'workingHourTo'} onChange={handleFormUpdate} availability={availability} />*/}
