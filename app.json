@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dokku": {
-      "predeploy": "mkdir /tmp/donde-import-tmp-files",
+      "predeploy": "mkdir /tmp/donde-import-tmp-files && chmod 777 /tmp/donde-import-tmp-files",
       "postdeploy": "npx prisma migrate deploy"
     }
   },
