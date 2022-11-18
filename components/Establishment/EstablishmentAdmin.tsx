@@ -248,8 +248,6 @@ const EstablishmentAdmin = (props: {
     province,
   } = form;
 
-  console.log(fullAddress, province);
-
   return (
     <div className="w-full flex justify-center">
       <MainContainer className={'full h-fit lg:h-full lg:w-3/5 lg:mx-4 mt-4 pt-8 lg:py-8 lg:px-8 lg:flex-grow-0'}>

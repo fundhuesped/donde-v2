@@ -1,16 +1,28 @@
-import { CloudDownloadIcon } from '@heroicons/react/outline';
+// import { CSVHeaders, formatEstablishmentsForExport } from 'scripts/exportDataToCSV';
+import { EstablishmentModel } from '../Establishment/EstablishmentAdmin';
+
 type Props = React.PropsWithChildren<{
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  filteredEstablishments: EstablishmentModel[];
 }>;
+
 const DownloadButton = (props: Props) => {
-  const { onClick } = props;
+  const { filteredEstablishments } = props;
   return (
-    <button onClick={onClick} className="flex bg-inherent text-primary border-none text-sm mt-1.5">
-      <span className="mr-1 mt-0.5">
-        <CloudDownloadIcon className=" w-4 mx-1 text-primary" />
-      </span>
-      Descargar búsqueda (.csv)
-    </button>
+    // <CSVLink
+    //   filename={'export-establishment.csv'}
+    //   data={filteredEstablishments}
+    //   // data={formatEstablishmentsForExport(filteredEstablishments)}
+    //   // headers={CSVHeaders}
+    //   target="_blank"
+    //   className="flex bg-inherent text-primary border-none text-sm mt-1.5"
+    // >
+    //   <span className="mr-1 mt-0.5">
+    //     <CloudDownloadIcon className=" w-4 mx-1 text-primary" />
+    //   </span>
+    //   Descargar búsqueda (.csv)
+    // </CSVLink>
+    <></>
   );
 };
 

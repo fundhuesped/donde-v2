@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { AddEstablishmentButton } from '../../components/Buttons/AddEstablishmentButton';
+import DownloadButton from '../../components/Buttons/DownloadButton';
 import { ImportEstablishmentButton } from '../../components/Buttons/ImportEstablishmentButton';
 import Loading from '../../components/Loading';
 import ImportModal from '../../components/Modal/ImportModal';
@@ -75,14 +76,18 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
   useEffect(() => {
     setFilteredEstablishments(
       establishments?.filter((establishment: Establishment) => {
-        if (queryFilter.length > 0) {
+        if (queryFilter.length) {
+          console.log(queryFilter);
+          console.log(
+            queryFilter.includes(establishment.name.toLowerCase()) && queryFilter.includes(setType(establishment.type)),
+          );
+
           return (
-            queryFilter.includes(setType(establishment.type)) ||
-            establishment.services.filter((service) => queryFilter.includes(service.service.name)).length !== 0 ||
-            queryFilter.includes(establishment.name.toLowerCase()) ||
-            queryFilter.includes(establishment.street.toLowerCase()) ||
-            queryFilter.includes(establishment.city.toLowerCase()) ||
-            queryFilter.includes(establishment.province.toLowerCase()) ||
+            queryFilter.includes(setType(establishment.type)) &&
+            establishment.services.filter((service) => queryFilter.includes(service.service.name)).length !== 0 &&
+            queryFilter.includes(establishment.name.toLowerCase()) &&
+            queryFilter.includes(establishment.city.toLowerCase()) &&
+            queryFilter.includes(establishment.province.toLowerCase()) &&
             queryFilter.includes(establishment.country)
           );
         }
@@ -95,6 +100,8 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
         //   );
         // }
         setIsLoading(false);
+        console.log(establishment);
+
         return establishment;
       }),
     );
@@ -174,9 +181,9 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
                   </>
                 ))}
             </div>
-            {/* <div className="">
-              <DownloadButton onClick={() => setDescargarModal(true)} />
-            </div> */}
+            <div className="">
+              <DownloadButton filteredEstablishments={filteredEstablishments} />
+            </div>
           </div>
           <p className="text-gray-600 text-xs mb-2 ">
             Total de establecimientos: <span className="text-gray-800">{totalEstablishment}</span>

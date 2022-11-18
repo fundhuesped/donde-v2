@@ -24,7 +24,7 @@ const Cell = React.memo<CellProps>((props) => {
   return <td className={classNames('py-3 px-2', className)}>{children}</td>;
 });
 
-export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
+export const TableBody = (props: Props) => {
   const { establishments } = props;
   const router = useRouter();
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -99,4 +99,4 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
       </tbody>
     </>
   );
-});
+};

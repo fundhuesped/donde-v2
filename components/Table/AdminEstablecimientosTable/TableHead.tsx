@@ -29,7 +29,7 @@ const ColumnHeader = React.memo<ColumnHeaderProp>((props) => {
   );
 });
 
-const TableHead = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
+const TableHead = (props: Props) => {
   const { onColumnSort } = props;
 
   return (
@@ -47,5 +47,5 @@ const TableHead = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
       </thead>
     </>
   );
-});
+};
 export default TableHead;

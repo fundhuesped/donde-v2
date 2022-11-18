@@ -10,7 +10,7 @@ type Props = React.PropsWithChildren<{
   onColumnSort: (x: any) => void;
 }>;
 
-const Table = React.forwardRef<HTMLDivElement, Props>((props) => {
+const Table = (props: Props) => {
   const { establishments, onColumnSort } = props;
 
   return establishments != null ? (
@@ -25,6 +25,6 @@ const Table = React.forwardRef<HTMLDivElement, Props>((props) => {
       <Loading></Loading>
     </div>
   );
-});
+};
 
 export default Table;
