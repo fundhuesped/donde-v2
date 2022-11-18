@@ -1,6 +1,6 @@
+import classNames from 'classnames';
 import React, { ReactNode } from 'react';
 import { SortTableArrows } from './SortTableArrows';
-import classNames from 'classnames';
 
 type Props = React.PropsWithChildren<{
   onColumnSort: (accessor: string) => void;
@@ -29,22 +29,23 @@ const ColumnHeader = React.memo<ColumnHeaderProp>((props) => {
   );
 });
 
-const TableHead = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
+const TableHead = (props: Props) => {
   const { onColumnSort } = props;
 
   return (
     <>
       <thead>
-        <tr className="text-sm text-gray-700 font-light">
+        <tr className="text-sm text-black font-light">
           <ColumnHeader>Nombre</ColumnHeader>
-          <ColumnHeader>Apellido</ColumnHeader>
-          <ColumnHeader onColumnSort={() => onColumnSort('createdAt')}>Fecha</ColumnHeader>
+          <ColumnHeader>Dirección</ColumnHeader>
+          <ColumnHeader onColumnSort={() => onColumnSort('city')}>Ciudad</ColumnHeader>
+          <ColumnHeader onColumnSort={() => onColumnSort('department')}>Provincia</ColumnHeader>
+          <ColumnHeader>Servicios</ColumnHeader>
           <ColumnHeader>País</ColumnHeader>
-          <ColumnHeader onColumnSort={() => onColumnSort('status')}>Estado</ColumnHeader>
           <ColumnHeader className={'text-center'}>Acciones</ColumnHeader>
         </tr>
       </thead>
     </>
   );
-});
+};
 export default TableHead;

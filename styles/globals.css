@@ -31,7 +31,7 @@
   }
 
   .modal-style {
-    @apply flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-white bg-opacity-50;
+    @apply flex justify-center items-center fixed inset-0 z-50 outline-none focus:outline-none bg-white bg-opacity-50;
   }
 
   .scrollbar-scroll::-webkit-scrollbar {

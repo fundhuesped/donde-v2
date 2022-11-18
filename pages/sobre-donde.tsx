@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { HTMLProps } from 'react';
-import { Button } from '../components/Button';
+import { Button } from '../components/Buttons/Button';
 
 const FAQLink = (props: HTMLProps<HTMLAnchorElement>) => {
   const { className, children, ...rest } = props;
@@ -51,7 +51,7 @@ export default function About() {
         </p>
         <p>
           Es una plataforma de código abierto, disponible en:{' '}
-          <FAQLink href=" https://github.com/fundhuesped/donde-huesped">Github</FAQLink>
+          <FAQLink href=" https://github.com/fundhuesped/donde-v2">Github</FAQLink>
         </p>
         <p className={'my-4 p-2 bg-ultra-light-salmon rounded-2xl text-center'}>
           Si tenés inquietudes, visitá nuestra sección de{' '}

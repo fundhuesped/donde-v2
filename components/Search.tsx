@@ -7,22 +7,26 @@ type Props = React.PropsWithChildren<{
   value?: string;
   defaultValue?: string;
   onChange?: (e: any) => void;
+  className?: string;
+  iconClassName?: string;
+  onKeyPress?: (e: any) => void;
 }>;
 
-export const Search = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
-  const { placeholder, name, value, defaultValue, onChange } = props;
+export const Search = (props: Props) => {
+  const { placeholder, onKeyPress, name, value, defaultValue, onChange, className, iconClassName } = props;
 
   return (
-    <div ref={ref} className="relative">
+    <>
       <input
-        className="input-style w-72 lg:w-96 rounded-base h-10 text-sm text-gray-500"
+        className={className}
         placeholder={placeholder}
         name={name}
         defaultValue={defaultValue}
         value={value}
         onChange={onChange}
+        onKeyPress={onKeyPress}
       />
-      <SearchIcon className="absolute -translate-y-2/4 right-2 lg:rigth-full lg:ml-28 top-1/3 w-5 text-light-gray" />
-    </div>
+      <SearchIcon className={iconClassName} />
+    </>
   );
-});
+};

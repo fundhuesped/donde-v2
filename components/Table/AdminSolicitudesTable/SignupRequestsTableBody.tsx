@@ -3,9 +3,9 @@ import { OrganizationType } from '@prisma/client';
 import axios from 'axios';
 import classNames from 'classnames';
 import React, { ReactNode, useState } from 'react';
-import { SignupRequest, SignupRequests } from '../../model/signup';
-import { formatDate } from '../../utils/dates';
-import { Modal } from '../Modal';
+import { SignupRequest, SignupRequests } from '../../../model/signup';
+import { formatDate } from '../../../utils/dates';
+import { Modal } from '../../Modal';
 
 type Props = React.PropsWithChildren<{
   className?: string;
@@ -22,7 +22,7 @@ const Cell = React.memo<CellProps>((props) => {
   return <td className={classNames('py-3 px-2', className)}>{children}</td>;
 });
 
-export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
+export const TableBody = (props: Props) => {
   const { filteredSolicitudes, onUpdateData } = props;
   const [index, setIndex] = useState<number>(0);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -148,7 +148,7 @@ export const TableBody = React.forwardRef<HTMLDivElement, Props>((props, ref) =>
       ) : null}
     </>
   );
-});
+};
 
 function formatOrganizationType(type: string) {
   switch (type) {

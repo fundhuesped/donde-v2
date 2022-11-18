@@ -1,9 +1,10 @@
-import fs from 'fs';
-import { parse } from 'csv-parse/sync';
-import { literal, z, ZodError } from 'zod';
 import { Day, EstablishmentStatus, EstablishmentType, Prisma, Subservice } from '@prisma/client';
-import { prismaClient } from '../server/prisma/client';
+import { parse } from 'csv-parse/sync';
+import fs from 'fs';
+import { literal, z, ZodError } from 'zod';
 import { Service } from '../model/services';
+import { establishmentWithLegacyIdExists } from '../server/api/establishments';
+import { prismaClient } from '../server/prisma/client';
 
 enum LegacyDataField {
   OFFICIAL_ID = 'ID Oficial',
@@ -101,7 +102,7 @@ const OpeningTimesRegex =
   /(\s*[L, M, X, J, V, S, D]-(([0-2][0-3]|[0-1][0-9]):[0-5][0-9])-(([0-2][0-3]|[0-1][0-9]):[0-5][0-9])\s*;?$)+/;
 
 const ServiceOnEstablishmentPhoneNumberSchema = z
-  .preprocess((val) => (val ? val : null), z.string().max(100).nullable())
+  .preprocess((val) => (val ? (typeof val == 'number' ? val.toString() : val) : null), z.string().max(100).nullable())
   .optional();
 const ServiceOnEstablishmentEmailSchema = z.preprocess((val) => (val ? val : null), z.string().max(254).nullable()).optional();
 const ServiceOnEstablishmentDetailsSchema = z.preprocess((val) => (val ? val : null), z.string().nullable()).optional();
@@ -117,7 +118,17 @@ const LegacyPublishedStatusSchema = z.union([z.literal(1), z.literal(-1)]);
 type LegacyDataRecord = z.infer<typeof LegacyDataRecordSchema>;
 const LegacyDataRecordSchema = z.object({
   [LegacyDataField.OFFICIAL_ID]: z.string().max(100).optional(),
-  [LegacyDataField.LEGACY_ID]: z.preprocess((val) => (val ? val : null), z.number().nullable()).optional(),
+  [LegacyDataField.LEGACY_ID]: z
+    .preprocess(
+      (val) => (val ? val : null),
+      z
+        .number()
+        .refine(async (val) => {
+          return val ? await establishmentWithLegacyIdExists(val) : true;
+        })
+        .nullable(),
+    )
+    .optional(),
   [LegacyDataField.NAME]: z.string().min(1).max(100),
   [LegacyDataField.TYPE]: LegacyDataEstablishmentTypeScheme,
   [LegacyDataField.STREET]: z.union([z.string().min(1).max(200), z.number()]),
@@ -172,7 +183,7 @@ async function findServicesFromDB(): Promise<ServicesData> {
   });
   const its = await prismaClient.service.findUniqueOrThrow({
     where: {
-      name: 'Test de ITS',
+      name: 'Test VIH y otras ITS',
     },
   });
   const vacunatorio = await prismaClient.service.findUniqueOrThrow({
@@ -251,8 +262,9 @@ function getAbortoSubservices(abortoSubservices: Subservice[]): AbortoSubservice
   };
 }
 
-function parseLegacyData(path: string): LegacyDataRecord[] {
+async function parseLegacyData(path: string): Promise<LegacyDataRecord[]> {
   let records = undefined;
+
   try {
     const buffer = fs.readFileSync(path);
     records = parse(buffer, {
@@ -262,31 +274,34 @@ function parseLegacyData(path: string): LegacyDataRecord[] {
       cast: true,
     });
   } catch (e) {
+    console.log(e);
     throw new Error(
       'Hubo un fallo al leer el archivo en la fase inicial de la importación. Si el error persiste contacte al equipo de desarrollo.',
     );
   }
 
-  let row = 1;
   let validationErrors: string[] = [];
-  const data = records.map((record: unknown) => {
-    try {
-      row++;
-      console.log(record);
-      return LegacyDataRecordSchema.parse(record);
-    } catch (error) {
-      const zodError = error as ZodError;
-      validationErrors.push(
-        `La fila ${row} tiene valores incorrectos en los campos: ` +
-          zodError.issues
-            .map((value) => {
-              return value.path[0];
-            })
-            .join(', ') +
-          '.',
-      );
-    }
-  });
+
+  const data = await Promise.all(
+    records.map(async (record: unknown, index: number) => {
+      try {
+        return await LegacyDataRecordSchema.parseAsync(record);
+      } catch (error) {
+        const zodError = error as ZodError;
+        console.log(zodError);
+        const row = index + 2;
+        validationErrors.push(
+          `La fila ${row} tiene valores incorrectos en los campos: ` +
+            zodError.issues
+              .map((value) => {
+                return value.path[0];
+              })
+              .join(', ') +
+            '.',
+        );
+      }
+    }),
+  );
 
   if (validationErrors.length > 0) {
     throw new Error(validationErrors.join('\n'));
@@ -508,7 +523,7 @@ function getSubservicesOnEstablishmentCreate(
 }
 
 export async function importDataFromCSV(path: string) {
-  const legacyData = parseLegacyData(path);
+  const legacyData = await parseLegacyData(path);
 
   let services = undefined;
   try {

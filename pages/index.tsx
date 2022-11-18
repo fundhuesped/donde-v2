@@ -4,7 +4,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useState } from 'react';
-import { Button } from '../components/Button';
+import { Button } from '../components/Buttons/Button';
 import MainContainer from '../components/MainContainer';
 import { SERVICE_ICONS } from '../config/services';
 import { Service, serviceSchema } from '../model/services';

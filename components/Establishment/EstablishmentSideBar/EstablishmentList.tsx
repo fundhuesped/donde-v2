@@ -93,7 +93,7 @@ const EstablishmentList = React.memo<Props>((props) => {
                   ))}
                 </CardList>
                 <footer className={classNames('mt-4 w-full p-0 flex justify-start')}>
-                  <Pill className="{text-xs }">Cargado por Fundación Huesped</Pill>
+                  <Pill className="{text-dark-gray text-xs }">Cargado por Fundación Huesped</Pill>
                 </footer>
               </Card>
             );

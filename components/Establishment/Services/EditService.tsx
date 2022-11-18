@@ -2,7 +2,7 @@ import { PlusIcon, TrashIcon, XIcon } from '@heroicons/react/outline';
 import { uniqueId } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Service } from '../../../model/services';
-import { Button } from '../../Button';
+import { Button } from '../../Buttons/Button';
 import { ServicesModal } from '../AvailableServices';
 import { Hour } from './components/Hour';
 import { Day, ServiceOnEstablishmentOpeningTimeFormat, SubService } from './types';
@@ -31,6 +31,7 @@ const EditService = (props: EditServiceProps) => {
   const [subserviceDisabled, setSubserviceDisabled] = useState<boolean>(true);
   const [subserviceId, setSubserviceId] = useState<string | null>(null);
   const [subserviceOnService, setSubserviceOnService] = useState<Service[] | null>(null);
+  const [openStatus, setOpenStatus] = useState<boolean>(false);
 
   const setServiceHandler = (id: string) => {
     const serviceSelected = availableServices.filter((ser) => ser.id == id);
@@ -38,7 +39,6 @@ const EditService = (props: EditServiceProps) => {
     if (modalService) {
       var serviceAlreadyActivated = activeServices.find((service) => service.serviceId == serviceSelected[0].id);
 
-      console.log(serviceSelected, serviceAlreadyActivated);
       if (serviceAlreadyActivated || serviceSelected[0].id == modalService[0]?.serviceId) {
         setServiceId(null);
         setError('El servicio seleccionado ya está activo, seleccione uno que no este activo');
@@ -69,7 +69,7 @@ const EditService = (props: EditServiceProps) => {
     setChecked(updatedList);
   };
 
-  const isChecked = (item: string) => (checked.includes(item) ? 'text-primary' : '');
+  const isChecked = (item: string) => (checked.includes(item) ? 'text-primary bg-secondary' : '');
 
   const addHour = () => {
     if (checkedDays.length) {
@@ -99,8 +99,21 @@ const EditService = (props: EditServiceProps) => {
       setServiceId(modalService[0].serviceId);
       setPhoneNumber(modalService[0].phoneNumber);
       setDetails(modalService[0].details);
-      setOpeningTimes(modalService[0].openingTimes);
       setEmail(modalService[0].email);
+      setOpeningTimes(modalService[0].openingTimes);
+      var hasHours = modalService[0].openingTimes.find(
+        (day) => day.endTime !== ('00:00' as unknown as Date) && day.startTime !== ('00:00' as unknown as Date),
+      );
+
+      if (!hasHours) {
+        var checkedDays = modalService[0].openingTimes.map((day) => {
+          return day.day;
+        });
+        setChecked(checkedDays);
+        setCheckedDays(checkedDays);
+        setOpeningTimes([]);
+        setOpenStatus(true);
+      }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -137,9 +150,30 @@ const EditService = (props: EditServiceProps) => {
       return null;
     }
 
-    const formatGetDays = getDays.map((day) => {
+    var formatGetDays = getDays.map((day) => {
       return { day: day.day, startTime: day.startTime, endTime: day.endTime };
     });
+
+    if (openStatus) {
+      if (checkedDays.length) {
+        const mappedDays = checkedDays.map((day) => {
+          return {
+            day: day as Day,
+            startTime: '00:00',
+            endTime: '00:00',
+          };
+        });
+        formatGetDays = mappedDays;
+      } else {
+        formatGetDays = [
+          {
+            day: 'M' as Day,
+            startTime: '00:00',
+            endTime: '00:00',
+          },
+        ];
+      }
+    }
 
     const updatedServicesId = new Set(activeServicesId);
     const updatedServices: { id: string }[] = activeServices;
@@ -276,10 +310,12 @@ const EditService = (props: EditServiceProps) => {
               <label className="relative cursor-pointer text-center items-center content-center justify-center ">
                 <input
                   type="checkbox"
-                  className="form-check-input appearance-none  w-8 h-8 mr-3  border rounded-full bg-ultra-light-gray checked:bg-secondary  focus:outline-none transition duration-200 mt-1 align-middle cursor-pointer z-30 "
-                  name="checkbox"
+                  className={`form-check-input appearance-none  w-8 h-8 mr-3  border rounded-full bg-ultra-light-gray focus:outline-none transition duration-200 mt-1 align-middle cursor-pointer z-30  ${isChecked(
+                    'M',
+                  )} `}
                   value={'M'}
                   id={'lunes'}
+                  checked={checked.includes('M')}
                   onChange={(e) => handleCheck(e)}
                 />
                 <span className={`absolute left-2.5 right-5 top-0 z-40 ${isChecked('M')} `}>L</span>
@@ -289,10 +325,13 @@ const EditService = (props: EditServiceProps) => {
               <label className="relative cursor-pointer text-center items-center content-center justify-center ">
                 <input
                   type="checkbox"
-                  className="form-check-input appearance-none  w-8 h-8 mr-3  border rounded-full bg-ultra-light-gray checked:bg-secondary  focus:outline-none transition duration-200 mt-1 align-middle cursor-pointer z-30 "
+                  className={`form-check-input appearance-none  w-8 h-8 mr-3  border rounded-full bg-ultra-light-gray focus:outline-none transition duration-200 mt-1 align-middle cursor-pointer z-30  ${isChecked(
+                    'T',
+                  )} `}
                   name="checkbox"
                   value={'T'}
                   id={'martes'}
+                  checked={checked.includes('T')}
                   onChange={(e) => handleCheck(e)}
                 />
                 <span className={`absolute left-2.5 right-5 top-0 z-40 ${isChecked('T')} `}>M</span>
@@ -302,10 +341,13 @@ const EditService = (props: EditServiceProps) => {
               <label className="relative cursor-pointer text-center items-center content-center justify-center ">
                 <input
                   type="checkbox"
-                  className="form-check-input appearance-none  w-8 h-8 mr-3  border rounded-full bg-ultra-light-gray checked:bg-secondary  focus:outline-none transition duration-200 mt-1 align-middle cursor-pointer z-30 "
+                  className={`form-check-input appearance-none  w-8 h-8 mr-3  border rounded-full bg-ultra-light-gray focus:outline-none transition duration-200 mt-1 align-middle cursor-pointer z-30  ${isChecked(
+                    'W',
+                  )} `}
                   name="checkbox"
                   value={'W'}
                   id={'miercoles'}
+                  checked={checked.includes('W')}
                   onChange={(e) => handleCheck(e)}
                 />
                 <span className={`absolute left-2.5 right-5 top-0 z-40 ${isChecked('W')}`}>X</span>
@@ -315,10 +357,13 @@ const EditService = (props: EditServiceProps) => {
               <label className="relative cursor-pointer text-center items-center content-center justify-center ">
                 <input
                   type="checkbox"
-                  className="form-check-input appearance-none  w-8 h-8 mr-3  border rounded-full bg-ultra-light-gray checked:bg-secondary  focus:outline-none transition duration-200 mt-1 align-middle cursor-pointer z-30 "
+                  className={`form-check-input appearance-none  w-8 h-8 mr-3  border rounded-full bg-ultra-light-gray focus:outline-none transition duration-200 mt-1 align-middle cursor-pointer z-30  ${isChecked(
+                    'R',
+                  )} `}
                   name="checkbox"
                   value={'R'}
                   id={'jueves'}
+                  checked={checked.includes('R')}
                   onChange={(e) => handleCheck(e)}
                 />
                 <span className={`absolute left-2.5 right-5 top-0 z-40 ${isChecked('R')}  `}>J</span>
@@ -328,10 +373,13 @@ const EditService = (props: EditServiceProps) => {
               <label className="relative cursor-pointer text-center items-center content-center justify-center ">
                 <input
                   type="checkbox"
-                  className="form-check-input appearance-none  w-8 h-8 mr-3  border rounded-full bg-ultra-light-gray checked:bg-secondary  focus:outline-none transition duration-200 mt-1 align-middle cursor-pointer z-30 "
+                  className={`form-check-input appearance-none  w-8 h-8 mr-3  border rounded-full bg-ultra-light-gray focus:outline-none transition duration-200 mt-1 align-middle cursor-pointer z-30  ${isChecked(
+                    'F',
+                  )} `}
                   name="checkbox"
                   value={'F'}
                   id={'viernes'}
+                  checked={checked.includes('F')}
                   onChange={(e) => handleCheck(e)}
                 />
                 <span className={`absolute left-2.5 right-5 top-0 z-40 ${isChecked('F')}`}>V</span>
@@ -341,10 +389,12 @@ const EditService = (props: EditServiceProps) => {
               <label className="relative cursor-pointer text-center items-center content-center justify-center ">
                 <input
                   type="checkbox"
-                  className="form-check-input appearance-none  w-8 h-8 mr-3  border rounded-full bg-ultra-light-gray checked:bg-secondary  focus:outline-none transition duration-200 mt-1 align-middle cursor-pointer z-30 "
-                  name="checkbox"
+                  className={`form-check-input appearance-none  w-8 h-8 mr-3  border rounded-full bg-ultra-light-gray focus:outline-none transition duration-200 mt-1 align-middle cursor-pointer z-30  ${isChecked(
+                    'S',
+                  )} `}
                   value={'S'}
                   id={'sabado'}
+                  checked={checked.includes('S')}
                   onChange={(e) => handleCheck(e)}
                 />
                 <span className={`absolute left-2.5 right-5 top-0 z-40 ${isChecked('S')}`}>S</span>
@@ -354,42 +404,33 @@ const EditService = (props: EditServiceProps) => {
               <label className="relative cursor-pointer text-center items-center content-center justify-center">
                 <input
                   type="checkbox"
-                  className="form-check-input appearance-none  w-8 h-8 mr-3  border rounded-full bg-ultra-light-gray checked:bg-secondary  focus:outline-none transition duration-200 mt-1 align-middle cursor-pointer z-30 "
-                  name="checkbox"
+                  className={`form-check-input appearance-none  w-8 h-8 mr-3  border rounded-full bg-ultra-light-gray focus:outline-none transition duration-200 mt-1 align-middle cursor-pointer z-30  ${isChecked(
+                    'U',
+                  )} `}
                   value={'U'}
                   id={'domingo'}
+                  checked={checked.includes('U')}
                   onChange={(e) => handleCheck(e)}
                 />
                 <span className={`absolute left-2.5 right-5 top-0 z-40 ${isChecked('U')}`}>D</span>
               </label>
             </li>
           </ul>
-          {/* <div className='flex flex-row justify-evenly p-4'>
-                        <div className='mr-4'>
-                            <label htmlFor="" className='text-sm font-normal'>
-                                <input 
-                                    type={'checkbox'} 
-                                    className={'form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-secondary checked:border-primary focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer'}
-                                    // checked={!checkedOpen}
-                                    // name='state[]'
-                                    // value='openState'
-                                    // onChange={handleOnChange}
-                                />
-                            Abierto las 24hs</label>
-                        </div>
-                        <div>
-                            <label htmlFor="" className='text-sm font-normal'>
-                                <input 
-                                    type={'checkbox'} 
-                                    className={'form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-secondary checked:border-primary focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer'} 
-                                    // checked={checkedOpen}
-                                    // onChange={handleOnChange}
-                                    name='state[]'
-                                    value='openState'
-                                />
-                            Cerrado</label>
-                        </div>                    
-                    </div> */}
+          <div className="flex flex-row justify-evenly p-4">
+            <div className="mr-4">
+              <label htmlFor="" className="text-sm font-normal">
+                <input
+                  type={'checkbox'}
+                  className={
+                    'form-check-input h-4 w-4 border accent-primary focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer'
+                  }
+                  checked={openStatus === true}
+                  onChange={() => setOpenStatus(!openStatus)}
+                />
+                Abierto las 24hs
+              </label>
+            </div>
+          </div>
         </div>
         {getDays.map((dayHour, idx) => {
           return (
@@ -402,7 +443,11 @@ const EditService = (props: EditServiceProps) => {
             />
           );
         })}
-        <button onClick={addHour} className={'flex text-primary font-bold p-2 btn-inherit'}>
+        <button
+          onClick={addHour}
+          className={'flex text-primary font-bold p-2 btn-inherit disabled:text-gray-500'}
+          disabled={openStatus == true}
+        >
           <span className="mr-1 mt-1 mb-3">
             <PlusIcon className=" w-4 mx-1 text-primary" />
           </span>

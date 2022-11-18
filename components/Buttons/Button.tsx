@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import React, { ReactNode } from 'react';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
 
 type Props = React.PropsWithChildren<
   {

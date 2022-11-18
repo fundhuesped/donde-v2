@@ -153,8 +153,8 @@ export const EstablishmentDetail = React.memo<Props>((props) => {
           </>
         )}
 
-        <Pill onClick={() => handleDetailsClick(activeEstablishment.id)} className={'cursor-pointer'}>
-          Cargado por Fundación Huesped
+        <Pill onClick={() => handleDetailsClick(activeEstablishment.id)} className={'text-dark-gray cursor-pointer'}>
+          Actualizado por Fundación Huesped
         </Pill>
       </footer>
 

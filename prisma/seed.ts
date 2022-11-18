@@ -12,7 +12,7 @@ async function main() {
 
   const tests = await prisma.service.create({
     data: {
-      name: 'Test de ITS',
+      name: 'Test VIH y otras ITS',
       icon: ServiceIcon.ITS,
     },
   });
@@ -45,7 +45,7 @@ async function main() {
           id: aborto.id,
         },
       },
-      name: 'No está confirmado que asesore o realice interrupción legal del embarazo',
+      name: 'No está confirmado que asesore o realice interrupción voluntaria del embarazo.',
     },
   });
 
@@ -56,7 +56,7 @@ async function main() {
           id: aborto.id,
         },
       },
-      name: 'Ofrece asesoramiento sobre interrupción voluntaria del embarazo',
+      name: 'Ofrece asesoramiento sobre interrupción voluntaria del embarazo y derivación.',
     },
   });
 
@@ -67,7 +67,7 @@ async function main() {
           id: aborto.id,
         },
       },
-      name: 'Ofrece asesoramiento y derivación sobre interrupción voluntaria del embarazo',
+      name: 'Ofrece asesoramiento sobre interrupción voluntaria del embarazo.',
     },
   });
 
@@ -78,7 +78,7 @@ async function main() {
           id: aborto.id,
         },
       },
-      name: 'Ofrece asesoramiento y realiza interrupción legal del embarazo',
+      name: 'Ofrece asesoramiento y realiza interrupción voluntaria del embarazo.',
     },
   });
 

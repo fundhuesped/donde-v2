@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import MainContainer from '../components/MainContainer';
 import { Modal } from '../components/Modal';
+import countries from '../utils/countries';
 
 type FormValues = {
   firstName: string;
@@ -90,35 +91,6 @@ const SignUp: NextPage = () => {
       console.log('Enviado con exito');
     }
   }, [setResponse, response]);
-
-  const countries = [
-    'Argentina',
-    'Bolivia',
-    'Brasil',
-    'Chile',
-    'Colombia',
-    'Costa Rica',
-    'Cuba',
-    'Ecuador',
-    'El Salvador',
-    'Guayana Francesa',
-    'Granada',
-    'Guatemala',
-    'Guayana',
-    'Haití',
-    'Honduras',
-    'Jamaica',
-    'México',
-    'Nicaragua',
-    'Paraguay',
-    'Panamá',
-    'Perú',
-    'Puerto Rico',
-    'República Dominicana',
-    'Surinam',
-    'Uruguay',
-    'Venezuela',
-  ];
 
   return (
     <>
@@ -273,7 +245,9 @@ const SignUp: NextPage = () => {
                   País de la organización
                 </option>
                 {countries.map((country) => (
-                  <option key={`country-${country}`}>{country}</option>
+                  <option key={`country-${country.code}`} value={country.name}>
+                    {country.name}
+                  </option>
                 ))}
               </select>
               <p className="color-primary text-sm">{errors.organizationCountry?.message}</p>

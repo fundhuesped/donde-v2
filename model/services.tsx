@@ -9,6 +9,14 @@ export enum ServiceIcon {
   PRESERVATIVOS = 'PRESERVATIVOS',
 }
 
+export enum ServiceName {
+  ITS = 'Test VIH y otras ITS',
+  MAC = 'Métodos anticonceptivos',
+  ABORTO = 'Interrupción voluntaria del embarazo',
+  VACUNATORIOS = 'Vacunatorios',
+  PRESERVATIVOS = 'Preservativos',
+}
+
 export type Service = {
   id: string;
   name: string;
