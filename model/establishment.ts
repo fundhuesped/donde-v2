@@ -46,6 +46,7 @@ export const editEstablishmentSchema = yup.object({
 export type Establishment = {
   id: string;
   officialId: string | null;
+  legacyId: string;
   name: string;
   type:
     | 'HEALTH_ESTABLISHMENT'
@@ -66,6 +67,7 @@ export type Establishment = {
   country: string;
   latitude: number;
   longitude: number;
+  status: PrismaClient.EstablishmentStatus;
   services: (PrismaClient.ServiceOnEstablishment & {
     service: PrismaClient.Service;
     subservice: PrismaClient.Subservice | null;
