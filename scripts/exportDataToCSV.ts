@@ -3,7 +3,7 @@ import { Establishment } from "../model/establishment";
 import { ServiceName } from "../model/services";
 import { formatEstablishmentType } from "../utils/establishments";
 
-const CSVHeaders = [
+export const CSVHeaders = [
     { label: 'ID Oficial', key: 'officialId' },
     { label: 'ID FH', key: 'legacyId' },
     { label: 'establecimiento', key: 'name' },
@@ -113,7 +113,7 @@ function createCSVRecord(establishment: Establishment): any {
         mac: macService ? 'SI' : 'NO',
         its: itsService ? 'SI' : 'NO',
         aborto: abortoService ? 'SI' : 'NO',
-        vac: vacService ? 'SI' : 'NO',
+        vacunatorio: vacService ? 'SI' : 'NO',
         preservativosPhoneNumber: preservativosService?.phoneNumber,
         preservativosEmail: preservativosService?.email,
         preservativosDetails: preservativosService?.details,
@@ -126,7 +126,7 @@ function createCSVRecord(establishment: Establishment): any {
         itsEmail: itsService?.email,
         itsDetails: itsService?.details,
         itsOpeningTimes: itsService?.openingTimes ? formatOpeningTimesToCSVCellFormat(itsService.openingTimes) : '',
-        abortoSubervice: abortoService?.subservice?.name ? abortoService.subservice.name : '',
+        abortoSubservice: abortoService?.subservice?.name ? abortoService.subservice.name : '',
         abortoPhoneNumber: abortoService?.phoneNumber,
         abortoEmail: abortoService?.email,
         abortoDetails: abortoService?.details,
