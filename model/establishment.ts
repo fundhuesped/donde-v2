@@ -46,7 +46,7 @@ export const editEstablishmentSchema = yup.object({
 export type Establishment = {
   id: string;
   officialId: string | null;
-  legacyId: string;
+  legacyId: number;
   name: string;
   type:
     | 'HEALTH_ESTABLISHMENT'

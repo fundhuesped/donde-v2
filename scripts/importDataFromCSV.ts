@@ -102,7 +102,7 @@ const OpeningTimesRegex =
   /(\s*[L, M, X, J, V, S, D]-(([0-2][0-3]|[0-1][0-9]):[0-5][0-9])-(([0-2][0-3]|[0-1][0-9]):[0-5][0-9])\s*;?$)+/;
 
 const ServiceOnEstablishmentPhoneNumberSchema = z
-  .preprocess((val) => (val ? val.toString() : null), z.string().max(100).nullable())
+  .preprocess((val) => (val ? (typeof val == 'number' ? val.toString() : val) : null), z.string().max(100).nullable())
   .optional();
 const ServiceOnEstablishmentEmailSchema = z.preprocess((val) => (val ? val : null), z.string().max(254).nullable()).optional();
 const ServiceOnEstablishmentDetailsSchema = z.preprocess((val) => (val ? val : null), z.string().nullable()).optional();
