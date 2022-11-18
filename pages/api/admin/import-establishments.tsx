@@ -55,7 +55,7 @@ const handler: NextApiHandler = async (req, res) => {
 
 const parseForm = async (req: NextApiRequest): Promise<{ fields: formidable.Fields; files: formidable.Files }> => {
   return await new Promise(async (resolve, reject) => {
-    let maxFileSize = 10;
+    let maxFileSize = 5;
     if (process.env.IMPORT_MAX_FILE_SIZE_MB) {
       maxFileSize = +process.env.IMPORT_MAX_FILE_SIZE_MB;
     }

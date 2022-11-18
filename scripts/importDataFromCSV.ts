@@ -102,7 +102,7 @@ const OpeningTimesRegex =
   /(\s*[L, M, X, J, V, S, D]-(([0-2][0-3]|[0-1][0-9]):[0-5][0-9])-(([0-2][0-3]|[0-1][0-9]):[0-5][0-9])\s*;?$)+/;
 
 const ServiceOnEstablishmentPhoneNumberSchema = z
-  .preprocess((val) => (val ? val : null), z.string().max(100).nullable())
+  .preprocess((val) => (val ? (typeof val == 'number' ? val.toString() : val) : null), z.string().max(100).nullable())
   .optional();
 const ServiceOnEstablishmentEmailSchema = z.preprocess((val) => (val ? val : null), z.string().max(254).nullable()).optional();
 const ServiceOnEstablishmentDetailsSchema = z.preprocess((val) => (val ? val : null), z.string().nullable()).optional();
@@ -274,6 +274,7 @@ async function parseLegacyData(path: string): Promise<LegacyDataRecord[]> {
       cast: true,
     });
   } catch (e) {
+    console.log(e);
     throw new Error(
       'Hubo un fallo al leer el archivo en la fase inicial de la importación. Si el error persiste contacte al equipo de desarrollo.',
     );
@@ -287,6 +288,7 @@ async function parseLegacyData(path: string): Promise<LegacyDataRecord[]> {
         return await LegacyDataRecordSchema.parseAsync(record);
       } catch (error) {
         const zodError = error as ZodError;
+        console.log(zodError);
         const row = index + 2;
         validationErrors.push(
           `La fila ${row} tiene valores incorrectos en los campos: ` +
