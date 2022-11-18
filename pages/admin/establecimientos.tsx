@@ -1,4 +1,3 @@
-import { XIcon } from '@heroicons/react/solid';
 import axios from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
@@ -11,7 +10,6 @@ import { ImportEstablishmentButton } from '../../components/Buttons/ImportEstabl
 import Loading from '../../components/Loading';
 import ImportModal from '../../components/Modal/ImportModal';
 import Pagination from '../../components/Pagination';
-import { Pill } from '../../components/Pill';
 import Filtros from '../../components/Table/AdminEstablecimientosTable/Filter/Filtros';
 import MultipleSearch from '../../components/Table/AdminEstablecimientosTable/Filter/MultipleSearch';
 import { establishmentTypes } from '../../components/Table/AdminEstablecimientosTable/Filter/types';
@@ -42,11 +40,19 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
   const router = useRouter();
   const [importModal, setImportModal] = useState<boolean>(false);
   // const [descargarModal, setDescargarModal] = useState<boolean>(false);
-  const [querySearch, setQuerySearch] = useState<string>('');
+  const [queryName, setQueryName] = useState<string>('');
+  const [queryStreet, setQueryStreet] = useState<string>('');
+  const [queryProvince, setQueryProvince] = useState<string>('');
+  const [queryCity, setQueryCity] = useState<string>('');
+  const [queryCountry, setQueryCountry] = useState<any>(() => new Set<string>());
+  const [queryType, setQueryType] = useState<any>(() => new Set<string>());
+  const [queryService, setQueryService] = useState<any>(() => new Set<string>());
   const [filters, setFilters] = useState<any>(() => new Set<string>());
   const [isLoading, setIsLoading] = useState(true);
 
-  const queryFilter = Array.from(filters);
+  const queryFilterCountry = Array.from(queryCountry);
+  const queryFilterType = Array.from(queryType);
+  const queryFilterService = Array.from(queryService);
   const [filteredEstablishments, setFilteredEstablishments] = useState<any>([]);
 
   const { data: establishments } = useSWR(router.isReady ? '/api/establishments' : null, (url) =>
@@ -60,53 +66,25 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
     return filtered?.name;
   };
 
-  const handleChange = (filter: string) => {
-    const update = filters.has(filter);
-    if (update) {
-      setFilters((prev: any) => {
-        const next = new Set(prev);
-        next.delete(filter);
-        return next;
-      });
-    } else {
-      setFilters((prev: any) => new Set(prev).add(filter));
-    }
-  };
-
   useEffect(() => {
     setFilteredEstablishments(
       establishments?.filter((establishment: Establishment) => {
-        if (queryFilter.length) {
-          console.log(queryFilter);
-          console.log(
-            queryFilter.includes(establishment.name.toLowerCase()) && queryFilter.includes(setType(establishment.type)),
-          );
-
-          return (
-            queryFilter.includes(setType(establishment.type)) &&
-            establishment.services.filter((service) => queryFilter.includes(service.service.name)).length !== 0 &&
-            queryFilter.includes(establishment.name.toLowerCase()) &&
-            queryFilter.includes(establishment.city.toLowerCase()) &&
-            queryFilter.includes(establishment.province.toLowerCase()) &&
-            queryFilter.includes(establishment.country)
-          );
-        }
-        // if (querySearch) {
-        //   return (
-        //     establishment.name.toLowerCase().includes(querySearch.toLowerCase()) ||
-        //     establishment.street.toLowerCase().includes(querySearch.toLowerCase()) ||
-        //     establishment.city.toLowerCase().includes(querySearch.toLowerCase()) ||
-        //     establishment.province.toLowerCase().includes(querySearch.toLowerCase())
-        //   );
-        // }
-        setIsLoading(false);
-        console.log(establishment);
-
-        return establishment;
+        setIsLoading(true);
+        return (
+          establishment.name.includes(queryName) &&
+          establishment.street.includes(queryStreet) &&
+          establishment.province.includes(queryProvince) &&
+          establishment.city.includes(queryCity) &&
+          (queryFilterType.length == 0 || queryFilterType.includes(setType(establishment.type))) &&
+          (queryFilterService.length == 0 ||
+            establishment.services.filter((service) => queryFilterService.includes(service.service.name)).length !== 0) &&
+          (queryFilterCountry.length == 0 || queryFilterCountry.includes(establishment.country))
+        );
       }),
     );
+    setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [establishments, setFilters, filters, querySearch]);
+  }, [establishments, queryCountry, queryType, queryService, queryName, queryStreet, queryCity, queryProvince]);
 
   const deleteFilter = (filter: string) => {
     setFilters((prev: any) => {
@@ -165,10 +143,23 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
               <AddEstablishmentButton />
             </div>
           </div>
-          <MultipleSearch handleChange={handleChange} />
-          <Filtros services={availableServices} setFilters={setFilters} filters={filters} />
+          <MultipleSearch
+            setQueryName={setQueryName}
+            setQueryStreet={setQueryStreet}
+            setQueryProvince={setQueryProvince}
+            setQueryCity={setQueryCity}
+          />
+          <Filtros
+            services={availableServices}
+            queryType={queryType}
+            queryService={queryService}
+            queryCountry={queryCountry}
+            setQueryType={setQueryType}
+            setQueryService={setQueryService}
+            setQueryCountry={setQueryCountry}
+          />
           <div className="w-full py-4 flex justify-between ">
-            <div className="ml-20 flex flex-wrap w-fit">
+            {/* <div className="ml-20 flex flex-wrap w-fit">
               {queryFilter &&
                 queryFilter.map((filter: any) => (
                   <>
@@ -180,7 +171,7 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
                     </Pill>
                   </>
                 ))}
-            </div>
+            </div> */}
             <div className="">
               <DownloadButton filteredEstablishments={filteredEstablishments} />
             </div>

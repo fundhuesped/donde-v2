@@ -5,12 +5,16 @@ import { countries, establishmentTypes } from './types';
 
 type Props = React.PropsWithChildren<{
   services: Service[];
-  filters: Set<string>;
-  setFilters: (x: any) => void;
+  queryType: Set<string>;
+  setQueryType: (x: any) => void;
+  queryService: Set<string>;
+  setQueryService: (x: any) => void;
+  queryCountry: Set<string>;
+  setQueryCountry: (x: any) => void;
 }>;
 
 const Filtros = (props: Props) => {
-  const { filters, setFilters, services } = props;
+  const { queryService, queryType, setQueryCountry, setQueryService, setQueryType, queryCountry, services } = props;
 
   return (
     <div className="w-full flex flex-col lg:flex-row">
@@ -19,11 +23,17 @@ const Filtros = (props: Props) => {
         className={'mr-2'}
         items={establishmentTypes}
         placeholder={'Tipo de establecimiento'}
-        filters={filters}
-        setFilters={setFilters}
+        filters={queryType}
+        setFilters={setQueryType}
       />
-      <MultipleSelect className={'mr-2'} items={services} placeholder={'Servicio'} filters={filters} setFilters={setFilters} />
-      <MultipleSelect className={''} items={countries} placeholder={'País'} filters={filters} setFilters={setFilters} />
+      <MultipleSelect
+        className={'mr-2'}
+        items={services}
+        placeholder={'Servicio'}
+        filters={queryService}
+        setFilters={setQueryService}
+      />
+      <MultipleSelect className={''} items={countries} placeholder={'País'} filters={queryCountry} setFilters={setQueryCountry} />
     </div>
   );
 };
