@@ -65,7 +65,7 @@ const MultipleSelect = (props: Props) => {
                       type="checkbox"
                       value=""
                       checked={handleChecked(item.name)}
-                      className="form-check-input appearance-none w-4 h-4 text-black bg-gray-200 rounded border-gray-300 focus:ring-1 checked:bg-primary checked:border-primary"
+                      className="form-check-input w-4 h-4 text-black bg-gray-200 rounded border-gray-300 accent-primary checked:bg-primary checked:border-primary"
                       onChange={() => handleChange(item.name)}
                     />
                     <label htmlFor={`${item.name}-checkbox`} className="ml-2 text-sm font-normal text-gray-700">

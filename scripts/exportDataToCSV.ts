@@ -72,7 +72,6 @@ function formatOpeningTimesToCSVCellFormat(openingTimes: ServiceOnEstablishmentO
   let openingTimesString: string = '';
   let index = 0;
   for (const openingTime of openingTimes) {
-    console.log(openingTime.endTime);
     let singleOpeningTimeString = formatOpeningTimeDay(openingTime.day) + '-' + openingTime.startTime + '-' + openingTime.endTime;
     if (index < openingTimes.length - 1) {
       singleOpeningTimeString += '; ';

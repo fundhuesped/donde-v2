@@ -1,6 +1,6 @@
+import classNames from 'classnames';
 import React, { ReactNode } from 'react';
 import { SortTableArrows } from './SortTableArrows';
-import classNames from 'classnames';
 
 type Props = React.PropsWithChildren<{
   onColumnSort: (accessor: string) => void;
@@ -29,7 +29,7 @@ const ColumnHeader = React.memo<ColumnHeaderProp>((props) => {
   );
 });
 
-const TableHead = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
+const TableHead = (props: Props) => {
   const { onColumnSort } = props;
 
   return (
@@ -46,5 +46,5 @@ const TableHead = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
       </thead>
     </>
   );
-});
+};
 export default TableHead;

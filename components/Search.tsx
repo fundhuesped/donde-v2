@@ -9,10 +9,11 @@ type Props = React.PropsWithChildren<{
   onChange?: (e: any) => void;
   className?: string;
   iconClassName?: string;
+  onKeyPress?: (e: any) => void;
 }>;
 
-export const Search = React.forwardRef<HTMLDivElement, Props>((props) => {
-  const { placeholder, name, value, defaultValue, onChange, className, iconClassName } = props;
+export const Search = (props: Props) => {
+  const { placeholder, onKeyPress, name, value, defaultValue, onChange, className, iconClassName } = props;
 
   return (
     <>
@@ -23,8 +24,9 @@ export const Search = React.forwardRef<HTMLDivElement, Props>((props) => {
         defaultValue={defaultValue}
         value={value}
         onChange={onChange}
+        onKeyPress={onKeyPress}
       />
       <SearchIcon className={iconClassName} />
     </>
   );
-});
+};

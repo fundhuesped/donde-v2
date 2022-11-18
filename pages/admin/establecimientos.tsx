@@ -1,4 +1,3 @@
-import { XIcon } from '@heroicons/react/solid';
 import axios from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
@@ -6,19 +5,20 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { AddEstablishmentButton } from '../../components/Buttons/AddEstablishmentButton';
+import DownloadButton from '../../components/Buttons/DownloadButton';
 import { ImportEstablishmentButton } from '../../components/Buttons/ImportEstablishmentButton';
 import Loading from '../../components/Loading';
 import ImportModal from '../../components/Modal/ImportModal';
 import Pagination from '../../components/Pagination';
-import { Pill } from '../../components/Pill';
-import { Search } from '../../components/Search';
 import Filtros from '../../components/Table/AdminEstablecimientosTable/Filter/Filtros';
+import MultipleSearch from '../../components/Table/AdminEstablecimientosTable/Filter/MultipleSearch';
 import { establishmentTypes } from '../../components/Table/AdminEstablecimientosTable/Filter/types';
 import Table from '../../components/Table/AdminEstablecimientosTable/Table';
 import { usePaginator } from '../../hooks/usePaginator';
 import { Establishment } from '../../model/establishment';
 import { Service, serviceSchema } from '../../model/services';
 import { prismaClient } from '../../server/prisma/client';
+
 type ServerSideProps = {
   availableServices: Service[];
 };
@@ -40,11 +40,19 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
   const router = useRouter();
   const [importModal, setImportModal] = useState<boolean>(false);
   // const [descargarModal, setDescargarModal] = useState<boolean>(false);
-  const [querySearch, setQuerySearch] = useState<string>('');
+  const [queryName, setQueryName] = useState<string>('');
+  const [queryStreet, setQueryStreet] = useState<string>('');
+  const [queryProvince, setQueryProvince] = useState<string>('');
+  const [queryCity, setQueryCity] = useState<string>('');
+  const [queryCountry, setQueryCountry] = useState<any>(() => new Set<string>());
+  const [queryType, setQueryType] = useState<any>(() => new Set<string>());
+  const [queryService, setQueryService] = useState<any>(() => new Set<string>());
   const [filters, setFilters] = useState<any>(() => new Set<string>());
   const [isLoading, setIsLoading] = useState(true);
 
-  const queryFilter = Array.from(filters);
+  const queryFilterCountry = Array.from(queryCountry);
+  const queryFilterType = Array.from(queryType);
+  const queryFilterService = Array.from(queryService);
   const [filteredEstablishments, setFilteredEstablishments] = useState<any>([]);
 
   const { data: establishments } = useSWR(router.isReady ? '/api/establishments' : null, (url) =>
@@ -61,25 +69,22 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
   useEffect(() => {
     setFilteredEstablishments(
       establishments?.filter((establishment: Establishment) => {
-        if (queryFilter.length > 0) {
-          return (
-            queryFilter.includes(establishment.country) ||
-            queryFilter.includes(setType(establishment.type)) ||
-            establishment.services.filter((service) => queryFilter.includes(service.service.name)).length !== 0
-          );
-        }
-        if (querySearch) {
-          return (
-            establishment.name.toLowerCase().includes(querySearch.toLowerCase()) ||
-            establishment.street.toLowerCase().includes(querySearch.toLowerCase())
-          );
-        }
-        setIsLoading(false);
-        return establishment;
+        setIsLoading(true);
+        return (
+          establishment.name.includes(queryName) &&
+          establishment.street.includes(queryStreet) &&
+          establishment.province.includes(queryProvince) &&
+          establishment.city.includes(queryCity) &&
+          (queryFilterType.length == 0 || queryFilterType.includes(setType(establishment.type))) &&
+          (queryFilterService.length == 0 ||
+            establishment.services.filter((service) => queryFilterService.includes(service.service.name)).length !== 0) &&
+          (queryFilterCountry.length == 0 || queryFilterCountry.includes(establishment.country))
+        );
       }),
     );
+    setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [establishments, setFilters, filters, querySearch]);
+  }, [establishments, queryCountry, queryType, queryService, queryName, queryStreet, queryCity, queryProvince]);
 
   const deleteFilter = (filter: string) => {
     setFilters((prev: any) => {
@@ -138,18 +143,23 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
               <AddEstablishmentButton />
             </div>
           </div>
-          <div className="relative flex mt-6 lg:mt-0 lg:justify-end">
-            <Search
-              placeholder="Buscar por nombre o dirección"
-              name="search"
-              onChange={(e) => setQuerySearch(e.target.value)}
-              className={'input-style w-full ml-0 lg:ml-20 rounded-base h-12 rigth-0 text-sm text-gray-500 right-1'}
-              iconClassName={'absolute -translate-y-2/4 right-2 lg:rigth-full lg:ml-28 top-2/4 w-5 text-light-gray'}
-            />
-          </div>
-          <Filtros services={availableServices} setFilters={setFilters} filters={filters} />
+          <MultipleSearch
+            setQueryName={setQueryName}
+            setQueryStreet={setQueryStreet}
+            setQueryProvince={setQueryProvince}
+            setQueryCity={setQueryCity}
+          />
+          <Filtros
+            services={availableServices}
+            queryType={queryType}
+            queryService={queryService}
+            queryCountry={queryCountry}
+            setQueryType={setQueryType}
+            setQueryService={setQueryService}
+            setQueryCountry={setQueryCountry}
+          />
           <div className="w-full py-4 flex justify-between ">
-            <div className="ml-20 flex flex-wrap w-fit">
+            {/* <div className="ml-20 flex flex-wrap w-fit">
               {queryFilter &&
                 queryFilter.map((filter: any) => (
                   <>
@@ -161,10 +171,10 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
                     </Pill>
                   </>
                 ))}
-            </div>
-            {/* <div className="">
-              <DownloadButton onClick={() => setDescargarModal(true)} />
             </div> */}
+            <div className="">
+              <DownloadButton filteredEstablishments={filteredEstablishments} />
+            </div>
           </div>
           <p className="text-gray-600 text-xs mb-2 ">
             Total de establecimientos: <span className="text-gray-800">{totalEstablishment}</span>

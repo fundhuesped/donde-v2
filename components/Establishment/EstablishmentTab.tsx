@@ -1,4 +1,5 @@
 import { AtSymbolIcon, ClockIcon, GlobeAltIcon, LocationMarkerIcon, PhoneIcon } from '@heroicons/react/outline';
+import { ServiceOnEstablishmentOpeningTime } from '@prisma/client';
 import React from 'react';
 import { SERVICE_ICONS } from '../../config/services';
 import { Establishment } from '../../model/establishment';
@@ -43,6 +44,13 @@ const EstablishmentTab = React.memo<Props>((props) => {
       case 'U':
         return 'Domingo';
     }
+  };
+
+  var checkOpenStatus = (openingTimes: ServiceOnEstablishmentOpeningTime[]) => {
+    var findStatus = openingTimes.find(
+      (day) => day.endTime === ('00:00' as unknown as Date) && day.startTime === ('00:00' as unknown as Date),
+    );
+    return findStatus;
   };
 
   return (
@@ -151,14 +159,28 @@ const EstablishmentTab = React.memo<Props>((props) => {
                       {serviceOnEstablishment.openingTimes.length ? (
                         <CardListItem icon={<ClockIcon className={'text-primary'} />}>
                           <div className="flex flex-wrap">
+                            {checkOpenStatus(serviceOnEstablishment.openingTimes) && (
+                              <span className="mr-2 bg-primary text-secondary rounded-lg p-0.5">
+                                <>Abierto 24hs</>
+                              </span>
+                            )}
+
                             {serviceOnEstablishment.openingTimes.map((date, idx) => {
-                              return (
-                                <span key={date.id + idx} className="mr-2">
-                                  <>
-                                    {getDay(date.day)} {date.startTime} - {date.endTime}
-                                  </>
-                                </span>
-                              );
+                              if (checkOpenStatus(serviceOnEstablishment.openingTimes)) {
+                                return (
+                                  <span key={date.id + idx} className="mr-2">
+                                    <>{getDay(date.day)}</>
+                                  </span>
+                                );
+                              } else {
+                                return (
+                                  <span key={date.id + idx} className="mr-2">
+                                    <>
+                                      {getDay(date.day)} {date.startTime} - {date.endTime}
+                                    </>
+                                  </span>
+                                );
+                              }
                             })}
                           </div>
                         </CardListItem>

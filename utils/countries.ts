@@ -1,4 +1,4 @@
-export const countries = [
+const countriesData = [
   { name: 'Belice', code: 'BZ' },
   { name: 'Costa Rica', code: 'CR' },
   { name: 'El Salvador', code: 'SV' },
@@ -32,3 +32,15 @@ export const countries = [
   { name: 'Trinidad y Tobago', code: 'TT' },
   { name: 'México', code: 'MX' },
 ];
+
+const countries = countriesData.sort(function (a, b) {
+  if (a.name > b.name) {
+    return 1;
+  }
+  if (a.name < b.name) {
+    return -1;
+  }
+  return 0;
+});
+
+export default countries;

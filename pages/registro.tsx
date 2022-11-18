@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import MainContainer from '../components/MainContainer';
 import { Modal } from '../components/Modal';
-import { countries } from '../utils/countries';
+import countries from '../utils/countries';
 
 type FormValues = {
   firstName: string;

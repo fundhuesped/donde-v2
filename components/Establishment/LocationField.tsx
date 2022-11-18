@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
-import { DraggableMap, DraggableMapProps } from '../DraggableMap';
 import { Bounds } from 'google-map-react';
+import { useState } from 'react';
+import { DraggableMap, DraggableMapProps } from '../DraggableMap';
 
 type LocationFieldProps = {
   onChange: (event: { currentTarget: { value: string; name: string } }) => void;
-  fullAddress: string;
+  province: string;
   street: string;
   streetNumber: string | null;
   apartment: string | null;
   intersection: string | null;
+  country: string | null;
+  city: string | null;
 } & Omit<DraggableMapProps, 'onChange'>;
 export const LocationField = (props: LocationFieldProps) => {
   const {
     onChange,
-    fullAddress,
+    province,
     street,
     streetNumber,
     apartment,
@@ -22,6 +24,8 @@ export const LocationField = (props: LocationFieldProps) => {
     onChildMouseMove: handleChildMouseMove,
     latitude,
     longitude,
+    country,
+    city,
   } = props;
   const [bounds, setBounds] = useState<Bounds | null>(null);
 
@@ -29,11 +33,25 @@ export const LocationField = (props: LocationFieldProps) => {
     <>
       <h3 className={'my-4 text-justify font-bold text-black'}>¿Dónde queda?</h3>
       <input
-        name={'fullAddress'}
+        name={'country'}
         className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0 '}
+        placeholder={'País'}
+        onChange={onChange}
+        value={country || undefined}
+      />
+      <input
+        name={'province'}
+        className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0  mt-6'}
         placeholder={'Estado / Provincia'}
         onChange={onChange}
-        value={fullAddress}
+        value={province || undefined}
+      />
+      <input
+        name={'city'}
+        className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0  mt-6'}
+        placeholder={'Ciudad'}
+        onChange={onChange}
+        value={city || undefined}
       />
       <input
         name={'street'}
