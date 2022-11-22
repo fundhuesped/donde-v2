@@ -158,7 +158,7 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
             setQueryService={setQueryService}
             setQueryCountry={setQueryCountry}
           />
-          <div className="w-full py-4 flex justify-between ">
+          <div className="w-full py-4 flex justify-end">
             {/* <div className="ml-20 flex flex-wrap w-fit">
               {queryFilter &&
                 queryFilter.map((filter: any) => (
