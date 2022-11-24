@@ -7,7 +7,7 @@ export const establishmentTypes = [
   { name: 'Otro', id: 'OTHER' },
 ];
 
-export const countries = [
+const countriesData = [
   { name: 'Argentina', id: 'AR' },
   { name: 'Bolivia', id: 'BO' },
   { name: 'Brasil', id: 'BR' },
@@ -41,3 +41,15 @@ export const countries = [
   { name: 'Trinidad y Tobago', id: 'TT' },
   { name: 'México', id: 'MX' },
 ];
+
+const countries = countriesData.sort(function (a, b) {
+  if (a.name > b.name) {
+    return 1;
+  }
+  if (a.name < b.name) {
+    return -1;
+  }
+  return 0;
+});
+
+export default countries;

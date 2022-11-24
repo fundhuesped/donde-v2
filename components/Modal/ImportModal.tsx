@@ -16,6 +16,7 @@ const ImportModal = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [response, setResponse] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [errorArray, setErrorArray] = useState<[] | null>([]);
 
   const onFileChange = (e: React.FormEvent<HTMLInputElement>) => {
     const eventTarget = e.target as HTMLInputElement;
@@ -49,7 +50,11 @@ const ImportModal = (props: Props) => {
       });
     } catch (e: any) {
       if (e.response.data.error) {
-        setError(e.response.data.error);
+        var errorSplit = e.response.data.error.split('.');
+        setErrorArray(errorSplit);
+        console.log(errorSplit);
+
+        setError(null);
       } else {
         setError('Error del servidor, vuelva a intentarlo');
       }
@@ -58,7 +63,14 @@ const ImportModal = (props: Props) => {
   };
 
   return (
-    <Modal bg={'bg-white'} width={'w-[32rem]'} rounded={'rounded-md'} showModal={showModal} className={'bg-neutral-600/50 '}>
+    <Modal
+      bg={'bg-white'}
+      width={'w-[32rem]'}
+      rounded={'rounded-md'}
+      showModal={showModal}
+      className={'bg-neutral-600/50 '}
+      height={' mt-0 lg:mt-4  max-h-screen overflow-x-hidden overflow-y-auto scroll-style'}
+    >
       <div className="w-full flex justify-end ">
         <button onClick={() => setShowModal(false)}>
           <XIcon className="mr-4 mt-4 text-primary w-4.5"></XIcon>
@@ -102,7 +114,7 @@ const ImportModal = (props: Props) => {
               </div>
             )}
           </div>
-          <div className="w-full flex justify-center py-3">
+          <div className="w-full flex justify-center pt-3 pb-1">
             <button
               className="btn-secondary w-1/3 p-1 flex justify-center aling-center text-sm mr-2 rounded-xl"
               type="button"
@@ -136,6 +148,27 @@ const ImportModal = (props: Props) => {
             <InformationCircleIcon className="w-6 text-primary mx-3" />
             <span className="font-light text-sm mr-2">{error}</span>
           </p>
+        </div>
+      )}
+      {errorArray && errorArray.length !== 0 && (
+        <div className="w-full h-30 flex justify-center mb-6 ">
+          <div className={'flex flex-col my-4 p-2 bg-ultra-light-salmon rounded-2xl mx-6'}>
+            <>
+              {errorArray.map((err: string, idx: number) => {
+                if (err !== '') {
+                  return (
+                    <div key={`index-${idx}`} className="flex font-light text-sm mr-2">
+                      <InformationCircleIcon className="w-6 text-primary mx-3" />
+                      {err}
+                      <br />
+                    </div>
+                  );
+                } else {
+                  return null;
+                }
+              })}
+            </>
+          </div>
         </div>
       )}
     </Modal>
