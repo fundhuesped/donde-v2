@@ -52,7 +52,7 @@ enum LegacyDataField {
   OPENING_TIMES_ABORTO = 'horario_aborto',
 }
 
-enum LegacyDataEstablishmentType {
+export enum LegacyDataEstablishmentType {
   HEALTH_ESTABLISHMENT = 'Establecimiento de salud público',
   SOCIAL_ORGANIZATION = 'Organización Social',
   PUBLIC_INSTITUTION = 'Organismo Público',
@@ -98,15 +98,30 @@ const LegacyDataAbortoSubserviceSchema = z
   )
   .optional();
 
-const OpeningTimesRegex =
-  /(\s*[L, M, X, J, V, S, D]-(([0-2][0-3]|[0-1][0-9]):[0-5][0-9])-(([0-2][0-3]|[0-1][0-9]):[0-5][0-9])\s*;?$)+/;
+const SingleOpeningTimeRegex =
+  /(^[L, M, X, J, V, S, D]-(([0-2][0-3]|[0-1][0-9]):[0-5][0-9])-(([0-2][0-3]|[0-1][0-9]):[0-5][0-9])$)/;
+
+const SingleOpeningTimeSchema = z.string().regex(SingleOpeningTimeRegex);
 
 const ServiceOnEstablishmentPhoneNumberSchema = z
   .preprocess((val) => (val ? (typeof val == 'number' ? val.toString() : val) : null), z.string().max(100).nullable())
   .optional();
 const ServiceOnEstablishmentEmailSchema = z.preprocess((val) => (val ? val : null), z.string().max(254).nullable()).optional();
 const ServiceOnEstablishmentDetailsSchema = z.preprocess((val) => (val ? val : null), z.string().nullable()).optional();
-const ServiceOnEstablishmentOpeningTimes = z.string().regex(OpeningTimesRegex).or(literal('')).optional();
+const ServiceOnEstablishmentOpeningTimes = z.string().refine((val) => {
+  if (val.length == 0) {
+    return true;
+  } else {
+    for (const singleDeconstructedOpeningTime of val.split(';')) {
+      try {
+        SingleOpeningTimeSchema.parse(singleDeconstructedOpeningTime.trim());
+      } catch (e) {
+        return false;
+      }
+    }
+    return true;
+  }
+}).optional();
 
 enum LegacyPublishedStatus {
   TRUE = 1,
@@ -270,11 +285,13 @@ async function parseLegacyData(path: string): Promise<LegacyDataRecord[]> {
     records = parse(buffer, {
       columns: true,
       skip_empty_lines: true,
-      trim: true,
+      trim: false,
       cast: true,
+      escape: '\\',
+      relax_quotes: true,
+      relax_column_count: true,
     });
   } catch (e) {
-    console.log(e);
     throw new Error(
       'Hubo un fallo al leer el archivo en la fase inicial de la importación. Si el error persiste contacte al equipo de desarrollo.',
     );
@@ -288,7 +305,6 @@ async function parseLegacyData(path: string): Promise<LegacyDataRecord[]> {
         return await LegacyDataRecordSchema.parseAsync(record);
       } catch (error) {
         const zodError = error as ZodError;
-        console.log(zodError);
         const row = index + 2;
         validationErrors.push(
           `La fila ${row} tiene valores incorrectos en los campos: ` +
