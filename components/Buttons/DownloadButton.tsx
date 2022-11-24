@@ -16,7 +16,6 @@ const DownloadButton = (props: Props) => {
       //@ts-ignore
       data={formatEstablishmentsForExport(filteredEstablishments ? filteredEstablishments : '')}
       headers={CSVHeaders}
-      enclosingCharacter={``}
       target="_blank"
       className="flex bg-inherent text-primary border-none text-sm mt-1.5"
     >

@@ -1,7 +1,6 @@
 import { Day, EstablishmentStatus, ServiceOnEstablishmentOpeningTime } from '@prisma/client';
 import { Establishment } from '../model/establishment';
 import { ServiceName } from '../model/services';
-import { formatEstablishmentType } from '../utils/establishments';
 
 export const CSVHeaders = [
   { label: 'ID Oficial', key: 'officialId' },
@@ -80,6 +79,19 @@ function formatOpeningTimesToCSVCellFormat(openingTimes: ServiceOnEstablishmentO
     index++;
   }
   return openingTimesString;
+}
+
+enum LegacyDataEstablishmentType {
+  HEALTH_ESTABLISHMENT = 'Establecimiento de salud público',
+  SOCIAL_ORGANIZATION = 'Organización Social',
+  PUBLIC_INSTITUTION = 'Organismo Público',
+  PRIVATE_INSTITUTION = 'Privado',
+  EDUCATIONAL_INSTITUTION = 'Establecimiento Educativo',
+  OTHER = 'Otro',
+}
+
+function formatEstablishmentType(establishment: Establishment): string {
+  return LegacyDataEstablishmentType[establishment.type];
 }
 
 function createCSVRecord(establishment: Establishment): any {
