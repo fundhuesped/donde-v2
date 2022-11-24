@@ -108,20 +108,23 @@ const ServiceOnEstablishmentPhoneNumberSchema = z
   .optional();
 const ServiceOnEstablishmentEmailSchema = z.preprocess((val) => (val ? val : null), z.string().max(254).nullable()).optional();
 const ServiceOnEstablishmentDetailsSchema = z.preprocess((val) => (val ? val : null), z.string().nullable()).optional();
-const ServiceOnEstablishmentOpeningTimes = z.string().refine((val) => {
-  if (val.length == 0) {
-    return true;
-  } else {
-    for (const singleDeconstructedOpeningTime of val.split(';')) {
-      try {
-        SingleOpeningTimeSchema.parse(singleDeconstructedOpeningTime.trim());
-      } catch (e) {
-        return false;
+const ServiceOnEstablishmentOpeningTimes = z
+  .string()
+  .refine((val) => {
+    if (val.length == 0) {
+      return true;
+    } else {
+      for (const singleDeconstructedOpeningTime of val.split(';')) {
+        try {
+          SingleOpeningTimeSchema.parse(singleDeconstructedOpeningTime.trim());
+        } catch (e) {
+          return false;
+        }
       }
+      return true;
     }
-    return true;
-  }
-}).optional();
+  })
+  .optional();
 
 enum LegacyPublishedStatus {
   TRUE = 1,
