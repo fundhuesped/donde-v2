@@ -280,9 +280,8 @@ function getAbortoSubservices(abortoSubservices: Subservice[]): AbortoSubservice
   };
 }
 
-async function parseLegacyData(path: string): Promise<LegacyDataRecord[]> {
+function parseLegacyData(path: string): any {
   let records = undefined;
-
   try {
     const buffer = fs.readFileSync(path);
     records = parse(buffer, {
@@ -299,16 +298,18 @@ async function parseLegacyData(path: string): Promise<LegacyDataRecord[]> {
       'Hubo un fallo al leer el archivo en la fase inicial de la importación. Si el error persiste contacte al equipo de desarrollo.',
     );
   }
+  return records;
+}
 
+async function parseRecords(records: any, fromIndex: number): Promise<LegacyDataRecord[]> {
   let validationErrors: string[] = [];
-
-  const data = await Promise.all(
+  const parsedRecords = await Promise.all(
     records.map(async (record: unknown, index: number) => {
       try {
         return await LegacyDataRecordSchema.parseAsync(record);
       } catch (error) {
         const zodError = error as ZodError;
-        const row = index + 2;
+        const row = fromIndex + index + 2;
         validationErrors.push(
           `La fila ${row} tiene valores incorrectos en los campos: ` +
             zodError.issues
@@ -323,10 +324,19 @@ async function parseLegacyData(path: string): Promise<LegacyDataRecord[]> {
   );
 
   if (validationErrors.length > 0) {
-    throw new Error(validationErrors.join('\n'));
+    if (fromIndex > 0) {
+      throw new Error(validationErrors.join('\n'));
+    } else {
+      throw new Error(
+        'Se pudieron insertar/actualizar las primeras ' +
+          fromIndex +
+          ' filas. Sin embargo, se interrumpió el proceso de importación debido a errores de validación. ' +
+          validationErrors.join('\n'),
+      );
+    }
   }
 
-  return data;
+  return parsedRecords;
 }
 
 type Services = { [x in keyof ServicesData]: Service };
@@ -542,7 +552,7 @@ function getSubservicesOnEstablishmentCreate(
 }
 
 export async function importDataFromCSV(path: string) {
-  const legacyData = await parseLegacyData(path);
+  const records = await parseLegacyData(path);
 
   let services = undefined;
   try {
@@ -561,53 +571,61 @@ export async function importDataFromCSV(path: string) {
 
   const abortoSubservices = getAbortoSubservices(services.aborto.subservices);
 
-  let transactions = [];
-  for (const record of legacyData) {
-    const legacyId = record[LegacyDataField.LEGACY_ID];
-    const dataCreate: Prisma.EstablishmentCreateInput = {
-      name: record[LegacyDataField.NAME],
-      type: mapLegacyEstablishmentType(record[LegacyDataField.TYPE]),
-      status: mapLegacyPublishedStatus(record[LegacyDataField.PUBLISHED]),
-      street: record[LegacyDataField.STREET].toString(),
-      apartment: mapLegacyString(record[LegacyDataField.APARTMENT]?.toString()),
-      streetNumber: mapLegacyString(record[LegacyDataField.STREET_NUMBER]?.toString()),
-      city: record[LegacyDataField.CITY],
-      department: record[LegacyDataField.DEPARTMENT],
-      province: record[LegacyDataField.PROVINCE],
-      country: record[LegacyDataField.COUNTRY],
-      latitude: record[LegacyDataField.LATITUDE],
-      longitude: record[LegacyDataField.LONGITUDE],
-      details: record[LegacyDataField.DETAILS],
-      officialId: record[LegacyDataField.OFFICIAL_ID],
-      legacyId: legacyId ? legacyId : undefined,
-      services: getSubservicesOnEstablishmentCreate(record, services, abortoSubservices),
-    };
-    const dataUpdate = JSON.parse(JSON.stringify(dataCreate)) as Prisma.EstablishmentUpdateInput;
-    if (dataUpdate.services) {
-      dataUpdate.services.deleteMany = {};
+  const opsPerTransaction = 500;
+  const totalNumberOfTransactions = Math.floor(records.length / opsPerTransaction) + 1;
+  for (let i = 0; i < totalNumberOfTransactions; i++) {
+    const initialIndex = i * opsPerTransaction;
+    const finalIndex = (i + 1) * opsPerTransaction < records.length ? (i + 1) * opsPerTransaction : records.length;
+    const parsedAndValidatedRecords = await parseRecords(records.slice(initialIndex, finalIndex), initialIndex);
+    let transactions = [];
+    for (const record of parsedAndValidatedRecords) {
+      const legacyId = record[LegacyDataField.LEGACY_ID];
+      const dataCreate: Prisma.EstablishmentCreateInput = {
+        name: record[LegacyDataField.NAME],
+        type: mapLegacyEstablishmentType(record[LegacyDataField.TYPE]),
+        status: mapLegacyPublishedStatus(record[LegacyDataField.PUBLISHED]),
+        street: record[LegacyDataField.STREET].toString(),
+        apartment: mapLegacyString(record[LegacyDataField.APARTMENT]?.toString()),
+        streetNumber: mapLegacyString(record[LegacyDataField.STREET_NUMBER]?.toString()),
+        city: record[LegacyDataField.CITY],
+        department: record[LegacyDataField.DEPARTMENT],
+        province: record[LegacyDataField.PROVINCE],
+        country: record[LegacyDataField.COUNTRY],
+        latitude: record[LegacyDataField.LATITUDE],
+        longitude: record[LegacyDataField.LONGITUDE],
+        details: record[LegacyDataField.DETAILS],
+        officialId: record[LegacyDataField.OFFICIAL_ID],
+        legacyId: legacyId ? legacyId : undefined,
+        services: getSubservicesOnEstablishmentCreate(record, services, abortoSubservices),
+      };
+      const dataUpdate = JSON.parse(JSON.stringify(dataCreate)) as Prisma.EstablishmentUpdateInput;
+      if (dataUpdate.services) {
+        dataUpdate.services.deleteMany = {};
+      }
+      if (legacyId) {
+        transactions.push(
+          prismaClient.establishment.upsert({
+            where: { legacyId },
+            create: dataCreate,
+            update: dataUpdate,
+          }),
+        );
+      } else {
+        transactions.push(
+          prismaClient.establishment.create({
+            data: dataCreate,
+          }),
+        );
+      }
     }
-    if (legacyId) {
-      transactions.push(
-        prismaClient.establishment.upsert({
-          where: { legacyId },
-          create: dataCreate,
-          update: dataUpdate,
-        }),
-      );
-    } else {
-      transactions.push(
-        prismaClient.establishment.create({
-          data: dataCreate,
-        }),
+    try {
+      await prismaClient.$transaction(transactions);
+    } catch (e) {
+      throw new Error(
+        `Hubo un fallo al tratar de realizar los cambios en la base de datos. Se pudieron insertar/actualizar las primera ${
+          i * opsPerTransaction
+        } filas.`,
       );
     }
-  }
-
-  try {
-    await prismaClient.$transaction(transactions);
-  } catch (e) {
-    throw new Error(
-      'Hubo un fallo al tratar de realizar los cambios en la base de datos. Ninguna modificación o creación de establecimientos fue realizada.',
-    );
   }
 }
