@@ -627,9 +627,7 @@ export async function importDataFromCSV(path: string) {
         );
       } else {
         throw new Error(
-          `Hubo un fallo al tratar de realizar los cambios en la base de datos. Se pudieron insertar/actualizar las primeras ${
-            initialIndex
-          } filas.`,
+          `Hubo un fallo al tratar de realizar los cambios en la base de datos. Se pudieron insertar/actualizar las primeras ${initialIndex} filas.`,
         );
       }
     }
