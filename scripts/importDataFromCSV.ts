@@ -293,7 +293,6 @@ function parseLegacyData(path: string): any {
       relax_quotes: true,
       relax_column_count: true,
     });
-
   } catch (e) {
     throw new Error(
       'Hubo un fallo al leer el archivo en la fase inicial de la importación. Si el error persiste contacte al equipo de desarrollo.',
@@ -323,12 +322,17 @@ async function parseRecords(records: any, fromIndex: number): Promise<LegacyData
       }
     }),
   );
-  
+
   if (validationErrors.length > 0) {
     if (fromIndex > 0) {
       throw new Error(validationErrors.join('\n'));
     } else {
-      throw new Error('Se pudieron insertar/actualizar las primeras ' + fromIndex + ' filas. Sin embargo, se interrumpió el proceso de importación debido a errores de validación. ' + validationErrors.join('\n'));
+      throw new Error(
+        'Se pudieron insertar/actualizar las primeras ' +
+          fromIndex +
+          ' filas. Sin embargo, se interrumpió el proceso de importación debido a errores de validación. ' +
+          validationErrors.join('\n'),
+      );
     }
   }
 
@@ -571,7 +575,7 @@ export async function importDataFromCSV(path: string) {
   const totalNumberOfTransactions = Math.floor(records.length / opsPerTransaction) + 1;
   for (let i = 0; i < totalNumberOfTransactions; i++) {
     const initialIndex = i * opsPerTransaction;
-    const finalIndex = ((i + 1) * opsPerTransaction) < records.length ? ((i + 1) * opsPerTransaction) : records.length;
+    const finalIndex = (i + 1) * opsPerTransaction < records.length ? (i + 1) * opsPerTransaction : records.length;
     const parsedAndValidatedRecords = await parseRecords(records.slice(initialIndex, finalIndex), initialIndex);
     let transactions = [];
     for (const record of parsedAndValidatedRecords) {
@@ -618,7 +622,9 @@ export async function importDataFromCSV(path: string) {
       await prismaClient.$transaction(transactions);
     } catch (e) {
       throw new Error(
-        `Hubo un fallo al tratar de realizar los cambios en la base de datos. Se pudieron insertar/actualizar las primera ${i * opsPerTransaction} filas.`,
+        `Hubo un fallo al tratar de realizar los cambios en la base de datos. Se pudieron insertar/actualizar las primera ${
+          i * opsPerTransaction
+        } filas.`,
       );
     }
   }
