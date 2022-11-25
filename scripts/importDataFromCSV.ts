@@ -324,8 +324,8 @@ async function parseRecords(records: any, fromIndex: number): Promise<LegacyData
   );
 
   if (validationErrors.length > 0) {
-    if (fromIndex > 0) {
-      throw new Error(validationErrors.join('\n'));
+    if (fromIndex == 0) {
+      throw new Error('No se insertó/actualizó ninguna fila. ' + validationErrors.join('\n'));
     } else {
       throw new Error(
         'Se pudieron insertar/actualizar las primeras ' +
@@ -559,7 +559,7 @@ export async function importDataFromCSV(path: string) {
     services = await findServicesFromDB();
   } catch (e) {
     throw new Error(
-      'La lista de servicios no fue encontrada en la base de dato. Es necesario contactar al equipo de desarrollo.',
+      'La lista de servicios no fue encontrada en la base de datos. Es necesario contactar al equipo de desarrollo.',
     );
   }
 
@@ -621,11 +621,15 @@ export async function importDataFromCSV(path: string) {
     try {
       await prismaClient.$transaction(transactions);
     } catch (e) {
-      throw new Error(
-        `Hubo un fallo al tratar de realizar los cambios en la base de datos. Se pudieron insertar/actualizar las primera ${
-          i * opsPerTransaction
-        } filas.`,
-      );
+      if (initialIndex == 0) {
+        throw new Error(
+          'Hubo un fallo al tratar de realizar los cambios en la base de datos. No se insertó/actualizó ninguna fila.',
+        );
+      } else {
+        throw new Error(
+          `Hubo un fallo al tratar de realizar los cambios en la base de datos. Se pudieron insertar/actualizar las primeras ${initialIndex} filas.`,
+        );
+      }
     }
   }
 }
