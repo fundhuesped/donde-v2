@@ -51,7 +51,7 @@ export default function About() {
         </p>
         <p>
           Es una plataforma de código abierto, disponible en:{' '}
-          <FAQLink href=" https://github.com/fundhuesped/donde-v2">Github</FAQLink>
+          <FAQLink href=" https://github.com/fundhuesped/donde-v2">Github.</FAQLink>
         </p>
         <p className={'my-4 p-2 bg-ultra-light-salmon rounded-2xl text-center'}>
           Si tenés inquietudes, visitá nuestra sección de{' '}
