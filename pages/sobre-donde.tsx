@@ -53,6 +53,11 @@ export default function About() {
           Es una plataforma de código abierto, disponible en:{' '}
           <FAQLink href=" https://github.com/fundhuesped/donde-v2">Github.</FAQLink>
         </p>
+        <p>
+          "Al recorrer y utilizar esta plataforma estás aceptando nuestras"
+            <!-- --> 
+            <a class="text-primary" href=" https://www.huesped.org.ar/politica-de-privacidad">políticas de privacidad.</a>
+        </p>
         <p className={'my-4 p-2 bg-ultra-light-salmon rounded-2xl text-center'}>
           Si tenés inquietudes, visitá nuestra sección de{' '}
           <Link href="/preguntas-frecuentes">
