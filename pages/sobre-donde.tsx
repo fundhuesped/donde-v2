@@ -49,11 +49,11 @@ export default function About() {
           Fue creada por Fundación Huésped en 2013 desarrollada en varias etapas gracias al trabajo de muchas personas. El sitio
           actual fue hecho por Wingu.
         </p>
-        <p>
+        <p className={'text-base text-justify mb-6'}>
           Es una plataforma de código abierto, disponible en:{' '}
           <FAQLink href=" https://github.com/fundhuesped/donde-v2">Github.</FAQLink>
         </p>
-        <p>
+        <p className={'text-base text-justify mb-6'}>
           Al recorrer y utilizar esta plataforma estás aceptando nuestras{' '}
           <FAQLink href=" https://www.huesped.org.ar/politica-de-privacidad">políticas de privacidad.</FAQLink>
         </p>
