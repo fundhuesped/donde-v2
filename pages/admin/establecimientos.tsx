@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
+import { EstablishmentStatus } from '@prisma/client';
 import { AddEstablishmentButton } from '../../components/Buttons/AddEstablishmentButton';
 import DownloadButton from '../../components/Buttons/DownloadButton';
 import { ImportEstablishmentButton } from '../../components/Buttons/ImportEstablishmentButton';
@@ -44,11 +45,13 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
   const [queryStreet, setQueryStreet] = useState<string>('');
   const [queryProvince, setQueryProvince] = useState<string>('');
   const [queryCity, setQueryCity] = useState<string>('');
+  const [queryStatus, setQueryStatus] = useState<string>("ALL");
   const [queryCountry, setQueryCountry] = useState<any>(() => new Set<string>());
   const [queryType, setQueryType] = useState<any>(() => new Set<string>());
   const [queryService, setQueryService] = useState<any>(() => new Set<string>());
   const [filters, setFilters] = useState<any>(() => new Set<string>());
   const [isLoading, setIsLoading] = useState(true);
+  const [showActiveEstablishments, setShowActiveEstablishments] = useState<boolean>(false);
 
   const queryFilterCountry = Array.from(queryCountry);
   const queryFilterType = Array.from(queryType);
@@ -75,6 +78,7 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
           establishment.street.includes(queryStreet) &&
           establishment.province.includes(queryProvince) &&
           establishment.city.includes(queryCity) &&
+          establishment.status.includes(queryStatus === "ALL" ? "" : queryStatus === "PUBLISHED" ? "PUBLISHED" : "REJECTED") &&
           (queryFilterType.length == 0 || queryFilterType.includes(setType(establishment.type))) &&
           (queryFilterService.length == 0 ||
             establishment.services.filter((service) => queryFilterService.includes(service.service.name)).length !== 0) &&
@@ -84,7 +88,7 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
     );
     setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [establishments, queryCountry, queryType, queryService, queryName, queryStreet, queryCity, queryProvince]);
+  }, [establishments, queryCountry, queryType, queryService, queryStatus, queryName, queryStreet, queryCity, queryProvince]);
 
   const deleteFilter = (filter: string) => {
     setFilters((prev: any) => {
@@ -129,6 +133,27 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
 
   var totalEstablishment = JSON.stringify(filteredEstablishments?.length);
 
+  const handleEstablishmentFiltering = (value: string) => {
+    setFilteredEstablishments(
+      establishments?.filter((establishment: Establishment) => {
+        setIsLoading(true);
+        return (
+          establishment.name.includes(queryName) &&
+          establishment.street.includes(queryStreet) &&
+          establishment.province.includes(queryProvince) &&
+          establishment.city.includes(queryCity) &&
+          establishment.status.includes(value === "ALL" ? "" : value === "PUBLISHED" ? "PUBLISHED" : "REJECTED") &&
+          (queryFilterType.length == 0 || queryFilterType.includes(setType(establishment.type))) &&
+          (queryFilterService.length == 0 ||
+            establishment.services.filter((service) => queryFilterService.includes(service.service.name)).length !== 0) &&
+          (queryFilterCountry.length == 0 || queryFilterCountry.includes(establishment.country))
+        );
+      }),
+    );
+    setIsLoading(false);
+    setQueryStatus(value);
+  }
+
   return (
     <>
       <Head>
@@ -154,9 +179,11 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
             queryType={queryType}
             queryService={queryService}
             queryCountry={queryCountry}
+            queryStatus={queryStatus}
             setQueryType={setQueryType}
             setQueryService={setQueryService}
             setQueryCountry={setQueryCountry}
+            setQueryStatus={handleEstablishmentFiltering}
           />
           <div className="w-full py-4 flex justify-end">
             {/* <div className="ml-20 flex flex-wrap w-fit">
@@ -172,7 +199,19 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
                   </>
                 ))}
             </div> */}
+            {/* <div className='w-1/4'>
+              <label className={'cursor-pointer flex'} htmlFor="">
+                <input
+                  className={'mr-2 cursor-pointer'}
+                  type={'checkbox'}
+                  onChange={() => handleEstablishmentFiltering()}
+                  checked={showActiveEstablishments}
+                />
+                Mostrar solo los activos
+              </label>
+            </div> */}
             <div className="">
+              
               <DownloadButton filteredEstablishments={filteredEstablishments} />
             </div>
           </div>

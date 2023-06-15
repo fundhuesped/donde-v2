@@ -57,6 +57,14 @@ export const TableBody = (props: Props) => {
                 <Cell>{establishment.city}</Cell>
                 <Cell>{establishment.province}</Cell>
                 <Cell>
+                  {establishment.status == 'PUBLISHED' && (
+                    <span className="text-white bg-success py-2 px-3 rounded-full text-sm">Activo</span>
+                  )}
+                  {establishment.status == 'REJECTED' && (
+                    <span className="text-white bg-danger py-2 px-3 rounded-full text-sm">Inactivo</span>
+                  )}
+                </Cell>
+                <Cell>
                   <div className="flex">
                     {establishment.services.map((service) => {
                       return (

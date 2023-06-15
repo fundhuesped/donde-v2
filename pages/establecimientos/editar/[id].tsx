@@ -25,7 +25,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (co
   return {
     props: {
       googleMapsApiKey,
-      establishment: transformEstablishmentIntoJSONResponse(establishment),
+      establishment: await transformEstablishmentIntoJSONResponse(establishment),
       availableServices,
     },
   };

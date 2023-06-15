@@ -13,6 +13,7 @@ export const signupRequestSchema = yup.object({
   organizationRole: yup.string().required(),
   organizationType: yup.string().required(),
   organizationWebsite: yup.string().matches(urlRegex, 'Website is not valid').nullable(),
+  role: yup.string().required(),
   createdAt: yup.date().required(),
 });
 

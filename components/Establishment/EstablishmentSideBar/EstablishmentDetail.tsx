@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import WhatsAppLogo from '../../../assets/images/WhatsAppLogo.svg';
 import { useAuthenticatedUser } from '../../../hooks/useAuthenticatedUser';
-import { Establishment } from '../../../model/establishment';
+import { ActiveEstablishment, Establishment } from '../../../model/establishment';
 import { formatEstablishmentType } from '../../../utils/establishments';
 import { Card, CardHeader, CardParagraph, CardSubHeader } from '../../Card';
 import { Icon } from '../../Icon';
@@ -93,8 +93,8 @@ const ShareButton = (props: { name: string }) => {
 };
 
 type Props = React.PropsWithChildren<{
-  activeEstablishment: Establishment;
-  setActiveEstablishment: (value: Establishment | null) => void;
+  activeEstablishment: ActiveEstablishment;
+  setActiveEstablishment: (value: ActiveEstablishment | null) => void;
   className: string;
 }>;
 
@@ -137,7 +137,7 @@ export const EstablishmentDetail = React.memo<Props>((props) => {
         {(user?.role === UserRole.ADMIN || user?.role === UserRole.COLLABORATOR) && (
           <Link href={`/establecimientos/editar/${activeEstablishment.id}`}>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-            <a className={'color-primary font-bold absolute top-8 right-16'}>Editar</a>
+            <a className={'color-primary font-bold absolute top-8 right-16 cursor-pointer'}>Editar</a>
           </Link>
         )}
         <button className={'w-5 text-dark-gray mr-1 pb-4'} onClick={handleClose}>
@@ -145,7 +145,7 @@ export const EstablishmentDetail = React.memo<Props>((props) => {
         </button>
       </header>
       <EstablishmentTab activeEstablishment={activeEstablishment} />
-      <footer className={classNames('mt-4 flex justify-center')}>
+      <footer className={classNames('mt-4 flex flex-col justify-center')}>
         {additionalInfo && (
           <>
             <CardSubHeader>Otros datos</CardSubHeader>
@@ -153,9 +153,12 @@ export const EstablishmentDetail = React.memo<Props>((props) => {
           </>
         )}
 
-        <Pill onClick={() => handleDetailsClick(activeEstablishment.id)} className={'text-dark-gray cursor-pointer'}>
+        <Pill className="text-dark-gray text-xs mb-4 bg-ultra-light-gray">{`Creado por ${activeEstablishment.createdBy ?? 'Fundación Huesped'}`}</Pill>
+        {activeEstablishment.lastModifiedBy && activeEstablishment.createdBy !== activeEstablishment.lastModifiedBy &&
+        <Pill className="text-dark-gray text-xs bg-ultra-light-gray">{`Actualizado por ${activeEstablishment.lastModifiedBy ?? 'Fundación Huesped'}`}</Pill>}
+        {/* <Pill onClick={() => handleDetailsClick(activeEstablishment.id)} className={'text-dark-gray cursor-pointer'}>
           Actualizado por Fundación Huesped
-        </Pill>
+        </Pill> */}
       </footer>
 
       <div className={'flex justify-center space-x-7 my-3'}>

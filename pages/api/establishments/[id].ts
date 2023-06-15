@@ -5,6 +5,7 @@ import * as yup from 'yup';
 import { editEstablishmentSchema as establishmentSchema } from '../../../model/establishment';
 import { prismaClient } from '../../../server/prisma/client';
 import { mapServicesOnEstablishmentToPrismaObject, transformEstablishmentIntoJSONResponse } from './index';
+import getUserDataFromReq from "../../../utils/getUserDataFromReq";
 
 const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
@@ -21,7 +22,7 @@ const handler: NextApiHandler = async (req, res) => {
 
 const getEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   const idSchema = yup.string().uuid().required();
-  const id = req.query.id;
+  const {id} = req.query;
   if (!idSchema.isValidSync(id)) {
     return res.status(400).end();
   }
@@ -81,13 +82,19 @@ const updateEstablishment = async (req: NextApiRequest, res: NextApiResponse<any
     return res.status(400).json(err.message);
   }
 
+  const reqUser = await getUserDataFromReq(req);
+  const user = await prismaClient.user.findUnique({ where: { email: reqUser?.email } });
+  if (!reqUser || !user) {
+    return res.status(404);
+  }
+
   const updateEstablishment = prismaClient.establishment.update({
     where: {
       id: establishmentId,
     },
     data: {
       ...req.body,
-      status: EstablishmentStatus.PUBLISHED,
+      lastModifiedBy: user.organization_name,
       services,
     },
   });

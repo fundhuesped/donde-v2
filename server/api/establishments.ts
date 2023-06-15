@@ -29,5 +29,5 @@ export const establishmentWithLegacyIdExists = async (legacyId: number): Promise
       legacyId: legacyId,
     },
   });
-  return establishment ? true : false;
+  return !!establishment;
 };

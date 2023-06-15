@@ -1,7 +1,8 @@
 import { ChevronDownIcon, ChevronLeftIcon, QuestionMarkCircleIcon } from '@heroicons/react/outline';
+import axios from 'axios';
 import classNames from 'classnames';
 import Head from 'next/head';
-import { HTMLProps, ReactNode, useState } from 'react';
+import { HTMLProps, ReactNode, useEffect, useState } from 'react';
 
 export const FAQLink = (props: HTMLProps<HTMLAnchorElement>) => {
   const { className, children, ...rest } = props;
@@ -16,6 +17,29 @@ type AccordionItemProps = {
   children?: ReactNode;
   title: ReactNode;
 };
+
+type ContentProps = {
+  id?: string,
+  question?: string,
+  answer?: string,
+}
+
+const handleHtml = (content: any) => {
+  if (content) {
+    return {
+      __html: content,
+    }
+  }
+}
+
+const getSectionContent = async (id?: string) => {
+  return await axios.get('/api/faq', {
+    /* params: {
+      id,
+    } */
+  });
+};
+
 const AccordionItem = (props: AccordionItemProps) => {
   const { children, title } = props;
   const [open, setOpen] = useState(false);
@@ -26,12 +50,13 @@ const AccordionItem = (props: AccordionItemProps) => {
     <div className={'flex flex-col rounded-2xl border-2 w-full my-4'}>
       <button className={'py-4 flex flex-row w-full cursor-pointer'} onClick={() => setOpen(!open)}>
         <QuestionMarkCircleIcon className={'h-6 w-5 text-primary mx-4'} />
-        <p className={'text-l font-title text-black font-semibold'}>{title}</p>
+        {/* <p className={'text-l font-title text-black font-semibold'}></p> */}
+        <div className='text-l font-title text-black font-semibold' dangerouslySetInnerHTML={handleHtml(title)}></div>
         <div className={'ml-auto'}>
           <ChevronIcon className={'h-6 w-5 text-primary mx-4'} />
         </div>
       </button>
-      {open && <div className="px-8 my-4">{children}</div>}
+      {open && <div className="px-8 my-4" dangerouslySetInnerHTML={handleHtml(children)}></div>}
     </div>
   );
 };
@@ -92,6 +117,14 @@ const ITEMS = [
 ];
 
 export default function FAQs() {
+  const [content, setContent] = useState<ContentProps[]>();
+
+  useEffect(() => {
+    getSectionContent().then((response) => {
+      setContent(response.data);
+    })
+  }, [])
+
   return (
     <>
       <Head>
@@ -100,9 +133,14 @@ export default function FAQs() {
       <main className={'px-6 my-2 lg:mx-auto lg:w-desktop'}>
         <h1 className={'text-lg text-black font-bold mb-8'}>Preguntas frecuentes</h1>
         <ul>
-          {ITEMS.map((item, index) => (
+          {/* {ITEMS.map((item, index) => (
             <li key={index}>
               <AccordionItem title={item.title}>{item.content}</AccordionItem>
+            </li>
+          ))} */}
+          {content?.map((item, index) => (
+            <li key={index}>
+              <AccordionItem title={item.question}>{item.answer}</AccordionItem>
             </li>
           ))}
         </ul>

@@ -112,7 +112,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async ({ 
 
   return {
     props: {
-      establishment: establishment ? transformEstablishmentIntoJSONResponse(establishment) : undefined,
+      establishment: establishment ? await transformEstablishmentIntoJSONResponse(establishment) : undefined,
     },
   };
 };
@@ -147,7 +147,7 @@ export const EstablishmentPage: NextPage<ServerSideProps> = React.memo(({ establ
           (user?.role === UserRole.COLLABORATOR && (
             <Link href={`/establecimientos/editar/${establishment.id}`}>
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <a className={'color-primary font-bold absolute top-8 right-8'}>Editar</a>
+              <a className={'color-primary font-bold absolute top-8 right-8 cursor-pointer'}>Editar</a>
             </Link>
           ))}
         <Card className={'my-4 pb-6'}>
@@ -194,7 +194,8 @@ export const EstablishmentPage: NextPage<ServerSideProps> = React.memo(({ establ
           )}
 
           <footer className={'mt-4'}>
-            <Pill className="text-dark-gray">Cargado por Fundación Huesped</Pill>
+            <Pill className="text-dark-gray text-xs mb-4 bg-ultra-light-gray">{`Creado por ${establishment.createdBy ?? 'Fundación Huesped'}`}</Pill>
+            {establishment.lastModifiedBy && establishment.createdBy !== establishment.lastModifiedBy && <Pill className="text-dark-gray text-xs bg-ultra-light-gray">{`Actualizado por ${establishment.lastModifiedBy ?? 'Fundación Huesped'}`}</Pill>}
           </footer>
         </Card>
 

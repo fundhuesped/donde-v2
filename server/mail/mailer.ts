@@ -8,14 +8,27 @@ export type SendMailProperties = {
 };
 
 export const sendMail = async ({ to, subject, text, html }: SendMailProperties) => {
+  const defaultTransport = process.env.MAILER_USER_EMAIL?.includes('@gmail.com') ?
+    {
+      service: 'gmail',
+    }
+    :
+    {
+      port: 465,
+      secure: true,
+      tls: {
+        // do not fail on invalid certs
+        rejectUnauthorized: false,
+      },
+    }
   try {
     const transporter = createTransport({
-      service: 'gmail',
       host: process.env.MAILER_HOST,
       auth: {
         user: process.env.MAILER_USER_EMAIL,
         pass: process.env.MAILER_USER_PASSWORD,
       },
+      ...defaultTransport
     });
 
     await transporter.sendMail({
@@ -28,6 +41,7 @@ export const sendMail = async ({ to, subject, text, html }: SendMailProperties) 
 
     return true;
   } catch (error) {
+    console.log(error)
     return error;
   }
 };

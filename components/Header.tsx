@@ -87,7 +87,7 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
     return (
       <Button
         onClick={async () => {
-          await signOut();
+          await signOut({ callbackUrl: '/' });
           setIsMenuOpen(false);
         }}
         className={'border-ultra-light-gray lg:border-none text-primary lg:text-white '}
@@ -144,6 +144,18 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
         >
           Establecimientos
         </Button>
+        <Button
+          onClick={async () => {
+            await router.push({ pathname: '/admin/contenido' });
+            setIsMenuOpen(false);
+          }}
+          className={'border-ultra-light-gray lg:border-none text-primary lg:text-white '}
+          type={'tertiary'}
+          alignment={'left'}
+          icon={<AnnotationIcon className={'h-6 w-5'} />}
+        >
+          Contenido
+        </Button>
       </>
     );
   };
@@ -162,7 +174,7 @@ export function Header({ onMenuOpening: handleMenuOpening }: { onMenuOpening: ()
           <Link href="/">
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a>
-              <DondeLogo className={'translate-y-0.5'} />
+              <DondeLogo className={'translate-y-0.5 cursor-pointer'} />
             </a>
           </Link>
 

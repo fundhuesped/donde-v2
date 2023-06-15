@@ -2,14 +2,14 @@ import { AtSymbolIcon, ClockIcon, GlobeAltIcon, LocationMarkerIcon, PhoneIcon } 
 import { ServiceOnEstablishmentOpeningTime } from '@prisma/client';
 import React from 'react';
 import { SERVICE_ICONS } from '../../config/services';
-import { Establishment } from '../../model/establishment';
+import { ActiveEstablishment, Establishment } from '../../model/establishment';
 import { ServiceIcon } from '../../model/services';
 import { formatEstablishmentLocation } from '../../utils/establishments';
 import { CardList, CardListItem, CardSubHeader } from '../Card';
 import { Icon } from '../Icon';
 
 type Props = React.PropsWithChildren<{
-  activeEstablishment: Establishment;
+  activeEstablishment: ActiveEstablishment;
 }>;
 
 const EstablishmentTab = React.memo<Props>((props) => {
@@ -45,6 +45,8 @@ const EstablishmentTab = React.memo<Props>((props) => {
         return 'Domingo';
     }
   };
+
+  
 
   var checkOpenStatus = (openingTimes: ServiceOnEstablishmentOpeningTime[]) => {
     var findStatus = openingTimes.find(
@@ -104,7 +106,7 @@ const EstablishmentTab = React.memo<Props>((props) => {
                 <div className={openTab === -1 ? 'block' : 'hidden'} id="id-info">
                   <CardList>
                     <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
-                      {address} {addressNotes && <span className={'text-xs text-medium-gray'}>- {addressNotes}</span>}
+                      {address} {addressNotes && <span className={'text-xs text-medium-gray'}>- {addressNotes}</span>} <span className={"ml-2 text-medium-gray"}>· A {activeEstablishment?.distance}</span>
                     </CardListItem>
                     {activeEstablishment.website && (
                       <CardListItem icon={<GlobeAltIcon className={'text-primary'} />}>

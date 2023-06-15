@@ -15,6 +15,7 @@ const userSignupRequestData = Prisma.validator<Prisma.UserArgs>()({
     organization_role: true,
     organization_type: true,
     organization_website: true,
+    role: true,
     created_at: true,
   },
 });
@@ -36,6 +37,7 @@ const handler: NextApiHandler<SignupRequests> = async (req, res) => {
     organizationRole: data.organization_role,
     organizationType: data.organization_type,
     organizationWebsite: data.organization_website,
+    role: data.role,
     createdAt: data.created_at,
   }));
 

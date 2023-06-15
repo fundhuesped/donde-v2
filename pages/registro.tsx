@@ -98,169 +98,196 @@ const SignUp: NextPage = () => {
         <title>Dónde - Registro</title>
       </Head>
 
-      <MainContainer className={'mt-6 p-5 container mx-auto w-full lg:w-[55em] lg:max-h-[32em] px-[3rem]'}>
+      <MainContainer className={'mt-6 p-5 container mx-auto w-full lg:w-[55em] lg:max-h-[38em] px-[3rem]'}>
         <form className={'px-5'} onSubmit={handleSubmit(handleSignUp)}>
           <h1 className="text-xl font-bold mb-4 text-center">Registro</h1>
           <p className="text-sm text-center">
-            Para ser colaboradore de <b>Dónde</b> y poder agregar establecimientos dentro de la aplicación, complete el siguiente
+            Para colaborar con <b>Dónde</b> y poder agregar establecimientos dentro de la aplicación, complete el siguiente
             formulario para solicitar una cuenta.
           </p>
           <div className="flex flex-wrap -mx-3 my-6">
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-              {!dirtyFields.firstName ? (
-                <p style={{ color: '#E6334C', margin: '.2em .5em .5em 4em', position: 'absolute', width: '1.2em' }}>*</p>
-              ) : (
-                ''
-              )}
-              <input
-                {...register('firstName')}
-                className="input-style"
-                placeholder="Nombre"
-                id="firstName"
-                name="firstName"
-              ></input>
+              <label htmlFor="">
+                Nombre
+                {!dirtyFields.firstName ? (
+                  <span style={{ color: '#E6334C', marginLeft: '0.25em', position: 'absolute', width: '1.2em' }}>*</span>
+                ) : (
+                  ''
+                )}
+                <input
+                  {...register('firstName')}
+                  className="input-style"
+                  placeholder=""
+                  id="firstName"
+                  name="firstName"
+                />
+              </label>
               <p className="color-primary text-sm">{errors.firstName?.message}</p>
             </div>
             <div className="w-full md:w-1/2 px-3">
-              {!dirtyFields.lastName ? (
-                <p style={{ color: '#E6334C', margin: '.2em .5em .5em 4em', position: 'absolute', width: '1.2em' }}>*</p>
-              ) : (
-                ''
-              )}
-              <input
-                {...register('lastName')}
-                className="input-style"
-                placeholder="Apellido"
-                id="lastName"
-                name="lastName"
-              ></input>
+              <label htmlFor="">
+                Apellido
+                {!dirtyFields.lastName ? (
+                  <span style={{ color: '#E6334C', marginLeft: '0.25em', position: 'absolute', width: '1.2em' }}>*</span>
+                ) : (
+                  ''
+                )}
+                <input
+                  {...register('lastName')}
+                  className="input-style"
+                  placeholder=""
+                  id="lastName"
+                  name="lastName"
+                />
+              </label>
               <p className="color-primary text-sm">{errors.lastName?.message}</p>
             </div>
           </div>
           <div className="flex flex-wrap -mx-3 my-6">
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-              {!dirtyFields.email ? (
-                <p style={{ color: '#E6334C', margin: '.2em .5em .5em 8.2em', position: 'absolute', width: '1.2em' }}>*</p>
-              ) : (
-                ''
-              )}
-              <input
-                {...register('email')}
-                className="input-style"
-                placeholder="Correo electrónico"
-                id="email"
-                name="email"
-              ></input>
+              <label htmlFor="">
+                Correo Electrónico
+                {!dirtyFields.email ? (
+                  <span style={{ color: '#E6334C', marginLeft: '0.25em', position: 'absolute', width: '1.2em' }}>*</span>
+                ) : (
+                  ''
+                )}
+                <input
+                  {...register('email')}
+                  className="input-style"
+                  placeholder=""
+                  id="email"
+                  name="email"
+                />
+              </label>
               <p className="color-primary text-sm">{errors.email?.message}</p>
             </div>
             <div className="w-full md:w-1/2 px-3">
-              {!dirtyFields.password ? (
-                <p style={{ color: '#E6334C', margin: '.2em .5em .5em 5.3em', position: 'absolute', width: '1.2em' }}>*</p>
-              ) : (
-                ''
-              )}
-              <input
-                {...register('password')}
-                type="password"
-                className="input-style"
-                placeholder="Contraseña"
-                id="password"
-                name="password"
-              ></input>
+              <label htmlFor="">
+              Contraseña
+                {!dirtyFields.password ? (
+                  <span style={{ color: '#E6334C', marginLeft: '0.25em', position: 'absolute', width: '1.2em' }}>*</span>
+                ) : (
+                  ''
+                )}
+                <input
+                  {...register('password')}
+                  type="password"
+                  className="input-style"
+                  placeholder=""
+                  id="password"
+                  name="password"
+                />
+              </label>
               <p className="color-primary text-sm">{errors.lastName?.message}</p>
             </div>
           </div>
           <div className="flex flex-wrap -mx-3 my-6">
             <div className="w-full md:w-1/2 px-3">
-              {!dirtyFields.organizationName ? (
-                <p style={{ color: '#E6334C', margin: '.2em .5em .5em 11.8em', position: 'absolute', width: '1.2em' }}>*</p>
-              ) : (
-                ''
-              )}
-              <input
-                {...register('organizationName')}
-                className="input-style"
-                placeholder="Nombre de la organización"
-                id="organizationName"
-                name="organizationName"
-              ></input>
+              <label htmlFor="">
+                Nombre de la Organización
+                {!dirtyFields.organizationName ? (
+                  <span style={{ color: '#E6334C', marginLeft: '0.25em', position: 'absolute', width: '1.2em' }}>*</span>
+                ) : (
+                  ''
+                )}
+                <input
+                  {...register('organizationName')}
+                  className="input-style"
+                  placeholder=""
+                  id="organizationName"
+                  name="organizationName"
+                />
+              </label>
               <p className="color-primary text-sm">{errors.organizationName?.message}</p>
             </div>
             <div className="w-full md:w-1/2 px-3">
-              {!dirtyFields.organizationRole ? (
-                <p style={{ color: '#E6334C', margin: '.2em .5em .5em 9.6em', position: 'absolute', width: '1.2em' }}>*</p>
-              ) : (
-                ''
-              )}
-              <input
-                {...register('organizationRole')}
-                className="input-style"
-                placeholder="Rol en la organización"
-                id="organizationRole"
-                name="organizationRole"
-              ></input>
+              <label htmlFor="">
+                Rol en la Organización
+                {!dirtyFields.organizationRole ? (
+                  <span style={{ color: '#E6334C', marginLeft: '0.25em', position: 'absolute', width: '1.2em' }}>*</span>
+                ) : (
+                  ''
+                )}
+                <input
+                  {...register('organizationRole')}
+                  className="input-style"
+                  placeholder=""
+                  id="organizationRole"
+                  name="organizationRole"
+                />
+              </label>
               <p className="color-primary text-sm">{errors.organizationRole?.message}</p>
             </div>
           </div>
           <div className="flex flex-wrap -mx-3 my-6">
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-              {!dirtyFields.organizationType ? (
-                <p style={{ color: '#E6334C', margin: '.2em .5em .5em 9.4em', position: 'absolute', width: '1.2em' }}>*</p>
-              ) : (
-                ''
-              )}
-              <select
-                {...register('organizationType')}
-                className="select-style"
-                placeholder="Tipo de organización"
-                id="organizationType"
-                name="organizationType"
-                defaultValue=""
-              >
-                <option value="" disabled hidden>
-                  Tipo de organización
-                </option>
-                <option value={OrganizationType.SOCIAL_ORGANIZATION}>Organización social</option>
-                <option value={OrganizationType.PUBLIC_INSTITUTION}>Institución pública</option>
-                <option value={OrganizationType.PRIVATE_INSTITUTION}>Institución privada</option>
-                <option value={OrganizationType.OTHER}>Otro</option>
-              </select>
+              <label htmlFor="">
+                Tipo de Organización
+                {!dirtyFields.organizationType ? (
+                  <span style={{ color: '#E6334C', marginLeft: '0.25em', position: 'absolute', width: '1.2em' }}>*</span>
+                ) : (
+                  ''
+                )}
+                <select
+                  {...register('organizationType')}
+                  className="input-style"
+                  placeholder=""
+                  id="organizationType"
+                  name="organizationType"
+                  defaultValue=""
+                >
+                  <option value="" disabled hidden>
+                    Elija un tipo
+                  </option>
+                  <option value={OrganizationType.SOCIAL_ORGANIZATION}>Organización social</option>
+                  <option value={OrganizationType.PUBLIC_INSTITUTION}>Institución pública</option>
+                  <option value={OrganizationType.PRIVATE_INSTITUTION}>Institución privada</option>
+                  <option value={OrganizationType.OTHER}>Otro</option>
+                </select>
+              </label>
               <p className="color-primary text-sm">{errors.organizationType?.message}</p>
             </div>
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-              {!dirtyFields.organizationCountry ? (
-                <p style={{ color: '#E6334C', margin: '.2em .5em .5em 10.2em', position: 'absolute', width: '1.2em' }}>*</p>
-              ) : (
-                ''
-              )}
-              <select
-                {...register('organizationCountry')}
-                className="input-style select-style"
-                placeholder="País de la organización"
-                id="organizationCountry"
-                name="organizationCountry"
-                defaultValue=""
-              >
-                <option className="text-gray-300" value="" disabled hidden>
-                  País de la organización
-                </option>
-                {countries.map((country) => (
-                  <option key={`country-${country.code}`} value={country.name}>
-                    {country.name}
+              <label htmlFor="">
+                Elija un país
+                {!dirtyFields.organizationCountry ? (
+                  <span style={{ color: '#E6334C', marginLeft: '0.25em', position: 'absolute', width: '1.2em' }}>*</span>
+                ) : (
+                  ''
+                )}
+                <select
+                  {...register('organizationCountry')}
+                  className="input-style"
+                  placeholder=""
+                  id="organizationCountry"
+                  name="organizationCountry"
+                  defaultValue=""
+                >
+                  <option className="text-gray-300" value="" disabled hidden>
+                    País de la organización
                   </option>
-                ))}
-              </select>
+                  {countries.map((country) => (
+                    <option key={`country-${country.code}`} value={country.name}>
+                      {country.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
               <p className="color-primary text-sm">{errors.organizationCountry?.message}</p>
             </div>
           </div>
           <div className="flex flex-wrap -mx-3 my-6">
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-              <input
-                className="input-style"
-                placeholder="Sitio web o RRSS de la organización"
-                id="organizationWebsite"
-                name="organizationWebsite"
-              ></input>
+              <label htmlFor="">
+                Sitio Web o RSS de la Organización
+                <input
+                  className="input-style"
+                  placeholder=""
+                  id="organizationWebsite"
+                  name="organizationWebsite"
+                />
+              </label>
             </div>
           </div>
           <div className="m-3">
