@@ -53,7 +53,7 @@ const handler: NextApiHandler = async (req, res) => {
 
   const schema = z.object({
     id: z.string(),
-    text: z.string().max(1024),
+    text: z.string().max(5120),
   });
   const queryParse = schema.safeParse(req.body);
   if (!queryParse.success) {

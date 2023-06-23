@@ -58,14 +58,14 @@ enum EstablishmentStatus {
 
 model FAQ {
   id             String      @id @default(uuid()) @db.Uuid
-  question           String      @db.VarChar(254)
-  answer           String      @db.VarChar(1024)
+  question           String      @db.VarChar(512)
+  answer           String      @db.Text
   createdAt      DateTime  @default(now())
 }
 
 model Content {
   id             String      @unique
-  text           String      @db.VarChar(1024)
+  text           String      @db.Text
 }
 
 model Service {
