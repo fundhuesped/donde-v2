@@ -1,92 +1,83 @@
-import classNames from "classnames"
-import { useCallback } from "react"
+import classNames from 'classnames';
+import { useCallback } from 'react';
 
 // @ts-ignore
 const EditorBar = ({ editor }) => {
-
   const setLink = useCallback(() => {
-    const previousUrl = editor.getAttributes('link').href
-    const url = window.prompt('URL', previousUrl)
+    const previousUrl = editor.getAttributes('link').href;
+    const url = window.prompt('URL', previousUrl);
 
     // cancelled
     if (url === null) {
-      return
+      return;
     }
 
     // empty
     if (url === '') {
-      editor.chain().focus().extendMarkRange('link').unsetLink()
-        .run()
+      editor.chain().focus().extendMarkRange('link').unsetLink().run();
 
-      return
+      return;
     }
 
     // update link
-    editor.chain().focus().extendMarkRange('link').setLink({ href: url })
-      .run()
-  }, [editor])
+    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+  }, [editor]);
 
   if (!editor) {
-    return null
+    return null;
   }
 
   return (
     <div className="mb-4">
       <input
         type="color"
-        onInput={event => editor.chain().focus().setColor(event.currentTarget.value).run()}
+        onInput={(event) => editor.chain().focus().setColor(event.currentTarget.value).run()}
         value={editor.getAttributes('textStyle').color}
         className="border border-light-gray rounded-full text-xs text-dark-gray mb-1 mr-1 inline-block lg:max-w-sm py-1 px-3 lg:max-h-14 "
       />
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
-        disabled={
-          !editor.can()
-            .chain()
-            .focus()
-            .toggleBold()
-            .run()
-        }
-        className={classNames('border border-light-gray rounded-full py-1 px-4 text-xs w-fit text-dark-gray mb-1 mr-1 inline-block', editor.isActive('bold') ? 'bg-primary text-white' : '')}
+        disabled={!editor.can().chain().focus().toggleBold().run()}
+        className={classNames(
+          'border border-light-gray rounded-full py-1 px-4 text-xs w-fit text-dark-gray mb-1 mr-1 inline-block',
+          editor.isActive('bold') ? 'bg-primary text-white' : '',
+        )}
       >
         Negrita
       </button>
       <button
         onClick={() => editor.chain().focus().toggleItalic().run()}
-        disabled={
-          !editor.can()
-            .chain()
-            .focus()
-            .toggleItalic()
-            .run()
-        }
-        className={classNames('border border-light-gray rounded-full py-1 px-4 text-xs w-fit text-dark-gray mb-1 mr-1 inline-block', editor.isActive('italic') ? 'bg-primary text-white' : '')}
+        disabled={!editor.can().chain().focus().toggleItalic().run()}
+        className={classNames(
+          'border border-light-gray rounded-full py-1 px-4 text-xs w-fit text-dark-gray mb-1 mr-1 inline-block',
+          editor.isActive('italic') ? 'bg-primary text-white' : '',
+        )}
       >
         Italica
       </button>
       <button
         onClick={() => editor.chain().focus().toggleStrike().run()}
-        disabled={
-          !editor.can()
-            .chain()
-            .focus()
-            .toggleStrike()
-            .run()
-        }
-        className={classNames('border border-light-gray rounded-full py-1 px-4 text-xs w-fit text-dark-gray mb-1 mr-1 inline-block', editor.isActive('strike') ? 'bg-primary text-white' : '')}
+        disabled={!editor.can().chain().focus().toggleStrike().run()}
+        className={classNames(
+          'border border-light-gray rounded-full py-1 px-4 text-xs w-fit text-dark-gray mb-1 mr-1 inline-block',
+          editor.isActive('strike') ? 'bg-primary text-white' : '',
+        )}
       >
         Tachado
       </button>
       <button
         onClick={setLink}
-        className={classNames('border border-light-gray rounded-full py-1 px-4 text-xs w-fit text-dark-gray mb-1 mr-1 inline-block', editor.isActive('link') ? 'bg-primary text-white' : '')}
+        className={classNames(
+          'border border-light-gray rounded-full py-1 px-4 text-xs w-fit text-dark-gray mb-1 mr-1 inline-block',
+          editor.isActive('link') ? 'bg-primary text-white' : '',
+        )}
       >
         Agregar Link
       </button>
       <button
         onClick={() => editor.chain().focus().unsetLink().run()}
         disabled={!editor.isActive('link')}
-        className='border border-light-gray rounded-full py-1 px-4 text-xs w-fit text-dark-gray mb-1 mr-1 inline-block'
+        className="border border-light-gray rounded-full py-1 px-4 text-xs w-fit text-dark-gray mb-1 mr-1 inline-block"
       >
         Quitar Link
       </button>
@@ -212,7 +203,7 @@ const EditorBar = ({ editor }) => {
           purple
         </button> */}
     </div>
-  )
-}
+  );
+};
 
 export default EditorBar;

@@ -18,7 +18,17 @@ type Props = React.PropsWithChildren<{
 }>;
 
 const Filtros = (props: Props) => {
-  const { queryService, queryType, setQueryCountry, setQueryService, setQueryType, setQueryStatus, queryCountry, queryStatus, services } = props;
+  const {
+    queryService,
+    queryType,
+    setQueryCountry,
+    setQueryService,
+    setQueryType,
+    setQueryStatus,
+    queryCountry,
+    queryStatus,
+    services,
+  } = props;
   return (
     <div className="w-full flex flex-col lg:flex-row">
       <h4 className={'text-sm font-medium text-black mt-10 mx-4'}>Filtros:</h4>
@@ -36,10 +46,16 @@ const Filtros = (props: Props) => {
         filters={queryService}
         setFilters={setQueryService}
       />
-      <MultipleSelect className={'mr-2'} items={countries} placeholder={'País'} filters={queryCountry} setFilters={setQueryCountry} />
+      <MultipleSelect
+        className={'mr-2'}
+        items={countries}
+        placeholder={'País'}
+        filters={queryCountry}
+        setFilters={setQueryCountry}
+      />
       <Select
         className={'mr-2 mt-6 input-style w-full rounded-base h-12 right-0 text-sm text-gray-500 right-1'}
-        items={{ALL: 'Todos', ...establishmentStatuses}}
+        items={{ ALL: 'Todos', ...establishmentStatuses }}
         placeholder={'Estado'}
         onSelect={(event) => setQueryStatus(event.currentTarget.value)}
         value={queryStatus}

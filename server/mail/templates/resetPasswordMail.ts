@@ -1,5 +1,4 @@
-export const resetPasswordMail = (link: string) =>
-  `Para recuperar tu contraseña, haz click en el siguiente enlace: ${link}`;
+export const resetPasswordMail = (link: string) => `Para recuperar tu contraseña, haz click en el siguiente enlace: ${link}`;
 
 export const resetPasswordHTMLMail = (link: string) =>
   `

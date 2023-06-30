@@ -46,8 +46,6 @@ const EstablishmentTab = React.memo<Props>((props) => {
     }
   };
 
-  
-
   var checkOpenStatus = (openingTimes: ServiceOnEstablishmentOpeningTime[]) => {
     var findStatus = openingTimes.find(
       (day) => day.endTime === ('00:00' as unknown as Date) && day.startTime === ('00:00' as unknown as Date),
@@ -106,7 +104,8 @@ const EstablishmentTab = React.memo<Props>((props) => {
                 <div className={openTab === -1 ? 'block' : 'hidden'} id="id-info">
                   <CardList>
                     <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
-                      {address} {addressNotes && <span className={'text-xs text-medium-gray'}>- {addressNotes}</span>} <span className={"ml-2 text-medium-gray"}>· A {activeEstablishment?.distance}</span>
+                      {address} {addressNotes && <span className={'text-xs text-medium-gray'}>- {addressNotes}</span>}{' '}
+                      <span className={'ml-2 text-medium-gray'}>· A {activeEstablishment?.distance}</span>
                     </CardListItem>
                     {activeEstablishment.website && (
                       <CardListItem icon={<GlobeAltIcon className={'text-primary'} />}>

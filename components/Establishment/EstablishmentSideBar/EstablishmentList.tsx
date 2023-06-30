@@ -24,31 +24,40 @@ type Props = React.PropsWithChildren<{
 }>;
 
 const EstablishmentList = React.memo<Props>((props) => {
-  const { searchedServiceIds, mapPosition, establishments, mapVisibility, setActiveEstablishment, setMapVisibility, searchLocationParam } = props;
+  const {
+    searchedServiceIds,
+    mapPosition,
+    establishments,
+    mapVisibility,
+    setActiveEstablishment,
+    setMapVisibility,
+    searchLocationParam,
+  } = props;
   const router = useRouter();
   const user = useAuthenticatedUser();
   const [loading, setLoading] = useState(true);
 
   const handleDetailsClick = async (establishmentId: string) => {
-
-    const selectedEstablishmentDistance =
-      await axios.get(
+    const selectedEstablishmentDistance = await axios
+      .get(
         `/api/establishments/distance?coords[lat]=${mapPosition?.coords.lat}&coords[lng]=${mapPosition?.coords.lng}&establishmentId=${establishmentId}`,
         {
-          params: { services: searchedServiceIds }
-        }).then((res) => res.data)
+          params: { services: searchedServiceIds },
+        },
+      )
+      .then((res) => res.data);
 
     const findSelectedEstablishment = establishments.find((establishment: Establishment) => establishment.id === establishmentId);
 
-    const selectedEstablishment: ActiveEstablishment | null = findSelectedEstablishment ? {
-      ...findSelectedEstablishment,
-      distance: selectedEstablishmentDistance.distance,
-    } : null;
-
+    const selectedEstablishment: ActiveEstablishment | null = findSelectedEstablishment
+      ? {
+          ...findSelectedEstablishment,
+          distance: selectedEstablishmentDistance.distance,
+        }
+      : null;
 
     setMapVisibility('block');
-    setActiveEstablishment(selectedEstablishment)
-
+    setActiveEstablishment(selectedEstablishment);
   };
 
   useEffect(() => {
@@ -61,8 +70,9 @@ const EstablishmentList = React.memo<Props>((props) => {
 
   return (
     <div
-      className={`${mapVisibility == 'hidden' ? 'block' : 'hidden'
-        } lg:block bg-ultra-light-gray lg:bg-inherit w-100 lg:h-[calc(100vh_-_295px)] lg:scroll-style lg:overflow-auto relative mt-2`}
+      className={`${
+        mapVisibility == 'hidden' ? 'block' : 'hidden'
+      } lg:block bg-ultra-light-gray lg:bg-inherit w-100 lg:h-[calc(100vh_-_295px)] lg:scroll-style lg:overflow-auto relative mt-2`}
     >
       {(user?.role === UserRole.ADMIN || user?.role === UserRole.COLLABORATOR) && (
         <div className="hidden lg:block mb-4 lg:ml-2">
@@ -91,33 +101,39 @@ const EstablishmentList = React.memo<Props>((props) => {
       )}
       {establishments && establishments.length
         ? establishments.map((establishment) => {
-          return (
-            <Card
-              key={establishment.id}
-              className={'my-2 pb-6 mx-3 lg:mx-0 cursor-pointer'}
-              onClick={() => handleDetailsClick(establishment.id)}
-            >
-              <CardHeader className={'font-title text-lg'}>{establishment.name}</CardHeader>
-              <CardList>
-                <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
-                  {establishment.street} {establishment.streetNumber}
-                </CardListItem>
-                {uniqBy(
-                  establishment.services.map((service) => service.service),
-                  (service) => service.id,
-                ).map((service) => (
-                  <CardListItem key={service.id} icon={SERVICE_ICONS[service.icon as ServiceIcon]}>
-                    {service.name}
+            return (
+              <Card
+                key={establishment.id}
+                className={'my-2 pb-6 mx-3 lg:mx-0 cursor-pointer'}
+                onClick={() => handleDetailsClick(establishment.id)}
+              >
+                <CardHeader className={'font-title text-lg'}>{establishment.name}</CardHeader>
+                <CardList>
+                  <CardListItem icon={<LocationMarkerIcon className={'text-primary'} />}>
+                    {establishment.street} {establishment.streetNumber}
                   </CardListItem>
-                ))}
-              </CardList>
-              <footer className={classNames('mt-4 w-full p-0 flex justify-start flex-col')}>
-                <Pill className="text-dark-gray text-xs mb-4 bg-ultra-light-gray">{`Creado por ${establishment.createdBy ?? 'Fundación Huesped'}`}</Pill>
-                {establishment.lastModifiedBy && establishment.createdBy !== establishment.lastModifiedBy && <Pill className="text-dark-gray text-xs bg-ultra-light-gray">{`Actualizado por ${establishment.lastModifiedBy ?? 'Fundación Huesped'}`}</Pill>}
-              </footer>
-            </Card>
-          );
-        })
+                  {uniqBy(
+                    establishment.services.map((service) => service.service),
+                    (service) => service.id,
+                  ).map((service) => (
+                    <CardListItem key={service.id} icon={SERVICE_ICONS[service.icon as ServiceIcon]}>
+                      {service.name}
+                    </CardListItem>
+                  ))}
+                </CardList>
+                <footer className={classNames('mt-4 w-full p-0 flex justify-start flex-col')}>
+                  <Pill className="text-dark-gray text-xs mb-4 bg-ultra-light-gray">{`Creado por ${
+                    establishment.createdBy ?? 'Fundación Huesped'
+                  }`}</Pill>
+                  {establishment.lastModifiedBy && establishment.createdBy !== establishment.lastModifiedBy && (
+                    <Pill className="text-dark-gray text-xs bg-ultra-light-gray">{`Actualizado por ${
+                      establishment.lastModifiedBy ?? 'Fundación Huesped'
+                    }`}</Pill>
+                  )}
+                </footer>
+              </Card>
+            );
+          })
         : ''}
       {!loading && establishments && !establishments.length ? (
         <div className="mt-4 p-6 lg:p-0 mx-3 lg:mx-0 lg:ml-2 text-center lg:text-start">

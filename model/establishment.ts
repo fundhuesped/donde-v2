@@ -93,4 +93,4 @@ export const establishmentTypes = {
 export const establishmentStatuses = {
   PUBLISHED: 'Activo',
   REJECTED: 'Inactivo',
-}
+};

@@ -11,9 +11,9 @@ import { prismaClient } from '../../../server/prisma/client';
 
 import isEmpty from 'lodash/isEmpty';
 import { createServiceOnEstablishmentOpeningTimeSchema } from '../../../model/openingTime';
-import axios from "axios";
-import {useAuthenticatedUser} from "../../../hooks/useAuthenticatedUser";
-import getUserDataFromReq from "../../../utils/getUserDataFromReq";
+import axios from 'axios';
+import { useAuthenticatedUser } from '../../../hooks/useAuthenticatedUser';
+import getUserDataFromReq from '../../../utils/getUserDataFromReq';
 
 const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
@@ -28,9 +28,13 @@ const handler: NextApiHandler = async (req, res) => {
 
 const queryParamsSchema = z.object({
   'services[]': z.union([z.array(z.string().uuid()), z.string().uuid()]).optional(),
-  includeRejected: z.string().optional().refine(value => !value || value === 'true' || value === 'false', {
-    message: 'Expected boolean, received string',
-  }).transform(value => value === 'true'),
+  includeRejected: z
+    .string()
+    .optional()
+    .refine((value) => !value || value === 'true' || value === 'false', {
+      message: 'Expected boolean, received string',
+    })
+    .transform((value) => value === 'true'),
 });
 
 const getEstablishments = async (req: NextApiRequest, res: NextApiResponse<any>) => {
@@ -76,7 +80,7 @@ const getEstablishments = async (req: NextApiRequest, res: NextApiResponse<any>)
   const resJson = await Promise.all(
     establishments.map(async (establishment: Establishment) => {
       return transformEstablishmentIntoJSONResponse(establishment);
-    })
+    }),
   );
   return res.status(200).json(resJson);
 };

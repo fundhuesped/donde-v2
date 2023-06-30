@@ -7,7 +7,7 @@ async function main() {
     data: {
       question: '¿Cómo funciona Dónde?',
       answer: `Seleccioná los servicios que quieras encontrar. Después, escribí una ubicación o compartirla desde tu dispositivo.
-La plataforma te mostrará los resultados más cercanos a la dirección que indicaste. En ese momento, vas a poder modificar tu búsqueda con el botón de "Filtrar".`
+La plataforma te mostrará los resultados más cercanos a la dirección que indicaste. En ese momento, vas a poder modificar tu búsqueda con el botón de "Filtrar".`,
     },
   });
 
@@ -22,7 +22,7 @@ Fue creada por Fundación Huésped en 2013 desarrollada en varias etapas gracias
 
 Es una plataforma de código abierto, disponible en: Github.
 
-Al recorrer y utilizar esta plataforma estás aceptando nuestras políticas de privacidad.`
+Al recorrer y utilizar esta plataforma estás aceptando nuestras políticas de privacidad.`,
     },
   });
 

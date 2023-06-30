@@ -1,6 +1,6 @@
 import { NextApiHandler } from 'next';
 import { prismaClient } from '../../../server/prisma/client';
-import {resetPasswordForEmail} from "../../../utils/resetPasswordForEmail";
+import { resetPasswordForEmail } from '../../../utils/resetPasswordForEmail';
 
 const handler: NextApiHandler = async (req, res) => {
   if (req.method !== 'POST') {

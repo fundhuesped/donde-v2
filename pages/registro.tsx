@@ -114,13 +114,7 @@ const SignUp: NextPage = () => {
                 ) : (
                   ''
                 )}
-                <input
-                  {...register('firstName')}
-                  className="input-style"
-                  placeholder=""
-                  id="firstName"
-                  name="firstName"
-                />
+                <input {...register('firstName')} className="input-style" placeholder="" id="firstName" name="firstName" />
               </label>
               <p className="color-primary text-sm">{errors.firstName?.message}</p>
             </div>
@@ -132,13 +126,7 @@ const SignUp: NextPage = () => {
                 ) : (
                   ''
                 )}
-                <input
-                  {...register('lastName')}
-                  className="input-style"
-                  placeholder=""
-                  id="lastName"
-                  name="lastName"
-                />
+                <input {...register('lastName')} className="input-style" placeholder="" id="lastName" name="lastName" />
               </label>
               <p className="color-primary text-sm">{errors.lastName?.message}</p>
             </div>
@@ -152,19 +140,13 @@ const SignUp: NextPage = () => {
                 ) : (
                   ''
                 )}
-                <input
-                  {...register('email')}
-                  className="input-style"
-                  placeholder=""
-                  id="email"
-                  name="email"
-                />
+                <input {...register('email')} className="input-style" placeholder="" id="email" name="email" />
               </label>
               <p className="color-primary text-sm">{errors.email?.message}</p>
             </div>
             <div className="w-full md:w-1/2 px-3">
               <label htmlFor="">
-              Contraseña
+                Contraseña
                 {!dirtyFields.password ? (
                   <span style={{ color: '#E6334C', marginLeft: '0.25em', position: 'absolute', width: '1.2em' }}>*</span>
                 ) : (
@@ -281,12 +263,7 @@ const SignUp: NextPage = () => {
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
               <label htmlFor="">
                 Sitio Web o RSS de la Organización
-                <input
-                  className="input-style"
-                  placeholder=""
-                  id="organizationWebsite"
-                  name="organizationWebsite"
-                />
+                <input className="input-style" placeholder="" id="organizationWebsite" name="organizationWebsite" />
               </label>
             </div>
           </div>

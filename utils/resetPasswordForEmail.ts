@@ -1,18 +1,16 @@
-import {prismaClient} from "../server/prisma/client";
-import bcrypt from "bcrypt";
-import {BCRYPT_COST} from "../config/server";
-import {sendMail} from "../server/mail/mailer";
+import { prismaClient } from '../server/prisma/client';
+import bcrypt from 'bcrypt';
+import { BCRYPT_COST } from '../config/server';
+import { sendMail } from '../server/mail/mailer';
 import {
   createPasswordHTMLMail,
   createPasswordMail,
   resetPasswordHTMLMail,
-  resetPasswordMail
-} from "../server/mail/templates/resetPasswordMail";
+  resetPasswordMail,
+} from '../server/mail/templates/resetPasswordMail';
 
 export const resetPasswordForEmail = async (email: string, isNewUser?: boolean) => {
-  const token =
-    Math.random().toString(36).substring(2) +
-    Math.random().toString(36).substring(2);
+  const token = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
 
   await prismaClient.user.update({
     where: { email },
@@ -27,5 +25,4 @@ export const resetPasswordForEmail = async (email: string, isNewUser?: boolean) 
     html: isNewUser ? createPasswordMail(recoverLink) : resetPasswordMail(recoverLink),
     text: isNewUser ? createPasswordHTMLMail(recoverLink) : resetPasswordHTMLMail(recoverLink),
   });
-
-}
+};

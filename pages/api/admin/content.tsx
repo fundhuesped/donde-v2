@@ -1,6 +1,6 @@
-import {NextApiHandler} from "next";
-import {z} from "zod";
-import {prismaClient} from "../../../server/prisma/client";
+import { NextApiHandler } from 'next';
+import { z } from 'zod';
+import { prismaClient } from '../../../server/prisma/client';
 
 const handler: NextApiHandler = async (req, res) => {
   if (req.method !== 'POST' && req.method !== 'PUT' && req.method !== 'DELETE') {
@@ -17,17 +17,17 @@ const handler: NextApiHandler = async (req, res) => {
       return res.status(400).send(queryParse.error.message);
     }
 
-    const {id, text} = queryParse.data;
+    const { id, text } = queryParse.data;
 
     try {
       await prismaClient.content.create({
         data: {
           id,
           text,
-        }
+        },
       });
     } catch (e) {
-      return res.status(400).json({message: 'Duplicated ID'});
+      return res.status(400).json({ message: 'Duplicated ID' });
     }
 
     return res.status(200).end();
@@ -44,7 +44,7 @@ const handler: NextApiHandler = async (req, res) => {
     const queryData = queryParse.data;
 
     try {
-      await prismaClient.content.delete({where: {id: queryData.id}});
+      await prismaClient.content.delete({ where: { id: queryData.id } });
     } catch (e) {
       return res.status(404).end();
     }
@@ -60,23 +60,23 @@ const handler: NextApiHandler = async (req, res) => {
     const errorMessage = queryParse.error.issues[0].message;
     return res.status(400).send(errorMessage);
   }
-  const {text, id} = queryParse.data;
+  const { text, id } = queryParse.data;
 
   try {
     await prismaClient.content.update({
-      where: {id},
+      where: { id },
       data: {
         text,
-      }
+      },
     });
   } catch (e) {
     console.log(e);
-    
+
     await prismaClient.content.create({
       data: {
         id,
         text,
-      }
+      },
     });
   }
 

@@ -141,25 +141,26 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
   const [activeEstablishment, setActiveEstablishment] = useState<ActiveEstablishment | null>(null);
 
   const handleMarkerClick = async (establishmentId: string) => {
-
-    const selectedEstablishmentDistance =
-      await axios.get(
+    const selectedEstablishmentDistance = await axios
+      .get(
         `/api/establishments/distance?coords[lat]=${mapPosition?.coords.lat}&coords[lng]=${mapPosition?.coords.lng}&establishmentId=${establishmentId}`,
         {
-          params: { services: searchedServiceIds }
-        }).then((res) => res.data)
+          params: { services: searchedServiceIds },
+        },
+      )
+      .then((res) => res.data);
 
-
-    const selectedEstablishment: ActiveEstablishment = Object.assign({},
+    const selectedEstablishment: ActiveEstablishment = Object.assign(
+      {},
       {
-        ...establishments.find((establishment: Establishment) => establishment.id === establishmentId) ?? null,
+        ...(establishments.find((establishment: Establishment) => establishment.id === establishmentId) ?? null),
         distance: selectedEstablishmentDistance.distance,
         /* isEstablishmentSelected: !isEstablishmentSelected */
-      })
+      },
+    );
 
-    setActiveEstablishment(selectedEstablishment)
+    setActiveEstablishment(selectedEstablishment);
     /* setIsEstablishmentSelected(!isEstablishmentSelected) */
-
   };
 
   useEffect(() => {

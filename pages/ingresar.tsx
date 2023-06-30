@@ -88,7 +88,7 @@ const SignIn: NextPage = () => {
               <p className="color-primary text-sm">{errors.password?.message}</p>
               {error && <p className="color-primary text-sm mt-4">{error}</p>}
             </div>
-            <Link href={"/nueva-clave"}>
+            <Link href={'/nueva-clave'}>
               <small className={'flex justify-end pt-3 color-primary font-bold cursor-pointer'}>¿Olvidaste la contraseña?</small>
             </Link>
           </div>

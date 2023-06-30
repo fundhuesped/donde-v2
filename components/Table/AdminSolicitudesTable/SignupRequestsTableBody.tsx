@@ -47,7 +47,7 @@ export const TableBody = (props: Props) => {
   const handleCloseAllModals = () => {
     setShowModal(false);
     onUpdateData?.();
-  }
+  };
 
   return (
     <>
@@ -106,7 +106,7 @@ export const TableBody = (props: Props) => {
         })}
       </tbody>
       {showModal ? (
-        <Modal showModal={showModal} className={'bg-neutral-600/50'} width='w-55'>
+        <Modal showModal={showModal} className={'bg-neutral-600/50'} width="w-55">
           <div className="w-full flex justify-end">
             <button onClick={() => setShowModal(false)}>
               <XIcon className="mr-4 mt-4 text-primary w-4.5"></XIcon>
@@ -118,7 +118,7 @@ export const TableBody = (props: Props) => {
             </div>
           </div>
         </Modal>
-        /* filteredSolicitudes[index].status === 'PENDING' ? (
+      ) : /* filteredSolicitudes[index].status === 'PENDING' ? (
           <Modal showModal={showModal} className={'bg-neutral-600/50'}>
             <div className="w-full flex justify-end">
               <button onClick={() => setShowModal(false)}>
@@ -167,7 +167,7 @@ export const TableBody = (props: Props) => {
           </Modal>
         )
         */
-      ) : null}
+      null}
     </>
   );
 };

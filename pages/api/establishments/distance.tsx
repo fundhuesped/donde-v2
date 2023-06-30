@@ -1,17 +1,23 @@
-import {NextApiHandler} from "next";
-import {z} from "zod";
-import axios from "axios";
-import {prismaClient} from "../../../server/prisma/client";
-import convert from "convert-units";
+import { NextApiHandler } from 'next';
+import { z } from 'zod';
+import axios from 'axios';
+import { prismaClient } from '../../../server/prisma/client';
+import convert from 'convert-units';
 
 const queryParamsSchema = z.object({
   coords: z.object({
-    lat: z.string().refine(value => !isNaN(parseFloat(value)), {
-      message: 'Expected number, received string',
-    }).transform(value => parseFloat(value)),
-    lng: z.string().refine(value => !isNaN(parseFloat(value)), {
-      message: 'Expected number, received string',
-    }).transform(value => parseFloat(value)),
+    lat: z
+      .string()
+      .refine((value) => !isNaN(parseFloat(value)), {
+        message: 'Expected number, received string',
+      })
+      .transform((value) => parseFloat(value)),
+    lng: z
+      .string()
+      .refine((value) => !isNaN(parseFloat(value)), {
+        message: 'Expected number, received string',
+      })
+      .transform((value) => parseFloat(value)),
   }),
   establishmentId: z.string().uuid(),
 });
@@ -46,26 +52,27 @@ const handler: NextApiHandler = async (req, res) => {
     return res.status(404).json({ error: 'Establishment not found' });
   }
 
-
   let distance = null;
 
   if (process.env.USE_MAPBOX_DISTANCE === 'true') {
-    const mapBoxResponse = await axios.get(`https://api.mapbox.com/directions-matrix/v1/mapbox/walking/${queryData.coords.lng},${queryData.coords.lat};${establishment.longitude},${establishment.latitude}?access_token=${process.env.MAPBOX_TOKEN}&sources=0&annotations=distance`);
+    const mapBoxResponse = await axios.get(
+      `https://api.mapbox.com/directions-matrix/v1/mapbox/walking/${queryData.coords.lng},${queryData.coords.lat};${establishment.longitude},${establishment.latitude}?access_token=${process.env.MAPBOX_TOKEN}&sources=0&annotations=distance`,
+    );
     const meters = mapBoxResponse.data?.distances?.[0]?.[1] ?? null;
     if (meters) {
       const conversion = convert(meters).from('m').toBest();
-      distance = `${Math.round(conversion.val * 10) / 10}${conversion.unit}`
+      distance = `${Math.round(conversion.val * 10) / 10}${conversion.unit}`;
     }
   } else {
-    const googleMapsResponse = await axios.get(`https://maps.googleapis.com/maps/api/distancematrix/json?origins=${queryData.coords.lat},${queryData.coords.lng}&destinations=${establishment.latitude},${establishment.longitude}&key=${process.env.GOOGLE_MAPS_API_KEY}&mode=walking`);
+    const googleMapsResponse = await axios.get(
+      `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${queryData.coords.lat},${queryData.coords.lng}&destinations=${establishment.latitude},${establishment.longitude}&key=${process.env.GOOGLE_MAPS_API_KEY}&mode=walking`,
+    );
     // Google Maps already formats the distance.
     distance = googleMapsResponse.data?.rows[0]?.elements[0]?.distance?.text ?? null;
     if (!distance) console.error(googleMapsResponse?.data);
   }
 
-
-
-  return res.status(200).json({distance})
+  return res.status(200).json({ distance });
 };
 
 export default handler;

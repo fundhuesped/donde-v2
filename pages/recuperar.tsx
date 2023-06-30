@@ -40,7 +40,7 @@ const PasswordNew: NextPage = () => {
       body: JSON.stringify({
         email: router.query.email,
         password: data.password,
-        token: router.query.token
+        token: router.query.token,
       }),
       method: 'POST',
       headers: {
@@ -62,13 +62,13 @@ const PasswordNew: NextPage = () => {
     if (response) {
       setShowModal(true);
     }
-  }, [response, setResponse])
+  }, [response, setResponse]);
 
   const handleShowPassword = (key: string) => {
     if (key === 'Enter') {
-      setHidePassword(!hidePassword)  
+      setHidePassword(!hidePassword);
     }
-  }
+  };
 
   return (
     <>
@@ -83,11 +83,11 @@ const PasswordNew: NextPage = () => {
             <label htmlFor="password" className="block mb-2 text-sm font-medium text-medium-gray">
               Contraseña
             </label>
-            <div className='relative'>
+            <div className="relative">
               <KeyIcon style={{ margin: '.4em .5em .5em .7em', position: 'absolute', width: '1.2em' }} color="#E6334C" />
               <input
                 {...register('password')}
-                type={hidePassword ? "password" : "text"}
+                type={hidePassword ? 'password' : 'text'}
                 id="password"
                 name="password"
                 className="input-style placeholder-icon"
@@ -95,7 +95,7 @@ const PasswordNew: NextPage = () => {
               />
               <span
                 className="absolute top-0 right-0 w-[30px] mr-2 mt-[2.5px] text-primary"
-                role='button'
+                role="button"
                 tabIndex={0}
                 onKeyUp={(event) => handleShowPassword(event.key)}
                 onClick={() => setHidePassword(!hidePassword)}
@@ -111,7 +111,7 @@ const PasswordNew: NextPage = () => {
               Cambiar Contraseña
             </button>
           </div>
-          {showModal &&
+          {showModal && (
             <Modal showModal={showModal} className={'bg-modal-image bg-white'}>
               <div className="flex items-center justify-center flex-col px-[5rem] py-[1.5rem] rounded-b">
                 <h2 className="text-xl font-semibold p-2">¡Tu contraseña se recuperó correctamente!</h2>
@@ -127,7 +127,7 @@ const PasswordNew: NextPage = () => {
                 </button>
               </div>
             </Modal>
-          }
+          )}
         </form>
       </MainContainer>
     </>

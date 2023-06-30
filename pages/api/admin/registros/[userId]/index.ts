@@ -1,6 +1,6 @@
-import {NextApiHandler} from "next";
-import {prismaClient} from "../../../../../server/prisma/client";
-import * as yup from "yup";
+import { NextApiHandler } from 'next';
+import { prismaClient } from '../../../../../server/prisma/client';
+import * as yup from 'yup';
 
 const userIdSchema = yup.object({
   userId: yup.string().uuid().required(),

@@ -45,7 +45,7 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
   const [queryStreet, setQueryStreet] = useState<string>('');
   const [queryProvince, setQueryProvince] = useState<string>('');
   const [queryCity, setQueryCity] = useState<string>('');
-  const [queryStatus, setQueryStatus] = useState<string>("ALL");
+  const [queryStatus, setQueryStatus] = useState<string>('ALL');
   const [queryCountry, setQueryCountry] = useState<any>(() => new Set<string>());
   const [queryType, setQueryType] = useState<any>(() => new Set<string>());
   const [queryService, setQueryService] = useState<any>(() => new Set<string>());
@@ -78,7 +78,7 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
           establishment.street.includes(queryStreet) &&
           establishment.province.includes(queryProvince) &&
           establishment.city.includes(queryCity) &&
-          establishment.status.includes(queryStatus === "ALL" ? "" : queryStatus === "PUBLISHED" ? "PUBLISHED" : "REJECTED") &&
+          establishment.status.includes(queryStatus === 'ALL' ? '' : queryStatus === 'PUBLISHED' ? 'PUBLISHED' : 'REJECTED') &&
           (queryFilterType.length == 0 || queryFilterType.includes(setType(establishment.type))) &&
           (queryFilterService.length == 0 ||
             establishment.services.filter((service) => queryFilterService.includes(service.service.name)).length !== 0) &&
@@ -142,7 +142,7 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
           establishment.street.includes(queryStreet) &&
           establishment.province.includes(queryProvince) &&
           establishment.city.includes(queryCity) &&
-          establishment.status.includes(value === "ALL" ? "" : value === "PUBLISHED" ? "PUBLISHED" : "REJECTED") &&
+          establishment.status.includes(value === 'ALL' ? '' : value === 'PUBLISHED' ? 'PUBLISHED' : 'REJECTED') &&
           (queryFilterType.length == 0 || queryFilterType.includes(setType(establishment.type))) &&
           (queryFilterService.length == 0 ||
             establishment.services.filter((service) => queryFilterService.includes(service.service.name)).length !== 0) &&
@@ -152,7 +152,7 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
     );
     setIsLoading(false);
     setQueryStatus(value);
-  }
+  };
 
   return (
     <>
@@ -211,7 +211,6 @@ const EstablecimientosAdmin: NextPage<ServerSideProps> = ({ availableServices })
               </label>
             </div> */}
             <div className="">
-              
               <DownloadButton filteredEstablishments={filteredEstablishments} />
             </div>
           </div>

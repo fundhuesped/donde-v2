@@ -65,13 +65,7 @@ const PasswordReset: NextPage = () => {
 
             <div>
               <UserIcon style={{ margin: '.4em .5em .5em .7em', position: 'absolute', width: '1.2em' }} color="#E6334C" />
-              <input
-                {...register('email')}
-                id="email"
-                name="email"
-                className="input-style placeholder-icon"
-                placeholder=""
-              />
+              <input {...register('email')} id="email" name="email" className="input-style placeholder-icon" placeholder="" />
               <p className="color-primary text-sm">{errors.email?.message}</p>
             </div>
           </div>
@@ -85,7 +79,10 @@ const PasswordReset: NextPage = () => {
               <Modal showModal={showModal} className={'bg-modal-image bg-white'}>
                 <div className="flex items-center justify-center flex-col px-[5rem] py-[1.5rem] rounded-b">
                   <h2 className="text-xl font-semibold p-2">¡Solo un paso más!</h2>
-                  <p className="text-center p-5">Se ha enviado un correo electrónico con instrucciones para reestablecer la contraseña. Por favor, revisar la bandeja de entrada y seguir los pasos indicados. ¡Gracias por tu colaboración!</p>
+                  <p className="text-center p-5">
+                    Se ha enviado un correo electrónico con instrucciones para reestablecer la contraseña. Por favor, revisar la
+                    bandeja de entrada y seguir los pasos indicados. ¡Gracias por tu colaboración!
+                  </p>
                   <button
                     className="btn-secondary my-5 cursor-pointer"
                     type="button"
@@ -101,7 +98,10 @@ const PasswordReset: NextPage = () => {
               <Modal showModal={showModal} className={'bg-modal-image bg-white'}>
                 <div className="flex items-center justify-center flex-col px-[5rem] py-[1.5rem] rounded-b">
                   <h2 className="text-xl font-semibold p-2">Un momento...</h2>
-                  <p className="text-center p-5">El correo electrónico proporcionado no existe en nuestra base de datos de colaboración. Sin embargo, te invitamos a continuar y solicitar una nueva cuenta para colaborar en Dónde.</p>
+                  <p className="text-center p-5">
+                    El correo electrónico proporcionado no existe en nuestra base de datos de colaboración. Sin embargo, te
+                    invitamos a continuar y solicitar una nueva cuenta para colaborar en Dónde.
+                  </p>
                   <button
                     className="btn-secondary my-5 cursor-pointer"
                     type="button"

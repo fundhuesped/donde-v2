@@ -74,7 +74,7 @@ const Table = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
     <div ref={ref} className="md:w-9/12 mx-auto py-12">
       <div className="flex flex-row justify-between">
         <h2 className={'text-2xl text-black font-bold mb-8 '}>{title}</h2>
-        <div className={"relative flex justify-between"}>
+        <div className={'relative flex justify-between'}>
           <div className={'mr-4'}>
             <Link href={'/admin/registro'}>
               <p className={'text-primary font-bold cursor-pointer'}>+ Nuevo Usuarie</p>

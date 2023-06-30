@@ -8,19 +8,18 @@ export type SendMailProperties = {
 };
 
 export const sendMail = async ({ to, subject, text, html }: SendMailProperties) => {
-  const defaultTransport = process.env.MAILER_HOST?.includes('gmail.com') ?
-    {
-      service: 'gmail',
-    }
-    :
-    {
-      port: 465,
-      secure: true,
-      tls: {
-        // do not fail on invalid certs
-        rejectUnauthorized: false,
-      },
-    }
+  const defaultTransport = process.env.MAILER_HOST?.includes('gmail.com')
+    ? {
+        service: 'gmail',
+      }
+    : {
+        port: 465,
+        secure: true,
+        tls: {
+          // do not fail on invalid certs
+          rejectUnauthorized: false,
+        },
+      };
   try {
     const transporter = createTransport({
       host: process.env.MAILER_HOST,
@@ -28,7 +27,7 @@ export const sendMail = async ({ to, subject, text, html }: SendMailProperties) 
         user: process.env.MAILER_USER_EMAIL,
         pass: process.env.MAILER_USER_PASSWORD,
       },
-      ...defaultTransport
+      ...defaultTransport,
     });
 
     await transporter.sendMail({
@@ -41,7 +40,7 @@ export const sendMail = async ({ to, subject, text, html }: SendMailProperties) 
 
     return true;
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return error;
   }
 };

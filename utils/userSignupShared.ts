@@ -1,12 +1,12 @@
-import {NextApiRequest, NextApiResponse} from "next";
-import bcrypt from "bcrypt";
-import {BCRYPT_COST} from "../config/server";
-import {prismaClient} from "../server/prisma/client";
-import {UserRole, UserStatus} from "@prisma/client";
-import {sendMail} from "../server/mail/mailer";
-import signupRequestMail from "../server/mail/templates/singupRequestMail";
-import signupRequestHTMLMail from "../server/mail/templates/singupRequestHTMLMail";
-import {resetPasswordForEmail} from "./resetPasswordForEmail";
+import { NextApiRequest, NextApiResponse } from 'next';
+import bcrypt from 'bcrypt';
+import { BCRYPT_COST } from '../config/server';
+import { prismaClient } from '../server/prisma/client';
+import { UserRole, UserStatus } from '@prisma/client';
+import { sendMail } from '../server/mail/mailer';
+import signupRequestMail from '../server/mail/templates/singupRequestMail';
+import signupRequestHTMLMail from '../server/mail/templates/singupRequestHTMLMail';
+import { resetPasswordForEmail } from './resetPasswordForEmail';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, isAdminRequest: boolean) => {
   if (req.method !== 'POST') {

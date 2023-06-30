@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import { editEstablishmentSchema as establishmentSchema } from '../../../model/establishment';
 import { prismaClient } from '../../../server/prisma/client';
 import { mapServicesOnEstablishmentToPrismaObject, transformEstablishmentIntoJSONResponse } from './index';
-import getUserDataFromReq from "../../../utils/getUserDataFromReq";
+import getUserDataFromReq from '../../../utils/getUserDataFromReq';
 
 const handler: NextApiHandler = async (req, res) => {
   switch (req.method) {
@@ -22,7 +22,7 @@ const handler: NextApiHandler = async (req, res) => {
 
 const getEstablishment = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   const idSchema = yup.string().uuid().required();
-  const {id} = req.query;
+  const { id } = req.query;
   if (!idSchema.isValidSync(id)) {
     return res.status(400).end();
   }

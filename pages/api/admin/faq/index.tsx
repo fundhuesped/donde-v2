@@ -1,6 +1,6 @@
-import { NextApiHandler } from "next";
-import { prismaClient } from "../../../../server/prisma/client";
-import { z } from "zod";
+import { NextApiHandler } from 'next';
+import { prismaClient } from '../../../../server/prisma/client';
+import { z } from 'zod';
 
 const handler: NextApiHandler = async (req, res) => {
   if (req.method !== 'POST' && req.method !== 'PUT' && req.method !== 'DELETE') {
@@ -23,7 +23,7 @@ const handler: NextApiHandler = async (req, res) => {
       data: {
         question,
         answer,
-      }
+      },
     });
     return res.status(200).end();
   }
@@ -66,9 +66,8 @@ const handler: NextApiHandler = async (req, res) => {
       data: {
         question,
         answer,
-      }
+      },
     });
-
   } catch (e) {
     return res.status(404).end();
   }

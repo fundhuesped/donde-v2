@@ -19,18 +19,18 @@ type AccordionItemProps = {
 };
 
 type ContentProps = {
-  id?: string,
-  question?: string,
-  answer?: string,
-}
+  id?: string;
+  question?: string;
+  answer?: string;
+};
 
 const handleHtml = (content: any) => {
   if (content) {
     return {
       __html: content,
-    }
+    };
   }
-}
+};
 
 const getSectionContent = async (id?: string) => {
   return await axios.get('/api/faq', {
@@ -51,7 +51,7 @@ const AccordionItem = (props: AccordionItemProps) => {
       <button className={'py-4 flex flex-row w-full cursor-pointer'} onClick={() => setOpen(!open)}>
         <QuestionMarkCircleIcon className={'h-6 w-5 text-primary mx-4'} />
         {/* <p className={'text-l font-title text-black font-semibold'}></p> */}
-        <div className='text-l font-title text-black font-semibold' dangerouslySetInnerHTML={handleHtml(title)}></div>
+        <div className="text-l font-title text-black font-semibold" dangerouslySetInnerHTML={handleHtml(title)}></div>
         <div className={'ml-auto'}>
           <ChevronIcon className={'h-6 w-5 text-primary mx-4'} />
         </div>
@@ -122,8 +122,8 @@ export default function FAQs() {
   useEffect(() => {
     getSectionContent().then((response) => {
       setContent(response.data);
-    })
-  }, [])
+    });
+  }, []);
 
   return (
     <>

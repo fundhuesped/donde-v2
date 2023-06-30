@@ -7,9 +7,9 @@ import { Button } from '../components/Buttons/Button';
 import axios from 'axios';
 
 type ContentProps = {
-  id?: string,
-  text?: string,
-}
+  id?: string;
+  text?: string;
+};
 
 const FAQLink = (props: HTMLProps<HTMLAnchorElement>) => {
   const { className, children, ...rest } = props;
@@ -39,27 +39,26 @@ const getSectionContent = async (id: string) => {
   return await axios.get('/api/content', {
     params: {
       id,
-    }
+    },
   });
 };
 
 export default function About() {
-
   const [content, setContent] = useState<ContentProps[]>();
 
   const handleHtml = (content: ContentProps) => {
     if (content.text) {
       return {
         __html: content.text,
-      }
+      };
     }
-  }
+  };
 
   useEffect(() => {
     getSectionContent('about').then((response) => {
       setContent(response.data);
-    })
-  }, [])
+    });
+  }, []);
 
   return (
     <>
@@ -69,9 +68,8 @@ export default function About() {
 
       <main className={'px-6 my-2 lg:mx-auto lg:max-w-desktop'}>
         <h1 className={'text-lg text-black font-bold mb-8'}>Sobre Dónde</h1>
-        {content && content.map((content, key) => (
-          <div key={key} className='' dangerouslySetInnerHTML={handleHtml(content)}></div>
-        ))}
+        {content &&
+          content.map((content, key) => <div key={key} className="" dangerouslySetInnerHTML={handleHtml(content)}></div>)}
         {/* <p className={'text-base text-justify mb-6'}>
           <strong>Dónde</strong> es una plataforma que te permite encontrar servicios de salud.
         </p>

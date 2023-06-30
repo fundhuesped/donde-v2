@@ -194,8 +194,14 @@ export const EstablishmentPage: NextPage<ServerSideProps> = React.memo(({ establ
           )}
 
           <footer className={'mt-4'}>
-            <Pill className="text-dark-gray text-xs mb-4 bg-ultra-light-gray">{`Creado por ${establishment.createdBy ?? 'Fundación Huesped'}`}</Pill>
-            {establishment.lastModifiedBy && establishment.createdBy !== establishment.lastModifiedBy && <Pill className="text-dark-gray text-xs bg-ultra-light-gray">{`Actualizado por ${establishment.lastModifiedBy ?? 'Fundación Huesped'}`}</Pill>}
+            <Pill className="text-dark-gray text-xs mb-4 bg-ultra-light-gray">{`Creado por ${
+              establishment.createdBy ?? 'Fundación Huesped'
+            }`}</Pill>
+            {establishment.lastModifiedBy && establishment.createdBy !== establishment.lastModifiedBy && (
+              <Pill className="text-dark-gray text-xs bg-ultra-light-gray">{`Actualizado por ${
+                establishment.lastModifiedBy ?? 'Fundación Huesped'
+              }`}</Pill>
+            )}
           </footer>
         </Card>
 

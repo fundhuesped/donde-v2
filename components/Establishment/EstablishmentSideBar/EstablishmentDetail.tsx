@@ -153,9 +153,14 @@ export const EstablishmentDetail = React.memo<Props>((props) => {
           </>
         )}
 
-        <Pill className="text-dark-gray text-xs mb-4 bg-ultra-light-gray">{`Creado por ${activeEstablishment.createdBy ?? 'Fundación Huesped'}`}</Pill>
-        {activeEstablishment.lastModifiedBy && activeEstablishment.createdBy !== activeEstablishment.lastModifiedBy &&
-        <Pill className="text-dark-gray text-xs bg-ultra-light-gray">{`Actualizado por ${activeEstablishment.lastModifiedBy ?? 'Fundación Huesped'}`}</Pill>}
+        <Pill className="text-dark-gray text-xs mb-4 bg-ultra-light-gray">{`Creado por ${
+          activeEstablishment.createdBy ?? 'Fundación Huesped'
+        }`}</Pill>
+        {activeEstablishment.lastModifiedBy && activeEstablishment.createdBy !== activeEstablishment.lastModifiedBy && (
+          <Pill className="text-dark-gray text-xs bg-ultra-light-gray">{`Actualizado por ${
+            activeEstablishment.lastModifiedBy ?? 'Fundación Huesped'
+          }`}</Pill>
+        )}
         {/* <Pill onClick={() => handleDetailsClick(activeEstablishment.id)} className={'text-dark-gray cursor-pointer'}>
           Actualizado por Fundación Huesped
         </Pill> */}

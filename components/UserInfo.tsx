@@ -65,7 +65,7 @@ const userInfoValues = {
   role: '',
   userId: '',
   status: '',
-}
+};
 
 const schema = yup
   .object({
@@ -81,9 +81,9 @@ const schema = yup
   .required();
 
 interface UserInfoProps {
-  currentUser?: UserInfoType | null | undefined,
-  isNewUser?: boolean,
-  handleCloseAllModals?: () => void,
+  currentUser?: UserInfoType | null | undefined;
+  isNewUser?: boolean;
+  handleCloseAllModals?: () => void;
 }
 
 const UserInfo = (props: UserInfoProps) => {
@@ -105,52 +105,52 @@ const UserInfo = (props: UserInfoProps) => {
 
   const handleSignUp = async (data: FormValues) => {
     if (isNewUser) {
-        await fetch('/api/admin/registros/nuevo', {
-            body: JSON.stringify({
-            email: data.email,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            password: data.password,
-            organizationName: data.organizationName,
-            organizationType: data.organizationType,
-            organizationRole: data.organizationRole,
-            organizationCountry: data.organizationCountry,
-            organizationWebsite: data.organizationWebsite,
-            userRole: data.role,
+      await fetch('/api/admin/registros/nuevo', {
+        body: JSON.stringify({
+          email: data.email,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          password: data.password,
+          organizationName: data.organizationName,
+          organizationType: data.organizationType,
+          organizationRole: data.organizationRole,
+          organizationCountry: data.organizationCountry,
+          organizationWebsite: data.organizationWebsite,
+          userRole: data.role,
         }),
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then((resp) => {
-            setResponse(true);
-            // setResponse(resp.ok);
-            setError(resp.statusText);
-        });
-      } else {
-        await fetch(`/api/admin/registros/${currentUserInfo.userId}`, {
-            body: JSON.stringify({
-            email: data.email,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            password: data.password,
-            organizationName: data.organizationName,
-            organizationType: data.organizationType,
-            organizationRole: data.organizationRole,
-            organizationCountry: data.organizationCountry,
-            organizationWebsite: data.organizationWebsite,
-            userRole: data.role,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then((resp) => {
+        setResponse(true);
+        // setResponse(resp.ok);
+        setError(resp.statusText);
+      });
+    } else {
+      await fetch(`/api/admin/registros/${currentUserInfo.userId}`, {
+        body: JSON.stringify({
+          email: data.email,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          password: data.password,
+          organizationName: data.organizationName,
+          organizationType: data.organizationType,
+          organizationRole: data.organizationRole,
+          organizationCountry: data.organizationCountry,
+          organizationWebsite: data.organizationWebsite,
+          userRole: data.role,
         }),
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }).then((resp) => {
-            setResponse(true);
-            // setResponse(resp.ok);
-            setError(resp.statusText);
-        });
-      }
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then((resp) => {
+        setResponse(true);
+        // setResponse(resp.ok);
+        setError(resp.statusText);
+      });
+    }
   };
 
   useEffect(() => {
@@ -172,9 +172,11 @@ const UserInfo = (props: UserInfoProps) => {
       <MainContainer className={'mt-6 p-5 container mx-auto w-full lg:w-[55em] lg:max-h-[38em] px-[3rem]'}>
         <form className={'px-5'} onSubmit={handleSubmit(handleSignUp)}>
           <h1 className="text-xl font-bold mb-4 text-center">{isNewUser ? 'Alta de Usuarie' : 'Editar Usuario'}</h1>
-          {isNewUser && <p className="text-sm text-center">
-            Para dar de alta un usuarie de <b>Dónde</b> complete el siguiente formulario para crear su cuenta.
-          </p>}
+          {isNewUser && (
+            <p className="text-sm text-center">
+              Para dar de alta un usuarie de <b>Dónde</b> complete el siguiente formulario para crear su cuenta.
+            </p>
+          )}
           <div className="flex flex-wrap -mx-3 my-6">
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
               <label htmlFor="">
@@ -191,7 +193,7 @@ const UserInfo = (props: UserInfoProps) => {
                   id="firstName"
                   name="firstName"
                   value={currentUserInfo ? currentUserInfo.firstName : ''}
-                  onChange={(event) => setCurrentUserInfo({...currentUserInfo, firstName: event.currentTarget.value})}
+                  onChange={(event) => setCurrentUserInfo({ ...currentUserInfo, firstName: event.currentTarget.value })}
                 />
               </label>
               <p className="color-primary text-sm">{errors.firstName?.message}</p>
@@ -211,7 +213,7 @@ const UserInfo = (props: UserInfoProps) => {
                   id="lastName"
                   name="lastName"
                   value={currentUserInfo ? currentUserInfo.lastName : ''}
-                  onChange={(event) => setCurrentUserInfo({...currentUserInfo, lastName: event.currentTarget.value})}
+                  onChange={(event) => setCurrentUserInfo({ ...currentUserInfo, lastName: event.currentTarget.value })}
                 />
               </label>
               <p className="color-primary text-sm">{errors.lastName?.message}</p>
@@ -233,30 +235,32 @@ const UserInfo = (props: UserInfoProps) => {
                   id="email"
                   name="email"
                   value={currentUserInfo ? currentUserInfo.email : ''}
-                  onChange={(event) => setCurrentUserInfo({...currentUserInfo, email: event.currentTarget.value})}
+                  onChange={(event) => setCurrentUserInfo({ ...currentUserInfo, email: event.currentTarget.value })}
                 />
               </label>
               <p className="color-primary text-sm">{errors.email?.message}</p>
             </div>
-            {isNewUser && <div className="w-full md:w-1/2 px-3">
-              <label htmlFor="">
-                Contraseña
-                {!dirtyFields.password ? (
-                  <span style={{ color: '#E6334C', marginLeft: '0.25em', position: 'absolute', width: '1.2em' }}>*</span>
-                ) : (
-                  ''
-                )}
-                <input
-                  {...register('password')}
-                  type="password"
-                  className="input-style"
-                  placeholder=""
-                  id="password"
-                  name="password"
-                />
-              </label>
-              <p className="color-primary text-sm">{errors.lastName?.message}</p>
-            </div>}
+            {isNewUser && (
+              <div className="w-full md:w-1/2 px-3">
+                <label htmlFor="">
+                  Contraseña
+                  {!dirtyFields.password ? (
+                    <span style={{ color: '#E6334C', marginLeft: '0.25em', position: 'absolute', width: '1.2em' }}>*</span>
+                  ) : (
+                    ''
+                  )}
+                  <input
+                    {...register('password')}
+                    type="password"
+                    className="input-style"
+                    placeholder=""
+                    id="password"
+                    name="password"
+                  />
+                </label>
+                <p className="color-primary text-sm">{errors.lastName?.message}</p>
+              </div>
+            )}
           </div>
           <div className="flex flex-wrap -mx-3 my-6">
             <div className="w-full md:w-1/2 px-3">
@@ -274,7 +278,7 @@ const UserInfo = (props: UserInfoProps) => {
                   id="organizationName"
                   name="organizationName"
                   value={currentUserInfo ? currentUserInfo.organizationName : ''}
-                  onChange={(event) => setCurrentUserInfo({...currentUserInfo, organizationName: event.currentTarget.value})}
+                  onChange={(event) => setCurrentUserInfo({ ...currentUserInfo, organizationName: event.currentTarget.value })}
                 />
               </label>
               <p className="color-primary text-sm">{errors.organizationName?.message}</p>
@@ -294,7 +298,7 @@ const UserInfo = (props: UserInfoProps) => {
                   id="organizationRole"
                   name="organizationRole"
                   value={currentUserInfo ? currentUserInfo.organizationRole : ''}
-                  onChange={(event) => setCurrentUserInfo({...currentUserInfo, organizationRole: event.currentTarget.value})}
+                  onChange={(event) => setCurrentUserInfo({ ...currentUserInfo, organizationRole: event.currentTarget.value })}
                 />
               </label>
               <p className="color-primary text-sm">{errors.organizationRole?.message}</p>
@@ -316,7 +320,7 @@ const UserInfo = (props: UserInfoProps) => {
                   id="organizationType"
                   name="organizationType"
                   value={currentUserInfo ? currentUserInfo.organizationType : ''}
-                  onChange={(event) => setCurrentUserInfo({...currentUserInfo, organizationType: event.currentTarget.value})}
+                  onChange={(event) => setCurrentUserInfo({ ...currentUserInfo, organizationType: event.currentTarget.value })}
                 >
                   <option value="" disabled hidden>
                     Elija un tipo
@@ -344,7 +348,7 @@ const UserInfo = (props: UserInfoProps) => {
                   id="organizationCountry"
                   name="organizationCountry"
                   value={currentUserInfo ? currentUserInfo.organizationCountry : ''}
-                  onChange={(event) => setCurrentUserInfo({...currentUserInfo, organizationCountry: event.currentTarget.value})}
+                  onChange={(event) => setCurrentUserInfo({ ...currentUserInfo, organizationCountry: event.currentTarget.value })}
                 >
                   <option value="" disabled hidden>
                     Elija un país
@@ -368,8 +372,10 @@ const UserInfo = (props: UserInfoProps) => {
                   placeholder=""
                   id="organizationWebsite"
                   name="organizationWebsite"
-                  value={currentUserInfo && currentUserInfo.organizationWebsite !== null ? currentUserInfo.organizationWebsite : ''}
-                  onChange={(event) => setCurrentUserInfo({...currentUserInfo, organizationWebsite: event.currentTarget.value})}
+                  value={
+                    currentUserInfo && currentUserInfo.organizationWebsite !== null ? currentUserInfo.organizationWebsite : ''
+                  }
+                  onChange={(event) => setCurrentUserInfo({ ...currentUserInfo, organizationWebsite: event.currentTarget.value })}
                 />
               </label>
             </div>
@@ -388,7 +394,7 @@ const UserInfo = (props: UserInfoProps) => {
                   id="role"
                   name="role"
                   value={currentUserInfo ? currentUserInfo.role : ''}
-                  onChange={(event) => setCurrentUserInfo({...currentUserInfo, role: event.currentTarget.value})}
+                  onChange={(event) => setCurrentUserInfo({ ...currentUserInfo, role: event.currentTarget.value })}
                 >
                   <option className="text-gray-300" value="" disabled hidden>
                     Elija un rol

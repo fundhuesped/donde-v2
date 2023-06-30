@@ -1,4 +1,4 @@
-import { NextApiRequest} from 'next';
+import { NextApiRequest } from 'next';
 import { getToken } from 'next-auth/jwt';
 import { NextRequest } from 'next/server';
 import { AuthenticatedUser } from '../model/auth';
