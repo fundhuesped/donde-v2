@@ -40,6 +40,7 @@ const TableHead = (props: Props) => {
           <ColumnHeader>Dirección</ColumnHeader>
           <ColumnHeader onColumnSort={() => onColumnSort('city')}>Ciudad</ColumnHeader>
           <ColumnHeader onColumnSort={() => onColumnSort('department')}>Provincia</ColumnHeader>
+          <ColumnHeader>Estado</ColumnHeader>
           <ColumnHeader>Servicios</ColumnHeader>
           <ColumnHeader>País</ColumnHeader>
           <ColumnHeader className={'text-center'}>Acciones</ColumnHeader>

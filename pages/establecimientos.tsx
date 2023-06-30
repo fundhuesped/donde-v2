@@ -4,7 +4,7 @@ import GoogleMapReact, { Bounds } from 'google-map-react';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import useSWR from 'swr';
 import EstablishmentSideBar from '../components/Establishment/EstablishmentSideBar';
 import { EstablishmentDetail } from '../components/Establishment/EstablishmentSideBar/EstablishmentDetail';
@@ -13,7 +13,7 @@ import EstablishmentList from '../components/Establishment/EstablishmentSideBar/
 import EstablishmentToggle from '../components/Establishment/EstablishmentSideBar/EstablishmentToggle';
 import MainContainer from '../components/MainContainer';
 import { Marker, UserMarker } from '../components/Marker';
-import { Establishment } from '../model/establishment';
+import { ActiveEstablishment, Establishment } from '../model/establishment';
 import { Service } from '../model/services';
 import { prismaClient } from '../server/prisma/client';
 
@@ -71,7 +71,7 @@ function getCurrentLocation(callback: (coords: Coordinates) => void): void {
   );
 }
 
-type MapPosition = {
+export type MapPosition = {
   coords: Coordinates;
   zoom: number;
 };
@@ -96,6 +96,8 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
 
   const [mapPosition, setMapPosition] = useState<MapPosition | null>(null);
   const [mapVisibility, setMapVisibility] = useState('block');
+  /* const [isEstablishmentSelected, setIsEstablishmentSelected] = useState(false); */
+  /* const [establishments, setEstablishments] = useState([]); */
 
   const servicesQueryParam = router.query.services;
   const searchedServiceIds = servicesQueryParam
@@ -103,16 +105,27 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
       ? servicesQueryParam
       : [servicesQueryParam]
     : [];
+  const currentCoords = coords;
 
-  const { data: establishments } = useSWR(router.isReady ? '/api/establishments' : null, (url) =>
+  const { data: establishments } = useSWR(router.isReady ? `/api/establishments` : null, (url) =>
     axios.get(url, { params: { services: searchedServiceIds } }).then((res) => res.data),
   );
+  /* const data = useSWR(router.isReady ? `/api/establishments` : null, (url) =>
+    axios.get(url, { params: { services: searchedServiceIds } }).then((res) => res.data),
+  );
+  const establishmentsOthers = data.data?.map((establishment: Establishment) => {
+    return Object.assign({}, {
+      ...establishment,
+      distance: null,
+      isEstablishmentSelected: false,
+    })
+  }) */
 
   useEffect(() => {
+    /* setEstablishments(establishmentsOthers); */
     if (!router.isReady) {
       return;
     }
-
     if (coords) {
       // Sin el setTimeout no funciona el ruteo, no pudimos encontrar el motivo
       setTimeout(() => {
@@ -125,9 +138,29 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
 
   const [bounds, setBounds] = useState<Bounds | null>(null);
 
-  const [activeEstablishment, setActiveEstablishment] = useState<Establishment | null>(null);
-  const handleMarkerClick = (establishmentId: string) => {
-    setActiveEstablishment(establishments.find((establishment: Establishment) => establishment.id === establishmentId) ?? null);
+  const [activeEstablishment, setActiveEstablishment] = useState<ActiveEstablishment | null>(null);
+
+  const handleMarkerClick = async (establishmentId: string) => {
+    const selectedEstablishmentDistance = await axios
+      .get(
+        `/api/establishments/distance?coords[lat]=${mapPosition?.coords.lat}&coords[lng]=${mapPosition?.coords.lng}&establishmentId=${establishmentId}`,
+        {
+          params: { services: searchedServiceIds },
+        },
+      )
+      .then((res) => res.data);
+
+    const selectedEstablishment: ActiveEstablishment = Object.assign(
+      {},
+      {
+        ...(establishments.find((establishment: Establishment) => establishment.id === establishmentId) ?? null),
+        distance: selectedEstablishmentDistance.distance,
+        /* isEstablishmentSelected: !isEstablishmentSelected */
+      },
+    );
+
+    setActiveEstablishment(selectedEstablishment);
+    /* setIsEstablishmentSelected(!isEstablishmentSelected) */
   };
 
   useEffect(() => {
@@ -176,6 +209,8 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
                     setMapVisibility={setMapVisibility}
                     mapVisibility={mapVisibility}
                     setActiveEstablishment={setActiveEstablishment}
+                    mapPosition={mapPosition}
+                    searchedServiceIds={searchedServiceIds}
                   />
                 </div>
               </EstablishmentSideBar>
@@ -216,9 +251,11 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
                           bounds,
                         ),
                     )
+                    /* .filter((establishment: Establishment) => establishment.isEstablishmentSelected === true) */
                     .map((establishment: Establishment) => {
                       return (
                         <Marker
+                          isSelected={establishment.id === activeEstablishment?.id}
                           key={establishment.id}
                           lat={establishment.latitude}
                           lng={establishment.longitude}
@@ -226,6 +263,14 @@ const Establishments: NextPage<ServerSideProps> = ({ googleMapsApiKey, available
                         />
                       );
                     })}
+                {/* {activeEstablishment && (
+                    <Marker
+                      key={activeEstablishment.id}
+                      lat={activeEstablishment.latitude}
+                      lng={activeEstablishment.longitude}
+                      onClick={() => handleMarkerClick(activeEstablishment.id)}
+                    />
+                  )} */}
               </GoogleMapReact>
               {activeEstablishment !== null && (
                 <EstablishmentDetail

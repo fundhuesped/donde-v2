@@ -2,10 +2,12 @@ import { CheckIcon, EyeIcon, XIcon } from '@heroicons/react/solid';
 import { OrganizationType } from '@prisma/client';
 import axios from 'axios';
 import classNames from 'classnames';
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { SignupRequest, SignupRequests } from '../../../model/signup';
 import { formatDate } from '../../../utils/dates';
 import { Modal } from '../../Modal';
+import MainContainer from '../../MainContainer';
+import UserInfo from '../../UserInfo';
 
 type Props = React.PropsWithChildren<{
   className?: string;
@@ -39,6 +41,11 @@ export const TableBody = (props: Props) => {
 
   const rejectSignupRequest = async (request: SignupRequest) => {
     await axios.post(`/api/admin/registros/${request.userId}/rechazar`);
+    onUpdateData?.();
+  };
+
+  const handleCloseAllModals = () => {
+    setShowModal(false);
     onUpdateData?.();
   };
 
@@ -85,7 +92,7 @@ export const TableBody = (props: Props) => {
                   </>
                 )}
                 <button
-                  className=" w-1/3 p-1 flex aling-center"
+                  className=" w-1/3 p-1 flex align-center"
                   type="button"
                   onClick={() => {
                     handlerShowModal(index);
@@ -99,7 +106,7 @@ export const TableBody = (props: Props) => {
         })}
       </tbody>
       {showModal ? (
-        <Modal showModal={showModal} className={'bg-neutral-600/50'}>
+        <Modal showModal={showModal} className={'bg-neutral-600/50'} width="w-55">
           <div className="w-full flex justify-end">
             <button onClick={() => setShowModal(false)}>
               <XIcon className="mr-4 mt-4 text-primary w-4.5"></XIcon>
@@ -107,45 +114,60 @@ export const TableBody = (props: Props) => {
           </div>
           <div className="flex items-left justify-center flex-col px-8 pb-6 rounded-b">
             <div className="w-full">
-              <h2 className="text-2xl font-semibold py-2 text-black">
-                {filteredSolicitudes[index].firstName} {filteredSolicitudes[index].lastName}
-              </h2>
-              <ul>
-                <li>{filteredSolicitudes[index].email}</li>
-                <li>Nombre de la organización: {filteredSolicitudes[index].organizationName}</li>
-                <li>País: {filteredSolicitudes[index].organizationCountry}</li>
-                <li>Rol: {filteredSolicitudes[index].organizationRole}</li>
-                <li>Tipo de organización: {formatOrganizationType(filteredSolicitudes[index].organizationType)}</li>
-                <li>Sitio: {filteredSolicitudes[index].organizationWebsite}</li>
-              </ul>
-            </div>
-            <div className="w-full flex justify-end py-3">
-              <button
-                className="btn-primary w-1/3 p-1 flex justify-center aling-center text-sm mr-2 rounded-xl"
-                type="button"
-                onClick={() => {
-                  approveSignupRequest(filteredSolicitudes[index]);
-                  setShowModal(false);
-                }}
-              >
-                <CheckIcon className="mr-1 mt- mt-0.5 text-inherit w-4"></CheckIcon>
-                Aprobar
-              </button>
-              <button
-                className="btn-secondary w-1/3 p-1 flex justify-center aling-center text-sm mr-2 rounded-xl"
-                type="button"
-                onClick={() => {
-                  rejectSignupRequest(filteredSolicitudes[index]);
-                  setShowModal(false);
-                }}
-              >
-                <XIcon className="mr-1 mt- mt-0.5 text-inherit w-4"></XIcon>
-                Rechazar
-              </button>
+              <UserInfo currentUser={filteredSolicitudes[index]} isNewUser={false} handleCloseAllModals={handleCloseAllModals} />
             </div>
           </div>
         </Modal>
-      ) : null}
+      ) : /* filteredSolicitudes[index].status === 'PENDING' ? (
+          <Modal showModal={showModal} className={'bg-neutral-600/50'}>
+            <div className="w-full flex justify-end">
+              <button onClick={() => setShowModal(false)}>
+                <XIcon className="mr-4 mt-4 text-primary w-4.5"></XIcon>
+              </button>
+            </div>
+            <div className="flex items-left justify-center flex-col px-8 pb-6 rounded-b">
+              <div className="w-full">
+                <h2 className="text-2xl font-semibold py-2 text-black">
+                  {filteredSolicitudes[index].firstName} {filteredSolicitudes[index].lastName}
+                </h2>
+                <ul>
+                  <li>{filteredSolicitudes[index].email}</li>
+                  <li>Nombre de la organización: {filteredSolicitudes[index].organizationName}</li>
+                  <li>País: {filteredSolicitudes[index].organizationCountry}</li>
+                  <li>Rol: {filteredSolicitudes[index].organizationRole}</li>
+                  <li>Tipo de organización: {formatOrganizationType(filteredSolicitudes[index].organizationType)}</li>
+                  <li>Sitio: {filteredSolicitudes[index].organizationWebsite}</li>
+                </ul>
+              </div>
+              <div className="w-full flex justify-end py-3">
+                <button
+                  className="btn-primary w-1/3 p-1 flex justify-center aling-center text-sm mr-2 rounded-xl"
+                  type="button"
+                  onClick={() => {
+                    approveSignupRequest(filteredSolicitudes[index]);
+                    setShowModal(false);
+                  }}
+                >
+                  <CheckIcon className="mr-1 mt- mt-0.5 text-inherit w-4"></CheckIcon>
+                  Aprobar
+                </button>
+                <button
+                  className="btn-secondary w-1/3 p-1 flex justify-center aling-center text-sm mr-2 rounded-xl"
+                  type="button"
+                  onClick={() => {
+                    rejectSignupRequest(filteredSolicitudes[index]);
+                    setShowModal(false);
+                  }}
+                >
+                  <XIcon className="mr-1 mt- mt-0.5 text-inherit w-4"></XIcon>
+                  Rechazar
+                </button>
+              </div>
+            </div>
+          </Modal>
+        )
+        */
+      null}
     </>
   );
 };

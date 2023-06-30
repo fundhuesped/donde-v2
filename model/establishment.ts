@@ -41,6 +41,7 @@ export const editEstablishmentSchema = yup.object({
   latitude: yup.number().min(-90).max(90),
   longitude: yup.number().min(-180).max(180),
   services: yup.array().of(createServiceOnEstablishmentSchema).min(1),
+  status: yup.mixed().oneOf(Object.values(PrismaClient.EstablishmentStatus)).optional(),
 });
 
 export type Establishment = {
@@ -63,6 +64,8 @@ export type Establishment = {
   website: string | null;
   city: string;
   department: string;
+  createdBy: string | null;
+  lastModifiedBy: string | null;
   province: string;
   country: string;
   latitude: number;
@@ -74,6 +77,11 @@ export type Establishment = {
     openingTimes: PrismaClient.ServiceOnEstablishmentOpeningTime[];
   })[];
 };
+
+export interface ActiveEstablishment extends Establishment {
+  distance?: string;
+}
+
 export const establishmentTypes = {
   HEALTH_ESTABLISHMENT: 'Establecimiento de salud público',
   SOCIAL_ORGANIZATION: 'Organizacion social',
@@ -81,4 +89,8 @@ export const establishmentTypes = {
   PRIVATE_INSTITUTION: 'Privado',
   EDUCATIONAL_INSTITUTION: 'Establecimiento educativo',
   OTHER: 'Otro',
+};
+export const establishmentStatuses = {
+  PUBLISHED: 'Activo',
+  REJECTED: 'Inactivo',
 };

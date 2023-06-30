@@ -74,3 +74,9 @@
     color: #e75f72;
   }
 }
+
+.ProseMirror-focused {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}

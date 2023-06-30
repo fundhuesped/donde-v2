@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from 'react';
+import React, { MouseEventHandler, MutableRefObject } from 'react';
 import { LocationMarkerIcon } from '@heroicons/react/outline';
 import UserMarkerIcon from '../assets/images/UserMarkerIcon.svg';
 import classNames from 'classnames';
@@ -8,12 +8,13 @@ export type MarkerProps = {
   lng: number;
   className?: string;
   onClick?: MouseEventHandler;
+  isSelected?: boolean;
 };
 
-export const Marker = React.memo<MarkerProps>(({ lat, lng, className, onClick }) => {
+export const Marker = React.memo<MarkerProps>(({ lat, lng, className, onClick, isSelected }) => {
   return (
     <button className={classNames(className, 'w-10 h-10 absolute -translate-x-1/2 -translate-y-full')} onClick={onClick}>
-      <LocationMarkerIcon className={'text-primary fill-white'} />
+      <LocationMarkerIcon className={classNames('text-primary', isSelected ? 'fill-primary' : 'fill-white')} />
     </button>
   );
 });

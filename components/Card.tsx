@@ -44,7 +44,7 @@ type CardParagraphProps = React.PropsWithChildren<{
 }>;
 export const CardParagraph = React.memo<CardParagraphProps>((props) => {
   const { className, children } = props;
-  return <p className={classNames(className, 'text-black text-sm leading-6')}>{children}</p>;
+  return <p className={classNames(className, 'text-black text-sm leading-6 mb-4')}>{children}</p>;
 });
 
 type CardIconListProps = React.PropsWithChildren<{

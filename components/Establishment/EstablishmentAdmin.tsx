@@ -10,7 +10,7 @@ import { usePlacesWidget } from 'react-google-autocomplete';
 import MainContainer from '../../components/MainContainer';
 import Select from '../../components/Select';
 import { GET_DYNAMIC_GOOGLE_MAPS_AUTOCOMPLETE_OPTIONS } from '../../config/thirdParty';
-import { establishmentTypes } from '../../model/establishment';
+import { establishmentTypes, establishmentStatuses } from '../../model/establishment';
 import { Service } from '../../model/services';
 import Alert from '../Alert';
 import { Button } from '../Buttons/Button';
@@ -36,6 +36,7 @@ export type EstablishmentModel = {
   country: string;
   latitude?: number;
   longitude?: number;
+  status?: string;
   services: {
     id: string;
     serviceId: string;
@@ -65,6 +66,7 @@ export const emptyEstablishmentModel = {
   fullAddress: '',
   apartment: '',
   intersection: '',
+  status: '',
   services: [],
   servicesId: new Set<string>(),
   website: '',
@@ -140,6 +142,7 @@ const EstablishmentAdmin = (props: {
       handleFormUpdate({
         fullAddress: place.formatted_address,
         street: streetName,
+        status,
         streetNumber,
         address: place.formatted_address,
         latitude: location.lat(),
@@ -167,6 +170,7 @@ const EstablishmentAdmin = (props: {
       .pick([
         'name',
         'type',
+        'status',
         'street',
         'streetNumber',
         'apartment',
@@ -232,6 +236,7 @@ const EstablishmentAdmin = (props: {
     streetNumber,
     apartment,
     intersection,
+    status,
     services,
     servicesId,
     website,
@@ -306,6 +311,14 @@ const EstablishmentAdmin = (props: {
                 longitude={longitude}
                 country={country}
                 city={city}
+              />
+
+              <Select
+                name={'status'}
+                placeholder={'Estado'}
+                onSelect={handleFieldChange}
+                value={status}
+                items={establishmentStatuses}
               />
 
               {/*<AvailabilityField key={'workingHourTo'} onChange={handleFormUpdate} availability={availability} />*/}

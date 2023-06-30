@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import MainContainer from '../components/MainContainer';
 import Head from 'next/head';
+import Link from 'next/link';
 
 type FormValues = {
   email: string;
@@ -87,7 +88,9 @@ const SignIn: NextPage = () => {
               <p className="color-primary text-sm">{errors.password?.message}</p>
               {error && <p className="color-primary text-sm mt-4">{error}</p>}
             </div>
-            <small className={'flex justify-end pt-3 color-primary font-bold'}>¿Olvidaste la contraseña?</small>
+            <Link href={'/nueva-clave'}>
+              <small className={'flex justify-end pt-3 color-primary font-bold cursor-pointer'}>¿Olvidaste la contraseña?</small>
+            </Link>
           </div>
           <div className="mb-6">
             <button type="submit" className="btn-primary">

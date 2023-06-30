@@ -6,6 +6,7 @@ import { SignupRequest, SignupRequests, signupRequestsSchema } from '../../../mo
 import { Search } from '../../Search';
 import { TableBody } from './SignupRequestsTableBody';
 import TableHead from './TableHead';
+import Link from 'next/link';
 
 type Props = React.PropsWithChildren<{
   className?: string;
@@ -73,7 +74,12 @@ const Table = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
     <div ref={ref} className="md:w-9/12 mx-auto py-12">
       <div className="flex flex-row justify-between">
         <h2 className={'text-2xl text-black font-bold mb-8 '}>{title}</h2>
-        <div className="relative">
+        <div className={'relative flex justify-between'}>
+          <div className={'mr-4'}>
+            <Link href={'/admin/registro'}>
+              <p className={'text-primary font-bold cursor-pointer'}>+ Nuevo Usuarie</p>
+            </Link>
+          </div>
           <Search
             className={'input-style w-72 lg:w-96 rounded-base h-10 text-sm text-gray-500'}
             iconClassName={'absolute -translate-y-2/4 right-2 lg:rigth-full lg:ml-28 top-1/3 w-5 text-light-gray'}

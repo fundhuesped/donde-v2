@@ -21,6 +21,7 @@ model User {
   organization_country String           @db.VarChar(100)
   organization_website String?          @db.VarChar(100)
   created_at           DateTime         @default(now())
+  reset_password_token String?          @unique @db.VarChar(200)
 }
 
 enum UserRole {
@@ -53,6 +54,18 @@ enum EstablishmentType {
 enum EstablishmentStatus {
   PUBLISHED
   REJECTED
+}
+
+model FAQ {
+  id             String      @id @default(uuid()) @db.Uuid
+  question           String      @db.VarChar(512)
+  answer           String      @db.Text
+  createdAt      DateTime  @default(now())
+}
+
+model Content {
+  id             String      @unique
+  text           String      @db.Text
 }
 
 model Service {
@@ -93,6 +106,8 @@ model Establishment {
   status       EstablishmentStatus
   latitude     Float
   longitude    Float
+  createdBy    String?                        @db.VarChar(100)
+  lastModifiedBy    String?                        @db.VarChar(100)
 }
 
 model ServiceOnEstablishment {
