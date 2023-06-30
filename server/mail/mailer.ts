@@ -8,7 +8,7 @@ export type SendMailProperties = {
 };
 
 export const sendMail = async ({ to, subject, text, html }: SendMailProperties) => {
-  const defaultTransport = process.env.MAILER_USER_EMAIL?.includes('@gmail.com') ?
+  const defaultTransport = process.env.MAILER_HOST?.includes('@gmail.com') ?
     {
       service: 'gmail',
     }
