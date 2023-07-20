@@ -69,7 +69,7 @@ export const emptyEstablishmentModel = {
   status: '',
   services: [],
   servicesId: new Set<string>(),
-  website: '',
+  website: null,
   phone: '',
   whatsApp: '',
   email: '',
@@ -165,7 +165,7 @@ const EstablishmentAdmin = (props: {
     handleFormUpdate({ [elementName]: checked });
   };
   const buildEstablishmentPayload = (establishment: Partial<EstablishmentModel>) => {
-    const establishmentPayload = _(establishment)
+    let establishmentPayload = _(establishment)
       .omitBy(isNull)
       .pick([
         'name',
@@ -185,6 +185,10 @@ const EstablishmentAdmin = (props: {
         'longitude',
       ])
       .value();
+
+    if (establishmentPayload.website === '') {
+      establishmentPayload.website = null;
+    }
 
     return {
       ...establishmentPayload,
