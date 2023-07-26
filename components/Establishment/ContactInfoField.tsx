@@ -1,3 +1,7 @@
+import { useState } from "react";
+import * as yup from 'yup';
+import { urlRegex } from "../../model/establishment";
+
 type ContactInfoFieldProps = {
   onChange: (event: { currentTarget: { value: string; name: string } }) => void;
   website: string | null;
@@ -8,15 +12,28 @@ type ContactInfoFieldProps = {
 
 export const ContactInfoField = (props: ContactInfoFieldProps) => {
   const { onChange, website, phone, whatsApp, email } = props;
+
+  const [isValidWebsite, setIsValidWebsite] = useState(true);
+
+  const validateWebsite = (url: string) => {
+    const schema = yup.string().matches(urlRegex).max(2048).nullable();
+    return schema.isValidSync(url);
+  };
+
+  const handleInputChange = (event: { currentTarget: { value: string; name: string } }) => {
+    const isValid = validateWebsite(event.currentTarget.value);
+    setIsValidWebsite(isValid);
+    onChange(event);
+  };
+
   return (
     <>
       <h2 className={'my-2 text-justify font-bold text-black'}>Datos de contacto del establecimiento</h2>
       <input
         name={'website'}
-        pattern="[Hh][Tt][Tt][Pp][Ss]?:\/\/(?:(?:[a-zA-Z\u00a1-\uffff0-9]+-?)*[a-zA-Z\u00a1-\uffff0-9]+)(?:\.(?:[a-zA-Z\u00a1-\uffff0-9]+-?)*[a-zA-Z\u00a1-\uffff0-9]+)*(?:\.(?:[a-zA-Z\u00a1-\uffff]{2,}))(?::\d{2,5})?(?:\/[^\s]*)?"
-        className={'rounded-lg p-3 w-full border border-light-gray focus:outline-0  invalid:bg-red-400 invalid:font-semibold'}
+        className={`rounded-lg p-3 w-full border border-light-gray focus:outline-0 ${isValidWebsite ? '' : 'bg-red-400 font-semibold'}`}
         placeholder={'Sitio web: https://ejemplo.org'}
-        onChange={onChange}
+        onChange={handleInputChange}
         value={website ? website : undefined}
       />
       {/* <input
