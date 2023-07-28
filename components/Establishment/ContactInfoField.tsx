@@ -32,7 +32,7 @@ export const ContactInfoField = (props: ContactInfoFieldProps) => {
       <input
         name={'website'}
         className={`rounded-lg p-3 w-full border border-light-gray focus:outline-0 ${isValidWebsite ? '' : 'bg-red-400 font-semibold'}`}
-        placeholder={'Sitio web: https://ejemplo.org'}
+        placeholder={'Sitio web: ejemplo.org'}
         onChange={handleInputChange}
         value={website ? website : undefined}
       />
