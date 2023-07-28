@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState } from 'react';
 import * as yup from 'yup';
-import { urlRegex } from "../../model/establishment";
+import { urlRegex } from '../../model/establishment';
 
 type ContactInfoFieldProps = {
   onChange: (event: { currentTarget: { value: string; name: string } }) => void;
@@ -31,7 +31,9 @@ export const ContactInfoField = (props: ContactInfoFieldProps) => {
       <h2 className={'my-2 text-justify font-bold text-black'}>Datos de contacto del establecimiento</h2>
       <input
         name={'website'}
-        className={`rounded-lg p-3 w-full border border-light-gray focus:outline-0 ${isValidWebsite ? '' : 'bg-red-400 font-semibold'}`}
+        className={`rounded-lg p-3 w-full border border-light-gray focus:outline-0 ${
+          isValidWebsite ? '' : 'bg-red-400 font-semibold'
+        }`}
         placeholder={'Sitio web: ejemplo.org'}
         onChange={handleInputChange}
         value={website ? website : undefined}
