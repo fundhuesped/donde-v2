@@ -69,7 +69,7 @@ export const emptyEstablishmentModel = {
   status: '',
   services: [],
   servicesId: new Set<string>(),
-  website: '',
+  website: null,
   phone: '',
   whatsApp: '',
   email: '',
@@ -95,7 +95,13 @@ const EstablishmentAdmin = (props: {
   const [isUpdateSuccessful, setIsUpdateSuccessful] = useState(false);
   const [isSearchStepCompleted, setIsSearchStepCompleted] = useState(false);
   const isNewEstablishment = isNil(establishment?.id);
-  const [form, setForm] = useState<EstablishmentModel>(establishment || emptyEstablishmentModel);
+
+  // These two lines of code are to ensure none services are taken as selected
+  // when adding an establishment right after adding another one
+  let emptyEstablishment = emptyEstablishmentModel;
+  emptyEstablishment.services = [];
+
+  const [form, setForm] = useState<EstablishmentModel>(establishment || emptyEstablishment);
   const [isFormCompleted, setIsFormCompleted] = useState(false);
   const [countryApi, setCountryApi] = useState<string | undefined>('');
 
@@ -165,7 +171,7 @@ const EstablishmentAdmin = (props: {
     handleFormUpdate({ [elementName]: checked });
   };
   const buildEstablishmentPayload = (establishment: Partial<EstablishmentModel>) => {
-    const establishmentPayload = _(establishment)
+    let establishmentPayload = _(establishment)
       .omitBy(isNull)
       .pick([
         'name',
@@ -185,6 +191,10 @@ const EstablishmentAdmin = (props: {
         'longitude',
       ])
       .value();
+
+    if (establishmentPayload.website === '') {
+      establishmentPayload.website = null;
+    }
 
     return {
       ...establishmentPayload,
