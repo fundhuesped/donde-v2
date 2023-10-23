@@ -3,12 +3,13 @@ import type { NextPage } from 'next';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import { Button } from '../components/Buttons/Button';
 import MainContainer from '../components/MainContainer';
 import { SERVICE_ICONS } from '../config/services';
 import { Service, serviceSchema } from '../model/services';
 import { prismaClient } from '../server/prisma/client';
+import Popup from '../components/Popup/Popup';
 
 type ServicePill = {
   id: string;
@@ -95,6 +96,24 @@ export const ServiceButton = (props: ServiceProps) => {
 };
 
 const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
+  const [showPopup, setShowPopup] = useState(true);
+  useEffect(() => {
+    const hasPopupBeenShown = localStorage.getItem('hasPopupBeenShown');
+    if (hasPopupBeenShown) {
+      setShowPopup(false);
+    }
+    const handleBeforeUnload = () => {
+      localStorage.removeItem('hasPopupBeenShown');
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+  const handlePopUpClose = () => {
+    localStorage.setItem('hasPopupBeenShown', 'true');
+    setShowPopup(false);
+  };
   const [services, setServices] = useState<Record<string, ServicePill>>(
     Object.fromEntries(
       availableServices.map((serviceData: Service) => [
@@ -178,6 +197,11 @@ const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
           <SearchAllButton onClick={handleSearchAllButtonClicked} />
         </div>
       </MainContainer>
+      {showPopup && (
+        <Popup
+        showPopup={showPopup}
+        onClose={handlePopUpClose} />
+      )}
     </div>
   );
 });
