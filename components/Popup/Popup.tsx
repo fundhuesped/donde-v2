@@ -22,7 +22,10 @@ const Popup: React.FC<PopupProps> = (props) => {
           <a href="https://bit.ly/donde-dona" target="_blank" rel="noopener noreferrer">
             <Image src={img} alt="Ayudanos con tu donación" width={800} height={600} />
           </a>
-          <button className="close-button absolute top-6 right-6 z-50 bg-white rounded-full w-10 h-10 flex items-center justify-center" onClick={onClose}>
+          <button
+            className="close-button absolute top-6 right-6 z-50 bg-white rounded-full w-10 h-10 flex items-center justify-center"
+            onClick={onClose}
+          >
             X
           </button>
         </div>

@@ -197,11 +197,7 @@ const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
           <SearchAllButton onClick={handleSearchAllButtonClicked} />
         </div>
       </MainContainer>
-      {showPopup && (
-        <Popup
-        showPopup={showPopup}
-        onClose={handlePopUpClose} />
-      )}
+      {showPopup && <Popup showPopup={showPopup} onClose={handlePopUpClose} />}
     </div>
   );
 });
