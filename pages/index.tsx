@@ -25,7 +25,6 @@ interface SearchButtonProps {
 
 const SearchButton = React.memo<SearchButtonProps>((props: SearchButtonProps) => {
   const { enabled, onClick } = props;
-
   return (
     <Button className={'my-5 w-full lg:w-80 lg:mr-1 mb-5 lg:my-5'} disabled={!enabled} type={'primary'} onClick={onClick}>
       Buscar
@@ -53,6 +52,7 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async () 
 interface SearchAllButtonProps {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
 }
+
 const SearchAllButton = React.memo<SearchAllButtonProps>((props) => {
   const { onClick } = props;
 
@@ -76,10 +76,12 @@ interface ServiceProps {
   active: boolean;
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
+
 export const ServiceButton = (props: ServiceProps) => {
   const { id, icon, description, active, onClick } = props;
   const borderColor = active ? '!border-primary' : 'border-white';
   const fontWeight = active ? 'font-semibold' : '!font-normal';
+
   return (
     <Button
       name={id}
@@ -96,24 +98,34 @@ export const ServiceButton = (props: ServiceProps) => {
 };
 
 const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
-  const [showPopup, setShowPopup] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
+
   useEffect(() => {
     const hasPopupBeenShown = localStorage.getItem('hasPopupBeenShown');
-    if (hasPopupBeenShown) {
-      setShowPopup(false);
+    const today = new Date();
+  
+    const starDate = new Date(2023, 9, 22);
+    const endDate = new Date(2023, 10, 1, 23, 59);
+
+    if (today >= starDate && today <= endDate && !hasPopupBeenShown) {
+      setShowPopup(true);
     }
     const handleBeforeUnload = () => {
-      localStorage.removeItem('hasPopupBeenShown');
+      if (today >= starDate && today <= endDate) {
+        localStorage.removeItem('hasPopupBeenShown');
+      }
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
+
   const handlePopUpClose = () => {
     localStorage.setItem('hasPopupBeenShown', 'true');
     setShowPopup(false);
   };
+
   const [services, setServices] = useState<Record<string, ServicePill>>(
     Object.fromEntries(
       availableServices.map((serviceData: Service) => [
@@ -128,6 +140,7 @@ const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
       ]),
     ),
   );
+
   const servicesSelected = Object.values(services).some((service) => service.selected);
 
   const toggleService = (serviceId: string) => {
@@ -145,6 +158,7 @@ const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
   };
 
   const router = useRouter();
+
   const search = (servicesToSearch: ServicePill[]) => {
     if (servicesToSearch.length > 0) {
       router.push({
@@ -197,7 +211,11 @@ const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
           <SearchAllButton onClick={handleSearchAllButtonClicked} />
         </div>
       </MainContainer>
-      {showPopup && <Popup showPopup={showPopup} onClose={handlePopUpClose} />}
+      {showPopup && (
+        <Popup
+          showPopup={showPopup}
+          onClose={handlePopUpClose} />
+      )}
     </div>
   );
 });
