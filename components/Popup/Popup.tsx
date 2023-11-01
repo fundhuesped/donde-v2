@@ -9,14 +9,22 @@ export type PopupProps = {
 
 const Popup: React.FC<PopupProps> = (props) => {
   const { onClose, showPopup } = props;
+
   const closePopup = () => {
     if (showPopup) {
       onClose();
     }
   };
+
   return (
     <div className={`fixed inset-0 flex p-4 items-center justify-center z-50 ${showPopup ? 'block' : 'hidden'}`}>
-      <div className="fixed inset-0 bg-opacity-40 bg-black z-50" onClick={closePopup}></div>
+      <div
+        className="fixed inset-0 bg-opacity-40 bg-black z-50"
+        role="button"
+        tabIndex={0}
+        onClick={closePopup}
+        onKeyDown={closePopup}
+      ></div>
       <div className="w-full h-full flex items-center justify-center">
         <div className="bg-white rounded-lg shadow-lg relative p-4 z-50">
           <a href="https://bit.ly/donde-dona" target="_blank" rel="noopener noreferrer">

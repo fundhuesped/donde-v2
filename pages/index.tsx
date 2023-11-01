@@ -105,7 +105,7 @@ const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
     const today = new Date();
   
     const starDate = new Date(2023, 9, 22);
-    const endDate = new Date(2023, 10, 1, 23, 59);
+    const endDate = new Date(2023, 11, 31, 23, 59);
 
     if (today >= starDate && today <= endDate && !hasPopupBeenShown) {
       setShowPopup(true);
