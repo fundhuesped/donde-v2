@@ -104,14 +104,14 @@ const Home: NextPage<ServerSideProps> = React.memo(({ availableServices }) => {
     const hasPopupBeenShown = localStorage.getItem('hasPopupBeenShown');
     const today = new Date();
 
-    const starDate = new Date(2023, 9, 22);
+    const startDate = new Date(2023, 10, 22);
     const endDate = new Date(2023, 11, 31, 23, 59);
 
-    if (today >= starDate && today <= endDate && !hasPopupBeenShown) {
+    if (today >= startDate && today <= endDate && !hasPopupBeenShown) {
       setShowPopup(true);
     }
     const handleBeforeUnload = () => {
-      if (today >= starDate && today <= endDate) {
+      if (today >= startDate && today <= endDate) {
         localStorage.removeItem('hasPopupBeenShown');
       }
     };
